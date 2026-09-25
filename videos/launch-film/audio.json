@@ -1,0 +1,442 @@
+{
+  "name": "launch-film",
+  "duration": 66.23,
+  "video": "../../out/launch-film/launch-film.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 2.2
+  },
+  "voice": {
+    "from": "vo.json",
+    "gain": 0,
+    "duck": {
+      "threshold": 0.03,
+      "ratio": 6,
+      "attack": 25,
+      "release": 450,
+      "sfx": false
+    }
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 12.35,
+      "generate": 16,
+      "from": 1.5,
+      "gain": -5,
+      "fadeIn": 0.4,
+      "fadeOut": 0.6,
+      "prompt": "Sparse, tense modern piano motif at 100 BPM with a soft ticking pulse, a low warm sub drone and airy pads. Restrained and slightly uneasy, like something is about to go wrong, slowly building toward the end. Starts immediately with the piano, no long silence. No drums, no vocals."
+    },
+    {
+      "at": 11.9,
+      "length": 54.33,
+      "generate": 62,
+      "from": 1.5,
+      "gain": -4,
+      "fadeIn": 0.3,
+      "fadeOut": 3,
+      "prompt": "Uplifting modern piano-driven electronic track at 100 BPM for a premium software product launch film: warm confident piano chords, pulsing synth arpeggios, a deep soft sub bass, crisp light percussion and hand claps that build to full energy within the first bars and stay there. Hopeful, bright and cinematic but modern and clean, leaving space for a voiceover. Steady energy all the way through with no breakdown, and a gentle ending on a sustained chord with no big final hit. No vocals, no choir."
+    }
+  ],
+  "sounds": {
+    "msg": {
+      "text": "soft warm chat message notification pop, gentle and modern",
+      "duration": 0.6,
+      "gain": -15
+    },
+    "draw": {
+      "text": "quick delicate pen-line drawing swish, a UI frame sketching itself",
+      "duration": 0.7,
+      "gain": -18
+    },
+    "fly": {
+      "text": "soft airy whoosh of a card flying past, short",
+      "duration": 0.7,
+      "gain": -15
+    },
+    "fall": {
+      "text": "tiny pieces of paper falling and scattering, light and delicate",
+      "duration": 1.2,
+      "gain": -17
+    },
+    "pullback": {
+      "text": "slow wide cinematic whoosh as a camera pulls back, airy and deep",
+      "duration": 1.4,
+      "gain": -14
+    },
+    "snap": {
+      "text": "several thin threads snapping one after another, light and crisp",
+      "duration": 0.8,
+      "gain": -13
+    },
+    "swell": {
+      "text": "reverse cymbal and shimmering synth swell rising into a reveal, about one second, no hit",
+      "duration": 1.3,
+      "gain": -8
+    },
+    "reveal": {
+      "text": "soft magical shimmer as pieces click together into a logo, warm and bright, subtle low thump",
+      "duration": 1.5,
+      "gain": -12
+    },
+    "sweep": {
+      "text": "smooth light glassy sweep as a line draws across the screen",
+      "duration": 0.9,
+      "gain": -17
+    },
+    "pluck": {
+      "text": "soft round synth pluck, a UI element appearing, clean and pleasant",
+      "duration": 0.5,
+      "gain": -17
+    },
+    "comet": {
+      "text": "bright shimmering sparkle travelling left to right, delicate",
+      "duration": 1,
+      "gain": -18
+    },
+    "blip": {
+      "text": "tiny soft glassy blip",
+      "duration": 0.5,
+      "gain": -21
+    },
+    "zoom": {
+      "text": "smooth forward zoom whoosh into a screen, soft",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "tick": {
+      "text": "tiny crisp soft UI tick",
+      "duration": 0.5,
+      "gain": -19
+    },
+    "stamp": {
+      "text": "soft muted stamp tap on paper",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "whip": {
+      "text": "fast smooth whip pan whoosh, clean",
+      "duration": 0.6,
+      "gain": -15
+    },
+    "land": {
+      "text": "soft muted tap as a card settles into place",
+      "duration": 0.5,
+      "gain": -17
+    },
+    "zip": {
+      "text": "light quick zip of a line connecting two points",
+      "duration": 0.6,
+      "gain": -18
+    },
+    "keys": {
+      "text": "short soft burst of quiet keyboard typing",
+      "duration": 0.8,
+      "gain": -20
+    },
+    "scan": {
+      "text": "soft electronic scanning sweep, gentle",
+      "duration": 1,
+      "gain": -18
+    },
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "success": {
+      "text": "short warm two-note success chime, soft",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "release": {
+      "text": "bright soft chime with a light sparkle, something shipped",
+      "duration": 0.9,
+      "gain": -15
+    },
+    "scribble": {
+      "text": "quick pen strike-through on paper, soft",
+      "duration": 0.5,
+      "gain": -18
+    },
+    "overview": {
+      "text": "wide airy whoosh as a camera zooms far out",
+      "duration": 0.9,
+      "gain": -15
+    },
+    "zoomin": {
+      "text": "smooth airy whoosh as a camera zooms back in",
+      "duration": 0.8,
+      "gain": -16
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -18
+    },
+    "srcpop": {
+      "text": "tiny soft bubbly pop",
+      "duration": 0.5,
+      "gain": -19
+    },
+    "thunk": {
+      "text": "soft satisfying toggle switch slide and click",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "bracket": {
+      "text": "two quick soft line-drawing swishes",
+      "duration": 0.8,
+      "gain": -17
+    },
+    "shimmer": {
+      "text": "soft warm shimmer as a logo assembles, gentle, no impact",
+      "duration": 1.2,
+      "gain": -15
+    },
+    "drop": {
+      "text": "soft muted thud of a small card landing",
+      "duration": 0.5,
+      "gain": -17
+    }
+  },
+  "cues": [
+    {
+      "sound": "msg",
+      "at": [
+        0.35,
+        21.711,
+        25.22,
+        44.013,
+        44.389
+      ]
+    },
+    {
+      "sound": "draw",
+      "at": [
+        2.297,
+        4.044,
+        5.391,
+        8.406
+      ]
+    },
+    {
+      "sound": "fly",
+      "at": [
+        4.094,
+        5.441
+      ]
+    },
+    {
+      "sound": "fall",
+      "at": [
+        4.244,
+        5.591
+      ]
+    },
+    {
+      "sound": "pullback",
+      "at": [
+        7.473
+      ]
+    },
+    {
+      "sound": "snap",
+      "at": [
+        10.097
+      ]
+    },
+    {
+      "sound": "swell",
+      "at": [
+        10.899
+      ]
+    },
+    {
+      "sound": "reveal",
+      "at": [
+        11.999
+      ]
+    },
+    {
+      "sound": "sweep",
+      "at": [
+        13.15,
+        60.008
+      ]
+    },
+    {
+      "sound": "pluck",
+      "at": [
+        14.599,
+        15.261,
+        15.923,
+        16.666,
+        17.176
+      ]
+    },
+    {
+      "sound": "comet",
+      "at": [
+        18.16
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        18.837,
+        18.967,
+        19.097,
+        19.227,
+        19.357,
+        19.487
+      ]
+    },
+    {
+      "sound": "zoom",
+      "at": [
+        20.811
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        24.046,
+        24.603,
+        24.99,
+        29.272,
+        29.492,
+        29.712,
+        36.757,
+        37.007,
+        37.257,
+        47.905,
+        48.255,
+        48.605
+      ]
+    },
+    {
+      "sound": "stamp",
+      "at": [
+        26.753
+      ]
+    },
+    {
+      "sound": "whip",
+      "at": [
+        27.728,
+        31.138,
+        34.832,
+        39.558
+      ]
+    },
+    {
+      "sound": "land",
+      "at": [
+        28.678,
+        31.988
+      ]
+    },
+    {
+      "sound": "zip",
+      "at": [
+        32.686
+      ]
+    },
+    {
+      "sound": "keys",
+      "at": [
+        34.982
+      ]
+    },
+    {
+      "sound": "scan",
+      "at": [
+        36.457
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        37.796
+      ]
+    },
+    {
+      "sound": "success",
+      "at": [
+        37.846,
+        45.652
+      ]
+    },
+    {
+      "sound": "release",
+      "at": [
+        39.968
+      ]
+    },
+    {
+      "sound": "scribble",
+      "at": [
+        41.01
+      ]
+    },
+    {
+      "sound": "overview",
+      "at": [
+        42.328
+      ]
+    },
+    {
+      "sound": "zoomin",
+      "at": [
+        43.513
+      ]
+    },
+    {
+      "sound": "soft",
+      "at": [
+        45.752,
+        50.249,
+        54.425
+      ]
+    },
+    {
+      "sound": "srcpop",
+      "at": [
+        48.838,
+        48.938,
+        49.038
+      ]
+    },
+    {
+      "sound": "thunk",
+      "at": [
+        50.97,
+        51.17,
+        52.123,
+        53.47
+      ]
+    },
+    {
+      "sound": "bracket",
+      "at": [
+        54.725
+      ]
+    },
+    {
+      "sound": "shimmer",
+      "at": [
+        54.925,
+        62.73
+      ]
+    },
+    {
+      "sound": "drop",
+      "at": [
+        57.059,
+        58.684
+      ]
+    }
+  ]
+}

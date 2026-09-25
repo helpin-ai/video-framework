@@ -111,3 +111,29 @@ Then add sound with the video-sound skill. Tell the user:
 - Don't pass a CSS `transition` or `animation` to anything; motion must come from `render(t)`.
 - `render.mjs --scale 0.5` gives fast drafts. Final renders must use scale 1.
 - Don't clean up with broad globs like `m*.png`: an earlier session lost a file that way. `render.mjs` only clears its own `out/<name>/stills` or `sheet` folder.
+
+## Generated footage (optional)
+
+`bin/genvideo.mjs` generates live-action plates via Higgsfield (`HIGGSFIELD_API_KEY` = `id:secret`), caches them in
+`out/video-cache/`, and explodes each into a 1080p JPEG sequence in `out/<name>/plates/<id>/`. Brief them in
+`videos/<name>/plates.json`; run with `--dry` first to see the estimated cost, then without it. Every paid generation is
+appended to `out/video-cache/ledger.json`.
+
+- **Model and cost.** Default is Seedance 2.0 at 720p (about $0.21/s with the running promo). Pricing is metered by pixels:
+  Seedance 2.5 at 720p costs about $0.32/s, and the headline "$0.144/s" is its 480p rate. Failed submits aren't charged.
+- **Same person across shots.** Give a plate `refs: ["assets/helpin/avatars/maya.webp"]` and it goes to
+  `seedance-2.0/reference-to-video` with that face, so the footage matches the UI avatar (Maya, Sam in `videos/launch-film`).
+  Without refs, describe the person identically in every prompt (hair, clothing): that held one woman across five hours
+  of `videos/film-one-day`.
+- **Showing a frame.** `plateFrame(PLATES, name, id, t)` and `showFrame(img, src)` in `lib/film.js`; return the decode
+  promises from `render` so the renderer waits for the pixels.
+- **How to use it.** People carry the story; motion graphics carry the product. Patterns that work:
+  full-frame footage of the person under floating UI, cut on their word (launch film Act 1); footage that opens an
+  hour full frame and then docks into a portrait frame while the cards play (One day); a live portrait card in place
+  of an avatar (Sam); a dimmed plate under the tagline. Frame faces clear of the UI with a zoom/offset per shot.
+  Never for product UI, and never text on a screen.
+- **Check every plate for brand marks.** Prompts say "no text, no logos", and the model still adds them: an Apple logo
+  on a laptop lid, an ASUS badge on a monitor, a laptop maker's badge. Crop the device areas of a few frames per plate
+  at full size, then either play only the clean range, crop it out with the framing zoom, or regenerate without the
+  device ("a paper notebook, no laptop").
+

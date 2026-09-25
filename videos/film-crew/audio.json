@@ -1,0 +1,262 @@
+{
+  "name": "film-crew",
+  "duration": 50.57,
+  "video": "../../out/film-crew/film-crew.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 2.2
+  },
+  "voice": {
+    "from": "vo.json",
+    "gain": 0,
+    "duck": {
+      "threshold": 0.03,
+      "ratio": 6,
+      "attack": 25,
+      "release": 450,
+      "sfx": false
+    }
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 50.57,
+      "generate": 57,
+      "from": 0,
+      "gain": -4,
+      "fadeIn": 0.2,
+      "fadeOut": 3,
+      "prompt": "Cool, playful heist jazz at 112 BPM that starts immediately at full groove: upright walking bass, crisp brushed breakbeat drums, vibraphone, muted trumpet riffs and finger snaps, like a stylish team-introduction montage in a caper film. Confident and fun, steady energy all the way through with no breakdown, ending on a cool held chord with no big final hit. No vocals."
+    }
+  ],
+  "sounds": {
+    "gather": {
+      "text": "soft magical swish as small dots gather into a row, light and playful",
+      "duration": 1,
+      "gain": -14
+    },
+    "wipe": {
+      "text": "quick bright whoosh with a soft round pop, a burst of colour filling the screen",
+      "duration": 0.7,
+      "gain": -12
+    },
+    "name": {
+      "text": "short soft snap, a title landing",
+      "duration": 0.5,
+      "gain": -17
+    },
+    "pop": {
+      "text": "soft bubbly UI pop",
+      "duration": 0.5,
+      "gain": -16
+    },
+    "sticky": {
+      "text": "light paper sticky note slap",
+      "duration": 0.5,
+      "gain": -16
+    },
+    "tick": {
+      "text": "tiny crisp soft UI tick",
+      "duration": 0.5,
+      "gain": -19
+    },
+    "typing": {
+      "text": "short soft burst of quiet keyboard typing",
+      "duration": 0.8,
+      "gain": -19
+    },
+    "testdots": {
+      "text": "quick rising run of tiny soft beeps, tests passing",
+      "duration": 1,
+      "gain": -17
+    },
+    "scan": {
+      "text": "soft whooshing glass sweep, a magnifier gliding",
+      "duration": 1.2,
+      "gain": -17
+    },
+    "flag": {
+      "text": "short soft warning blip",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "scribble": {
+      "text": "quick pen strike-through on paper, soft",
+      "duration": 0.5,
+      "gain": -17
+    },
+    "chime": {
+      "text": "short warm two-note chime, soft and friendly",
+      "duration": 0.7,
+      "gain": -16
+    },
+    "swoosh": {
+      "text": "smooth airy swoosh, notes flying into a card",
+      "duration": 0.7,
+      "gain": -15
+    },
+    "comet": {
+      "text": "bright shimmering sparkle travelling left to right, delicate",
+      "duration": 1,
+      "gain": -17
+    },
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "approve": {
+      "text": "short warm two-note success chime, soft",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "sparkle": {
+      "text": "soft warm shimmer, gentle, no impact",
+      "duration": 1.2,
+      "gain": -15
+    }
+  },
+  "cues": [
+    {
+      "sound": "gather",
+      "at": [
+        2.447
+      ]
+    },
+    {
+      "sound": "wipe",
+      "at": [
+        4.36,
+        10.622,
+        15.398,
+        19.57,
+        24.996,
+        27.868,
+        31.204,
+        34.169,
+        38.406
+      ]
+    },
+    {
+      "sound": "name",
+      "at": [
+        4.59,
+        10.852,
+        15.628,
+        19.8,
+        25.226,
+        28.098,
+        31.434,
+        34.399
+      ]
+    },
+    {
+      "sound": "pop",
+      "at": [
+        5.46,
+        6.095,
+        8.165,
+        8.85,
+        12.853,
+        22.876,
+        32.731,
+        36.225
+      ]
+    },
+    {
+      "sound": "sticky",
+      "at": [
+        11.726,
+        11.876,
+        12.026
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        13.453,
+        13.603,
+        13.753,
+        13.903,
+        16.992,
+        17.212,
+        17.432,
+        17.652,
+        37.049,
+        37.229,
+        37.409
+      ]
+    },
+    {
+      "sound": "typing",
+      "at": [
+        20.445
+      ]
+    },
+    {
+      "sound": "testdots",
+      "at": [
+        21.706
+      ]
+    },
+    {
+      "sound": "scan",
+      "at": [
+        25.666
+      ]
+    },
+    {
+      "sound": "flag",
+      "at": [
+        26.138,
+        26.602
+      ]
+    },
+    {
+      "sound": "scribble",
+      "at": [
+        28.661
+      ]
+    },
+    {
+      "sound": "chime",
+      "at": [
+        14.179,
+        18.397,
+        29.904,
+        33.472
+      ]
+    },
+    {
+      "sound": "swoosh",
+      "at": [
+        36.499
+      ]
+    },
+    {
+      "sound": "comet",
+      "at": [
+        39.459
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        41.847
+      ]
+    },
+    {
+      "sound": "approve",
+      "at": [
+        41.897
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        44.71,
+        46.13
+      ]
+    }
+  ]
+}

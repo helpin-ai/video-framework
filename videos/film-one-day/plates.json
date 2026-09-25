@@ -1,0 +1,48 @@
+{
+  "name": "film-one-day",
+  "fps": 30,
+  "size": "1920x1080",
+  "model": "bytedance/seedance-2.5/text-to-video",
+  "plates": [
+    {
+      "id": "sunrise",
+      "duration": 6,
+      "prompt": "Cinematic 35mm shot, early morning sunrise. A young woman in a cozy sweater sits at a wooden kitchen table beside a large window filled with soft peach and golden sunrise light. She opens a silver laptop and smiles slightly. Slow, smooth camera push-in over her shoulder toward the laptop, ending with the softly glowing screen filling most of the frame. Shallow depth of field, warm peach and cream colour palette, gentle film grain, calm and optimistic. No text, no logos, no readable screen content: the screen shows only a soft bright glow."
+    },
+    {
+      "id": "dusk",
+      "duration": 6,
+      "prompt": "Cinematic 35mm shot at dusk in a modern open-plan office with tall windows. Outside, the sky glows violet and coral over a city skyline as the city lights come on. In the foreground a person closes their laptop, stands up and puts on a jacket, relaxed and content; in the background a few colleagues wave goodbye and head out. Slow sideways dolly, warm interior lamps, shallow depth of field, violet and warm orange palette, soft film grain. No text, no logos, no readable screens."
+    },
+    {
+      "id": "ten",
+      "duration": 6,
+      "model": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "Cinematic 35mm film shot, mid-morning. A woman in her early thirties with long wavy honey-blonde hair and a cream cable-knit sweater sits at a light wooden desk by a large window in a bright home office, a mug of coffee beside her. She reads on a laptop seen from the side, smiles slightly and types a quick reply. Medium shot, she is in the centre of the frame, slow gentle push-in. Soft warm morning light, cream and peach palette, shallow depth of field, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "eleven",
+      "duration": 6,
+      "model": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "Cinematic 35mm film shot, late morning. A woman in her early thirties with long wavy honey-blonde hair and a cream cable-knit sweater sits in a bright, airy meeting nook with pale blue walls, on a video call from a laptop seen from the side. She wears small wireless earbuds, talks and gestures with one hand, then listens, nods and writes a short note in a paper notebook. Medium shot, she is in the centre of the frame, slow push-in. Clear daylight, cool sky-blue and white palette, shallow depth of field, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "one",
+      "duration": 6,
+      "model": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "Cinematic 35mm film shot at noon in a bright modern office. A woman in her early thirties with long wavy honey-blonde hair and a cream cable-knit sweater stands beside a colleague, an engineer with short curly brown hair and a navy t-shirt, at his desk. He points at his monitor, which is seen from behind so its screen is not visible; she leans in, reads, nods, and taps the trackpad of a laptop to approve. Medium shot, the two of them in the centre of the frame, slow push-in. Bright noon daylight, clean white and light-blue palette, shallow depth of field, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "three",
+      "duration": 6,
+      "model": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "Cinematic 35mm film shot in golden afternoon light in a warm open-plan office. A woman in her early thirties with long wavy honey-blonde hair and a cream cable-knit sweater and three colleagues gather around a laptop seen from behind for a small, quiet celebration: smiles, a light high-five, a relieved laugh. Medium shot, the group in the centre of the frame, slow push-in. Warm golden-yellow palette, shallow depth of field, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "five",
+      "duration": 6,
+      "model": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "Cinematic 35mm film shot, late afternoon, low warm sun through tall windows. A woman in her early thirties with long wavy honey-blonde hair and a cream cable-knit sweater walks into a small meeting room holding a paper notebook, sits down at the table, puts in one small white wireless earbud and smiles as a call begins, calm and prepared. There is no laptop, no phone and no other device on the table. Medium shot, she is in the centre of the frame, slow push-in. Warm coral and orange palette with long soft shadows, shallow depth of field, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    }
+  ]
+}

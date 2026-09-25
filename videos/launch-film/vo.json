@@ -1,0 +1,891 @@
+{
+ "voice": "Eric - Smooth, Trustworthy",
+ "total": 66.23,
+ "lines": [
+  {
+   "id": "ask",
+   "text": "A customer asks a question.",
+   "at": 0.7,
+   "start": 0.7,
+   "end": 2.047,
+   "file": "out/audio-cache/vo-ask-fa57803d49ea39f4.mp3",
+   "words": [
+    {
+     "w": "A",
+     "s": 0.7,
+     "e": 0.781
+    },
+    {
+     "w": "customer",
+     "s": 0.863,
+     "e": 1.199
+    },
+    {
+     "w": "asks",
+     "s": 1.257,
+     "e": 1.431
+    },
+    {
+     "w": "a",
+     "s": 1.466,
+     "e": 1.489
+    },
+    {
+     "w": "question.",
+     "s": 1.548,
+     "e": 2.047
+    }
+   ]
+  },
+  {
+   "id": "support",
+   "text": "Support looks into it.",
+   "at": 2.397,
+   "start": 2.397,
+   "end": 3.744,
+   "file": "out/audio-cache/vo-support-261157ff8f7f0dab.mp3",
+   "words": [
+    {
+     "w": "Support",
+     "s": 2.397,
+     "e": 2.827
+    },
+    {
+     "w": "looks",
+     "s": 2.861,
+     "e": 3.07
+    },
+    {
+     "w": "into",
+     "s": 3.117,
+     "e": 3.314
+    },
+    {
+     "w": "it.",
+     "s": 3.395,
+     "e": 3.744
+    }
+   ]
+  },
+  {
+   "id": "ships",
+   "text": "Product decides. Engineering ships.",
+   "at": 4.044,
+   "start": 4.044,
+   "end": 6.923,
+   "file": "out/audio-cache/vo-ships-8d44e9920eb03ddd.mp3",
+   "words": [
+    {
+     "w": "Product",
+     "s": 4.044,
+     "e": 4.474
+    },
+    {
+     "w": "decides.",
+     "s": 4.508,
+     "e": 5.135
+    },
+    {
+     "w": "Engineering",
+     "s": 5.391,
+     "e": 5.878
+    },
+    {
+     "w": "ships.",
+     "s": 5.936,
+     "e": 6.923
+    }
+   ]
+  },
+  {
+   "id": "lost",
+   "text": "And somewhere between five tools, the story gets lost.",
+   "at": 7.473,
+   "start": 7.473,
+   "end": 11.049,
+   "file": "out/audio-cache/vo-lost-94cfc75a1042fbbc.mp3",
+   "words": [
+    {
+     "w": "And",
+     "s": 7.473,
+     "e": 7.694
+    },
+    {
+     "w": "somewhere",
+     "s": 7.775,
+     "e": 8.1
+    },
+    {
+     "w": "between",
+     "s": 8.146,
+     "e": 8.437
+    },
+    {
+     "w": "five",
+     "s": 8.506,
+     "e": 8.773
+    },
+    {
+     "w": "tools,",
+     "s": 8.808,
+     "e": 9.261
+    },
+    {
+     "w": "the",
+     "s": 9.365,
+     "e": 9.482
+    },
+    {
+     "w": "story",
+     "s": 9.54,
+     "e": 9.818
+    },
+    {
+     "w": "gets",
+     "s": 9.865,
+     "e": 10.027
+    },
+    {
+     "w": "lost.",
+     "s": 10.097,
+     "e": 11.049
+    }
+   ]
+  },
+  {
+   "id": "keeps",
+   "text": "Helpin keeps the whole story in one place.",
+   "at": 12.049,
+   "start": 12.049,
+   "end": 13.999,
+   "file": "out/audio-cache/vo-keeps-6274246554340bfd.mp3",
+   "words": [
+    {
+     "w": "Helpin",
+     "s": 12.049,
+     "e": 12.339
+    },
+    {
+     "w": "keeps",
+     "s": 12.386,
+     "e": 12.595
+    },
+    {
+     "w": "the",
+     "s": 12.618,
+     "e": 12.688
+    },
+    {
+     "w": "whole",
+     "s": 12.734,
+     "e": 12.931
+    },
+    {
+     "w": "story",
+     "s": 12.955,
+     "e": 13.198
+    },
+    {
+     "w": "in",
+     "s": 13.222,
+     "e": 13.28
+    },
+    {
+     "w": "one",
+     "s": 13.338,
+     "e": 13.465
+    },
+    {
+     "w": "place.",
+     "s": 13.5,
+     "e": 13.999
+    }
+   ]
+  },
+  {
+   "id": "history",
+   "text": "Support, projects, CRM, meetings and docs. One history, shared with your AI agents.",
+   "at": 14.599,
+   "start": 14.599,
+   "end": 20.961,
+   "file": "out/audio-cache/vo-history-2a9a3a41c0bad651.mp3",
+   "words": [
+    {
+     "w": "Support,",
+     "s": 14.599,
+     "e": 15.179
+    },
+    {
+     "w": "projects,",
+     "s": 15.261,
+     "e": 15.888
+    },
+    {
+     "w": "CRM,",
+     "s": 15.923,
+     "e": 16.561
+    },
+    {
+     "w": "meetings",
+     "s": 16.666,
+     "e": 17.025
+    },
+    {
+     "w": "and",
+     "s": 17.06,
+     "e": 17.13
+    },
+    {
+     "w": "docs.",
+     "s": 17.176,
+     "e": 17.641
+    },
+    {
+     "w": "One",
+     "s": 18.21,
+     "e": 18.384
+    },
+    {
+     "w": "history,",
+     "s": 18.419,
+     "e": 18.802
+    },
+    {
+     "w": "shared",
+     "s": 18.837,
+     "e": 19.115
+    },
+    {
+     "w": "with",
+     "s": 19.139,
+     "e": 19.243
+    },
+    {
+     "w": "your",
+     "s": 19.278,
+     "e": 19.394
+    },
+    {
+     "w": "AI",
+     "s": 19.464,
+     "e": 19.789
+    },
+    {
+     "w": "agents.",
+     "s": 19.847,
+     "e": 20.961
+    }
+   ]
+  },
+  {
+   "id": "writes",
+   "text": "A customer writes in. Echo answers from your docs and past conversations.",
+   "at": 21.561,
+   "start": 21.561,
+   "end": 25.973,
+   "file": "out/audio-cache/vo-writes-4e6970c798e7b273.mp3",
+   "words": [
+    {
+     "w": "A",
+     "s": 21.561,
+     "e": 21.654
+    },
+    {
+     "w": "customer",
+     "s": 21.758,
+     "e": 22.165
+    },
+    {
+     "w": "writes",
+     "s": 22.211,
+     "e": 22.49
+    },
+    {
+     "w": "in.",
+     "s": 22.559,
+     "e": 22.815
+    },
+    {
+     "w": "Echo",
+     "s": 23.012,
+     "e": 23.256
+    },
+    {
+     "w": "answers",
+     "s": 23.337,
+     "e": 23.662
+    },
+    {
+     "w": "from",
+     "s": 23.709,
+     "e": 23.848
+    },
+    {
+     "w": "your",
+     "s": 23.895,
+     "e": 23.999
+    },
+    {
+     "w": "docs",
+     "s": 24.046,
+     "e": 24.371
+    },
+    {
+     "w": "and",
+     "s": 24.405,
+     "e": 24.522
+    },
+    {
+     "w": "past",
+     "s": 24.603,
+     "e": 24.823
+    },
+    {
+     "w": "conversations.",
+     "s": 24.87,
+     "e": 25.973
+    }
+   ]
+  },
+  {
+   "id": "bug",
+   "text": "If it's a bug, Echo hands it to your team, with everything it found.",
+   "at": 26.323,
+   "start": 26.323,
+   "end": 30.688,
+   "file": "out/audio-cache/vo-bug-cf038598c6e1d2c7.mp3",
+   "words": [
+    {
+     "w": "If",
+     "s": 26.323,
+     "e": 26.497
+    },
+    {
+     "w": "it's",
+     "s": 26.532,
+     "e": 26.66
+    },
+    {
+     "w": "a",
+     "s": 26.683,
+     "e": 26.706
+    },
+    {
+     "w": "bug,",
+     "s": 26.753,
+     "e": 27.182
+    },
+    {
+     "w": "Echo",
+     "s": 27.414,
+     "e": 27.67
+    },
+    {
+     "w": "hands",
+     "s": 27.728,
+     "e": 27.937
+    },
+    {
+     "w": "it",
+     "s": 27.983,
+     "e": 28.053
+    },
+    {
+     "w": "to",
+     "s": 28.076,
+     "e": 28.123
+    },
+    {
+     "w": "your",
+     "s": 28.169,
+     "e": 28.273
+    },
+    {
+     "w": "team,",
+     "s": 28.332,
+     "e": 28.808
+    },
+    {
+     "w": "with",
+     "s": 29.063,
+     "e": 29.225
+    },
+    {
+     "w": "everything",
+     "s": 29.272,
+     "e": 29.562
+    },
+    {
+     "w": "it",
+     "s": 29.609,
+     "e": 29.667
+    },
+    {
+     "w": "found.",
+     "s": 29.725,
+     "e": 30.688
+    }
+   ]
+  },
+  {
+   "id": "task",
+   "text": "It becomes a task, linked to the conversation.",
+   "at": 31.138,
+   "start": 31.138,
+   "end": 34.482,
+   "file": "out/audio-cache/vo-task-aafe66ef8e970302.mp3",
+   "words": [
+    {
+     "w": "It",
+     "s": 31.138,
+     "e": 31.312
+    },
+    {
+     "w": "becomes",
+     "s": 31.359,
+     "e": 31.695
+    },
+    {
+     "w": "a",
+     "s": 31.753,
+     "e": 31.788
+    },
+    {
+     "w": "task,",
+     "s": 31.846,
+     "e": 32.473
+    },
+    {
+     "w": "linked",
+     "s": 32.636,
+     "e": 32.868
+    },
+    {
+     "w": "to",
+     "s": 32.891,
+     "e": 32.938
+    },
+    {
+     "w": "the",
+     "s": 32.996,
+     "e": 33.065
+    },
+    {
+     "w": "conversation.",
+     "s": 33.1,
+     "e": 34.482
+    }
+   ]
+  },
+  {
+   "id": "fix",
+   "text": "Forge prepares the fix. Lens reviews it. You approve.",
+   "at": 34.882,
+   "start": 34.882,
+   "end": 39.108,
+   "file": "out/audio-cache/vo-fix-9cd237366f133b52.mp3",
+   "words": [
+    {
+     "w": "Forge",
+     "s": 34.882,
+     "e": 35.219
+    },
+    {
+     "w": "prepares",
+     "s": 35.265,
+     "e": 35.637
+    },
+    {
+     "w": "the",
+     "s": 35.671,
+     "e": 35.741
+    },
+    {
+     "w": "fix.",
+     "s": 35.788,
+     "e": 36.206
+    },
+    {
+     "w": "Lens",
+     "s": 36.507,
+     "e": 36.774
+    },
+    {
+     "w": "reviews",
+     "s": 36.832,
+     "e": 37.158
+    },
+    {
+     "w": "it.",
+     "s": 37.216,
+     "e": 37.436
+    },
+    {
+     "w": "You",
+     "s": 37.599,
+     "e": 37.738
+    },
+    {
+     "w": "approve.",
+     "s": 37.796,
+     "e": 39.108
+    }
+   ]
+  },
+  {
+   "id": "ship",
+   "text": "When it ships, Quill drafts the docs update, and Echo tells the customer, in the same conversation.",
+   "at": 39.608,
+   "start": 39.608,
+   "end": 45.552,
+   "file": "out/audio-cache/vo-ship-e4d302c845069af9.mp3",
+   "words": [
+    {
+     "w": "When",
+     "s": 39.608,
+     "e": 39.805
+    },
+    {
+     "w": "it",
+     "s": 39.84,
+     "e": 39.91
+    },
+    {
+     "w": "ships,",
+     "s": 39.968,
+     "e": 40.456
+    },
+    {
+     "w": "Quill",
+     "s": 40.56,
+     "e": 40.827
+    },
+    {
+     "w": "drafts",
+     "s": 40.885,
+     "e": 41.233
+    },
+    {
+     "w": "the",
+     "s": 41.291,
+     "e": 41.361
+    },
+    {
+     "w": "docs",
+     "s": 41.408,
+     "e": 41.686
+    },
+    {
+     "w": "update,",
+     "s": 41.733,
+     "e": 42.278
+    },
+    {
+     "w": "and",
+     "s": 42.441,
+     "e": 42.673
+    },
+    {
+     "w": "Echo",
+     "s": 42.778,
+     "e": 43.021
+    },
+    {
+     "w": "tells",
+     "s": 43.079,
+     "e": 43.312
+    },
+    {
+     "w": "the",
+     "s": 43.358,
+     "e": 43.428
+    },
+    {
+     "w": "customer,",
+     "s": 43.463,
+     "e": 43.88
+    },
+    {
+     "w": "in",
+     "s": 43.904,
+     "e": 43.95
+    },
+    {
+     "w": "the",
+     "s": 43.985,
+     "e": 44.055
+    },
+    {
+     "w": "same",
+     "s": 44.089,
+     "e": 44.287
+    },
+    {
+     "w": "conversation.",
+     "s": 44.333,
+     "e": 45.552
+    }
+   ]
+  },
+  {
+   "id": "call",
+   "text": "Before a call, Ask Agent catches you up, with sources.",
+   "at": 46.152,
+   "start": 46.152,
+   "end": 50.099,
+   "file": "out/audio-cache/vo-call-b67521fb4756ae27.mp3",
+   "words": [
+    {
+     "w": "Before",
+     "s": 46.152,
+     "e": 46.558
+    },
+    {
+     "w": "a",
+     "s": 46.582,
+     "e": 46.605
+    },
+    {
+     "w": "call,",
+     "s": 46.663,
+     "e": 47.092
+    },
+    {
+     "w": "Ask",
+     "s": 47.255,
+     "e": 47.522
+    },
+    {
+     "w": "Agent",
+     "s": 47.603,
+     "e": 47.905
+    },
+    {
+     "w": "catches",
+     "s": 47.975,
+     "e": 48.323
+    },
+    {
+     "w": "you",
+     "s": 48.37,
+     "e": 48.451
+    },
+    {
+     "w": "up,",
+     "s": 48.532,
+     "e": 48.695
+    },
+    {
+     "w": "with",
+     "s": 48.729,
+     "e": 48.904
+    },
+    {
+     "w": "sources.",
+     "s": 48.938,
+     "e": 50.099
+    }
+   ]
+  },
+  {
+   "id": "control",
+   "text": "You decide what each agent can do, and what needs your approval.",
+   "at": 50.649,
+   "start": 50.649,
+   "end": 54.225,
+   "file": "out/audio-cache/vo-control-a01ee660777d6a19.mp3",
+   "words": [
+    {
+     "w": "You",
+     "s": 50.649,
+     "e": 50.812
+    },
+    {
+     "w": "decide",
+     "s": 50.87,
+     "e": 51.195
+    },
+    {
+     "w": "what",
+     "s": 51.218,
+     "e": 51.334
+    },
+    {
+     "w": "each",
+     "s": 51.38,
+     "e": 51.555
+    },
+    {
+     "w": "agent",
+     "s": 51.613,
+     "e": 51.903
+    },
+    {
+     "w": "can",
+     "s": 51.938,
+     "e": 52.054
+    },
+    {
+     "w": "do,",
+     "s": 52.123,
+     "e": 52.53
+    },
+    {
+     "w": "and",
+     "s": 52.727,
+     "e": 52.901
+    },
+    {
+     "w": "what",
+     "s": 52.959,
+     "e": 53.099
+    },
+    {
+     "w": "needs",
+     "s": 53.145,
+     "e": 53.308
+    },
+    {
+     "w": "your",
+     "s": 53.331,
+     "e": 53.447
+    },
+    {
+     "w": "approval.",
+     "s": 53.47,
+     "e": 54.225
+    }
+   ]
+  },
+  {
+   "id": "open",
+   "text": "Helpin is open source. Self-host it for free, or run it on Helpin Cloud.",
+   "at": 54.825,
+   "start": 54.825,
+   "end": 59.608,
+   "file": "out/audio-cache/vo-open-be0e6a7da38e987f.mp3",
+   "words": [
+    {
+     "w": "Helpin",
+     "s": 54.825,
+     "e": 55.208
+    },
+    {
+     "w": "is",
+     "s": 55.255,
+     "e": 55.324
+    },
+    {
+     "w": "open",
+     "s": 55.382,
+     "e": 55.591
+    },
+    {
+     "w": "source.",
+     "s": 55.649,
+     "e": 56.137
+    },
+    {
+     "w": "Self-host",
+     "s": 56.334,
+     "e": 56.834
+    },
+    {
+     "w": "it",
+     "s": 56.88,
+     "e": 56.95
+    },
+    {
+     "w": "for",
+     "s": 56.996,
+     "e": 57.101
+    },
+    {
+     "w": "free,",
+     "s": 57.159,
+     "e": 57.553
+    },
+    {
+     "w": "or",
+     "s": 57.716,
+     "e": 57.867
+    },
+    {
+     "w": "run",
+     "s": 57.936,
+     "e": 58.111
+    },
+    {
+     "w": "it",
+     "s": 58.157,
+     "e": 58.227
+    },
+    {
+     "w": "on",
+     "s": 58.285,
+     "e": 58.389
+    },
+    {
+     "w": "Helpin",
+     "s": 58.459,
+     "e": 58.726
+    },
+    {
+     "w": "Cloud.",
+     "s": 58.784,
+     "e": 59.608
+    }
+   ]
+  },
+  {
+   "id": "tagline",
+   "text": "Every handoff keeps the story.",
+   "at": 60.508,
+   "start": 60.508,
+   "end": 62.18,
+   "file": "out/audio-cache/vo-tagline-1d844016df70fd25.mp3",
+   "words": [
+    {
+     "w": "Every",
+     "s": 60.508,
+     "e": 60.763
+    },
+    {
+     "w": "handoff",
+     "s": 60.81,
+     "e": 61.158
+    },
+    {
+     "w": "keeps",
+     "s": 61.216,
+     "e": 61.425
+    },
+    {
+     "w": "the",
+     "s": 61.472,
+     "e": 61.541
+    },
+    {
+     "w": "story.",
+     "s": 61.588,
+     "e": 62.18
+    }
+   ]
+  },
+  {
+   "id": "name",
+   "text": "Helpin.",
+   "at": 62.98,
+   "start": 62.98,
+   "end": 63.63,
+   "file": "out/audio-cache/vo-name-3bdeee046adb7844.mp3",
+   "words": [
+    {
+     "w": "Helpin.",
+     "s": 62.98,
+     "e": 63.63
+    }
+   ]
+  }
+ ]
+}

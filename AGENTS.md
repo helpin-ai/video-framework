@@ -25,7 +25,7 @@ Load the matching skill before starting. Skills live in `.agents/skills/`, and `
 - Node lives under nvm and isn't on the default PATH: `export PATH=$HOME/.nvm/versions/node/v24.21.0/bin:$PATH`.
 - `npm install`. Playwright is pinned to 1.59.1 to match the Chromium in `~/.cache/ms-playwright`; don't bump it without `npx playwright install chromium`.
 - ffmpeg comes from `ffmpeg-static` (`node_modules/ffmpeg-static/ffmpeg`, with libx264). There is no system ffmpeg.
-- `.env` holds `ELEVENLABS_API_KEY` (see `.env.example`). Never print or copy its values; check key names with `cut -d= -f1 .env`.
+- `.env` holds `ELEVENLABS_API_KEY` and, for generated footage, `HIGGSFIELD_API_KEY` (`id:secret`; see `.env.example`). Never print or copy its values; check key names with `cut -d= -f1 .env`.
 
 ## Commands
 
@@ -48,9 +48,11 @@ lib/motion.js       pure timing: P, L, map, keys, envelope, stagger, typed, rand
 lib/components.js   helpinSymbol, kineticLines, vortex, lineBundles, terminal, type, rise, leave, stagePoint,
                     counter, rollWord, zoomThrough, cursor, css
 lib/kit.js          use-case video helpers: masked word rises, pop, push, bigScreen, flashes, shared end card
+lib/film.js         narrated films: voice-timed anchors (vo.json), cameras, paths, plate frames for generated footage
 lib/site.js         siteView / siteWindow: live helpin.ai previews in a video, frame-exact (with lib/site-clock.js)
 lib/brand.css       Helpin tokens, fonts, .scene/.pill/.shot/.term/.callout/.scrim styles
-bin/                render, preview, audio, inspect, splice, new-video, server
+bin/                render, preview, audio, inspect, splice, new-video, server; vo (voiceover + word timings),
+                    genvideo (Seedance footage plates, cost estimate and ledger)
 assets/helpin/      symbol, palette, product screenshots (from helpin/website/public)
 videos/_template/   starter page + STORYBOARD.md
 videos/example/     20 s demo of every component

@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — One day</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "One day": a workday with Helpin from 9 a.m. to 6 p.m., narrated. The sky follows the clock (peach dawn, cream
+     morning, sky-blue noon, golden afternoon, sunset, dusk, night), a sun tracks the hours and a rolling clock turns.
+     Each hour is one screen. Voice-timed from vo.json. Acoustic indie-pop score of its own. */
+  #sky { position: absolute; inset: 0; }
+  #plate { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; opacity: 0; }
+  #scrim { position: absolute; inset: 0; opacity: 0; background: linear-gradient(180deg, rgba(24, 16, 44, .55) 0%, rgba(24, 16, 44, .12) 42%, rgba(24, 16, 44, .45) 62%, rgba(24, 16, 44, .82) 100%); }
+  /* each hour's footage: opens full frame, then docks into a portrait frame on the left */
+  .dock { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; opacity: 0; }
+  .dock img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* stacking: sky < hourly docks (1–5, later hours on top) < sunrise/dusk plate < sections < clock < cursor */
+  #plate { z-index: 8; } #scrim { z-index: 9; } .v { z-index: 10; } #clock { z-index: 11; } #stage .cursor { z-index: 12; }
+  .dock i { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 14, 30, .5) 0%, rgba(20, 14, 30, 0) 34%, rgba(20, 14, 30, 0) 70%, rgba(20, 14, 30, .35) 100%); }
+  #sun { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; }
+  #moon { position: absolute; left: 1560px; top: 150px; width: 110px; height: 110px; border-radius: 50%; background: #F4F1E6; box-shadow: -26px 8px 0 0 #121335 inset, 0 0 60px rgba(244, 241, 230, .35); opacity: 0; }
+  .star { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+  #clock { position: absolute; left: 120px; top: 84px; }
+  #clock .tm { font-size: 124px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; display: flex; align-items: baseline; }
+  #clock .tm small { margin-left: 16px; font-size: 40px; font-weight: 600; letter-spacing: -0.01em; }
+  #clock .lb { margin-top: 18px; font: 500 22px/1 var(--mono); letter-spacing: .3em; height: 24px; position: relative; }
+  #clock .lb span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .v { position: absolute; inset: 0; opacity: 0; }
+  .card { position: absolute; background: #fff; color: var(--ink); border-radius: 22px; box-shadow: 0 30px 80px rgba(60, 40, 30, .22); }
+  .card .hd { height: 72px; display: flex; align-items: center; gap: 12px; padding: 0 26px; border-bottom: 1px solid #EEF0EE; font: 600 23px/1 var(--sans); color: #2A2F2C; }
+  .card .hd small { font: 500 17px/1 var(--mono); color: #7A827E; margin-left: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 10px; font: 600 18px/1 var(--mono); white-space: nowrap; }
+  .chip.g { background: #E3F4EA; color: #0B6340; } .chip.n { background: #F0F2F1; color: #4F5A55; } .chip.a { background: #FFF4D6; color: #7A5A00; } .chip.r { background: #FDE8E5; color: #B42318; }
+  .ln { position: absolute; left: 26px; right: 26px; height: 70px; display: flex; align-items: center; gap: 16px; border-top: 1px solid #F0F2F1; font-size: 24px; }
+  .ln .ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex: none; font: 700 18px/1 var(--sans); }
+  .ln small { margin-left: auto; font: 500 17px/1 var(--mono); color: #7A827E; }
+  .app { position: absolute; width: 170px; height: 150px; margin: -75px 0 0 -85px; border-radius: 22px; background: #fff; box-shadow: 0 20px 50px rgba(60, 40, 30, .2); display: grid; place-items: center; text-align: center; font: 600 20px/1.2 var(--sans); color: #2A2F2C; }
+  .app i { display: block; width: 54px; height: 54px; border-radius: 14px; margin: 0 auto 12px; }
+  .q { position: absolute; left: 22px; right: 22px; height: 96px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #F0F2F1; }
+  .q img { width: 46px; height: 46px; border-radius: 50%; }
+  .q b { display: block; font-size: 21px; } .q span { font-size: 19px; color: #6A726E; }
+  .q .ok { margin-left: auto; }
+  .tile { position: absolute; width: 260px; height: 190px; border-radius: 18px; background: linear-gradient(160deg, #2C3E50, #1A2633); display: grid; place-items: center; }
+  .tile img { width: 86px; height: 86px; border-radius: 50%; }
+  .note { position: absolute; left: 20px; right: 20px; height: 44px; display: flex; align-items: center; font: 500 20px/1 var(--sans); color: #4F5A55; }
+  .fly { position: absolute; left: 0; top: 0; height: 58px; padding: 0 20px; border-radius: 14px; display: flex; align-items: center; gap: 10px; font: 600 22px/1 var(--sans); white-space: nowrap; box-shadow: 0 16px 40px rgba(60, 40, 30, .2); }
+  .task { position: absolute; left: 22px; right: 22px; height: 92px; border-radius: 14px; background: #F7F8F7; border: 1px solid #ECEFED; display: flex; align-items: center; gap: 14px; padding: 0 18px; font-size: 22px; font-weight: 600; opacity: 0; }
+  .task .own { margin-left: auto; width: 44px; height: 44px; border-radius: 50%; opacity: 0; }
+  .bub { position: absolute; max-width: 470px; padding: 14px 18px; border-radius: 18px; font: 500 21px/1.35 var(--sans); }
+  .bub.c { left: 22px; background: #F0F2F1; border-top-left-radius: 6px; } .bub.a { right: 22px; background: #E3F4EA; color: #0B3B27; border-top-right-radius: 6px; }
+  #stamp { position: absolute; left: 1080px; top: 190px; padding: 18px 30px; border: 6px solid #0F7A50; border-radius: 16px; color: #0F7A50; font: 700 44px/1 var(--mono); letter-spacing: .08em; background: rgba(255, 255, 255, .85); opacity: 0; }
+  #wrapline { position: absolute; left: 0; width: 1920px; top: 380px; text-align: center; font-size: 76px; font-weight: 600; letter-spacing: -0.04em; color: #fff; }
+  #wrapline em { font-style: normal; color: #FFD2B8; }
+  #dayline { position: absolute; left: 0; top: 0; overflow: visible; }
+  #dayline path { fill: none; stroke: rgba(255, 255, 255, .75); stroke-width: 3; stroke-dasharray: 1; }
+  .dd { position: absolute; width: 150px; margin-left: -75px; text-align: center; opacity: 0; }
+  .dd i { display: block; width: 20px; height: 20px; margin: 0 auto 14px; border-radius: 50%; background: #FFD2B8; }
+  .dd b { display: block; font: 600 30px/1 var(--sans); color: #fff; } .dd span { display: block; margin-top: 8px; font: 500 16px/1 var(--mono); letter-spacing: .14em; color: rgba(255, 255, 255, .75); text-transform: uppercase; }
+  #esym { position: absolute; left: 700px; top: 360px; }
+  #eword { position: absolute; left: 872px; top: 372px; font-size: 128px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: #fff; }
+  #ecta { position: absolute; left: 0; width: 1920px; top: 600px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #ecta span { height: 58px; padding: 0 24px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 500 25px/1 var(--sans); }
+  #ecta .url { background: #fff; color: #121335; font-weight: 600; } #ecta .t { border: 1px solid rgba(255, 255, 255, .4); color: #fff; }
+  .cursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 9; }
+  .cursor svg { width: 40px; height: 40px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .35)); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="sky"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div>
+  <div class="dock" id="dockA"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><i></i></div>
+  <div class="dock" id="dockB"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><i></i></div>
+  <img id="plate" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt=""><div id="scrim"></div>
+
+  <!-- 9:00 the brief -->
+  <div class="v" id="v1"><div id="apps"></div>
+    <div class="card" id="brief" style="left:820px; top:280px; width:880px; height:520px"><div class="hd"><span id="bsym"></span>Your morning brief<small>Ask Agent</small></div>
+      <div class="ln" id="b1" style="top:96px"><span class="ic" style="background:#FBEAF0; color:#9D2E55">◷</span>3 new conversations overnight, 1 is a bug<small>Support</small></div>
+      <div class="ln" id="b2" style="top:176px"><span class="ic" style="background:#EEEDFE; color:#3F3894">▦</span>5 tasks due today, 1 waiting on you<small>Projects</small></div>
+      <div class="ln" id="b3" style="top:256px"><span class="ic" style="background:#E6F1FB; color:#185FA5">◉</span>11:00 SSO planning call<small>Calendar</small></div>
+      <div class="ln" id="b4" style="top:336px"><span class="ic" style="background:#D9FBF5; color:#0B5F55">◉</span>17:00 Northstar renewal call<small>Calendar</small></div>
+      <div id="bchips" style="position:absolute; left:26px; bottom:30px; display:flex; gap:10px"><span class="chip g">Support ↗</span><span class="chip g">Projects ↗</span><span class="chip g">Calendar ↗</span></div></div></div>
+
+  <!-- 10:00 support -->
+  <div class="v" id="v2"><div class="card" id="inbox" style="left:700px; top:230px; width:520px; height:640px"><div class="hd">Inbox<small id="cnt"></small></div><div id="qrows"></div></div>
+    <div class="card" id="foryou" style="left:1280px; top:300px; width:500px; height:470px"><div class="hd" style="color:#0B6340">For you<small>handed off by Echo</small></div>
+      <div style="position:absolute; left:26px; top:96px; display:flex; gap:14px; align-items:center"><img src="../../assets/helpin/avatars/maya.webp" style="width:54px; height:54px; border-radius:50%" alt=""><div><b style="font-size:24px">Maya Chen</b><div style="font: 500 17px/1.6 var(--mono); color:#7A827E">Northstar Labs · Enterprise</div></div></div>
+      <div style="position:absolute; left:26px; right:26px; top:180px; font-size:26px; font-weight:600; line-height:1.3">“Our export stops at 10,000 rows.”</div>
+      <div id="ctx" style="position:absolute; left:26px; right:26px; bottom:28px; display:flex; flex-wrap:wrap; gap:10px"><span class="chip g">Earlier chat ↗</span><span class="chip g">Export logs ↗</span><span class="chip n">Echo’s findings</span></div></div></div>
+
+  <!-- 11:00 planning call -->
+  <div class="v" id="v3"><div class="card" id="call" style="left:680px; top:230px; width:600px; height:640px; background:#131A20; color:#fff"><div class="hd" style="color:#DDE6EA; border-color:#26313A">SSO planning call<small style="color:#8FA0AA">Notetaker on</small></div>
+      <div class="tile" style="left:24px; top:92px"><img src="../../assets/helpin/avatars/sam.webp" alt=""></div><div class="tile" style="left:316px; top:92px"><img src="../../assets/helpin/avatars/aisha.webp" alt=""></div>
+      <div class="tile" style="left:24px; top:298px"><img src="../../assets/helpin/avatars/dev.webp" alt=""></div><div class="tile" style="left:316px; top:298px"><img src="../../assets/helpin/avatars/lin.webp" alt=""></div>
+      <div id="notes" style="position:absolute; left:0; right:0; top:500px; height:120px; overflow:hidden"></div></div>
+    <div class="card" id="proj" style="left:1330px; top:230px; width:460px; height:640px"><div class="hd">Projects<small>This week</small></div>
+      <div class="task" id="t1" style="top:96px">Admin-only pilot first<img class="own" src="../../assets/helpin/avatars/sam.webp" alt=""></div>
+      <div class="task" id="t2" style="top:204px">Share the setup guide<img class="own" src="../../assets/helpin/avatars/aisha.webp" alt=""></div>
+      <div class="task" id="t3" style="top:312px">Map groups to roles<img class="own" src="../../assets/helpin/avatars/dev.webp" alt=""></div></div>
+    <div class="fly" id="f1" style="background:#E6F1FB; color:#0B2E55">Decision · admin-only pilot first</div>
+    <div class="fly" id="f2" style="background:#FFF4D6; color:#7A5A00">Action · share the setup guide</div>
+    <div class="fly" id="f3" style="background:#FFF4D6; color:#7A5A00">Action · map groups to roles</div></div>
+
+  <!-- 1 p.m. the fix -->
+  <div class="v" id="v4"><div class="card" id="pr" style="left:0; top:0; overflow:hidden">
+      <div id="bugc" style="position:absolute; inset:0; padding:26px 30px"><span class="chip r">Bug</span><div style="margin-top:14px; font-size:30px; font-weight:700; letter-spacing:-0.02em">Export stops at 10,000 rows</div></div>
+      <div id="prc" style="position:absolute; inset:0; padding:26px 30px; opacity:0"><div style="font: 700 17px/1 var(--mono); color:#7A827E; letter-spacing:.06em">PR #284 · FROM THIS MORNING’S BUG</div>
+        <div style="margin:10px 0 14px; font-size:36px; font-weight:700; letter-spacing:-0.02em">Export every row</div>
+        <div id="diff" style="border-radius:12px; background:#0B1612; padding:14px 18px; font: 500 20px/1.7 var(--mono); color:#CFE3D6">
+          <div id="d1" style="color:#F6C0B8">- rows = query(filters).limit(10000)</div><div id="d2" style="color:#C4F0D2">+ for await (const page of paginate(query))</div><div id="d3" style="color:#C4F0D2">+   rows.push(...page)</div></div>
+        <div style="display:flex; gap:10px; margin-top:18px"><span class="chip" id="cf" style="background:#EEEDFE; color:#3F3894"><img src="../../assets/helpin/agents/forge.svg" style="width:26px" alt="">Forge wrote it</span><span class="chip" id="cl" style="background:#FAEEDA; color:#8A5200"><img src="../../assets/helpin/agents/lens.svg" style="width:26px" alt="">Lens checked it ✓</span></div>
+        <div id="appr" style="position:absolute; right:30px; bottom:26px; height:60px; width:220px; border-radius:14px; background:#131514; color:#fff; display:grid; place-items:center; font: 600 24px/1 var(--sans)">Approve</div></div></div></div>
+
+  <!-- 3 p.m. release -->
+  <div class="v" id="v5"><div id="stamp">SHIPPED · v2.6</div>
+    <div class="card" id="doc" style="left:680px; top:320px; width:560px; height:520px; padding:32px 36px"><div style="font: 500 15px/1 var(--mono); letter-spacing:.14em; color:#7A827E">HELP CENTER · EXPORTS</div>
+      <div style="margin:12px 0 18px; font-size:34px; font-weight:700; letter-spacing:-0.02em">Export your contacts</div>
+      <div style="font-size:22px; line-height:1.5; position:relative"><span>Exports are limited to 10,000 rows.</span><i id="dstr" style="position:absolute; left:0; top:52%; height:3px; background:#B42318; width:0"></i></div>
+      <div id="dnew" style="margin-top:10px; font-size:22px; line-height:1.5; color:#0B3B27; background:#E3F4EA; border-radius:6px; padding:2px 8px; display:inline-block; opacity:0">Exports now include every row.</div>
+      <div id="dchip" style="position:absolute; left:36px; bottom:30px"><span class="chip a"><img src="../../assets/helpin/agents/quill.svg" style="width:26px" alt="">Quill · draft for review</span></div></div>
+    <div class="card" id="replies" style="left:1290px; top:320px; width:500px; height:520px"><div class="hd">Replies<small>after release</small></div><div id="rrows"></div></div></div>
+
+  <!-- 5 p.m. renewal call -->
+  <div class="v" id="v6"><div class="card" id="acct" style="left:680px; top:230px; width:560px; height:640px"><div class="hd"><span style="width:40px; height:40px; border-radius:10px; background:#1D3B8B; color:#fff; display:grid; place-items:center; font-weight:700">N</span>Northstar Labs<small>Renewal in 30 days</small></div>
+      <div style="position:absolute; left:26px; top:92px; font: 700 16px/1 var(--mono); letter-spacing:.16em; color:#7A827E">TODAY</div><div id="arows"></div></div>
+    <div class="card" id="ask" style="left:1290px; top:300px; width:500px; height:500px; padding:26px 28px"><div style="display:flex; align-items:center; gap:10px; font: 700 16px/1 var(--mono); letter-spacing:.14em; color:#0B6340"><span id="asym"></span>ASK AGENT</div>
+      <div id="askq" style="margin:18px 0 16px; padding:14px 18px; border-radius:14px; background:#F0F2F1; font-size:22px; line-height:1.35; opacity:0">What should I know before the Northstar call?</div>
+      <div id="aska" style="font-size:21px; line-height:1.5; color:#2A2F2C; opacity:0">Their export bug was fixed today and Maya confirmed it. The SSO pilot is agreed. They asked about 40 more seats.</div>
+      <div id="askc" style="position:absolute; left:28px; bottom:26px; display:flex; gap:10px; opacity:0"><span class="chip g">Support ↗</span><span class="chip g">Meeting ↗</span><span class="chip g">Email ↗</span></div></div></div>
+
+  <!-- 6 p.m. wrap -->
+  <div class="v" id="v7"><div id="wrapline"></div><svg id="dayline" width="1920" height="1080"><path pathLength="1" id="dlp" d="M200 800 C 600 690, 1320 690, 1720 800"/></svg><div id="ddots"></div></div>
+
+  <!-- night -->
+  <div class="v" id="v8"><span id="esym"></span><div id="eword">Helpin</div><div id="ecta"><span class="url">helpin.ai</span><span class="t">Open source</span></div></div>
+
+  <div id="clock"><div class="tm"><span id="hh"></span><span>:00</span><small id="ap"></small></div><div class="lb" id="lbs"></div></div>
+  <div class="cursor" id="cursor"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, expoInOut, rand } from '../../lib/motion.js';
+import { helpinSymbol, css, rollWord } from '../../lib/components.js';
+import { KIT_CSS, CURSOR_SVG, words, rise } from '../../lib/kit.js';
+import { E, voice, initPaths, drawP, inOut, stamp, colorAt, bez, mixHex, setRect } from '../../lib/film.js';
+import VO from './vo.json' with { type: 'json' };
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS + '#stage{background:#FFE6D1}';
+$('#cursor').innerHTML = CURSOR_SVG;
+const { W, WP, S, total } = voice(VO);
+initPaths();
+import PLATES from '../../out/film-one-day/plates/plates.json' with { type: 'json' };
+const PL = (id, lt) => `../../out/film-one-day/plates/${id}/f${String(Math.max(1, Math.min(PLATES[id].frames, Math.floor(lt * PLATES[id].fps) + 1))).padStart(4, '0')}.jpg`;
+const PLF = (id, f) => `../../out/film-one-day/plates/${id}/f${String(Math.max(1, Math.min(PLATES[id].frames, f))).padStart(4, '0')}.jpg`;
+const H = { nine: 0, ten: S('ten'), eleven: S('eleven'), one: S('one'), three: S('three'), five: S('five'), six: S('six'), end: S('end') };
+
+// ── Each hour's footage (Seedance 2.0): full frame on the hour, then it docks into a portrait frame on the left
+// while the product cards play on the right. [plate, hour, object-position when docked]
+const DOCK = [120, 280, 500, 590];
+const HOURLY = [['ten', H.ten, '50% 45%'], ['eleven', H.eleven, '50% 40%'], ['one', H.one, '50% 40%'], ['three', H.three, '50% 45%'], ['five', H.five, '50% 40%']].filter(([id]) => PLATES[id]);
+const dockEls = [$('#dockA'), $('#dockB')];
+
+// ── The sky through the day: [time, top, bottom]
+const SKY = [[0, '#F7B79B', '#FFE6D1'], [H.ten, '#FFE0B8', '#FBF3EA'], [H.eleven, '#CFE4FF', '#F3F8FF'], [H.one, '#A9D1FF', '#EAF4FF'],
+  [H.three, '#FFD98A', '#FFF3D6'], [H.five, '#F59E7B', '#FFD2B8'], [H.six, '#5B3F86', '#E88A7A'], [H.end, '#0D1030', '#1D1E48']];
+const skyKeys = (idx) => SKY.flatMap((k, i) => (i === 0 ? [[0, k[idx]]] : [[k[0] - 0.25, SKY[i - 1][idx]], [k[0] + 1.2, k[idx]]]));
+const TOP = skyKeys(1), BOT = skyKeys(2);
+const dark = (t) => E(P(t, H.six - 0.2, H.six + 1.0));
+// sun: 9 a.m. low on the left, noon high, setting on the right at six
+const HOURS = [[0, 9], [H.ten, 10], [H.eleven, 11], [H.one, 13], [H.three, 15], [H.five, 17], [H.six, 18]];
+const clockHour = (t) => keys(t, HOURS.flatMap(([at, h], i) => (i === 0 ? [[0, h]] : [[at - 0.3, HOURS[i - 1][1]], [at + 0.9, h, expoInOut]])));
+$('#stars').innerHTML = Array.from({ length: 70 }, (_, i) => `<i class="star" style="left:${Math.round(rand(i + 1) * 1920)}px; top:${Math.round(rand(i + 71) * 720)}px"></i>`).join('');
+const stars = [...document.querySelectorAll('.star')];
+
+// ── The clock
+const hh = rollWord($('#hh'), ['9', '10', '11', '1', '3', '5', '6'], { lineHeight: 1.0 });
+const ap = rollWord($('#ap'), ['AM', 'AM', 'AM', 'PM', 'PM', 'PM', 'PM'], { lineHeight: 1.1 });
+const HT = [0, H.ten, H.eleven, H.one, H.three, H.five, H.six];
+const LABELS = ['MORNING BRIEF', 'SUPPORT', 'PLANNING CALL', 'THE FIX', 'RELEASE', 'RENEWAL CALL', 'WRAP-UP'];
+$('#lbs').innerHTML = LABELS.map((l) => `<span>${l}</span>`).join('');
+const lbEls = [...document.querySelectorAll('#lbs span')];
+
+// ── 9:00: apps scatter (the scavenger hunt), then pull into the brief
+const APPS = [['Inbox', '#FBEAF0'], ['Tracker', '#EEEDFE'], ['Calendar', '#E6F1FB'], ['Team chat', '#FAEEDA'], ['Docs', '#E1F5EE'], ['CRM', '#D9FBF5']];
+$('#apps').innerHTML = APPS.map(([n, c]) => `<div class="app"><div><i style="background:${c}"></i>${n}</div></div>`).join('');
+const appEls = [...document.querySelectorAll('.app')];
+const APOS = APPS.map((_, i) => [880 + (i % 3) * 330 + (rand(i + 4) - 0.5) * 120, 330 + Math.floor(i / 3) * 330 + (rand(i + 9) - 0.5) * 80]);
+{ const m = helpinSymbol({ size: 32, color: '#0F7A50' }); m.assemble(1); $('#bsym').append(m.node); }
+{ const m = helpinSymbol({ size: 24, color: '#0F7A50' }); m.assemble(1); $('#asym').append(m.node); }
+
+// ── 10:00: the inbox
+const QS = [['priya', 'Priya Shah', 'How do I add a teammate?'], ['lin', 'Lin Park', 'Where do I change billing?'], ['dev', 'Alex Kim', 'Can I export to CSV?'], ['aisha', 'Aisha Noor', 'How do I reset 2FA?'], ['maya', 'Maya Chen', 'Our export stops at 10,000 rows.']];
+$('#qrows').innerHTML = QS.map(([a, n, s], i) => `<div class="q" id="q${i}" style="top:${80 + i * 106}px"><img src="../../assets/helpin/avatars/${a}.webp" alt=""><div><b>${n}</b><span>${s}</span></div><span class="ok chip g" style="opacity:0">Echo ✓</span></div>`).join('');
+const qEls = QS.map((_, i) => $(`#q${i}`));
+
+// ── 11:00: notes, decisions flying to Projects
+const NOTES = ['Sam: let’s start with admins only.', 'Aisha: I’ll share the setup guide.', 'Alex: I’ll map groups to roles.', 'Lin: sounds good, Friday then.'];
+$('#notes').innerHTML = NOTES.map((n) => `<div class="note">${n}</div>`).join('');
+const noteEls = [...document.querySelectorAll('.note')];
+
+// ── 3 p.m.: replies after release
+const RR = [['maya', 'Maya Chen'], ['priya', 'Priya Shah'], ['lin', 'Lin Park']];
+$('#rrows').innerHTML = RR.map(([a, n], i) => `<div style="position:absolute; left:22px; right:22px; top:${92 + i * 136}px; height:120px">
+  <div style="display:flex; gap:12px; align-items:center; font-size:20px; font-weight:600"><img src="../../assets/helpin/avatars/${a}.webp" style="width:38px; height:38px; border-radius:50%" alt="">${n}<span class="chip g rok" style="margin-left:auto; height:32px; opacity:0">Answered ✓</span></div>
+  <div class="bub a rbub" style="top:50px; right:0; opacity:0">It’s fixed. Export every row now.</div></div>`).join('');
+const rokEls = [...document.querySelectorAll('.rok')], rbEls = [...document.querySelectorAll('.rbub')];
+
+// ── 5 p.m.: today on the account
+const TODAY = [['9:00', 'In the morning brief'], ['10:00', 'Maya’s export bug, handed off'], ['11:00', 'SSO pilot agreed on the call'], ['1:00', 'Fix approved · PR #284'], ['3:00', 'Shipped · Maya told']];
+$('#arows').innerHTML = TODAY.map(([h, s], i) => `<div class="ln" style="top:${120 + i * 80}px"><span class="ic" style="background:#E3F4EA; color:#0B6340; width:70px; font-size:17px">${h}</span>${s}</div>`).join('');
+const arEls = [...document.querySelectorAll('#arows .ln')];
+
+// ── 6 p.m.: the day on one line
+const WRAP = words($('#wrapline'), 'You spent the day on the work, <em>not the handoffs.</em>');
+const DAY = [['9', 'Brief'], ['10', 'Support'], ['11', 'Call'], ['1', 'Fix'], ['3', 'Ship'], ['5', 'Renewal'], ['6', 'Done']];
+const dlp = $('#dlp');
+$('#ddots').innerHTML = DAY.map(([h, n]) => `<div class="dd"><i></i><b>${h}</b><span>${n}</span></div>`).join('');
+const ddEls = [...document.querySelectorAll('.dd')];
+const dayPt = (u) => bez([200, 800], [600, 690], [1320, 690], [1720, 800], u);
+
+// ── night
+const esym = helpinSymbol({ size: 150, color: '#FFFFFF' });
+$('#esym').append(esym.node);
+
+const vSec = (el, t, a, b) => { const on = t >= a && t < b; const k = E(P(t, a, a + 0.6)), o = E(P(t, b - 0.45, b)); css(el, { opacity: String(on ? k * (1 - o) : 0), transform: on && (k < 1 || o > 0) ? `translateY(${Math.round((1 - k) * 40 - o * 30)}px)` : 'none', filter: on && (k < 1 || o > 0) ? `blur(${(Math.max(1 - k, o) * 8).toFixed(1)}px)` : 'none' }); return on; };
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: total,
+  scenes: [{ id: 'film', start: 0, end: total, render: ({ t }) => {
+    // generated footage (Seedance 2.5 via Higgsfield): sunrise opens the day, dusk sits under the wrap-up
+    const plate = $('#plate');
+    let src = null, pOp = 0, pf = 'none', scr = 0;
+    if (t < 4.0) {
+      // frames 46–139 only, at 0.8× speed: the closed lid shows a laptop maker's badge before frame 44 and another after 150
+      src = PLF('sunrise', 46 + Math.floor(t * 24)); const x = E(P(t, 3.1, 3.9));
+      pOp = 1 - x; pf = x > 0.001 ? `brightness(${(1 + x * 0.7).toFixed(3)}) blur(${(x * 14).toFixed(1)}px)` : 'none';
+    } else if (t >= H.six - 0.3 && t < H.end) {
+      src = PL('dusk', t - (H.six - 0.3)); pOp = E(P(t, H.six - 0.3, H.six + 0.35)) * (1 - E(P(t, H.end - 0.55, H.end)));
+      scr = pOp;
+    }
+    css(plate, { opacity: String(pOp), filter: pf });
+    $('#scrim').style.opacity = String(scr);
+    let wait = null;
+    if (src && plate.dataset.src !== src) { plate.dataset.src = src; plate.src = src; wait = plate.decode().catch(() => {}); }
+    const inFootage = pOp > 0.99;
+    // hourly footage: in 0.35 s before the hour, full frame for ~1 s, then docks; the next hour covers it
+    let full = 0;
+    const waits = [wait];
+    dockEls.forEach((d) => { d.style.opacity = '0'; });
+    HOURLY.forEach(([id, at, pos], i) => {
+      const next = HOURLY[i + 1]?.[1] ?? H.six;
+      const a = at - 0.35, b = next + 0.4;
+      if (t < a || t >= b) return;
+      const d = dockEls[i % 2], img = d.firstElementChild;
+      const len = next - a, speed = Math.max(0.8, Math.min(1, PLATES[id].frames / PLATES[id].fps / len));
+      const f = Math.floor((t - a) * PLATES[id].fps * speed) + 1;
+      const s2 = PLF(id, f);
+      if (img.dataset.src !== s2) { img.dataset.src = s2; img.src = s2; waits.push(img.decode().catch(() => {})); }
+      const k = expoInOut(P(t, at + 0.95, at + 1.85));
+      setRect(d, [L(0, DOCK[0], k), L(0, DOCK[1], k), L(1920, DOCK[2], k), L(1080, DOCK[3], k)]);
+      const fin = E(P(t, a, a + 0.35)), fout = t >= next ? E(P(t, next + 0.05, b)) : 0;
+      css(d, { opacity: String(fin * (1 - fout)), zIndex: String(1 + i), borderRadius: `${Math.round(22 * k)}px`, boxShadow: k > 0.01 ? `0 30px 80px rgba(60, 40, 30, ${(0.22 * k).toFixed(3)})` : 'none' });
+      img.style.objectPosition = pos;
+      d.lastElementChild.style.opacity = String(1 - k);
+      full = Math.max(full, fin * (1 - k) * (1 - fout));
+    });
+    const all = waits.filter(Boolean);
+    wait = all.length ? Promise.all(all) : null;
+
+    // sky, sun, moon, stars
+    $('#sky').style.background = `linear-gradient(180deg, ${colorAt(t, TOP)}, ${colorAt(t, BOT)})`;
+    const dk = dark(t), night = E(P(t, H.end - 0.6, H.end + 0.8));
+    const hr = clockHour(t), u = (Math.min(hr, 18) - 9) / 9;
+    const set = E(P(t, H.six + 0.3, H.six + 2.6));
+    const sx = L(760, 1660, u), sy = 190 - Math.sin(u * Math.PI) * 70 + set * 700;
+    const sunCol = colorAt(t, [[0, '#FFC76B'], [H.ten, '#FFD66B'], [H.one, '#FFE08A'], [H.five - 0.2, '#FFB35C'], [H.six + 1, '#FF7A59']]);
+    css($('#sun'), { left: `${Math.round(sx)}px`, top: `${Math.round(sy)}px`, background: sunCol, boxShadow: `0 0 90px 30px ${sunCol}66`, opacity: String(E(P(t, 3.3, 4.0)) * (1 - full) * (1 - E(P(t, H.six - 0.3, H.six + 0.3)))) });
+    css($('#moon'), { opacity: String(night), transform: night < 1 ? `translateY(${Math.round((1 - night) * 60)}px)` : 'none' });
+    stars.forEach((s, i) => { s.style.opacity = String(night * (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * (1 + rand(i + 5) * 2) + i)))); });
+    // clock
+    hh.update(t, HT, 0.55); ap.update(t, HT, 0.55);
+    const inkK = Math.max(dk > 0.5 ? 1 : 0, full);
+    const ink = mixHex('#1E1B2E', '#FFFFFF', inkK);
+    css($('#clock'), { color: ink, opacity: String(E(P(t, 0.2, 0.9)) * (1 - E(P(t, H.end - 0.5, H.end)))) });
+    lbEls.forEach((l, i) => { const a = HT[i], b = HT[i + 1] ?? 1e9; l.style.opacity = String(t >= a - 0.1 && t < b ? E(P(t, a, a + 0.45)) * (1 - P(t, b - 0.3, b - 0.05)) : 0); l.style.color = inkK > 0.5 ? 'rgba(255,255,255,.8)' : 'rgba(30,27,46,.72)'; });
+
+    // ── 9:00
+    if (vSec($('#v1'), t, 0, H.ten - 0.05)) {
+      const scatter = t >= W('nine', 7) - 0.3;
+      const pull = expoInOut(P(t, W('brief', 2) - 0.1, W('brief', 5) + 0.3));
+      appEls.forEach((a, i) => {
+        const k = E(P(t, W('nine', 7) - 0.3 + i * 0.07, W('nine', 7) + 0.2 + i * 0.07));
+        const jit = t < W('brief', 2) ? [Math.sin(t * 5 + i * 2) * 18, Math.cos(t * 4.3 + i) * 14] : [0, 0];
+        const [x0, y0] = APOS[i];
+        const burst = E(P(t, W('nine', 7) - 0.3 + i * 0.07, W('nine', 7) + 0.45 + i * 0.07));
+        const x = L(L(640, x0, burst) + jit[0], 1260, pull), y = L(L(640, y0, burst) + jit[1], 560, pull);
+        css(a, { opacity: String(scatter ? k * (1 - P(pull, 0.7, 1)) : 0), transform: `translate(${Math.round(x)}px, ${Math.round(y)}px) rotate(${(Math.sin(t * 3 + i) * 6 * (1 - pull)).toFixed(1)}deg) scale(${L(1, 0.3, pull).toFixed(3)})`, left: '0', top: '0' });
+      });
+      inOut($('#brief'), t, W('brief', 2) + 0.35, { dy: 30 });
+      [['#b1', W('brief', 5)], ['#b2', W('brief', 6)], ['#b3', W('brief', 9)], ['#b4', W('brief', 10) + 0.2]].forEach(([s, at]) => inOut($(s), t, at, { dy: 12, dur: 0.45 }));
+      inOut($('#bchips'), t, W('brief', 12), { dy: 10 });
+    }
+
+    // ── 10:00 support
+    if (vSec($('#v2'), t, H.ten - 0.1, H.eleven - 0.05)) {
+      inOut($('#inbox'), t, H.ten + 0.2, { dy: 30 });
+      qEls.forEach((q, i) => {
+        const at = W('ten', 1) + i * 0.22;
+        const k = E(P(t, at, at + 0.4));
+        const done = i < 4 && t >= W('ten', 6) + i * 0.3;
+        const lift = i === 4 ? expoInOut(P(t, W('ten', 13) - 0.1, W('ten', 13) + 0.65)) : 0;
+        css(q, { opacity: String(k * (done ? L(1, 0.55, P(t, W('ten', 6) + i * 0.3 + 0.2, W('ten', 6) + i * 0.3 + 0.5)) : 1) * (1 - lift)), transform: lift > 0 ? `translate(${Math.round(lift * 600)}px, ${Math.round(lift * -200)}px) scale(${L(1, 0.8, lift).toFixed(3)})` : k < 1 ? `translateY(${Math.round((1 - k) * 16)}px)` : 'none' });
+        const okc = q.querySelector('.ok'); if (i < 4) stamp(okc, t, W('ten', 6) + i * 0.3);
+      });
+      const n = [0, 1, 2, 3].filter((i) => t >= W('ten', 6) + i * 0.3).length;
+      $('#cnt').textContent = n ? `Echo answered ${n}` : '';
+      inOut($('#foryou'), t, W('ten', 13) + 0.35, { dy: 30 });
+      inOut($('#ctx'), t, W('ten', 17), { dy: 10 });
+    }
+
+    // ── 11:00 planning call
+    if (vSec($('#v3'), t, H.eleven - 0.1, H.one - 0.05)) {
+      inOut($('#call'), t, H.eleven + 0.2, { dy: 30 });
+      inOut($('#proj'), t, W('eleven', 4) - 0.2, { dy: 30 });
+      noteEls.forEach((nEl, i) => { const at = W('eleven', 1) + i * 0.55; const scroll = Math.max(0, Math.min(i, Math.floor((t - W('eleven', 1)) / 0.55)) - 1); css(nEl, { top: `${Math.round(i * 44 - Math.max(0, (t - W('eleven', 1) - 1.1) / 0.55) * 0)}px`, opacity: String(E(P(t, at, at + 0.3))) }); void scroll; });
+      const FL = [['#f1', W('eleven', 4), 0], ['#f2', W('eleven', 6), 1], ['#f3', W('eleven', 6) + 0.25, 2]];
+      FL.forEach(([s, at, i]) => {
+        const k = E(P(t, at, at + 0.35)), fly = expoInOut(P(t, W('eleven', 8) - 0.1 + i * 0.15, W('eleven', 8) + 0.6 + i * 0.15));
+        const from = [720, 740 + i * 66], to = [1352, 326 + i * 108];
+        const p = bez(from, [from[0] + 200, from[1] - 200], [to[0] - 200, to[1] - 100], to, fly);
+        css($(s), { opacity: String(k * (1 - P(fly, 0.85, 1))), transform: `translate(${Math.round(p[0])}px, ${Math.round(p[1])}px) scale(${L(1, 0.85, fly).toFixed(3)})` });
+        const task = $(`#t${i + 1}`);
+        inOut(task, t, W('eleven', 8) + 0.5 + i * 0.15, { dy: 8, dur: 0.35 });
+        stamp(task.querySelector('.own'), t, W('eleven', 12) + i * 0.2);
+      });
+    }
+
+    // ── 1 p.m. the fix: the bug card becomes the pull request
+    if (vSec($('#v4'), t, H.one - 0.1, H.three - 0.05)) {
+      const m = expoInOut(P(t, W('one', 5) - 0.1, W('one', 9) + 0.1));
+      const r = [L(760, 700, m), L(360, 230, m), L(560, 1000, m), L(170, 620, m)];
+      css($('#pr'), { left: `${Math.round(r[0])}px`, top: `${Math.round(r[1])}px`, width: `${Math.round(r[2])}px`, height: `${Math.round(r[3])}px` });
+      inOut($('#pr'), t, W('one', 2) - 0.2, { dy: 24 });
+      $('#bugc').style.opacity = String(1 - E(P(t, W('one', 7), W('one', 8) + 0.1)));
+      $('#prc').style.opacity = String(E(P(t, W('one', 8), W('one', 9) + 0.2)));
+      ['#d1', '#d2', '#d3'].forEach((s, i) => inOut($(s), t, W('one', 10) + i * 0.15, { dy: 6, dur: 0.3 }));
+      stamp($('#cf'), t, W('one', 10)); stamp($('#cl'), t, W('one', 13));
+      const approved = t >= W('one', 17) + 0.05;
+      $('#appr').textContent = approved ? 'Approved ✓' : 'Approve';
+      $('#appr').style.background = approved ? '#0F7A50' : '#131514';
+      const bx = 700 + 1000 - 30 - 110, by = 230 + 620 - 26 - 30;
+      const cur = keys(t, [[W('one', 15), [1780, 1100]], [W('one', 17) - 0.08, [bx, by - 6], E]]);
+      const cOn = t > W('one', 15) && t < W('one', 17) + 0.7;
+      css($('#cursor'), { opacity: String(cOn ? E(P(t, W('one', 15), W('one', 15) + 0.3)) * (1 - P(t, W('one', 17) + 0.4, W('one', 17) + 0.7)) : 0), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px) scale(${t > W('one', 17) - 0.04 && t < W('one', 17) + 0.08 ? 0.86 : 1})` });
+    } else $('#cursor').style.opacity = '0';
+
+    // ── 3 p.m. release
+    if (vSec($('#v5'), t, H.three - 0.1, H.five - 0.05)) {
+      const sk = Math.min(1, P(t, W('three', 2), W('three', 2) + 0.3));
+      const sb = 1 + 3 * (sk - 1) ** 3 + 2 * (sk - 1) ** 2;
+      css($('#stamp'), { opacity: String(P(t, W('three', 2), W('three', 2) + 0.08)), transform: `rotate(-6deg) scale(${L(1.6, 1, sb).toFixed(3)})` });
+      inOut($('#doc'), t, W('three', 3) - 0.25, { dy: 30 });
+      $('#dstr').style.width = `${Math.round(E(P(t, W('three', 4), W('three', 4) + 0.4)) * 380)}px`;
+      inOut($('#dnew'), t, W('three', 6), { dy: 8 });
+      stamp($('#dchip'), t, W('three', 7));
+      inOut($('#replies'), t, W('three', 9) - 0.3, { dy: 30 });
+      rbEls.forEach((b, i) => { inOut(b, t, W('three', 12) + i * 0.4, { dy: 10, dur: 0.35 }); stamp(rokEls[i], t, W('three', 13) + i * 0.4); });
+    }
+
+    // ── 5 p.m. renewal call
+    if (vSec($('#v6'), t, H.five - 0.1, H.six - 0.05)) {
+      inOut($('#acct'), t, H.five + 0.2, { dy: 30 });
+      arEls.forEach((r, i) => inOut(r, t, W('five', 5) + i * 0.16, { dy: 10, dur: 0.35 }));
+      inOut($('#ask'), t, W('five', 9) - 0.3, { dy: 30 });
+      inOut($('#askq'), t, W('five', 10), { dy: 10 });
+      inOut($('#aska'), t, W('five', 12) + 0.1, { dy: 10 });
+      inOut($('#askc'), t, W('five', 12) + 0.5, { dy: 8 });
+    }
+
+    // ── 6 p.m. the day on one line; the sun sets
+    if (vSec($('#v7'), t, H.six - 0.1, H.end - 0.1)) {
+      rise(WRAP, t, W('six', 1), 0.1);
+      drawP(dlp, E(P(t, H.six + 0.2, H.six + 1.6)));
+      ddEls.forEach((d, i) => {
+        const at = H.six + 0.35 + i * 0.16, [x, y] = dayPt(i / 6);
+        css(d, { left: `${Math.round(x)}px`, top: `${Math.round(y - 10)}px` });
+        inOut(d, t, at, { dy: 14, dur: 0.4 });
+      });
+    }
+
+    // ── night: Helpin
+    if (vSec($('#v8'), t, H.end - 0.2, total + 1)) {
+      esym.assemble(P(t, H.end - 0.1, H.end + 0.8));
+      const wk = E(P(t, H.end + 0.1, H.end + 0.8));
+      css($('#eword'), { clipPath: `inset(0 ${((1 - wk) * 100).toFixed(1)}% 0 0)` });
+      inOut($('#ecta'), t, WP('end', 'open'), { dy: 14 });
+    }
+    void inFootage;
+    return wait;
+  } }],
+});
+</script>
+</body>
+</html>

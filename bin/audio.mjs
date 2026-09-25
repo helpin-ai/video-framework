@@ -95,7 +95,9 @@ for (const [id, s] of Object.entries(sounds)) {
     text: s.text, duration_seconds: Math.min(30, Math.max(0.5, s.duration)), prompt_influence: s.influence ?? 0.5, // API range 0.5–30 s
   }) }));
 }
-if (cues.voice && !has('no-voice')) {
+// voice.from: a vo.json written by bin/vo.mjs (clips already generated, with their start times).
+const voFrom = cues.voice?.from && JSON.parse(fs.readFileSync(path.resolve(path.dirname(cueFile), cues.voice.from), 'utf8'));
+if (cues.voice && !voFrom && !has('no-voice')) {
   cues.voice.lines.forEach((line, i) => jobs.push(async () => ({ kind: 'voice', i, file: await generate(`voice-${i}`, `/text-to-speech/${cues.voice.voiceId}`, {
     text: line.text, model_id: cues.voice.model || 'eleven_multilingual_v2',
     voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.2, ...cues.voice.settings },
@@ -110,6 +112,9 @@ const clip = (kind, key) => results.find((r) => r.kind === kind && (r.id === key
 // (An `apad` tail instead never reaches end-of-stream on some mixes, so loudnorm never flushes.)
 const inputs = ['-f', 'lavfi', '-t', String(duration), '-i', 'anullsrc=r=48000:cl=stereo'];
 const filters = ['[0:a]aformat=channel_layouts=stereo[base]'], labels = ['[base]'];
+// Buses: music and effects can be ducked under the voice (voice.duck), so they're summed separately.
+const bus = { music: [], sfx: [], voice: [] };
+let curBus = 'music';
 const add = (file, { at = 0, gain = 0, trim, from = 0, fadeIn = 0, fadeOut = 0 }) => {
   const i = inputs.filter((a) => a === '-i').length;
   inputs.push('-i', file);
@@ -119,19 +124,38 @@ const add = (file, { at = 0, gain = 0, trim, from = 0, fadeIn = 0, fadeOut = 0 }
   if (fadeOut && trim) chain.push(`afade=t=out:st=${Math.max(0, trim - fadeOut)}:d=${fadeOut}`);
   chain.push(`volume=${dB(gain)}`, `adelay=${Math.round(at * 1000)}:all=1`);
   filters.push(`[${i}:a]${chain.join(',')}[a${i}]`);
-  labels.push(`[a${i}]`);
+  bus[curBus].push(`[a${i}]`);
 };
 
+curBus = 'music';
 beds.forEach((m, bed) => add(clip('music', bed), {
   at: m.at || 0, gain: m.gain ?? -6, trim: m.length, from: m.from || 0, fadeIn: m.fadeIn ?? 0.3, fadeOut: m.fadeOut ?? 1,
 }));
+curBus = 'sfx';
 for (const c of cues.cues || []) {
   const file = clip('sfx', c.sound);
   if (!file) throw new Error(`cue at ${c.at}s references unknown sound "${c.sound}"`);
   const times = Array.isArray(c.at) ? c.at : [c.at];
   for (const at of times) add(file, { at, gain: c.gain ?? sounds[c.sound].gain ?? -3, trim: c.trim, fadeOut: c.trim ? 0.08 : 0 });
 }
-if (cues.voice && !has('no-voice')) cues.voice.lines.forEach((line, i) => add(clip('voice', i), { at: line.at, gain: cues.voice.gain ?? 0 }));
+curBus = 'voice';
+if (cues.voice && !has('no-voice')) {
+  if (voFrom) voFrom.lines.forEach((line) => add(path.join(ROOT, line.file), { at: line.at, gain: cues.voice.gain ?? 0 }));
+  else cues.voice.lines.forEach((line, i) => add(clip('voice', i), { at: line.at, gain: cues.voice.gain ?? 0 }));
+}
+const sum = (list, out) => { if (list.length === 1) filters.push(`${list[0]}anull[${out}]`); else filters.push(`${list.join('')}amix=inputs=${list.length}:duration=longest:normalize=0:dropout_transition=0[${out}]`); };
+const duck = cues.voice?.duck;
+if (duck && bus.voice.length) {
+  // Sidechain: the voice bus drives a compressor on the music (+ sfx if duck.sfx) bus.
+  const under = [...bus.music, ...(duck.sfx ? bus.sfx : [])];
+  sum(bus.voice, 'vox'); filters.push(`[vox]asplit=2[voxout][voxraw]`, `[voxraw]apad=whole_dur=${duration}[voxkey]`); // the key must outlast the voice, or the ducked bus ends with it
+  if (under.length) {
+    sum(under, 'under');
+    filters.push(`[under][voxkey]sidechaincompress=threshold=${duck.threshold ?? 0.02}:ratio=${duck.ratio ?? 8}:attack=${duck.attack ?? 20}:release=${duck.release ?? 400}:makeup=1[ducked]`);
+    labels.push('[ducked]');
+  } else filters.push('[voxkey]anullsink');
+  labels.push(...(duck.sfx ? [] : bus.sfx), '[voxout]');
+} else labels.push(...bus.music, ...bus.sfx, ...bus.voice);
 
 const master = cues.master || {};
 filters.push(`${labels.join('')}amix=inputs=${labels.length}:duration=first:normalize=0:dropout_transition=0,` +

@@ -95,8 +95,19 @@ not a single stock set across the series.
 ## Voiceover
 
 Recommend against narration on kinetic-type cuts, because the text already carries the story and
-most social views are muted. For a narrated cut, reduce on-screen text, write 3–4 short lines,
-and let the user pick the voice (`voiceId`) from their ElevenLabs library.
+most social views are muted. For a narrated cut (like `videos/launch-film`), let the voice drive the picture:
+
+1. Write `script.json`: `{ voiceId, model, settings, start, tail, lines: [{ id, text, gap }] }`. List the
+   account's voices with the API and let the user pick; `settings.speed` barely changes pace, so trim copy instead.
+2. `node --env-file=.env bin/vo.mjs videos/<name>/script.json` generates each line with word timestamps
+   (neighbouring lines are passed as context for continuous delivery) and writes `vo.json`: every line's start/end
+   and every word's time. The scene imports it (`import VO from './vo.json' with { type: 'json' }`) and keys each beat
+   to a word, so re-voicing re-times the film.
+3. In `audio.json`, set `"voice": { "from": "vo.json", "duck": { "threshold": 0.03, "ratio": 6, "attack": 25, "release": 450 } }`.
+   The music bus is sidechain-ducked under the voice (effects too with `duck.sfx`); music swells back in the pauses.
+4. Generate sound-effect cues from the same word anchors (see `videos/launch-film/cues.mjs`).
+5. You can't listen, so transcribe the final mix with ElevenLabs speech-to-text (`scribe_v1`) and compare it with the
+   script. It catches buried or ambiguous lines ("self-host it free" came back as "self-hosted, free").
 
 ## Cost and safety
 

@@ -1,0 +1,96 @@
+{
+  "name": "launch-film",
+  "voiceId": "cjVigY5qzO86Huf0OWal",
+  "voiceName": "Eric - Smooth, Trustworthy",
+  "model": "eleven_multilingual_v2",
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.22,
+    "use_speaker_boost": true,
+    "speed": 1.07
+  },
+  "start": 0.7,
+  "tail": 2.6,
+  "lines": [
+    {
+      "id": "ask",
+      "text": "A customer asks a question."
+    },
+    {
+      "id": "support",
+      "gap": 0.35,
+      "text": "Support looks into it."
+    },
+    {
+      "id": "ships",
+      "gap": 0.3,
+      "text": "Product decides. Engineering ships."
+    },
+    {
+      "id": "lost",
+      "gap": 0.55,
+      "text": "And somewhere between five tools, the story gets lost."
+    },
+    {
+      "id": "keeps",
+      "gap": 1.0,
+      "text": "Helpin keeps the whole story in one place."
+    },
+    {
+      "id": "history",
+      "gap": 0.6,
+      "text": "Support, projects, CRM, meetings and docs. One history, shared with your AI agents."
+    },
+    {
+      "id": "writes",
+      "gap": 0.6,
+      "text": "A customer writes in. Echo answers from your docs and past conversations."
+    },
+    {
+      "id": "bug",
+      "gap": 0.35,
+      "text": "If it's a bug, Echo hands it to your team, with everything it found."
+    },
+    {
+      "id": "task",
+      "gap": 0.45,
+      "text": "It becomes a task, linked to the conversation."
+    },
+    {
+      "id": "fix",
+      "gap": 0.4,
+      "text": "Forge prepares the fix. Lens reviews it. You approve."
+    },
+    {
+      "id": "ship",
+      "gap": 0.5,
+      "text": "When it ships, Quill drafts the docs update, and Echo tells the customer, in the same conversation."
+    },
+    {
+      "id": "call",
+      "gap": 0.6,
+      "text": "Before a call, Ask Agent catches you up, with sources."
+    },
+    {
+      "id": "control",
+      "gap": 0.55,
+      "text": "You decide what each agent can do, and what needs your approval."
+    },
+    {
+      "id": "open",
+      "gap": 0.6,
+      "text": "Helpin is open source. Self-host it for free, or run it on Helpin Cloud."
+    },
+    {
+      "id": "tagline",
+      "gap": 0.9,
+      "text": "Every handoff keeps the story."
+    },
+    {
+      "id": "name",
+      "gap": 0.8,
+      "text": "Helpin."
+    }
+  ]
+}

@@ -51,6 +51,21 @@ which was "very neat and subtle" with "very good animations". It's a reference f
 - **Sound:** keep the energetic music, but swap slams and impacts for soft whooshes, ticks and chimes. Fill pre-drop dips with a gentle swell, not a riser hit.
 - Energy comes from pacing and music, not from hits.
 
+## Narrated films (Sept 25)
+
+The 66 s narrated launch film `videos/launch-film` ("The story") was approved ("Looks good"). What it does:
+full motion design with no screenshots and little typing; a voiceover that drives the timing (`bin/vo.mjs` → `vo.json`);
+music ducked under the voice; one continuous camera move through the product flow; a strip that collects the story's beats.
+After it, they asked for more films with **different colours** and new stories. Colour beyond the forest palette is
+welcome when the concept earns it: `film-one-day` follows the sky through a workday, and `film-crew` gives each agent
+its own colour field. Keep the neat motion rules either way.
+
+**Generated footage (Sept 25).** They suggested mixing Seedance footage with the motion graphics. When two plates in
+One day felt like too little, the feedback was "the real footages are very less being used, we need to use them properly
+where we can use". Give the people real screen time: the customer, the support person, the PM and the engineer under the
+relay; each hour of the day opening on its footage; a live card in place of an avatar; the team under the tagline.
+Match the footage faces to the UI avatars (reference images). A clip stuck in one corner isn't enough.
+
 ## What they reject
 
 - Title-card openers: a lone slammed word or a "Meet <agent>" card as the first screens.

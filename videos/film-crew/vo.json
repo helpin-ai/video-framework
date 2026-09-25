@@ -1,0 +1,681 @@
+{
+ "voice": "Chris - Charming, Down-to-Earth",
+ "total": 50.57,
+ "lines": [
+  {
+   "id": "hook",
+   "text": "Every great team has specialists.",
+   "at": 0.8,
+   "start": 0.8,
+   "end": 2.147,
+   "file": "out/audio-cache/vo-hook-27467b797f40bcba.mp3",
+   "words": [
+    {
+     "w": "Every",
+     "s": 0.8,
+     "e": 1.032
+    },
+    {
+     "w": "great",
+     "s": 1.067,
+     "e": 1.218
+    },
+    {
+     "w": "team",
+     "s": 1.241,
+     "e": 1.404
+    },
+    {
+     "w": "has",
+     "s": 1.439,
+     "e": 1.531
+    },
+    {
+     "w": "specialists.",
+     "s": 1.566,
+     "e": 2.147
+    }
+   ]
+  },
+  {
+   "id": "meet",
+   "text": "Meet yours.",
+   "at": 2.647,
+   "start": 2.647,
+   "end": 4.04,
+   "file": "out/audio-cache/vo-meet-24735ed03657175e.mp3",
+   "words": [
+    {
+     "w": "Meet",
+     "s": 2.647,
+     "e": 2.902
+    },
+    {
+     "w": "yours.",
+     "s": 2.949,
+     "e": 4.04
+    }
+   ]
+  },
+  {
+   "id": "echo",
+   "text": "Echo answers your customers from your help center and past conversations, and knows when to bring in a person.",
+   "at": 4.84,
+   "start": 4.84,
+   "end": 10.552,
+   "file": "out/audio-cache/vo-echo-da16f0ecd25dadef.mp3",
+   "words": [
+    {
+     "w": "Echo",
+     "s": 4.84,
+     "e": 5.13
+    },
+    {
+     "w": "answers",
+     "s": 5.188,
+     "e": 5.409
+    },
+    {
+     "w": "your",
+     "s": 5.432,
+     "e": 5.525
+    },
+    {
+     "w": "customers",
+     "s": 5.56,
+     "e": 5.908
+    },
+    {
+     "w": "from",
+     "s": 5.943,
+     "e": 6.059
+    },
+    {
+     "w": "your",
+     "s": 6.094,
+     "e": 6.198
+    },
+    {
+     "w": "help",
+     "s": 6.245,
+     "e": 6.396
+    },
+    {
+     "w": "center",
+     "s": 6.454,
+     "e": 6.686
+    },
+    {
+     "w": "and",
+     "s": 6.744,
+     "e": 6.849
+    },
+    {
+     "w": "past",
+     "s": 6.907,
+     "e": 7.15
+    },
+    {
+     "w": "conversations,",
+     "s": 7.197,
+     "e": 8.056
+    },
+    {
+     "w": "and",
+     "s": 8.265,
+     "e": 8.404
+    },
+    {
+     "w": "knows",
+     "s": 8.451,
+     "e": 8.66
+    },
+    {
+     "w": "when",
+     "s": 8.695,
+     "e": 8.811
+    },
+    {
+     "w": "to",
+     "s": 8.857,
+     "e": 8.903
+    },
+    {
+     "w": "bring",
+     "s": 8.95,
+     "e": 9.136
+    },
+    {
+     "w": "in",
+     "s": 9.194,
+     "e": 9.252
+    },
+    {
+     "w": "a",
+     "s": 9.298,
+     "e": 9.321
+    },
+    {
+     "w": "person.",
+     "s": 9.368,
+     "e": 10.552
+    }
+   ]
+  },
+  {
+   "id": "atlas",
+   "text": "Atlas turns customer needs into a plan your team can review.",
+   "at": 11.102,
+   "start": 11.102,
+   "end": 15.328,
+   "file": "out/audio-cache/vo-atlas-a924e267e62bd82a.mp3",
+   "words": [
+    {
+     "w": "Atlas",
+     "s": 11.102,
+     "e": 11.508
+    },
+    {
+     "w": "turns",
+     "s": 11.555,
+     "e": 11.845
+    },
+    {
+     "w": "customer",
+     "s": 11.926,
+     "e": 12.309
+    },
+    {
+     "w": "needs",
+     "s": 12.367,
+     "e": 12.693
+    },
+    {
+     "w": "into",
+     "s": 12.809,
+     "e": 13.041
+    },
+    {
+     "w": "a",
+     "s": 13.122,
+     "e": 13.145
+    },
+    {
+     "w": "plan",
+     "s": 13.203,
+     "e": 13.482
+    },
+    {
+     "w": "your",
+     "s": 13.54,
+     "e": 13.656
+    },
+    {
+     "w": "team",
+     "s": 13.703,
+     "e": 13.923
+    },
+    {
+     "w": "can",
+     "s": 13.981,
+     "e": 14.109
+    },
+    {
+     "w": "review.",
+     "s": 14.179,
+     "e": 15.328
+    }
+   ]
+  },
+  {
+   "id": "scribe",
+   "text": "Scribe works out the details before coding begins.",
+   "at": 15.878,
+   "start": 15.878,
+   "end": 19.5,
+   "file": "out/audio-cache/vo-scribe-57895e14dcdbdbe2.mp3",
+   "words": [
+    {
+     "w": "Scribe",
+     "s": 15.878,
+     "e": 16.308
+    },
+    {
+     "w": "works",
+     "s": 16.331,
+     "e": 16.54
+    },
+    {
+     "w": "out",
+     "s": 16.575,
+     "e": 16.679
+    },
+    {
+     "w": "the",
+     "s": 16.714,
+     "e": 16.784
+    },
+    {
+     "w": "details",
+     "s": 16.842,
+     "e": 17.364
+    },
+    {
+     "w": "before",
+     "s": 17.643,
+     "e": 17.979
+    },
+    {
+     "w": "coding",
+     "s": 18.026,
+     "e": 18.351
+    },
+    {
+     "w": "begins.",
+     "s": 18.397,
+     "e": 19.5
+    }
+   ]
+  },
+  {
+   "id": "forge",
+   "text": "Forge writes the change, runs the tests, and opens a pull request.",
+   "at": 20.05,
+   "start": 20.05,
+   "end": 24.926,
+   "file": "out/audio-cache/vo-forge-6f75d24467223192.mp3",
+   "words": [
+    {
+     "w": "Forge",
+     "s": 20.05,
+     "e": 20.422
+    },
+    {
+     "w": "writes",
+     "s": 20.445,
+     "e": 20.665
+    },
+    {
+     "w": "the",
+     "s": 20.723,
+     "e": 20.793
+    },
+    {
+     "w": "change,",
+     "s": 20.839,
+     "e": 21.362
+    },
+    {
+     "w": "runs",
+     "s": 21.606,
+     "e": 21.85
+    },
+    {
+     "w": "the",
+     "s": 21.908,
+     "e": 21.977
+    },
+    {
+     "w": "tests,",
+     "s": 22.024,
+     "e": 22.604
+    },
+    {
+     "w": "and",
+     "s": 22.778,
+     "e": 22.918
+    },
+    {
+     "w": "opens",
+     "s": 22.976,
+     "e": 23.231
+    },
+    {
+     "w": "a",
+     "s": 23.278,
+     "e": 23.312
+    },
+    {
+     "w": "pull",
+     "s": 23.37,
+     "e": 23.614
+    },
+    {
+     "w": "request.",
+     "s": 23.684,
+     "e": 24.926
+    }
+   ]
+  },
+  {
+   "id": "lens",
+   "text": "Lens looks for risks and missing tests.",
+   "at": 25.476,
+   "start": 25.476,
+   "end": 27.798,
+   "file": "out/audio-cache/vo-lens-488c1d1e5d9f866a.mp3",
+   "words": [
+    {
+     "w": "Lens",
+     "s": 25.476,
+     "e": 25.731
+    },
+    {
+     "w": "looks",
+     "s": 25.766,
+     "e": 25.94
+    },
+    {
+     "w": "for",
+     "s": 25.975,
+     "e": 26.08
+    },
+    {
+     "w": "risks",
+     "s": 26.138,
+     "e": 26.428
+    },
+    {
+     "w": "and",
+     "s": 26.463,
+     "e": 26.544
+    },
+    {
+     "w": "missing",
+     "s": 26.602,
+     "e": 26.881
+    },
+    {
+     "w": "tests.",
+     "s": 26.927,
+     "e": 27.798
+    }
+   ]
+  },
+  {
+   "id": "quill",
+   "text": "Quill prepares your help-article updates.",
+   "at": 28.348,
+   "start": 28.348,
+   "end": 31.134,
+   "file": "out/audio-cache/vo-quill-b4270f5622fe4d91.mp3",
+   "words": [
+    {
+     "w": "Quill",
+     "s": 28.348,
+     "e": 28.603
+    },
+    {
+     "w": "prepares",
+     "s": 28.661,
+     "e": 29.068
+    },
+    {
+     "w": "your",
+     "s": 29.114,
+     "e": 29.254
+    },
+    {
+     "w": "help-article",
+     "s": 29.312,
+     "e": 29.869
+    },
+    {
+     "w": "updates.",
+     "s": 29.904,
+     "e": 31.134
+    }
+   ]
+  },
+  {
+   "id": "beacon",
+   "text": "Beacon gets your next customer follow-up ready.",
+   "at": 31.684,
+   "start": 31.684,
+   "end": 34.099,
+   "file": "out/audio-cache/vo-beacon-501993ce0e1a3e91.mp3",
+   "words": [
+    {
+     "w": "Beacon",
+     "s": 31.684,
+     "e": 31.963
+    },
+    {
+     "w": "gets",
+     "s": 32.009,
+     "e": 32.148
+    },
+    {
+     "w": "your",
+     "s": 32.183,
+     "e": 32.288
+    },
+    {
+     "w": "next",
+     "s": 32.334,
+     "e": 32.508
+    },
+    {
+     "w": "customer",
+     "s": 32.543,
+     "e": 32.949
+    },
+    {
+     "w": "follow-up",
+     "s": 33.031,
+     "e": 33.402
+    },
+    {
+     "w": "ready.",
+     "s": 33.472,
+     "e": 34.099
+    }
+   ]
+  },
+  {
+   "id": "mira",
+   "text": "And Mira turns customer signals into launch messaging.",
+   "at": 34.649,
+   "start": 34.649,
+   "end": 38.086,
+   "file": "out/audio-cache/vo-mira-0b485fc2eb911b40.mp3",
+   "words": [
+    {
+     "w": "And",
+     "s": 34.649,
+     "e": 34.846
+    },
+    {
+     "w": "Mira",
+     "s": 34.916,
+     "e": 35.171
+    },
+    {
+     "w": "turns",
+     "s": 35.229,
+     "e": 35.543
+    },
+    {
+     "w": "customer",
+     "s": 35.613,
+     "e": 35.984
+    },
+    {
+     "w": "signals",
+     "s": 36.054,
+     "e": 36.379
+    },
+    {
+     "w": "into",
+     "s": 36.425,
+     "e": 36.553
+    },
+    {
+     "w": "launch",
+     "s": 36.599,
+     "e": 36.82
+    },
+    {
+     "w": "messaging.",
+     "s": 36.855,
+     "e": 38.086
+    }
+   ]
+  },
+  {
+   "id": "share",
+   "text": "They share one history with your team, and they ask before they act.",
+   "at": 38.886,
+   "start": 38.886,
+   "end": 43.019,
+   "file": "out/audio-cache/vo-share-742d6e2e144dab91.mp3",
+   "words": [
+    {
+     "w": "They",
+     "s": 38.886,
+     "e": 39.072
+    },
+    {
+     "w": "share",
+     "s": 39.107,
+     "e": 39.304
+    },
+    {
+     "w": "one",
+     "s": 39.362,
+     "e": 39.513
+    },
+    {
+     "w": "history",
+     "s": 39.559,
+     "e": 39.85
+    },
+    {
+     "w": "with",
+     "s": 39.873,
+     "e": 39.966
+    },
+    {
+     "w": "your",
+     "s": 40.001,
+     "e": 40.093
+    },
+    {
+     "w": "team,",
+     "s": 40.128,
+     "e": 40.535
+    },
+    {
+     "w": "and",
+     "s": 40.651,
+     "e": 40.778
+    },
+    {
+     "w": "they",
+     "s": 40.813,
+     "e": 40.918
+    },
+    {
+     "w": "ask",
+     "s": 40.976,
+     "e": 41.301
+    },
+    {
+     "w": "before",
+     "s": 41.371,
+     "e": 41.649
+    },
+    {
+     "w": "they",
+     "s": 41.672,
+     "e": 41.788
+    },
+    {
+     "w": "act.",
+     "s": 41.847,
+     "e": 43.019
+    }
+   ]
+  },
+  {
+   "id": "own",
+   "text": "Need a different job done? Build your own.",
+   "at": 43.619,
+   "start": 43.619,
+   "end": 45.43,
+   "file": "out/audio-cache/vo-own-0f29dc32c42a92cb.mp3",
+   "words": [
+    {
+     "w": "Need",
+     "s": 43.619,
+     "e": 43.805
+    },
+    {
+     "w": "a",
+     "s": 43.84,
+     "e": 43.863
+    },
+    {
+     "w": "different",
+     "s": 43.898,
+     "e": 44.153
+    },
+    {
+     "w": "job",
+     "s": 44.188,
+     "e": 44.42
+    },
+    {
+     "w": "done?",
+     "s": 44.49,
+     "e": 44.676
+    },
+    {
+     "w": "Build",
+     "s": 44.71,
+     "e": 44.896
+    },
+    {
+     "w": "your",
+     "s": 44.943,
+     "e": 45.059
+    },
+    {
+     "w": "own.",
+     "s": 45.117,
+     "e": 45.43
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "text": "Helpin. Meet your crew.",
+   "at": 46.33,
+   "start": 46.33,
+   "end": 47.77,
+   "file": "out/audio-cache/vo-end-244c851dac310ab5.mp3",
+   "words": [
+    {
+     "w": "Helpin.",
+     "s": 46.33,
+     "e": 46.794
+    },
+    {
+     "w": "Meet",
+     "s": 46.841,
+     "e": 47.003
+    },
+    {
+     "w": "your",
+     "s": 47.038,
+     "e": 47.131
+    },
+    {
+     "w": "crew.",
+     "s": 47.166,
+     "e": 47.77
+    }
+   ]
+  }
+ ]
+}

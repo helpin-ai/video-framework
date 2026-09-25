@@ -1,0 +1,20 @@
+{
+  "name": "film-one-day",
+  "voiceId": "EXAVITQu4vr4xnSDxMaL",
+  "voiceName": "Sarah - Mature, Reassuring, Confident",
+  "model": "eleven_multilingual_v2",
+  "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": true },
+  "start": 0.8,
+  "tail": 2.8,
+  "lines": [
+    { "id": "nine", "text": "Nine a.m. Your day starts with a briefing, not a scavenger hunt." },
+    { "id": "brief", "gap": 0.35, "text": "Ask Agent pulls last night's conversations, open work and today's calls into one page." },
+    { "id": "ten", "gap": 0.7, "text": "Ten. Customers are writing in. Echo answers what your docs already cover, and hands you the rest, with context." },
+    { "id": "eleven", "gap": 0.7, "text": "Eleven. Your planning call. Decisions and action items land in your projects, each with an owner." },
+    { "id": "one", "gap": 0.7, "text": "One p.m. This morning's bug is now a pull request. Forge wrote it. Lens checked it. You approve it." },
+    { "id": "three", "gap": 0.7, "text": "Three. It ships. Quill drafts the docs update, and the customers who asked get an answer." },
+    { "id": "five", "gap": 0.7, "text": "Five. Before your renewal call, the whole account story is one question away." },
+    { "id": "six", "gap": 0.8, "text": "Six. You spent the day on the work, not the handoffs." },
+    { "id": "end", "gap": 0.9, "text": "Helpin. Open source." }
+  ]
+}

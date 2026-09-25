@@ -1,0 +1,24 @@
+{
+  "name": "film-crew",
+  "voiceId": "iP95p4xoKVk53GoZ742B",
+  "voiceName": "Chris - Charming, Down-to-Earth",
+  "model": "eleven_multilingual_v2",
+  "settings": { "stability": 0.45, "similarity_boost": 0.8, "style": 0.3, "use_speaker_boost": true },
+  "start": 0.8,
+  "tail": 2.8,
+  "lines": [
+    { "id": "hook", "text": "Every great team has specialists." },
+    { "id": "meet", "gap": 0.5, "text": "Meet yours." },
+    { "id": "echo", "gap": 0.8, "text": "Echo answers your customers from your help center and past conversations, and knows when to bring in a person." },
+    { "id": "atlas", "gap": 0.55, "text": "Atlas turns customer needs into a plan your team can review." },
+    { "id": "scribe", "gap": 0.55, "text": "Scribe works out the details before coding begins." },
+    { "id": "forge", "gap": 0.55, "text": "Forge writes the change, runs the tests, and opens a pull request." },
+    { "id": "lens", "gap": 0.55, "text": "Lens looks for risks and missing tests." },
+    { "id": "quill", "gap": 0.55, "text": "Quill prepares your help-article updates." },
+    { "id": "beacon", "gap": 0.55, "text": "Beacon gets your next customer follow-up ready." },
+    { "id": "mira", "gap": 0.55, "text": "And Mira turns customer signals into launch messaging." },
+    { "id": "share", "gap": 0.8, "text": "They share one history with your team, and they ask before they act." },
+    { "id": "own", "gap": 0.6, "text": "Need a different job done? Build your own." },
+    { "id": "end", "gap": 0.9, "text": "Helpin. Meet your crew." }
+  ]
+}
