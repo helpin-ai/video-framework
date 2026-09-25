@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — The Board (Quill keeps docs on time)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "The Board": the help center as a split-flap departures board. A release arrives and guides flip to
+     OUTDATED ("Doc drift."). Quill, Helpin's docs agent, works row 01: each status flip zooms through the
+     board into that step (check → capture → rewrite), then the team publishes and the board ripples green.
+     126 BPM (beat 0.476 s, bar 1.905 s). Its own look (airport board) and music (funk breakbeat). HEL-148. */
+  #stage { background: radial-gradient(ellipse 80% 70% at 50% 45%, #15191B, #08090A); color: #EEF3EF; }
+  .scr { position: absolute; inset: 0; opacity: 0; }
+  .tile { display: inline-block; width: 40px; height: 62px; margin-right: 4px; border-radius: 5px; position: relative; vertical-align: top;
+    background: linear-gradient(#262B29 0 50%, #1C2020 50% 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 2px 0 rgba(0,0,0,.6);
+    font: 700 38px/62px var(--mono); text-align: center; color: #EEF3EF; }
+  .tile::after { content: ''; position: absolute; left: 0; right: 0; top: 30px; height: 2px; background: #0A0C0B; }
+  .tile.ok { color: var(--mint); } .tile.bad { color: #F28B82; } .tile.work { color: #F0C35A; } .tile.cyc { color: #C9D2CD; }
+
+  #board { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 1420px 255px; }
+  .panel { position: absolute; left: 50px; top: 36px; width: 1820px; height: 1008px; border-radius: 22px; background: #0F1213; border: 2px solid #232829; box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+  .hdr { position: absolute; left: 100px; top: 72px; right: 100px; height: 70px; display: flex; align-items: center; justify-content: space-between; }
+  .hdr .name { font: 700 34px/1 var(--sans); letter-spacing: -0.01em; display: flex; align-items: center; gap: 14px; }
+  .hdr .name i { width: 14px; height: 14px; border-radius: 50%; background: var(--mint); }
+  .cols { position: absolute; left: 100px; top: 176px; font: 500 16px/1 var(--mono); letter-spacing: .2em; color: #6F7D76; }
+  .row { position: absolute; left: 100px; height: 62px; display: flex; align-items: center; }
+  .row .title { width: 700px; font-size: 32px; font-weight: 500; color: #E7EDE9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 20px; }
+  .row .ver { width: 206px; } .row .st { width: 760px; }
+  #hand { position: absolute; left: 0; top: 0; width: 40px; height: 40px; opacity: 0; z-index: 9; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+
+  .mega { position: absolute; left: 0; width: 1920px; text-align: center; font-weight: 700; letter-spacing: -0.055em; line-height: .95; color: #F2F5F3; }
+  .mega em { font-style: normal; color: var(--mint); }
+  .sub2 { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 44px; font-weight: 600; letter-spacing: -0.02em; color: #9FB0A7; }
+  .cap { position: absolute; left: 0; width: 1920px; top: 44px; text-align: center; }
+  .cap small { display: block; font: 500 18px/1 var(--mono); letter-spacing: .2em; color: #F0C35A; margin-bottom: 14px; }
+  .cap b { font-size: 50px; font-weight: 700; letter-spacing: -0.035em; color: #F2F5F3; } .cap b em { font-style: normal; color: var(--mint); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 20; }
+
+  /* generated OrbitDesk UI (1440×900) */
+  .app { width: 1440px; height: 900px; background: #F6F8F7; color: #131514; font-family: var(--sans); position: relative; overflow: hidden; }
+  .app .top { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: #fff; border-bottom: 1px solid #E4E9E6; font-size: 20px; }
+  .app .logo { width: 34px; height: 34px; border-radius: 9px; background: #1D6A4A; color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .app .crumb { color: #66716C; } .app .crumb b { color: #131514; font-weight: 600; }
+  .app .side { position: absolute; left: 0; top: 64px; bottom: 0; width: 250px; background: #fff; border-right: 1px solid #E4E9E6; padding: 22px 16px; }
+  .app .side div { padding: 12px 14px; border-radius: 10px; font-size: 19px; color: #4F5A55; margin-bottom: 4px; }
+  .app .side .on { background: #E7F4ED; color: #0B6340; font-weight: 600; }
+  .app .main { position: absolute; left: 250px; right: 0; top: 64px; bottom: 0; padding: 40px 56px; }
+  .app h1 { margin: 0 0 8px; font-size: 38px; letter-spacing: -0.02em; } .app .lede { color: #66716C; font-size: 20px; margin-bottom: 30px; }
+  .app .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .app .tool { background: #fff; border: 1px solid #E4E9E6; border-radius: 16px; padding: 24px; }
+  .app .tool b { display: block; font-size: 22px; margin-bottom: 6px; } .app .tool span { color: #66716C; font-size: 18px; }
+  .app .tool .btn { margin-top: 18px; display: inline-flex; height: 44px; padding: 0 18px; align-items: center; border-radius: 10px; background: #131514; color: #fff; font-size: 18px; font-weight: 600; }
+  .app .tool.hot { border-color: #0F7A50; box-shadow: 0 0 0 3px #CFE9D9; }
+  .app .shade { position: absolute; inset: 0; background: rgba(19, 21, 20, .35); }
+  .app .modal { position: absolute; left: 50%; top: 50%; width: 700px; transform: translate(-50%, -50%); background: #fff; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,.25); padding: 34px 38px; }
+  .app .modal .ok { display: inline-flex; gap: 8px; align-items: center; font-size: 17px; color: #0B6340; background: #E3F4EA; padding: 7px 12px; border-radius: 8px; margin-bottom: 16px; }
+  .app .modal h2 { margin: 0 0 6px; font-size: 32px; letter-spacing: -0.02em; } .app .modal p { margin: 0 0 22px; color: #66716C; font-size: 19px; }
+  .app .opt { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border: 1px solid #E4E9E6; border-radius: 14px; margin-bottom: 12px; font-size: 21px; }
+  .app .opt i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #9AA5A0; flex: none; }
+  .app .opt.sel { border-color: #0F7A50; background: #F3FAF6; } .app .opt.sel i { border: 7px solid #0F7A50; }
+  .app .opt small { margin-left: auto; color: #66716C; font-size: 17px; }
+  .app .acct { font-size: 17px; color: #66716C; margin: 18px 0 20px; } .app .acct b { color: #131514; font-weight: 500; }
+  .app .primary { display: inline-flex; height: 52px; padding: 0 24px; align-items: center; border-radius: 12px; background: #0F7A50; color: #fff; font-size: 20px; font-weight: 600; }
+  #browser { position: absolute; left: 260px; top: 180px; width: 1400px; height: 860px; border-radius: 16px; overflow: hidden; box-shadow: 0 40px 110px rgba(0,0,0,.6); background: #fff; }
+  #browser .bar { height: 50px; background: #EEF1EF; display: flex; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 1px solid #DDE3E0; }
+  #browser .bar i { width: 13px; height: 13px; border-radius: 50%; background: #C9D0CC; } #browser .url { margin-left: 16px; height: 32px; flex: 1; max-width: 700px; border-radius: 8px; background: #fff; display: flex; align-items: center; padding: 0 14px; font: 500 16px/1 var(--mono); color: #4F5A55; }
+  #browser .view { position: absolute; left: 0; top: 50px; width: 1440px; height: 900px; transform-origin: 0 0; }
+  #qcur { position: absolute; left: 0; top: 0; display: flex; align-items: flex-start; gap: 6px; opacity: 0; z-index: 9; }
+  #qcur svg { width: 34px; height: 34px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.35)); }
+  #qcur span { margin-top: 26px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px; border-radius: 8px; background: #2563EB; color: #fff; font: 600 16px/1 var(--sans); white-space: nowrap; }
+  #qcur span img { width: 20px; height: 20px; }
+  #capture { position: absolute; left: 0; top: 0; width: 1200px; height: 750px; transform-origin: 0 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 40px 110px rgba(0,0,0,.6); opacity: 0; }
+  #capture .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #capture .hl { position: absolute; border: 4px solid #0F7A50; border-radius: 14px; opacity: 0; box-shadow: 0 0 0 9999px rgba(19, 21, 20, .28); }
+  #capture .blur { position: absolute; border-radius: 8px; background: rgba(180, 188, 184, .96); opacity: 0; }
+  #capture .badge { position: absolute; right: 20px; bottom: 20px; padding: 10px 14px; border-radius: 10px; background: var(--green); color: #fff; font: 700 20px/1 var(--mono); letter-spacing: .08em; opacity: 0; }
+
+  /* the article (rewrite screen) */
+  #doc { position: absolute; left: 460px; top: 170px; width: 1000px; height: 880px; border-radius: 16px; background: #fff; color: #1F1C15; box-shadow: 0 40px 110px rgba(0,0,0,.6); padding: 56px 64px; overflow: hidden; }
+  #doc small { font: 500 16px/1 var(--mono); letter-spacing: .14em; color: #66716C; }
+  #doc h2 { margin: 16px 0 10px; font-size: 48px; letter-spacing: -0.02em; line-height: 1.08; }
+  #doc .meta { font: 500 18px/1 var(--mono); color: #66716C; margin-bottom: 26px; } #doc .meta b { color: #0F7A50; }
+  #doc p { margin: 0 0 16px; font-size: 25px; line-height: 1.46; }
+  #doc .old { position: relative; } #doc .strike { position: absolute; left: 0; top: 55%; height: 3px; background: #B42318; width: 0; }
+  #doc .new { color: #0B6340; background: #E3F4EA; border-radius: 6px; padding: 2px 6px; }
+  #doc .slot { position: relative; height: 330px; border-radius: 12px; overflow: hidden; border: 2px solid #CFE5D6; margin: 20px 0; background: #EDEFEE; }
+  #doc .slot .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #doc .slot .tag { position: absolute; right: 12px; top: 12px; padding: 8px 12px; border-radius: 8px; background: #0F7A50; color: #fff; font: 700 16px/1 var(--mono); letter-spacing: .08em; }
+  #doc .review { position: absolute; left: 64px; right: 64px; bottom: 36px; height: 70px; border-radius: 14px; background: #FFF7E0; border: 1px solid #F0DDA0; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 21px; color: #7A5A00; opacity: 0; }
+
+  #tagline { position: absolute; left: 0; width: 1920px; top: 230px; text-align: center; }
+  #tagline .ln { margin-bottom: 16px; white-space: nowrap; }
+  #tagline .tile { width: 78px; height: 118px; margin-right: 8px; font-size: 76px; line-height: 118px; border-radius: 8px; }
+  #tagline .tile::after { top: 58px; height: 3px; }
+  #endmark { position: absolute; left: 0; width: 1920px; top: 700px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #endmark b { font-size: 76px; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; }
+  #cta { position: absolute; left: 0; width: 1920px; top: 836px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #cta span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 25px/1 var(--sans); }
+  #cta .url { background: #F2F5F3; color: #0C0E0D; } #cta .t { border: 1px solid #3A4540; color: #D5E0DA; font-weight: 500; }
+  #cta .t i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="board">
+    <div class="panel"></div>
+    <div class="hdr"><div class="name"><i></i>OrbitDesk Help Center</div><div id="hmsg"></div><div id="hver"></div></div>
+    <div class="cols"><span style="display:inline-block;width:700px">GUIDE</span><span style="display:inline-block;width:206px">VERSION</span><span>STATUS</span></div>
+    <div id="rows"></div>
+  </div>
+  <svg id="hand" viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg>
+
+  <div class="scr" id="s-villain"><div class="mega" style="top:350px; font-size:280px">Doc drift.</div><div class="sub2" style="top:690px">One release. <span style="color:#F28B82">Four stale guides.</span></div></div>
+  <div class="scr" id="s-quill"><img src="../../assets/helpin/agents/quill.svg" style="position:absolute; left:810px; top:150px; width:300px; height:300px" alt=""><div class="mega" style="top:520px; font-size:190px">Meet <em>Quill.</em></div><div class="sub2" style="top:740px">Helpin’s docs agent.</div></div>
+
+  <div class="scr" id="s-check"><div class="cap"><small>ROW 01 · CHECKING</small><b>Quill checks the guide <em>against v2.6.</em></b></div></div>
+  <div id="w1"></div>
+  <div class="scr" id="s-capture"><div class="cap"><small>ROW 01 · CAPTURING</small><b>It signs in and shoots <em>the new screen.</em></b></div>
+    <div id="browser"><div class="bar"><i></i><i></i><i></i><div class="url">app.orbitdesk.example/settings/integrations</div></div><div class="view" id="view"></div></div></div>
+  <div id="capture"><div class="shot" id="capshot"></div><div class="hl" id="hl"></div><div class="blur" id="blur"></div><div class="badge" id="badge">CAPTURED · REFINED</div></div>
+  <div id="qcur"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#2563EB" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span><img src="../../assets/helpin/agents/quill.svg" alt="">Quill</span></div>
+  <div class="scr" id="s-rewrite"><div class="cap"><small>ROW 01 · REWRITING</small><b>Quill rewrites the step. <em>Your team reviews it.</em></b></div>
+    <div id="doc"><small>HELP CENTER · INTEGRATIONS</small><h2>Connect your first integration</h2><div class="meta">v2.3 → <b>v2.6</b> · proposed update</div>
+      <p>1. Open <b>Settings → Integrations</b> and choose your tool.</p>
+      <p>2. <span class="old" id="oldtxt">After authorization, start the first sync.<i class="strike" id="strike"></i></span><span class="new" id="newtxt" style="display:none"></span></p>
+      <div class="slot"><div class="shot" id="slotshot"></div><span class="tag">NEW · v2.6</span></div>
+      <div class="review" id="review">Ready for review · Not published<b>Your team publishes</b></div></div></div>
+
+  <div class="scr" id="s-tag"><div id="tagline"><div class="ln" id="tl1"></div><div class="ln" id="tl2"></div></div></div>
+  <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+  <div id="cta"><span class="url">helpin.ai</span><span class="t"><i></i>Open source · Coming soon</span></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, expoIn, expoInOut, backOut, rand } from '../../lib/motion.js';
+import { helpinSymbol, css, type } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s) => document.querySelector(s);
+const B = 60 / 126, BAR = 4 * B;
+const T = { release: BAR, villain: 2.5 * BAR, drop: 3 * BAR, check: 4 * BAR, capture: 6.5 * BAR, rewrite: 8.5 * BAR, ready: 10.5 * BAR,
+  publish: 11.5 * BAR, payoff: 12.5 * BAR, tag: 13.5 * BAR, total: 16 * BAR };
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.·';
+
+// ── Split-flap engine: a line of tiles follows a timeline of [time, text, class]
+function flapLine(el, n, cls = '') {
+  el.innerHTML = Array.from({ length: n }, () => `<span class="tile ${cls}"></span>`).join('');
+  const tiles = [...el.children];
+  return (t, timeline, { stagger = 0.03, settle = 0.2 } = {}) => {
+    let cur = null, prev = null;
+    for (const e of timeline) { if (t >= e[0]) { prev = cur; cur = e; } }
+    tiles.forEach((tile, i) => {
+      let ch = ' ', c = 'cyc';
+      if (cur) {
+        const target = (cur[1][i] || ' ').toUpperCase(), before = prev ? (prev[1][i] || ' ').toUpperCase() : ' ';
+        const done = cur[0] + settle + i * stagger;
+        if (t >= done || (target === ' ' && before === ' ')) { ch = target; c = cur[2]; }
+        else ch = CHARS[Math.floor(rand(Math.floor(t * 30) * 13 + i * 7) * CHARS.length)];
+      }
+      if (tile.textContent !== ch) tile.textContent = ch;
+      const k = 'tile ' + (c || '') ;
+      if (tile.className !== k) tile.className = k;
+    });
+  };
+}
+const pad = (s, n) => (s + ' '.repeat(n)).slice(0, n);
+
+// ── The board
+const ROWS = [
+  ['Connect your first integration', 'v2.3', true], ['Set up SSO with Okta', 'v2.5', true], ['Map groups to workspace roles', 'v2.5', true],
+  ['Invite your team', 'v2.5', false], ['Configure SCIM provisioning', 'v2.5', true], ['Choose when agents need approval', 'v2.5', false],
+  ['Choose the destination workspace', 'v2.6', 'new'],
+];
+const ROWY = (i) => 222 + i * 104;
+const rowsEl = $('#rows');
+const lines = ROWS.map(([title], i) => {
+  const r = document.createElement('div'); r.className = 'row'; r.style.top = `${ROWY(i)}px`;
+  r.innerHTML = `<div class="title">${title}</div><div class="ver"></div><div class="st"></div>`;
+  rowsEl.appendChild(r);
+  return { el: r, ver: flapLine(r.querySelector('.ver'), 4), st: flapLine(r.querySelector('.st'), 17) };
+});
+const hmsg = flapLine($('#hmsg'), 20), hver = flapLine($('#hver'), 4);
+// status timelines
+const affected = [0, 1, 2, 4];
+const pubAt = (k) => T.publish + k * 0.5 * B;
+const S = ROWS.map(([, ver, flag], i) => {
+  const tl = flag === 'new' ? [] : [[0.15 + i * 0.1, pad('UP TO DATE', 17), 'ok']];
+  const k = affected.indexOf(i);
+  if (k >= 0) tl.push([T.release + 0.55 + k * B, pad('OUTDATED', 17), 'bad']);
+  if (i === 0) tl.push([T.check + 0.15, pad('CHECKING', 17), 'work'], [T.capture + 0.15, pad('CAPTURING', 17), 'work'], [T.rewrite + 0.15, pad('REWRITING', 17), 'work'], [T.ready + 0.15, 'READY FOR REVIEW', 'work']);
+  else if (k >= 0) tl.push([T.ready + B + (k - 1) * 0.5 * B, 'READY FOR REVIEW', 'work']);
+  if (flag === 'new') tl.push([T.ready + 2.5 * B, pad('NEW · DRAFT', 17), 'work']);
+  const order = [0, 1, 2, 4, 6].indexOf(i);
+  if (order >= 0) tl.push([pubAt(order) + 0.08, pad('PUBLISHED', 17), 'ok']);
+  tl.push([T.payoff + 0.3 + i * 0.07, pad('UP TO DATE', 17), 'ok']);
+  const vtl = [[0.1 + i * 0.1, ver, 'ok']];
+  if (flag === 'new') vtl.length = 0, vtl.push([T.ready + 2.5 * B, 'v2.6', 'ok']);
+  if (order >= 0 && flag !== 'new') vtl.push([pubAt(order) + 0.08, 'v2.6', 'ok']);
+  if (flag === false) vtl.push([T.release + 0.9 + i * 0.05, 'v2.6', 'ok']); // unaffected guides stay valid for v2.6
+  return { tl, vtl };
+});
+const HMSG = [[0.2, pad('ALL GUIDES CURRENT', 20), 'ok'], [T.release, 'RELEASE v2.6 ARRIVED', 'bad'], [T.check, pad('QUILL · ON DUTY', 20), 'work'], [T.payoff + 0.2, pad('ALL DOCS ON TIME', 20), 'ok']];
+const HVER = [[0.2, 'v2.5', 'ok'], [T.release, 'v2.6', 'ok']];
+
+// ── Generated OrbitDesk UI for the capture
+const SIDE = `<div class="side"><div>Inbox</div><div>Projects</div><div>Docs</div><div class="on">Settings</div></div>`;
+const TOP = `<div class="top"><span class="logo">O</span><span class="crumb">OrbitDesk / <b>Settings · Integrations</b></span></div>`;
+const TOOLS = `<h1>Integrations</h1><div class="lede">Connect the tools your team already uses.</div><div class="tools">
+  <div class="tool hot"><b>Issue tracker</b><span>Sync tasks and status</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Team chat</b><span>Post updates to channels</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Data warehouse</b><span>Export conversations</span><div class="btn">Connect</div></div></div>`;
+const MODAL = `<div class="shade"></div><div class="modal"><div class="ok">✓ Issue tracker authorized</div><h2>Choose the destination workspace</h2>
+  <p>Which workspace should receive the activity?</p>
+  <div class="opt sel"><i></i>Northstar Support<small>12 members</small></div><div class="opt"><i></i>Northstar Sales<small>8 members</small></div><div class="opt"><i></i>Internal QA<small>3 members</small></div>
+  <div class="acct">Signed in as <b>quill@orbitdesk.example</b></div><span class="primary">Confirm and start sync</span></div>`;
+const appHTML = (modal) => `<div class="app">${TOP}${SIDE}<div class="main">${TOOLS}</div>${modal ? MODAL : ''}</div>`;
+$('#capshot').innerHTML = appHTML(true); $('#capshot').style.transform = `scale(${1200 / 1440})`;
+$('#slotshot').innerHTML = appHTML(true);
+
+// Live Quill preview (the website's docs-agent component)
+const quill = siteWindow($('#w1'), { path: '/products/knowledge', focus: '#knowledge-quill .knowledge-scene', hide: ['canvas'], radius: 18 });
+quill.el.style.boxShadow = '0 40px 110px rgba(0,0,0,.6)';
+waitFor(quill.view.ready);
+const QBOX = { x: 580, y: 180, w: 760, h: 860 };
+
+const endMark = helpinSymbol({ size: 84, color: '#F2F5F3' });
+$('#end-symbol').append(endMark.node);
+const tl1 = flapLine($('#tl1'), 14), tl2 = flapLine($('#tl2'), 13);
+
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+function shoot(w, lt, shots, box, bounds, dur = 0.45) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => fitAspect(r, box.w / box.h, bounds?.());
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.(), SP = 0.45;
+  if (a && b) w.spotlight(lerpRect(a, b, k), SP); else if (b) w.spotlight(b, k * SP); else if (a) w.spotlight(a, (1 - k) * SP); else w.spotlight(null, 0);
+}
+// Detail screens: zoom in from the board (scale up + fade), zoom out back to it. Still when settled.
+function detail(el, t, tin, tout) {
+  const k = expoOut(P(t, tin, tin + 0.4)), o = expoIn(P(t, tout - 0.35, tout));
+  const on = t >= tin && t < tout, moving = k < 1 || o > 0;
+  el.style.opacity = String(on ? Math.min(1, k * 1.5) * (1 - o) : 0);
+  el.style.transform = moving ? `scale(${L(0.7, 1, k) * L(1, 0.7, o)})` : 'none';
+  el.style.filter = moving && on ? `blur(${Math.max(1 - k, o) * 8}px)` : 'none';
+  return on;
+}
+const DET = [[T.check + 0.85, T.capture], [T.capture + 0.85, T.rewrite], [T.rewrite + 0.85, T.ready]];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 126, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    let fl = 0;
+    for (const [at, a] of [[T.villain, 0.35], [T.drop, 0.7], [T.payoff + 0.3, 0.25], [T.tag, 0.3], [T.capture + 0.85 + 1.6, 0.9]]) if (t >= at) fl = Math.max(fl, a * (1 - P(t, at, at + 0.2)));
+    $('#flash').style.opacity = String(fl);
+
+    // ── board visibility: zoom-through into row 01 for each detail screen, and away for the big-type screens
+    let bz = 1, bo = 1, bb = 0;
+    for (const [din, dout] of DET) {
+      const zin = expoIn(P(t, din - 0.45, din)), zout = expoOut(P(t, dout - 0.05, dout + 0.4));
+      if (t >= din - 0.45 && t < dout + 0.4) { const z = t < din ? zin : t < dout - 0.05 ? 1 : 1 - zout; bz = L(1, 4.5, z); bo = 1 - z; bb = z * 10; }
+    }
+    const away = (t >= T.villain && t < T.check) || t >= T.tag - 0.05;
+    const back = expoOut(P(t, T.check - 0.05, T.check + 0.4));
+    if (t >= T.villain - 0.2 && t < T.villain) { bo = 1 - P(t, T.villain - 0.2, T.villain); }
+    if (away && t >= T.villain) bo = 0;
+    if (t >= T.check && t < T.check + 0.4) { bz = L(0.85, 1, back); bo = back; bb = (1 - back) * 8; }
+    if (t >= T.tag - 0.3) bo = 1 - P(t, T.tag - 0.3, T.tag);
+    const still = bz === 1 && bb === 0;
+    css($('#board'), { opacity: String(bo), transform: still ? 'none' : `scale(${bz})`, filter: bb > 0.05 ? `blur(${bb}px)` : 'none' });
+    if (bo > 0) {
+      hmsg(t, HMSG); hver(t, HVER);
+      lines.forEach((ln, i) => { ln.st(t, S[i].tl); ln.ver(t, S[i].vtl); ln.el.style.opacity = ROWS[i][2] === 'new' ? String(P(t, T.ready + 2.5 * B - 0.1, T.ready + 2.5 * B + 0.1)) : '1'; });
+    }
+
+    // ── villain + Meet Quill (big type screens)
+    const vOn = t >= T.villain && t < T.drop;
+    css($('#s-villain'), { opacity: String(vOn ? 1 : 0), transform: vOn ? `scale(${L(1.3, 1, backOut(P(t, T.villain, T.villain + 0.22), 2.2))})` : 'none' });
+    const qOnS = t >= T.drop && t < T.check;
+    css($('#s-quill'), { opacity: String(qOnS ? 1 - P(t, T.check - 0.25, T.check) : 0), transform: qOnS ? `scale(${L(1.25, 1, backOut(P(t, T.drop, T.drop + 0.25), 2))})` : 'none' });
+    $('#s-quill img').style.transform = `translateY(${(1 - backOut(P(t, T.drop + 0.1, T.drop + 0.5), 1.8)) * 60}px) rotate(${L(-12, 0, expoOut(P(t, T.drop + 0.1, T.drop + 0.6)))}deg)`;
+
+    // ── D1: CHECKING — the live Quill preview
+    const d1 = detail($('#s-check'), t, DET[0][0], DET[0][1]);
+    quill.place(QBOX);
+    detail(quill.el, t, DET[0][0], DET[0][1]);
+    if (!d1) quill.el.style.opacity = '0';
+    const qT = t - DET[0][0];
+    const card = () => quill.view.rect(), qel = (s) => () => quill.view.rect(s);
+    const qband = (s, up = 60, down = 60) => () => { const c = card(), r = qel(s)(); return c && r && { x: c.x + 8, w: c.w - 16, y: r.y - up, h: r.h + up + down }; };
+    shoot(quill, qT, [
+      { at: 0, rect: card },
+      { at: 0.35, rect: qband('.ks-agent-request', 80, 90), spot: qel('.ks-evidence') },
+      { at: 1.2, rect: qband('.ks-review-steps', 40, 40), spot: qel('.ks-review-steps') },
+      { at: 2.2, rect: qband('.ks-proposal', 40, 30), spot: qel('.ks-proposal') },
+      { at: 3.0, rect: qband('.ks-review', 200, 30), spot: qel('.ks-review') },
+    ], QBOX, card);
+
+    // ── D2: CAPTURING — Quill drives the product; the shutter fires on the workspace step; the capture refines
+    const d2 = detail($('#s-capture'), t, DET[1][0], DET[1][1]);
+    const cT = t - DET[1][0];
+    const modal = cT >= 0.9;
+    const view = $('#view');
+    if (view.dataset.m !== String(modal)) { view.innerHTML = appHTML(modal); view.dataset.m = String(modal); }
+    view.style.transform = `scale(${1400 / 1440})`;
+    const bx = 260, by = 230, sc = 1400 / 1440;
+    const qc = keys(cT, [[0.1, [bx + 1000, by + 700]], [0.6, [bx + 380 * sc, by + 360 * sc], expoOut], [1.1, [bx + 380 * sc, by + 360 * sc]], [1.45, [bx + 560 * sc, by + 380 * sc], expoOut]]);
+    css($('#qcur'), { opacity: String(d2 && cT < 1.6 ? 1 : 0), transform: `translate(${qc[0]}px, ${qc[1]}px) scale(${(cT > 0.62 && cT < 0.72) || (cT > 1.47 && cT < 1.57) ? 0.88 : 1})` });
+    const snap = DET[1][0] + 1.6;
+    const ci = expoOut(P(t, snap, snap + 0.5)), co = expoIn(P(t, DET[1][1] - 0.35, DET[1][1]));
+    const capOn = t >= snap && t < DET[1][1];
+    css($('#capture'), { opacity: String(capOn ? 1 - co : 0), transform: `translate(${L(260, 360, ci)}px, ${L(230, 200, ci)}px) scale(${L(1400 / 1200, 1, ci) * L(1, 0.7, co)}) rotate(${L(0, -1.5, ci)}deg)`, filter: co > 0 && capOn ? `blur(${co * 8}px)` : 'none' });
+    if (capOn) $('#browser').style.opacity = '0'; else $('#browser').style.opacity = '1';
+    const rT = t - snap;
+    const hl = expoOut(P(rT, 0.25, 0.55));
+    css($('#hl'), { opacity: String(P(rT, 0.25, 0.35)), left: `${L(300, 346, hl)}px`, top: `${L(300, 311, hl)}px`, width: `${L(600, 508, hl)}px`, height: `${L(120, 62, hl)}px` });
+    css($('#blur'), { opacity: String(P(rT, 0.5, 0.6)), left: '468px', top: '480px', width: '218px', height: '26px' });
+    css($('#badge'), { opacity: String(P(rT, 0.7, 0.8)), transform: `scale(${L(1.5, 1, backOut(P(rT, 0.7, 0.95), 2))})` });
+
+    // ── D3: REWRITING — the article; strike, rewrite, then "ready for review"
+    detail($('#s-rewrite'), t, DET[2][0], DET[2][1]);
+    const wT = t - DET[2][0];
+    $('#slotshot').style.transform = 'translate(-160px, -120px) scale(0.66)';
+    $('#strike').style.width = `${100 * expoOut(P(wT, 0.35, 0.65))}%`;
+    const nt = $('#newtxt');
+    if (wT >= 0.8) { $('#oldtxt').style.display = 'none'; nt.style.display = 'inline'; type(nt, 'After authorization, confirm which workspace should receive the activity. Then start the first sync.', t, { start: DET[2][0] + 0.8, cps: 62, caret: false }); }
+    else { $('#oldtxt').style.display = 'inline'; nt.style.display = 'none'; }
+    css($('#review'), { opacity: String(P(wT, 2.5, 2.7)), transform: `translateY(${(1 - expoOut(P(wT, 2.5, 2.9))) * 20}px)` });
+
+    // ── publish: a person clicks each ready row on the board
+    const rowX = 1140, rowC = (i) => ROWY(i) + 20;
+    const order = [0, 1, 2, 4, 6];
+    const hk = [[T.publish - 0.4, [1500, 1080]]];
+    order.forEach((ri, k) => { hk.push([pubAt(k) - 0.12, [rowX + k * 6, rowC(ri)], expoOut], [pubAt(k) + 0.02, [rowX + k * 6, rowC(ri)]]); });
+    const hp = keys(t, hk);
+    const pressing = order.some((_, k) => t > pubAt(k) - 0.03 && t < pubAt(k) + 0.07);
+    css($('#hand'), { opacity: String(P(t, T.publish - 0.4, T.publish - 0.3) * (1 - P(t, T.payoff, T.payoff + 0.2))), transform: `translate(${hp[0]}px, ${hp[1]}px) scale(${pressing ? 0.86 : 1})` });
+
+    // ── tagline in flap tiles, then the logo
+    const tagOn = t >= T.tag;
+    $('#s-tag').style.opacity = tagOn ? '1' : '0';
+    if (tagOn) { tl1(t, [[T.tag, 'EVERY RELEASE.', 'cyc']], { stagger: 0.035 }); tl2(t, [[T.tag + B, 'DOCS ON TIME.', 'ok']], { stagger: 0.035 }); }
+    endMark.assemble(P(t, T.tag + 3 * B, T.tag + 5 * B));
+    const mk = brandEase(P(t, T.tag + 3 * B, T.tag + 4 * B)), ck = brandEase(P(t, T.tag + 4 * B, T.tag + 5 * B));
+    css($('#endmark'), { opacity: String(mk), transform: `translateY(${(1 - mk) * 20}px)` });
+    css($('#cta'), { opacity: String(ck), transform: `translateY(${(1 - ck) * 20}px)` });
+
+    return quill.view.update(Math.min(Math.max(0, qT) * 1.6, 6.5));
+  } }],
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Ticket limbo (energetic cut)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Ticket limbo": a named villain, then the thread. 128 BPM (1 beat = 0.469 s, 1 bar = 1.875 s).
+     Hook: a tangled scribble, stamps and a frozen export in a murky "limbo" tone. Drop: "Not anymore."
+     The tangle pulls taut into the thread, which whips through four stations (HEARD / FIX READY /
+     APPROVED / TOLD) with live helpin.ai previews. Then the export completes, the camera pulls back,
+     and the tagline lands: From "it's broken" to "it's live." Motion references: ClickUp 4.0 launch, X reels. */
+  #stage { background: #F4F6F5; color: var(--ink); }
+  #tone { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 45%, #EFE7DD, #E4DAD0); }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(#D3DBD6 1.5px, transparent 1.7px); }
+  #world { position: absolute; left: 0; top: 0; width: 8600px; height: 1080px; transform-origin: 0 0; }
+  svg.layer { position: absolute; left: 0; top: 0; overflow: visible; }
+
+  .card { position: absolute; background: #fff; border-radius: 20px; box-shadow: 0 24px 70px rgba(19, 21, 20, .10), 0 0 0 1px #E4E9E6; }
+  .export { width: 700px; height: 250px; }
+  .export h3 { position: absolute; left: 34px; top: 30px; margin: 0; font-size: 30px; letter-spacing: -0.02em; }
+  .export p { position: absolute; left: 34px; top: 72px; margin: 0; font-size: 20px; color: #66716C; }
+  .export .bar { position: absolute; left: 34px; top: 124px; width: 632px; height: 14px; border-radius: 7px; background: #ECEFED; overflow: hidden; }
+  .export .bar i { display: block; height: 100%; width: 0; border-radius: 7px; background: #D9A13A; }
+  .export .row { position: absolute; left: 34px; right: 34px; top: 160px; display: flex; justify-content: space-between; font: 500 22px/1 var(--mono); color: #66716C; }
+  .export .row b { font-weight: 500; }
+  .export .state { color: #8A6400; }
+  .export.done .bar i { background: var(--green); }
+  .export.done .state { color: var(--green); }
+
+  .chat { width: 600px; padding: 24px 28px; }
+  .chat .who { display: flex; gap: 14px; align-items: center; font-weight: 600; font-size: 24px; }
+  .chat .who span { width: 50px; height: 50px; border-radius: 50%; background: #FCE6D8; color: #A8502A; display: grid; place-items: center; font-size: 18px; }
+  .chat .who small { font-weight: 400; color: #66716C; font-size: 20px; }
+  .chat p { margin: 14px 0 0; font-size: 27px; line-height: 1.38; color: #2A2F2C; min-height: 76px; }
+
+  .villain { position: absolute; left: 0; width: 1920px; top: 330px; text-align: center; font-size: 200px; line-height: 1; font-weight: 700; letter-spacing: -0.055em; color: var(--ink); }
+  .stamp { position: absolute; padding: 12px 26px; border: 5px solid currentColor; border-radius: 12px; background: rgba(255, 255, 255, .55);
+    font: 700 50px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; opacity: 0; }
+
+  /* screen-space overlays */
+  .ov { position: absolute; inset: 0; pointer-events: none; }
+  #slam { position: absolute; left: 0; top: 0; font-size: 230px; line-height: 1; font-weight: 700; letter-spacing: -0.055em; color: var(--ink); white-space: nowrap; transform-origin: 0 0; opacity: 0; }
+  #slam em { font-style: normal; color: var(--green); }
+  #sub { position: absolute; left: 112px; top: 196px; font-size: 32px; line-height: 1.3; color: #3E4743; width: 560px; opacity: 0; }
+  #note { position: absolute; left: 112px; bottom: 70px; font-size: 20px; color: #66716C; opacity: 0; }
+  #flash { background: #fff; opacity: 0; }
+  #streaks i { position: absolute; left: 0; height: 3px; border-radius: 2px; background: #0F7A50; opacity: 0; }
+  #fade { background: #F4F6F5; opacity: 0; }
+  #payoff { opacity: 0; }
+  #payoff .line { position: absolute; left: 0; width: 1920px; top: 200px; text-align: center; font-size: 110px; font-weight: 700; letter-spacing: -0.045em; color: var(--ink); }
+  #payoff .line .roll { color: var(--green); }
+  #end .tag { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 104px; font-weight: 700; letter-spacing: -0.045em; line-height: 1.05; color: var(--ink); opacity: 0; }
+  #end .tag em { font-style: normal; color: var(--green); }
+  #end .mark { position: absolute; left: 0; width: 1920px; top: 640px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #end .mark b { font-size: 84px; font-weight: 700; letter-spacing: -0.05em; }
+  #end .cta { position: absolute; left: 0; width: 1920px; top: 790px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #end .cta span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 25px/1 var(--sans); }
+  #end .cta .url { background: var(--ink); color: #fff; }
+  #end .cta .tagp { background: #fff; border: 1px solid #CFD6D2; color: var(--ink); font-weight: 500; }
+  #end .cta .tagp i { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+
+  .chip { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 18px;
+    border-radius: 12px; background: #fff; border: 1px solid #CFE5D6; color: #0B6340; font: 500 21px/1 var(--sans); white-space: nowrap;
+    box-shadow: 0 14px 34px rgba(19, 21, 20, .16); opacity: 0; }
+  .chip.green { background: #E3F4EA; border-color: #B7DBC5; }
+  .burst { position: absolute; left: 0; top: 0; width: 10px; height: 10px; opacity: 0; }
+  .burst i { position: absolute; left: 0; top: 0; width: 26px; height: 5px; border-radius: 3px; background: var(--green); transform-origin: 0 50%; }
+  .ring { position: absolute; left: 0; top: 0; border: 4px solid var(--green); border-radius: 26px; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="tone"></div>
+  <div id="dots"></div>
+  <div id="world">
+    <svg class="layer" id="tangle-svg" width="8600" height="1080"><polyline id="tangle" fill="none" stroke="#131514" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" points=""/></svg>
+    <div class="villain" id="villain">Ticket limbo.</div>
+    <svg class="layer" width="8600" height="1080"><path id="strike" d="M 470 440 C 700 400, 900 470, 1100 420 S 1350 450, 1460 420" fill="none" stroke="#C2410C" stroke-width="16" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
+    <div class="card chat" id="chat" style="left:150px; top:90px"><div class="who"><span>MC</span><div>Maya Chen <small>· Northstar</small></div></div><p></p></div>
+    <div class="stamp" id="s1" style="left:1230px; top:130px; color:#131514">Ticket #4812</div>
+    <div class="stamp" id="s2" style="left:1340px; top:600px; color:#8A6400">Escalated</div>
+    <div class="stamp" id="s3" style="left:150px; top:620px; color:#4F5A55">Waiting…</div>
+    <div class="stamp" id="s4" style="left:430px; top:840px; color:#B42318">Still waiting…</div>
+    <div class="card export" id="ex-start" style="left:1120px; top:790px"><h3>Export contacts</h3><p>Northstar · Filtered view</p><div class="bar"><i style="width:54.3%"></i></div><div class="row"><b>10,000 of 18,400</b><span class="state">stuck</span></div></div>
+
+    <svg class="layer" width="8600" height="1080"><path id="path" fill="none" stroke="#0F7A50" stroke-width="7" stroke-linecap="round" d=""/></svg>
+    <div id="w2"></div><div id="w3"></div><div id="w4"></div>
+    <div class="card export done" id="ex-end" style="left:7400px; top:440px"><h3>Export contacts</h3><p>Northstar · Filtered view</p><div class="bar"><i></i></div><div class="row"><b class="count">10,000 of 18,400</b><span class="state">exporting…</span></div></div>
+    <div class="ring" id="ring"></div>
+    <div class="burst" id="burst"></div>
+    <svg class="layer" width="8600" height="1080"><circle id="pen" r="13" fill="#0F7A50" stroke="#fff" stroke-width="5"/></svg>
+
+    <div class="chip" id="a1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Maya’s conversation attached</span></div>
+    <div class="chip" id="a2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M6 8.5V21M18 15.5V9a3 3 0 0 0-3-3h-4"/></svg><span class="t">Pull request · ready for review</span></div>
+    <div class="chip green" id="a3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span>Released</span></div>
+  </div>
+
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div class="ov" id="streaks"></div>
+  <div class="ov" id="fade"></div>
+  <div class="ov"><div id="slam"></div><div id="sub"></div><div id="note">Coding agents need a connected GitHub or GitLab repository.</div></div>
+  <div class="ov" id="payoff"><div class="line">Nothing lost: <span class="roll" id="roll"></span></div></div>
+  <div class="ov" id="end">
+    <div class="tag" id="tag1" style="top:250px">From “it’s broken”</div>
+    <div class="tag" id="tag2" style="top:370px"><em>to “it’s live.”</em></div>
+    <div class="mark" id="mark"><span id="end-symbol"></span><b>Helpin</b></div>
+    <div class="cta" id="cta"><span class="url">helpin.ai</span><span class="tagp"><i></i>Open source · Coming soon</span></div>
+  </div>
+  <div class="ov" id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, expoInOut, backOut, easeIn, rand } from '../../lib/motion.js';
+import { helpinSymbol, css, counter, type, rollWord } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s) => document.querySelector(s);
+const BEAT = 60 / 128, BAR = BEAT * 4;               // 0.469 s, 1.875 s
+const T = {
+  drop: 2 * BAR,        // 3.75  "Not anymore."
+  heard: 3 * BAR,       // 5.63
+  fix: 5 * BAR,         // 9.38
+  approved: 7 * BAR,    // 13.13
+  told: 8.5 * BAR,      // 15.94
+  complete: 10 * BAR,   // 18.75
+  payoff: 11.5 * BAR,   // 21.56
+  end: 13 * BAR,        // 24.38
+  total: 16 * BAR,      // 30.0
+};
+
+// ── World layout
+const W = {
+  ask:    { x: 2556, y: 150, w: 770, h: 840 },
+  coding: { x: 4380, y: 170, w: 680, h: 836 },   // coding card aspect 606×745
+  follow: { x: 6010, y: 200, w: 860, h: 737 },   // follow-up art aspect 356×305
+};
+const PTS = [[60, 560], [1900, 560], [W.ask.x, 560], [W.ask.x + W.ask.w, 560], [W.coding.x, 560], [W.coding.x + W.coding.w, 560], [W.follow.x, 590], [W.follow.x + W.follow.w, 590], [7434, 571]];
+let d = `M ${PTS[0][0]} ${PTS[0][1]} L ${PTS[1][0]} ${PTS[1][1]}`;
+for (let i = 2; i < PTS.length; i++) {
+  const [x0, y0] = PTS[i - 1], [x1, y1] = PTS[i];
+  d += [3, 5, 7].includes(i) ? ` L ${x1} ${y1}` : ` C ${(x0 + x1) / 2} ${y0 + 130}, ${(x0 + x1) / 2} ${y1 - 130}, ${x1} ${y1}`;
+}
+const path = $('#path');
+path.setAttribute('d', d);
+const LEN = path.getTotalLength();
+const lenAtX = (x) => { let lo = 0, hi = LEN; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; path.getPointAtLength(m).x < x ? (lo = m) : (hi = m); } return hi; };
+const S = PTS.map(([x]) => lenAtX(x));
+path.style.strokeDasharray = `${LEN}`;
+
+// The tangle: ticket limbo drawn as loops; on the drop it pulls taut into the thread's first straight run.
+const N = 260;
+const tangleAt = (u) => [150 + 1650 * u + 170 * Math.cos(Math.PI * 2 * 6.5 * u + 0.6), 560 + 170 * Math.sin(Math.PI * 2 * 6.5 * u + 0.6) + 120 * Math.sin(Math.PI * 2 * 1.3 * u)];
+const straightAt = (u) => [60 + 1840 * u, 560];
+
+// Live helpin.ai previews
+const ask = siteWindow($('#w2'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 20 });
+const coding = siteWindow($('#w3'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 16, dark: true });
+const follow = siteWindow($('#w4'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 20 });
+for (const w of [ask, follow]) w.el.style.boxShadow = '0 30px 80px rgba(19,21,20,.14), 0 0 0 1px #E4E9E6';
+coding.el.style.boxShadow = '0 30px 80px rgba(19,21,20,.3)';
+[ask, coding, follow].forEach((w) => waitFor(w.view.ready));
+
+const endMark = helpinSymbol({ size: 92, color: '#131514' });
+$('#end-symbol').append(endMark.node);
+const roll = rollWord($('#roll'), ['the history.', 'the reason.', 'the review.', 'the reply.']);
+for (let i = 0; i < 12; i++) { const s = document.createElement('i'); s.style.transform = `rotate(${i * 30}deg) translateX(24px)`; $('#burst').appendChild(s); }
+for (let i = 0; i < 14; i++) { const s = document.createElement('i'); s.style.top = `${80 + rand(i + 3) * 920}px`; $('#streaks').appendChild(s); }
+
+// ── Helpers
+const land = (el, t, at, from = 36) => {
+  const k = backOut(Math.min(1, Math.max(0, (t - at) / 0.45)), 1.5);
+  css(el, { opacity: Math.min(1, Math.max(0, (t - at) / 0.12)), transform: `translateY(${(1 - k) * from}px) scale(${L(0.94, 1, k)})` });
+};
+const raise = (w, box, t, at, lean, pulse, phase) => {
+  const k = expoOut(P(t, at, at + 0.7));
+  w.place(box);
+  // Live UI must be pixel-still while the camera holds: no float, no scale pulse (sub-pixel motion shimmers text).
+  const settled = k >= 1 && Math.abs(lean) < 0.05;
+  css(w.el, { opacity: Math.min(1, k * 1.8), transform: settled ? 'none' : `perspective(2400px) translateY(${(1 - k) * 160}px) rotateX(${(1 - k) * 16}deg) rotateY(${lean}deg)` });
+};
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+function shoot(w, lt, shots, dur = 0.45, box, bounds) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => (box ? fitAspect(r, box.w / box.h, bounds?.()) : r);
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.();
+  if (a && b) w.spotlight(lerpRect(a, b, k), 1); else if (b) w.spotlight(b, k); else if (a) w.spotlight(a, 1 - k); else w.spotlight(null, 0);
+}
+const penKeys = [
+  [0, 0], [4.25, S[1]], [4.95, S[2], expoInOut],
+  [T.fix - 0.55, S[2]], [T.fix - 0.1, S[4], expoInOut],
+  [T.approved - 0.55, S[4]], [T.approved - 0.1, S[6], expoInOut],
+  [T.complete - 0.55, S[6]], [T.complete - 0.1, S[8], expoInOut],
+];
+const penAt = (x) => path.getPointAtLength(Math.max(0, keys(x, penKeys)));
+function carry(el, t, { lift, ride, arrive, dock, from, to }) {
+  if (t < lift || t > dock + 0.3) { el.style.opacity = '0'; return; }
+  const pen = (x) => { const q = penAt(x); return { x: q.x, y: q.y - 48 }; };
+  const centre = (r) => r && { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+  let pos, s = 1.12, o = 1;
+  if (t < lift + 0.25) { pos = centre(from()); const k = backOut(P(t, lift, lift + 0.25), 1.8); s = L(1, 1.14, k); o = P(t, lift, lift + 0.1); }
+  else if (t < ride) { const a = centre(from()), b = pen(ride), k = expoInOut(P(t, lift + 0.25, ride)); pos = a && { x: L(a.x, b.x, k), y: L(a.y, b.y, k) - Math.sin(k * Math.PI) * 70 }; }
+  else if (t < arrive) pos = pen(t);
+  else { const a = pen(arrive), b = centre(to()) || a, k = expoOut(P(t, arrive, dock)); pos = { x: L(a.x, b.x, k), y: L(a.y, b.y, k) - Math.sin(k * Math.PI) * 50 }; s = L(1.14, 0.92, k); o = 1 - P(t, dock, dock + 0.25); }
+  if (!pos) { el.style.opacity = '0'; return; }
+  css(el, { opacity: String(o), transform: `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%) scale(${s})` });
+}
+// Big word slams in on the beat, then shrinks to the top-left title.
+const SLAMS = [
+  [T.drop, 'Not <em>anymore.</em>', null],
+  [T.heard, 'HEARD.', 'Ask Agent picks it up with the whole history.'],
+  [T.fix, 'FIX <em>READY.</em>', 'A coding agent writes the fix and the test, then opens a pull request.'],
+  [T.approved, 'APPROVED.', 'Your team reviews it before release.'],
+  [T.told, 'TOLD<em>.</em>', 'Your customer hears back after release.'],
+];
+function slams(t) {
+  const cur = SLAMS.filter(([at]) => t >= at).pop();
+  const el = $('#slam'), sub = $('#sub');
+  if (!cur || t > T.complete - 0.3) { el.style.opacity = '0'; sub.style.opacity = '0'; return; }
+  const [at, html, line] = cur;
+  if (el.dataset.at !== String(at)) { el.innerHTML = html; el.dataset.at = String(at); sub.textContent = line || ''; }
+  const w = el.offsetWidth, h = el.offsetHeight;
+  const inK = backOut(P(t, at, at + 0.22), 2.2);
+  const shake = t - at < 0.3 ? Math.sin((t - at) * 120) * 10 * (1 - (t - at) / 0.3) : 0;
+  const isDrop = at === T.drop;
+  const outK = isDrop ? 0 : expoInOut(P(t, at + 0.55, at + 0.95));
+  const cx = 960 - w / 2, cy = 540 - h / 2;
+  const s = L(L(1.45, 1, inK), 0.34, outK);
+  const x = L(cx + shake, 112, outK), y = L(cy, 84, outK);
+  const exit = isDrop ? easeIn(P(t, 4.35, 4.7)) : 0;
+  css(el, { opacity: String(Math.min(1, P(t, at, at + 0.06)) * (1 - exit)), transform: `translate(${x}px, ${y - exit * 160}px) scale(${s})` });
+  const sk = brandEase(P(t, at + 0.85, at + 1.25));
+  css(sub, { opacity: String(line ? sk : 0), transform: `translateY(${(1 - sk) * 16}px)` });
+}
+
+// Camera
+const camKeys = [
+  [0, [960, 540, 1]], [T.drop - 0.05, [960, 540, 1.07]], [T.drop, [960, 540, 1]],
+  [4.3, [960, 540, 1]], [4.95, [2681, 560, 1], expoInOut],
+  [T.fix - 0.55, [2681, 560, 1]], [T.fix - 0.1, [4460, 580, 1], expoInOut],
+  [T.approved - 0.55, [4460, 580, 1]], [T.approved - 0.1, [6180, 580, 1], expoInOut],
+  [T.complete - 0.55, [6180, 580, 1]], [T.complete - 0.1, [7750, 560, 1], expoInOut],
+  [T.payoff, [7750, 560, 1.05]], [T.payoff + 1.1, [4300, 560, 0.215], expoInOut],
+  [T.end, [4300, 560, 0.215]], [T.total, [4300, 560, 0.18]],
+];
+const STAMPS = [['#s1', 2 * BEAT, -7], ['#s2', 3 * BEAT, 8], ['#s3', 4 * BEAT, -6], ['#s4', 5 * BEAT, 4]];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 128, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    // camera + shake on stamps and slams
+    let [cx, cy, z] = keys(t, camKeys);
+    let shx = 0, shy = 0;
+    for (const at of [...STAMPS.map((s) => s[1]), 6 * BEAT, T.drop]) if (t >= at && t < at + 0.35) { const a = 9 * Math.exp(-(t - at) * 12); shx += a * Math.sin((t - at) * 95); shy += a * Math.cos((t - at) * 80); }
+    const vx = (cx - keys(t - 1 / 30, camKeys)[0]) * 30 * z;
+    let wx = 960 - cx * z + shx, wy = 540 - cy * z + shy;
+    if (z === 1 && Math.abs(vx) < 400) { wx = Math.round(wx); wy = Math.round(wy); } // whole pixels keep UI text crisp
+    css($('#world'), { transform: `translate(${wx}px, ${wy}px) scale(${z})`, filter: Math.abs(vx) > 400 ? `blur(${Math.min(9, Math.abs(vx) / 900)}px)` : 'none' });
+    css($('#dots'), { backgroundSize: `${30 * z}px ${30 * z}px`, backgroundPosition: `${960 - cx * z * 0.55}px ${540 - cy * z * 0.55}px` });
+    $('#tone').style.opacity = String(1 - P(t, T.drop, T.drop + 0.2));
+    const lean = Math.max(-12, Math.min(12, -vx * 0.004));
+    const pulse = t > T.drop ? Math.exp(-(((t - T.drop) % BEAT)) * 12) : 0;
+    // speed streaks
+    const sp = Math.min(1, Math.abs(vx) / 3200);
+    [...$('#streaks').children].forEach((s, i) => css(s, { opacity: String(sp * (0.25 + rand(i) * 0.5)), width: `${sp * (200 + rand(i + 7) * 500)}px`, left: `${(rand(i + 11) * 1920 + t * 3000 * Math.sign(vx)) % 2200 - 150}px` }));
+    // flashes on the drop, each slam and the completion
+    let fl = 0;
+    for (const [at, amt] of [[T.drop, 0.75], [T.heard, 0.3], [T.fix, 0.3], [T.approved, 0.3], [T.told, 0.3], [T.complete + 1.05, 0.35]]) if (t >= at) fl = Math.max(fl, amt * (1 - P(t, at, at + 0.2)));
+    $('#flash').style.opacity = String(fl);
+
+    // ── Hook: ticket limbo
+    land($('#chat'), t, 0.05, 30);
+    type($('#chat p'), 'Our export is broken. We only get 10,000 of our 18,400 contacts.', t, { start: 0.2, cps: 70, caret: t < 1.3 });
+    const vk = backOut(P(t, BEAT, BEAT + 0.2), 2);
+    css($('#villain'), { opacity: String(P(t, BEAT, BEAT + 0.05) * (1 - P(t, T.drop, T.drop + 0.25))), transform: `translateY(${-P(t, T.drop, T.drop + 0.3) * 120}px) scale(${L(1.35, 1, vk)})` });
+    $('#strike').style.strokeDashoffset = String(1 - expoOut(P(t, 3.3, 3.62)));
+    $('#strike').style.opacity = String(1 - P(t, T.drop, T.drop + 0.25));
+    for (const [sel, at, rot] of STAMPS) {
+      const k = P(t, at, at + 0.1), out = expoOut(P(t, T.drop, T.drop + 0.45));
+      const el = $(sel), dx = (el.offsetLeft - 900) * 1.6 * out, dy = (el.offsetTop - 500) * 1.6 * out;
+      css(el, { opacity: String((t >= at ? 1 : 0) * (1 - out)), transform: `translate(${dx}px, ${dy}px) rotate(${rot + out * rot * 3}deg) scale(${L(2.1, 1, easeIn(k))})` });
+    }
+    land($('#ex-start'), t, 6 * BEAT, 20);
+    const g = t > 6 * BEAT && t < T.drop ? Math.round(rand(Math.floor(t * 30)) * 6 - 3) : 0;
+    css($('#ex-start .row b'), { transform: `translateX(${g}px)`, textShadow: g ? `${g}px 0 rgba(180,35,24,.55), ${-g}px 0 rgba(15,122,80,.55)` : 'none' });
+    const exOut = expoOut(P(t, T.drop, T.drop + 0.45));
+    if (exOut > 0) css($('#ex-start'), { opacity: String(1 - exOut), transform: `translate(${exOut * 500}px, ${exOut * 300}px) rotate(${exOut * 14}deg)` });
+    // tangle draws during the hook, pulls taut on the drop
+    const drawn = Math.floor(N * expoOut(P(t, 0.4, 3.3)));
+    const pts = [];
+    for (let i = 0; i <= Math.min(drawn, N); i++) {
+      const u = i / N, [tx, ty] = tangleAt(u), [sx, sy] = straightAt(u);
+      const k = expoInOut(P(t, T.drop + u * 0.15, T.drop + 0.3 + u * 0.2));
+      pts.push(`${L(tx, sx, k).toFixed(1)},${L(ty, sy, k).toFixed(1)}`);
+    }
+    const tangle = $('#tangle');
+    tangle.setAttribute('points', pts.join(' '));
+    tangle.setAttribute('stroke', t > T.drop ? '#0F7A50' : '#131514');
+    tangle.style.opacity = String(t < 4.3 ? 1 : 0);
+
+    // ── Thread + pen
+    const len = t < 4.25 ? 0 : keys(t, penKeys);
+    path.style.strokeDashoffset = String(LEN - len);
+    const pen = $('#pen');
+    let pp;
+    if (t < T.drop) { const [x, y] = tangleAt(Math.min(1, drawn / N)); pp = { x, y }; }
+    else if (t < 4.25) { pp = { x: 60 + 1840 * expoInOut(P(t, T.drop, 4.25)), y: 560 }; }
+    else pp = path.getPointAtLength(Math.max(0, len));
+    pen.setAttribute('cx', pp.x); pen.setAttribute('cy', pp.y);
+    pen.style.opacity = String(P(t, 0.4, 0.5) * (1 - P(t, T.complete, T.complete + 0.2)));
+
+    // ── Stations
+    slams(t);
+    $('#note').style.opacity = String(brandEase(P(t, T.fix + 1.0, T.fix + 1.4)) * (1 - P(t, T.approved - 0.6, T.approved - 0.3)));
+    // HEARD — Ask Agent at 3.1×
+    raise(ask, W.ask, t, 4.6, lean, pulse, 0);
+    const aT = t - 4.6;
+    const panel = () => ask.view.rect('.swi-agent'), step = (i) => () => ask.view.rect('.swi-agent-step', i);
+    const band = (i, up = 190, down = 150) => () => { const pn = panel(), st = step(i)(); return pn && st && { x: pn.x - 10, w: pn.w + 20, y: st.y - up, h: st.h + up + down }; };
+    shoot(ask, aT, [
+      { at: 0, rect: () => ask.view.rect() },
+      { at: 0.35, rect: () => ({ ...panel(), x: panel()?.x - 120, w: (panel()?.w || 0) + 130 }) },
+      { at: 0.9, rect: band(1), spot: step(1) },
+      { at: 2.35, rect: band(2), spot: step(2) },
+      { at: 3.7, rect: band(3, 230, 120), spot: step(3) },
+    ]);
+    // FIX READY — coding agent at 1.05×
+    raise(coding, W.coding, t, T.fix - 0.4, lean, pulse, 1.7);
+    const cT = t - (T.fix - 0.4);
+    const card = () => coding.view.rect(), el = (s) => () => coding.view.rect(s);
+    const cband = (s, up = 60, down = 60) => () => { const c = card(), r = el(s)(); return c && r && { x: c.x + 12, w: 500, y: r.y - up, h: r.h + up + down }; };
+    shoot(coding, cT, [
+      { at: 0, rect: card },
+      { at: 0.35, rect: cband('.awa-code-task', 80, 40), spot: el('.awa-code-task small') },
+      { at: 0.95, rect: cband('.awa-code-file', 40, 50), spot: el('.awa-code-file') },
+      { at: 2.0, rect: cband('.awa-answer', 70, 30), spot: el('.awa-answer') },
+      { at: 2.85, rect: cband('.awa-code-review', 120, 40), spot: el('.awa-code-review') },
+    ], 0.45, W.coding, card);
+    // APPROVED + TOLD — follow-up at 1.2×
+    raise(follow, W.follow, t, T.approved - 0.4, lean, pulse, 3.1);
+    const fT = t - (T.approved - 0.4);
+    const art = () => follow.view.rect();
+    const region = (y0, y1, x0 = 0.05, x1 = 0.95) => () => { const r = art(); return r && { x: r.x + r.w * x0, y: r.y + r.h * y0, w: r.w * (x1 - x0), h: r.h * (y1 - y0) }; };
+    shoot(follow, fT, [
+      { at: 0, rect: art },
+      { at: 0.45, rect: region(0.2, 0.7, 0.02, 0.98), spot: region(0.3, 0.6) },
+      { at: T.told - (T.approved - 0.4) - 0.2, rect: region(0.5, 1.0, 0.02, 0.98), spot: region(0.66, 0.96) },
+      { at: T.complete - (T.approved - 0.4) - 0.9, rect: art },
+    ]);
+
+    // Artifacts ride the whips
+    carry($('#a1'), t, { lift: T.fix - 0.85, ride: T.fix - 0.55, arrive: T.fix - 0.1, dock: T.fix + 0.3,
+      from: () => ask.toOuter(ask.view.rect('.swi-agent-source')), to: () => coding.toOuter(coding.view.rect('.awa-code-task small')) });
+    carry($('#a2'), t, { lift: T.approved - 0.9, ride: T.approved - 0.55, arrive: T.approved - 0.1, dock: T.approved + 0.35,
+      from: () => coding.toOuter(coding.view.rect('.awa-code-review')), to: () => follow.toOuter(region(0.3, 0.6)()) });
+    $('#a2 .t').textContent = t > T.approved - 0.3 ? 'Reviewed by Sam · released' : 'Pull request · ready for review';
+    $('#a2').classList.toggle('green', t > T.approved - 0.3);
+    carry($('#a3'), t, { lift: T.complete - 0.9, ride: T.complete - 0.55, arrive: T.complete - 0.1, dock: T.complete + 0.15,
+      from: () => follow.toOuter(region(0.3, 0.45, 0.62, 0.95)()), to: () => ({ x: 7434, y: 564, w: 20, h: 14 }) });
+
+    // ── Complete: the export races to 18,400 and bursts
+    land($('#ex-end'), t, T.complete - 0.3);
+    const m = counter($('#ex-end .count'), t, T.complete + 0.15, T.complete + 1.05, 10000, 18400, { ease: easeIn, suffix: ' of 18,400' });
+    $('#ex-end .bar i').style.width = `${(m / 18400) * 100}%`;
+    $('#ex-end .state').textContent = m >= 18400 ? 'complete' : 'exporting…';
+    const bt = t - (T.complete + 1.05);
+    if (bt > 0) css($('#ex-end'), { transform: `scale(${1 + 0.07 * Math.exp(-bt * 7) * Math.cos(bt * 18)})` });
+    const rk = P(bt, 0, 0.6);
+    css($('#ring'), { opacity: String(bt > 0 ? (1 - rk) * 0.9 : 0), left: `${7400 - rk * 60}px`, top: `${440 - rk * 60}px`, width: `${700 + rk * 120}px`, height: `${250 + rk * 120}px` });
+    css($('#burst'), { opacity: String(bt > 0 ? 1 - P(bt, 0.25, 0.6) : 0), left: '8100px', top: '470px', transform: `scale(${L(0.4, 2.6, expoOut(P(bt, 0, 0.5)))})` });
+
+    // ── Payoff: pull back over the whole thread; "Nothing lost:" rolls on the beat
+    const po = brandEase(P(t, T.payoff + 0.5, T.payoff + 0.9)) * (1 - P(t, T.end - 0.15, T.end + 0.05));
+    $('#fade').style.opacity = String(Math.max(po * 0.45, P(t, T.end - 0.15, T.end + 0.1) * 1.0));
+    css($('#payoff'), { opacity: String(po), transform: `translateY(${(1 - po) * 20}px)` });
+    roll.update(t, [T.payoff + 0.7, T.payoff + 0.7 + BEAT * 1, T.payoff + 0.7 + BEAT * 2, T.payoff + 0.7 + BEAT * 3], 0.2);
+
+    // ── End: tagline slams in two beats, then the logo
+    const tag = (el, at) => { const k = backOut(P(t, at, at + 0.22), 2.2); css(el, { opacity: String(P(t, at, at + 0.06)), transform: `scale(${L(1.35, 1, k)})` }); };
+    tag($('#tag1'), T.end); tag($('#tag2'), T.end + BEAT);
+    endMark.assemble(P(t, T.end + BEAT * 2, T.end + BEAT * 4));
+    const mk = brandEase(P(t, T.end + BEAT * 2, T.end + BEAT * 3));
+    css($('#mark'), { opacity: String(mk), transform: `translateY(${(1 - mk) * 20}px)` });
+    const ck = brandEase(P(t, T.end + BEAT * 3, T.end + BEAT * 4));
+    css($('#cta'), { opacity: String(ck), transform: `translateY(${(1 - ck) * 20}px)` });
+
+    const waits = [];
+    // Each preview holds its final state after its station (clamped time, not skipped updates),
+    // so a render that starts mid-video still shows every window filled in the pull-back map.
+    const clampT = (x, max) => Math.min(Math.max(0, x), max);
+    if (aT > -0.2) waits.push(ask.view.update(2.0 + clampT(aT, T.fix + 0.6 - 4.6) * 3.1));
+    if (cT > -0.2) waits.push(coding.view.update(clampT(cT, T.approved + 0.6 - (T.fix - 0.4)) * 1.05));
+    if (fT > -0.2) waits.push(follow.view.update(Math.min(clampT(fT, 20) * 1.2, 8.0)));
+    return waits.length ? Promise.all(waits) : null;
+  } }],
+});
+</script>
+</body>
+</html>

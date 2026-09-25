@@ -1,0 +1,158 @@
+{
+  "name": "bug-to-fix-energy",
+  "duration": 30.0,
+  "video": "../../out/bug-to-fix-energy/bug-to-fix-energy.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 3.8,
+      "generate": 10,
+      "from": 3.0,
+      "gain": -6,
+      "fadeIn": 0.2,
+      "fadeOut": 0.05,
+      "prompt": "Tight energetic percussion build at 128 BPM: punchy kick, crisp claps, fast ticking hi-hats and a snare roll that builds steadily and peaks right at the very end, like the seconds before a drop. Percussion only: no melody, no bass notes, no chords, no vocals."
+    },
+    {
+      "at": 3.75,
+      "length": 26.25,
+      "generate": 30,
+      "from": 0.5,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 3.0,
+      "prompt": "High-energy upbeat indie-electronic groove at 128 BPM that starts immediately at full energy on the very first beat, no intro and no fade-in: punchy four-on-the-floor kick, big claps, a driving bass line, bright synth plucks and a catchy marimba hook. Euphoric, confident and fun, like a modern tech product launch. Full energy all the way through with no breakdown, ending on a big bright sustained final chord. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "notify": {
+      "text": "friendly chat message notification pop, bright and short",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "stamp": {
+      "text": "rubber stamp slammed hard on paper, punchy dry thud",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "glitch": {
+      "text": "short harsh digital glitch stutter, data freezing",
+      "duration": 0.6,
+      "gain": -10
+    },
+    "slam": {
+      "text": "punchy short whoosh into a tight impact, like a bold word slamming onto the screen, modern and crisp, not cinematic",
+      "duration": 0.6,
+      "gain": -8
+    },
+    "whip": {
+      "text": "very fast whip pan whoosh, sharp airy swish",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "blip": {
+      "text": "short bright positive UI blip, clean",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "tick": {
+      "text": "fast digital counter ticking up rapidly, numbers racing",
+      "duration": 1.0,
+      "gain": -12
+    },
+    "success": {
+      "text": "bright satisfying success chime with a sparkle, upbeat and joyful",
+      "duration": 1.3,
+      "gain": -8
+    }
+  },
+  "cues": [
+    {
+      "sound": "notify",
+      "at": 0.05
+    },
+    {
+      "sound": "slam",
+      "at": [
+        0.46875,
+        3.75,
+        5.625,
+        9.375,
+        13.125,
+        15.9375,
+        24.375,
+        24.84375
+      ]
+    },
+    {
+      "sound": "stamp",
+      "at": [
+        0.9375,
+        1.40625,
+        1.875,
+        2.34375
+      ]
+    },
+    {
+      "sound": "glitch",
+      "at": 2.8125
+    },
+    {
+      "sound": "whip",
+      "at": [
+        3.3,
+        4.3,
+        8.825,
+        12.575,
+        18.2,
+        21.5625
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        4.92,
+        5.57,
+        7.02,
+        8.47,
+        9.55,
+        10.88,
+        11.36,
+        11.84,
+        14.4,
+        15.65,
+        9.675,
+        13.475,
+        18.9
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        22.2625,
+        22.73125,
+        23.2,
+        23.66875
+      ],
+      "gain": -11
+    },
+    {
+      "sound": "tick",
+      "at": 18.9,
+      "trim": 0.9
+    },
+    {
+      "sound": "success",
+      "at": 19.8
+    },
+    {
+      "sound": "blip",
+      "at": 25.3125,
+      "gain": -10
+    }
+  ]
+}

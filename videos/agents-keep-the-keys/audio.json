@@ -1,0 +1,184 @@
+{
+  "name": "agents-keep-the-keys",
+  "duration": 31.935,
+  "video": "../../out/agents-keep-the-keys/agents-keep-the-keys.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 6.774,
+      "generate": 10,
+      "from": 0,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Tense cinematic build at 124 BPM at full volume from the very first beat, no quiet intro: driving staccato low strings, pounding toms, a ticking pulse and rising tension, suspenseful and dramatic, building to the end. No vocals, no choir."
+    },
+    {
+      "at": 6.774,
+      "length": 25.161,
+      "generate": 40,
+      "from": 0.968,
+      "gain": -6,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Powerful cinematic hybrid electronic track at 124 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: driving staccato strings, big punchy drums, a pulsing synth bass and bright heroic synth leads. Confident and in control, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit. No vocals, no choir."
+    }
+  ],
+  "sounds": {
+    "keys": {
+      "text": "light fast laptop keyboard typing",
+      "duration": 1.5,
+      "gain": -14
+    },
+    "pop": {
+      "text": "soft bubbly UI pop",
+      "duration": 0.5,
+      "gain": -13
+    },
+    "thunk": {
+      "text": "satisfying heavy toggle switch thunk locking into position",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "wire": {
+      "text": "electric zip as a cable connects, bright and quick",
+      "duration": 0.6,
+      "gain": -10
+    },
+    "tick": {
+      "text": "tiny crisp confirmation tick",
+      "duration": 0.5,
+      "gain": -13
+    },
+    "gate": {
+      "text": "soft attention chime, two notes, waiting for approval",
+      "duration": 0.8,
+      "gain": -9
+    },
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "approve": {
+      "text": "warm confident success chime, approval granted",
+      "duration": 0.8,
+      "gain": -9
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    },
+    "cardin": {
+      "text": "soft low muted tone with a gentle paper whoosh, a card appearing, slightly tense",
+      "duration": 0.8,
+      "gain": -13
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "swell": {
+      "text": "gentle rising synth pad swell with soft shimmering strings, calm build, no drums",
+      "duration": 2,
+      "gain": -11
+    }
+  },
+  "cues": [
+    {
+      "sound": "keys",
+      "at": [
+        9.21
+      ]
+    },
+    {
+      "sound": "pop",
+      "at": [
+        11.41,
+        11.71,
+        12.01
+      ]
+    },
+    {
+      "sound": "thunk",
+      "at": [
+        13.681,
+        14.648,
+        15.616,
+        16.584
+      ]
+    },
+    {
+      "sound": "wire",
+      "at": [
+        18.019
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        20.823,
+        21.423,
+        24.023,
+        24.623
+      ]
+    },
+    {
+      "sound": "gate",
+      "at": [
+        22.223
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        23.623
+      ]
+    },
+    {
+      "sound": "approve",
+      "at": [
+        23.673
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        30
+      ]
+    },
+    {
+      "sound": "cardin",
+      "at": [
+        0.4,
+        1.368,
+        2.335,
+        3.303
+      ]
+    },
+    {
+      "sound": "soft",
+      "at": [
+        4.839,
+        6.774,
+        8.71,
+        12.581,
+        17.419,
+        20.323,
+        25.161
+      ]
+    },
+    {
+      "sound": "swell",
+      "at": [
+        4.939
+      ]
+    }
+  ]
+}

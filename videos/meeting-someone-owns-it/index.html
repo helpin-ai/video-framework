@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Someone owns it (meeting → tracked work)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "Someone owns it": a call ends on "someone will send the guide", everyone leaves, the commitment is left
+     floating with "Owner: ?". Helpin caught it: one sentence from the transcript lifts out and morphs, state by
+     state, into an action item, a task with an owner, and a follow-up draft. 124 BPM (beat 0.484 s, bar 1.935 s),
+     electro-swing score of its own. HEL-147. */
+  #call { position: absolute; left: 260px; top: 130px; width: 1400px; height: 800px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; }
+  .tile { position: relative; border-radius: 22px; background: linear-gradient(160deg, #1B3A30, #0F241D); border: 2px solid #24463A; overflow: hidden; }
+  .tile img { position: absolute; left: 50%; top: 44%; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; }
+  .tile .nm { position: absolute; left: 20px; bottom: 18px; font: 600 22px/1 var(--sans); color: #E6F0EA; padding: 8px 12px; border-radius: 9px; background: rgba(0, 0, 0, .35); }
+  .tile .say { position: absolute; left: 50%; top: 20px; transform: translateX(-50%); padding: 14px 22px; border-radius: 20px; background: #fff; color: var(--ink); font: 600 28px/1.2 var(--sans); white-space: nowrap; opacity: 0; }
+  .tile .left { position: absolute; inset: 0; display: grid; place-items: center; background: #0A1712; color: #6F8E7C; font: 600 24px/1 var(--mono); letter-spacing: .1em; opacity: 0; }
+  .tile .own { position: absolute; right: 18px; bottom: 16px; padding: 10px 14px; border-radius: 10px; background: #E3F4EA; color: var(--green-h); font: 600 20px/1 var(--sans); opacity: 0; }
+  .tile .own.q { background: #FFF4D6; color: #7A5A00; }
+  #ask { position: absolute; left: 0; width: 1920px; top: 960px; text-align: center; font: 600 34px/1 var(--sans); color: #CFE3D6; opacity: 0; }
+  #note { position: absolute; left: 760px; top: 380px; width: 400px; height: 260px; border-radius: 10px; background: #F7E7A6; color: #3A3000; padding: 30px; font: 600 38px/1.2 var(--sans); box-shadow: 0 30px 60px rgba(0, 0, 0, .45); opacity: 0; }
+  #note small { display: block; margin-top: 30px; font: 700 26px/1 var(--mono); color: #A04A00; }
+
+  /* transcript */
+  #tr { position: absolute; left: 310px; top: 240px; width: 1300px; height: 800px; overflow: hidden; }
+  #tr .hd { height: 92px; display: flex; align-items: center; gap: 16px; padding: 0 32px; border-bottom: 1px solid var(--hairline); }
+  #tr .hd b { font-size: 30px; letter-spacing: -0.02em; } #tr .hd span { font: 500 19px/1 var(--mono); color: var(--t3); }
+  #tr .chips { display: flex; gap: 10px; padding: 18px 32px; border-bottom: 1px solid var(--hairline); }
+  #tr .chips span { font: 600 19px/1 var(--mono); padding: 10px 14px; border-radius: 9px; background: #EFF2F0; color: var(--t2); opacity: 0; }
+  #tr .chips span.g { background: #E3F4EA; color: var(--green-h); } #tr .chips span.a { background: #FFF4D6; color: #7A5A00; }
+  .ln { position: absolute; left: 20px; right: 20px; height: 86px; display: flex; align-items: center; gap: 18px; padding: 0 14px; border-radius: 16px; opacity: 0; }
+  .ln img { width: 50px; height: 50px; border-radius: 50%; flex: none; }
+  .ln .who { width: 170px; flex: none; font: 600 21px/1.25 var(--sans); } .ln .who small { display: block; font: 500 17px/1.4 var(--mono); color: var(--t3); }
+  .ln .tx { font-size: 28px; color: #2A2F2C; }
+  .ln.hot { background: #E3F4EA; box-shadow: inset 0 0 0 3px var(--green); }
+
+  /* the object that morphs */
+  #obj { position: absolute; left: 0; top: 0; border-radius: 22px; background: #fff; color: var(--ink); box-shadow: 0 50px 130px rgba(0, 0, 0, .5); overflow: hidden; opacity: 0; }
+  #obj .st { position: absolute; left: 0; top: 0; width: 1000px; padding: 34px 40px; opacity: 0; }
+  #obj .tagm { display: inline-block; font: 700 18px/1 var(--mono); letter-spacing: .12em; padding: 9px 12px; border-radius: 8px; background: #E3F4EA; color: var(--green-h); margin-bottom: 18px; }
+  #obj h3 { margin: 0 0 20px; font-size: 44px; letter-spacing: -0.025em; line-height: 1.1; }
+  #obj .row { display: flex; align-items: center; gap: 14px; height: 60px; border-top: 1px solid var(--hairline); font-size: 25px; }
+  #obj .row b { width: 170px; flex: none; font: 600 18px/1 var(--mono); letter-spacing: .08em; color: var(--t3); }
+  #obj .row img { width: 36px; height: 36px; border-radius: 50%; }
+  #obj .row .lk { color: var(--green); font-weight: 600; }
+  #obj .pill { display: inline-flex; align-items: center; height: 38px; padding: 0 14px; border-radius: 10px; background: #EFF2F0; font: 600 20px/1 var(--sans); color: var(--t2); }
+  #obj .mail p { margin: 0 0 12px; font-size: 25px; line-height: 1.45; color: #2A2F2C; }
+  #obj .mail .hdr { font: 500 20px/1.7 var(--mono); color: var(--t3); margin-bottom: 16px; } #obj .mail .hdr b { color: var(--ink); font-weight: 600; }
+  #obj .foot { position: relative; margin-top: 22px; height: 66px; border-radius: 14px; background: #FFF7E0; border: 1px solid #F0DDA0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 22px; color: #7A5A00; }
+  #obj .foot span { height: 44px; padding: 0 18px; border-radius: 10px; background: var(--ink); color: #fff; display: inline-flex; align-items: center; font: 600 20px/1 var(--sans); }
+  #oq { position: absolute; left: 560px; top: 670px; width: 800px; height: 92px; border-radius: 18px; background: #FFF4D6; color: #5A4300; display: flex; align-items: center; gap: 16px; padding: 0 26px; font-size: 26px; box-shadow: 0 30px 80px rgba(0, 0, 0, .4); opacity: 0; }
+  #oq b { font: 700 18px/1 var(--mono); letter-spacing: .12em; color: #8A6400; }
+  #head { position: absolute; left: 0; width: 1920px; top: 74px; text-align: center; font-size: 80px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+  <div class="lines" id="lines"><div id="l1"></div><div id="l2"></div><div id="l3"></div></div>
+  <div id="side"></div>
+  <div id="rigwrap"><div id="rig">
+  <div id="call">
+    <div class="tile"><img src="../../assets/helpin/avatars/maya.webp" alt=""><div class="nm">Maya · Northstar</div><div class="say">So who sends the Okta guide?</div><div class="left">MAYA LEFT</div><div class="own q">Security approval · open</div></div>
+    <div class="tile"><img src="../../assets/helpin/avatars/sam.webp" alt=""><div class="nm">Sam</div><div class="say">We’ll get it over!</div><div class="left">SAM LEFT</div><div class="own">✓ Share the setup guide</div></div>
+    <div class="tile"><img src="../../assets/helpin/avatars/dev.webp" alt=""><div class="nm">Alex</div><div class="say">Yep, someone will.</div><div class="left">ALEX LEFT</div><div class="own">✓ Validate role mappings</div></div>
+    <div class="tile"><img src="../../assets/helpin/avatars/lin.webp" alt=""><div class="nm">Jules</div><div class="say">Great call, everyone!</div><div class="left">JULES LEFT</div><div class="own">✓ Draft the pilot plan</div></div>
+  </div>
+  
+  <div id="note">Send Maya the Okta setup guide<small>OWNER: ?</small></div>
+  
+  <div class="card" id="tr"><div class="hd"><b>SSO rollout review</b><span>Northstar Labs · 32 min · Notetaker</span></div>
+    <div class="chips"><span class="g">Summary</span><span class="g">Decisions · 2</span><span class="a">Open questions · 1</span><span class="g">Action items · 3</span></div>
+    <div id="trlines"></div></div>
+  <div id="obj">
+    <div class="st" id="st1"><span class="tagm">ACTION ITEM</span><h3>Share the Okta setup guide</h3>
+      <div class="row"><b>OWNER</b><img src="../../assets/helpin/avatars/sam.webp" alt="">Sam Rivera</div><div class="row"><b>DUE</b>Friday</div><div class="row"><b>SOURCE</b><span class="lk">SSO rollout review · 12:41 ↗</span></div></div>
+    <div class="st" id="st2"><span class="tagm">TASK · CUSTOMER SUCCESS</span><h3>Share the setup guide</h3>
+      <div class="row"><b>OWNER</b><img src="../../assets/helpin/avatars/sam.webp" alt="">Sam Rivera</div><div class="row"><b>STATUS</b><span class="pill">To do</span></div>
+      <div class="row"><b>PROJECT</b>Enterprise rollout</div><div class="row"><b>ATTACHED</b><span class="lk">SSO rollout review · meeting ↗</span></div><div class="row"><b>CUSTOMER</b>Northstar Labs · Maya Chen</div></div>
+    <div class="st mail" id="st3"><span class="tagm">FOLLOW-UP · DRAFT</span><div class="hdr">To <b>Maya Chen</b> · Subject <b>Next steps for Northstar’s SSO pilot</b></div>
+      <p>Hi Maya, thanks for today. Here’s where we landed:</p><p>• An admin-only pilot first<br>• Sam shares the Okta setup guide by Friday<br>• The security checklist, attached</p>
+      <div class="foot">Ready for Sam’s review · Not sent<span>Review</span></div></div>
+  </div>
+  <div id="oq"><b>OPEN QUESTION</b>Security approval is still pending.</div>
+  
+  </div></div>
+  <div class="scr" id="s-drop"><div class="mega" style="top:470px; font-size:104px" id="drop"></div></div>
+  <div class="scr" id="s-pay"><div class="topline" id="pay" style="top:120px; font-size:72px"></div></div>
+  <div id="endwrap"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, brandEase } from '../../lib/motion.js';
+import { css } from '../../lib/components.js';
+import { KIT_CSS, END_HTML, words, rise, pop, push, bigScreen, stack, sideCopy, rig, bundles, endCard } from '../../lib/kit.js';
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS;
+$('#endwrap').outerHTML = END_HTML;
+
+const B = 60 / 124, BAR = 4 * B;
+const T = { leave: 1.5 * BAR, note: 2 * BAR, vil: 2.75 * BAR, drop: 3.75 * BAR, s1: 4.75 * BAR, s2: 7 * BAR, s3: 9 * BAR, s4: 11 * BAR,
+  payoff: 12.5 * BAR, tag: 14 * BAR, total: 16 * BAR };
+const LN = [[$('#l1'), words($('#l1'), '“Someone will send it.”'), 0.4], [$('#l2'), words($('#l2'), 'Everyone agreed.'), T.leave], [$('#l3'), words($('#l3'), '<em>Nobody owns it.</em>'), T.vil]];
+const DROP = words($('#drop'), 'Helpin <em>caught it.</em>');
+const PAY = words($('#pay'), 'Everyone agreed. <em>Someone owns it.</em>');
+const end = endCard($, 'The call ended.', '<em>The work started.</em>');
+const side = sideCopy($, [
+  { at: T.s1, eyebrow: '01 · Captured', head: 'It hears <em>the promise.</em>', lede: 'Decisions and action items link to the speaker and the moment they were said.' },
+  { at: T.s2, eyebrow: '02 · Owned', head: 'It names <em>the owner.</em>', lede: 'The commitment gets an owner. Open questions stay visible.' },
+  { at: T.s3, eyebrow: '03 · Tracked', head: 'It becomes <em>the work.</em>', lede: 'A Customer Success task, with the meeting attached.' },
+  { at: T.s4, eyebrow: '04 · Followed up', head: 'It drafts <em>the follow-up.</em>', lede: 'Ready for Sam’s review. Nothing is sent until he does.' },
+], T.payoff);
+const cam = rig($('#rig'), [[0, 960, 530, 0.62, 1330, 560], [T.s1, 960, 620, 0.72, 1340, 560], [T.payoff, 960, 530, 0.62, 960, 640]]);
+const bg = bundles($);
+const tiles = [...document.querySelectorAll('.tile')];
+
+// transcript lines
+const LINES = [
+  ['maya', 'Maya Chen', '12:38', 'Can we start with admins only?'],
+  ['sam', 'Sam Rivera', '12:39', 'Yes, an admin-only pilot works for us.'],
+  ['dev', 'Alex', '12:40', 'Security still needs to approve it.'],
+  ['sam', 'Sam Rivera', '12:41', 'I’ll share the Okta setup guide by Friday.'],
+  ['maya', 'Maya Chen', '12:42', 'Perfect, I’ll loop in our IT lead.'],
+];
+const HOT = 3, LY = (i) => 180 + i * 104;
+const lineHost = $('#trlines');
+lineHost.innerHTML = LINES.map(([a, n, ts, tx], i) => `<div class="ln" style="top:${LY(i)}px"><img src="../../assets/helpin/avatars/${a}.webp" alt=""><div class="who">${n}<small>${ts}</small></div><div class="tx">${tx}</div></div>`).join('');
+const lineEls = [...lineHost.querySelectorAll('.ln')];
+const TRX = 310, TRY = 240;
+const POSE = [[TRX + 20, TRY + LY(HOT), 1260, 86], [560, 260, 800, 370], [460, 240, 1000, 500], [460, 250, 1000, 450]];
+const mixR = (a, b, k) => a.map((v, i) => L(v, b[i], k));
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 124, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    bg(t); cam(t); side(t);
+
+    // ── 1: the call, the lines on the left
+    const lo = brandEase(P(t, T.drop - 0.45, T.drop));
+    css($('#lines'), { opacity: String(t < T.drop ? 1 - lo : 0), filter: lo > 0.001 ? `blur(${(lo * 8).toFixed(2)}px)` : 'none' });
+    if (t < T.drop) stack(t, LN);
+    const callOn = t < T.drop || (t >= T.payoff && t < T.tag);
+    const cin = t < T.drop ? brandEase(P(t, 0.1, 0.8)) * (1 - lo) : brandEase(P(t, T.payoff, T.payoff + 0.7)) * (1 - brandEase(P(t, T.tag - 0.45, T.tag)));
+    css($('#call'), { opacity: String(callOn ? cin : 0), transform: 'none' });
+    const sayAt = [0.3, 2 * B, 2.8 * B, 3.6 * B];
+    tiles.forEach((tile, i) => {
+      const sEl = tile.querySelector('.say'), lf = tile.querySelector('.left'), own = tile.querySelector('.own');
+      const la = T.leave + i * 0.6 * B;
+      const k = brandEase(P(t, sayAt[i], sayAt[i] + 0.4));
+      css(sEl, { opacity: String(t < T.payoff ? k * (1 - P(t, la - 0.15, la)) : 0), transform: `translateX(-50%) translateY(${Math.round((1 - k) * 10)}px)` });
+      lf.style.opacity = String(t < T.payoff ? brandEase(P(t, la, la + 0.3)) : 0);
+      tile.querySelector('img').style.opacity = String(t < T.payoff ? 1 - brandEase(P(t, la, la + 0.3)) : 1);
+      if (t >= T.payoff) pop(own, t, T.payoff + 0.5 + i * 0.5 * B); else own.style.opacity = '0';
+    });
+    const nk = brandEase(P(t, T.note, T.note + 0.6));
+    const drift = P(t, T.note + 0.6, T.drop);
+    css($('#note'), { opacity: String(t >= T.note && t < T.drop ? nk * (1 - lo) : 0), transform: `translate(0px, ${Math.round((1 - nk) * 20 + drift * 60)}px) rotate(${L(-2, 5, drift).toFixed(2)}deg)` });
+    const cf = brandEase(P(t, T.note, T.note + 0.6));
+    $('#call').style.filter = t >= T.note && t < T.drop ? `brightness(${L(1, 0.45, cf).toFixed(3)})` : 'none';
+
+    bigScreen($('#s-drop'), DROP, t, T.drop, T.s1);
+
+    // ── 2: the transcript; the promise lights up
+    const trOn = push($('#tr'), t, T.s1, T.s2 + 0.3);
+    [...document.querySelectorAll('#tr .chips span')].forEach((c, i) => pop(c, t, T.s1 + 0.4 + i * 0.1));
+    lineEls.forEach((l, i) => { pop(l, t, T.s1 + 0.6 + i * 0.5 * B); l.classList.toggle('hot', i === HOT && t >= T.s1 + 2.6); });
+
+    // ── 3–5: the sentence lifts out and morphs
+    const oOn = t >= T.s2 && t < T.payoff;
+    const st = t < T.s3 ? 1 : t < T.s4 ? 2 : 3, sAt = [0, T.s2, T.s3, T.s4][st];
+    const mk = brandEase(P(t, sAt, sAt + 0.8));
+    const r = mixR(POSE[st - 1], POSE[st], mk);
+    const oOut = brandEase(P(t, T.payoff - 0.45, T.payoff));
+    css($('#obj'), { opacity: String(oOn ? P(t, T.s2, T.s2 + 0.1) * (1 - oOut) : 0), left: `${Math.round(r[0])}px`, top: `${Math.round(r[1])}px`, width: `${Math.round(r[2])}px`, height: `${Math.round(r[3])}px`,
+      filter: oOut > 0.001 ? `blur(${(oOut * 8).toFixed(2)}px)` : 'none' });
+    ['#st1', '#st2', '#st3'].forEach((sel, i) => { const on = i + 1 === st; const a = on ? brandEase(P(t, sAt + 0.35, sAt + 0.75)) : i + 2 === st ? 1 - P(t, sAt, sAt + 0.25) : 0; $(sel).style.opacity = String(a); });
+    $('#obj').style.background = t >= T.s2 && t < T.s2 + 0.3 ? '#E3F4EA' : '#fff';
+    if (t >= T.s2 + 1.2 && t < T.s3) pop($('#oq'), t, T.s2 + 1.2); else $('#oq').style.opacity = String(t >= T.s3 ? 1 - brandEase(P(t, T.s3, T.s3 + 0.4)) : 0);
+
+    // ── payoff
+    const pOn = t >= T.payoff && t < T.tag;
+    css($('#s-pay'), { opacity: String(pOn ? 1 - brandEase(P(t, T.tag - 0.45, T.tag)) : 0) });
+    if (pOn) rise(PAY, t, T.payoff + 0.2);
+
+    end(t, T.tag, B);
+  } }],
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+{
+  "name": "docs-board",
+  "duration": 30.476,
+  "video": "../../out/docs-board/docs-board.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 5.75,
+      "generate": 10,
+      "from": 1.0,
+      "gain": -6,
+      "fadeIn": 0.1,
+      "fadeOut": 0.05,
+      "prompt": "Tense mechanical percussion at 126 BPM: a ticking clock, clattering mechanical clicks, a muted kick on every beat and a building shaker. Percussion only: no melody, no chords, no bass notes, no vocals."
+    },
+    {
+      "at": 5.714,
+      "length": 24.762,
+      "generate": 30,
+      "from": 0.5,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 3.0,
+      "prompt": "Energetic funky breakbeat at 126 BPM that starts immediately at full energy on the very first beat, no intro and no fade-in: punchy breakbeat drums, a slap bass line, bright brass stabs and a clavinet riff. Playful and confident with a retro mechanical flair, like a modern product launch. Full energy all the way through with no breakdown, ending on a big brass chord. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "flap": {
+      "text": "split-flap departures board flipping many letters at once, rapid mechanical clatter",
+      "duration": 1.2,
+      "gain": -9
+    },
+    "flapone": {
+      "text": "short split-flap display flip, a quick mechanical clatter",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "chime": {
+      "text": "airport announcement chime, two-tone ding-dong, clean",
+      "duration": 1.3,
+      "gain": -8
+    },
+    "slam": {
+      "text": "deep punchy thump, bold text slamming onto the screen, tight and modern",
+      "duration": 0.6,
+      "gain": -8
+    },
+    "zoom": {
+      "text": "fast whoosh zooming into a screen, airy and bright",
+      "duration": 0.6,
+      "gain": -10
+    },
+    "shutter": {
+      "text": "crisp camera shutter click with a quick flash",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "click": {
+      "text": "crisp mouse click",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "typing": {
+      "text": "fast quiet laptop keyboard typing",
+      "duration": 1.2,
+      "gain": -13
+    },
+    "blip": {
+      "text": "short bright positive UI blip, clean",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "brass": {
+      "text": "short bright brass stab hit, joyful success",
+      "duration": 0.8,
+      "gain": -9
+    }
+  },
+  "cues": [
+    {
+      "sound": "flap",
+      "at": [
+        0.15,
+        1.905,
+        7.619,
+        24.01,
+        25.714,
+        26.19
+      ]
+    },
+    {
+      "sound": "flapone",
+      "at": [
+        2.455,
+        2.931,
+        3.407,
+        3.883,
+        12.531,
+        16.34,
+        20.15,
+        20.476,
+        20.714,
+        20.952,
+        21.19,
+        21.985,
+        22.223,
+        22.461,
+        22.699,
+        22.937
+      ]
+    },
+    {
+      "sound": "chime",
+      "at": 1.905
+    },
+    {
+      "sound": "slam",
+      "at": [
+        4.762,
+        5.714
+      ]
+    },
+    {
+      "sound": "zoom",
+      "at": [
+        8.019,
+        12.781,
+        16.59,
+        12.331,
+        16.14,
+        19.95
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        8.819,
+        9.669,
+        10.669,
+        11.469,
+        15.081,
+        15.331,
+        15.531,
+        19.54
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        13.851,
+        14.701,
+        21.905,
+        22.143,
+        22.381,
+        22.619,
+        22.857
+      ]
+    },
+    {
+      "sound": "shutter",
+      "at": 14.831
+    },
+    {
+      "sound": "typing",
+      "at": 17.84
+    },
+    {
+      "sound": "brass",
+      "at": [
+        24.11,
+        27.143
+      ]
+    }
+  ]
+}

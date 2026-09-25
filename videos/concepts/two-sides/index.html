@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Concept C — Two sides</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept C: split screen. Maya's side (warm paper, her own product, a clock that keeps moving)
+     against the team's side (white Helpin workspace). The divider slides as the work moves and
+     dissolves when she hears back. Style frame mid-story. */
+  #stage { background: #fff; color: var(--ink); }
+  .left { position: absolute; left: 0; top: 0; width: 760px; height: 1080px; background: #F3EEE6; }
+  .right { position: absolute; left: 760px; top: 0; right: 0; height: 1080px; background: #F6F8F7; }
+  .divider { position: absolute; left: 759px; top: 0; width: 2px; height: 1080px; background: var(--ink); }
+  .badge { position: absolute; left: 760px; top: 540px; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; }
+  .side { position: absolute; top: 70px; font: 500 18px/1 var(--mono); letter-spacing: .2em; color: #7A4B00; }
+  .clock { position: absolute; left: 540px; top: 64px; font: 500 30px/1 var(--mono); color: #7A4B00; }
+  .dialog { position: absolute; left: 90px; top: 250px; width: 580px; background: #fff; border-radius: 18px; box-shadow: 0 30px 80px rgba(60, 40, 10, .14); padding: 34px; }
+  .dialog h3 { margin: 0 0 8px; font-size: 32px; letter-spacing: -0.02em; }
+  .dialog p { margin: 0 0 26px; font-size: 22px; color: #66716C; }
+  .bar { height: 14px; border-radius: 7px; background: #EDE6D8; overflow: hidden; }
+  .bar i { display: block; width: 54%; height: 100%; background: #D9A13A; }
+  .dialog .row { display: flex; justify-content: space-between; margin-top: 14px; font: 500 20px/1 var(--mono); color: #7A4B00; }
+  .warn { margin-top: 26px; padding: 16px 18px; border-radius: 12px; background: #FBF1DF; border: 1px solid #E9CF9A; color: #7A4B00; font-size: 21px; }
+  .caption { position: absolute; left: 90px; bottom: 90px; font-size: 56px; line-height: 1.04; font-weight: 600; letter-spacing: -0.035em; }
+  .caption em { font-style: normal; color: var(--green); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="left"></div><div class="right"></div>
+  <section class="scene" id="f" style="visibility:visible">
+    <div class="side" style="left:90px">HER SIDE · NORTHSTAR</div><div class="clock">Tue 10:42</div>
+    <div class="dialog"><h3>Export contacts</h3><p>Filtered view · All customers</p><div class="bar"><i></i></div>
+      <div class="row"><span>10,000 of 18,400</span><span>stopped</span></div>
+      <div class="warn">Export stopped early. Some contacts are missing.</div></div>
+    <div class="caption">Her side stops.<br><em>Your side keeps moving.</em></div>
+    <div class="side" style="left:850px; color:#0F7A50">YOUR SIDE · HELPIN</div>
+    <div id="win"></div>
+    <div class="divider"></div><div class="badge" id="badge"></div>
+  </section>
+</div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js';
+import { siteWindow } from '../../../lib/site.js';
+import { helpinSymbol } from '../../../lib/components.js';
+const s = helpinSymbol({ size: 40 }); s.assemble(1); document.querySelector('#badge').append(s.node);
+const w = siteWindow(document.querySelector('#win'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 18 });
+w.el.style.boxShadow = '0 30px 80px rgba(19,21,20,.14), 0 0 0 1px #E4E9E6';
+waitFor(w.view.ready);
+defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1, render: () => {
+  w.place({ x: 850, y: 130, w: 980, h: 880 });
+  const p = w.view.rect('.swi-agent'); const wide = p && { x: p.x - p.w * 0.34, y: p.y, w: p.w * 1.34, h: p.h };
+  w.camera(1, [0.5, 0.5], wide); return w.view.update(11);
+} }] });
+</script>
+</body>
+</html>

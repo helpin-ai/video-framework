@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Caught up (Quill keeps your docs current)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Caught up": your week is a timeline. The camera whips along it as you rename a button, move a setting and add
+     a step (the UI does each change inline). Then it rewinds 12 weeks to where your docs still sit, stamped
+     "last updated 3 months ago". Quill checks, captures and fixes; you publish; the guide rides the timeline
+     forward to this week. Brand forest + white product cards. 130 BPM (beat 0.462 s, bar 1.846 s),
+     UK-garage score of its own. HEL-148. */
+  #stage { background: radial-gradient(ellipse 85% 75% at 50% 40%, #0E2A22, var(--forest) 72%); color: #F2F5F3; }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(184, 221, 187, .09) 1.6px, transparent 1.8px); background-size: 44px 44px; }
+  em { font-style: normal; color: var(--mint); }
+  .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0 .03em .24em; margin: 0 -.03em -.24em; }
+  .w > span { display: inline-block; }
+
+  /* the timeline world */
+  #wwrap { position: absolute; inset: 0; overflow: hidden; }
+  #world { position: absolute; left: 0; top: 0; width: 1px; height: 1080px; }
+  .rule { position: absolute; left: -20000px; width: 32000px; top: 930px; height: 2px; background: rgba(184, 221, 187, .35); }
+  .ticks { position: absolute; left: -20000px; width: 32000px; top: 921px; height: 20px; background: repeating-linear-gradient(90deg, rgba(184, 221, 187, .26) 0 2px, transparent 2px 55px); }
+  .major { position: absolute; top: 904px; width: 3px; height: 52px; margin-left: -1px; background: rgba(184, 221, 187, .6); }
+  .lbl { position: absolute; top: 966px; font: 500 22px/1 var(--mono); letter-spacing: .18em; color: #8FB39A; white-space: nowrap; transform: translateX(-50%); }
+  .lbl.now { color: var(--mint); } .lbl.old { color: #F28B82; }
+  .ph { position: absolute; top: 0; width: 1920px; height: 1080px; }
+  .ph .line { position: absolute; left: 0; width: 1920px; top: 150px; text-align: center; font-size: 132px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+  .ui { position: absolute; background: #fff; color: var(--ink); border-radius: 26px; box-shadow: 0 40px 100px rgba(0, 0, 0, .45), 0 0 0 1px rgba(184, 221, 187, .16); }
+  .ui .eyebrow { font: 500 21px/1 var(--mono); letter-spacing: .12em; color: var(--t3); }
+  #o1 { left: 560px; top: 430px; width: 800px; height: 290px; padding: 42px 48px; text-align: center; }
+  #o1 .acts { position: absolute; left: 0; right: 0; bottom: 46px; display: flex; justify-content: center; gap: 22px; }
+  #o1 .ghost, #o1 .prim { height: 104px; border-radius: 20px; display: inline-flex; align-items: center; font-size: 42px; font-weight: 600; white-space: nowrap; }
+  #o1 .ghost { padding: 0 38px; border: 2px solid #D5DCD8; color: var(--t2); }
+  #o1 .prim { padding: 0 44px; background: var(--green); color: #fff; font-weight: 700; gap: 4px; }
+  #o1 .sel { background: rgba(120, 170, 255, .55); border-radius: 6px; }
+  #o1 .car { display: inline-block; width: 4px; height: 48px; background: #fff; margin-left: 3px; }
+  #o2 { left: 650px; top: 400px; width: 620px; height: 440px; padding: 30px 28px; }
+  #o2 .list { position: absolute; left: 28px; right: 28px; top: 78px; height: 340px; }
+  #o2 .row { position: absolute; left: 0; right: 0; height: 76px; border-radius: 16px; display: flex; align-items: center; gap: 18px; padding: 0 22px; font-size: 34px; font-weight: 500; color: var(--t2); background: #fff; }
+  #o2 .row i { width: 30px; height: 30px; border-radius: 9px; background: #E4E9E6; flex: none; }
+  #o2 .row.mv { color: var(--green-h); font-weight: 600; }
+  #o2 .row.mv i { background: var(--green); }
+  #o2 .row small { margin-left: auto; font: 600 18px/1 var(--mono); letter-spacing: .1em; color: var(--green); background: #E3F4EA; padding: 8px 10px; border-radius: 8px; }
+  #o3 { position: absolute; left: 160px; top: 520px; width: 1600px; height: 120px; }
+  #o3 .link { position: absolute; top: 58px; height: 4px; background: rgba(184, 221, 187, .55); border-radius: 2px; }
+  #o3 .pill { position: absolute; top: 0; height: 120px; border-radius: 60px; background: #fff; color: var(--ink); display: flex; align-items: center; gap: 18px; padding: 0 44px 0 22px; font: 600 40px/1 var(--sans); letter-spacing: -0.01em; white-space: nowrap; box-shadow: 0 30px 80px rgba(0, 0, 0, .4); }
+  #o3 .pill b { width: 76px; height: 76px; border-radius: 50%; background: #EEF1EF; display: grid; place-items: center; font: 700 32px/1 var(--mono); color: var(--t2); overflow: hidden; }
+  #o3 .pill.new { background: #E3F4EA; box-shadow: 0 0 0 4px var(--green), 0 30px 80px rgba(0, 0, 0, .4); color: var(--green-h); }
+  #o3 .pill.new b { background: var(--green); color: #fff; }
+  #flag { position: absolute; top: 836px; height: 54px; padding: 0 20px; border-radius: 12px; background: var(--mint); color: var(--forest); display: flex; align-items: center; font: 700 26px/1 var(--mono); letter-spacing: .08em; white-space: nowrap; transform-origin: 0 100%; }
+  #pole { position: absolute; top: 888px; width: 4px; height: 42px; background: var(--mint); }
+
+  /* big type screens */
+  .scr { position: absolute; inset: 0; opacity: 0; }
+  .mega { position: absolute; left: 0; width: 1920px; text-align: center; font-weight: 700; letter-spacing: -0.055em; line-height: 1; white-space: nowrap; }
+  .topline { position: absolute; left: 0; width: 1920px; top: 96px; text-align: center; font-size: 112px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+
+  /* the help article */
+  #doc { position: absolute; left: 0; top: 0; width: 1000px; height: 720px; transform-origin: 0 0; border-radius: 20px; background: #fff; color: #1F1C15; padding: 50px 60px; overflow: hidden; box-shadow: 0 50px 130px rgba(0, 0, 0, .5); opacity: 0; }
+  #doc small { font: 500 17px/1 var(--mono); letter-spacing: .14em; color: var(--t3); }
+  #doc h2 { margin: 16px 0 12px; font-size: 48px; letter-spacing: -0.025em; line-height: 1.08; }
+  #doc .meta { font: 500 19px/1 var(--mono); color: var(--t3); margin-bottom: 26px; }
+  #doc .meta.prop { color: #8A6400; } #doc .meta.pub { color: var(--green); }
+  #doc p { margin: 0 0 12px; font-size: 27px; line-height: 1.45; }
+  #doc .old { position: relative; } #doc .strike { position: absolute; left: 0; top: 55%; height: 3px; background: #B42318; width: 0; }
+  #doc .new { color: var(--green-h); background: #E3F4EA; border-radius: 6px; padding: 2px 6px; }
+  #doc .slot { position: relative; height: 330px; margin-top: 22px; border-radius: 14px; overflow: hidden; border: 2px solid #E4E9E6; background: #EDEFEE; }
+  #doc .slot .oldshot { position: absolute; inset: 0; background: linear-gradient(#E7EAE8, #DADEDC); }
+  #doc .slot .oldshot i { position: absolute; border-radius: 8px; background: #C9CFCC; }
+  #doc .slot .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #doc .slot .tag { position: absolute; right: 14px; top: 14px; padding: 9px 13px; border-radius: 9px; background: var(--green); color: #fff; font: 700 17px/1 var(--mono); letter-spacing: .08em; }
+  .stamp { position: absolute; right: 56px; top: 330px; padding: 14px 20px; border: 6px solid currentColor; border-radius: 14px; background: rgba(255, 255, 255, .9); font: 700 30px/1.15 var(--mono); letter-spacing: .06em; text-align: center; opacity: 0; }
+  #stamp { color: #D2493C; } #stamp2 { color: var(--green); }
+
+  /* Quill's header: the subject and verb roll between stations */
+  #hrow { position: absolute; left: 0; width: 1920px; top: 60px; height: 100px; display: flex; justify-content: center; align-items: center; gap: 24px; font-size: 84px; font-weight: 700; letter-spacing: -0.045em; opacity: 0; transform-origin: 960px 50px; }
+  #havatar { width: 92px; height: 92px; flex: none; }
+  #hverb { color: var(--mint); }
+  #hsub { position: absolute; left: 0; width: 1920px; top: 176px; text-align: center; font-size: 34px; font-weight: 500; color: #A9C7B3; opacity: 0; }
+
+  /* station 1: live Quill preview; station 2: the product in a browser */
+  #w1 { position: absolute; inset: 0; }
+  #browser { position: absolute; left: 360px; top: 250px; width: 1200px; height: 800px; border-radius: 16px; overflow: hidden; box-shadow: 0 40px 110px rgba(0, 0, 0, .55); background: #fff; }
+  #browser .bar { height: 50px; background: #EEF1EF; display: flex; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 1px solid #DDE3E0; }
+  #browser .bar i { width: 13px; height: 13px; border-radius: 50%; background: #C9D0CC; }
+  #browser .url { margin-left: 16px; height: 32px; flex: 1; max-width: 640px; border-radius: 8px; background: #fff; display: flex; align-items: center; padding: 0 14px; font: 500 16px/1 var(--mono); color: #4F5A55; }
+  #browser .view { position: absolute; left: 0; top: 50px; width: 1440px; height: 900px; transform-origin: 0 0; }
+  #vf { position: absolute; left: 360px; top: 300px; width: 1200px; height: 750px; opacity: 0; pointer-events: none; }
+  #vf i { position: absolute; width: 70px; height: 70px; border: 6px solid var(--mint); }
+  #vf i:nth-child(1) { left: -22px; top: -22px; border-right: 0; border-bottom: 0; } #vf i:nth-child(2) { right: -22px; top: -22px; border-left: 0; border-bottom: 0; }
+  #vf i:nth-child(3) { left: -22px; bottom: -22px; border-right: 0; border-top: 0; } #vf i:nth-child(4) { right: -22px; bottom: -22px; border-left: 0; border-top: 0; }
+  #capture { position: absolute; left: 0; top: 0; width: 1200px; height: 750px; transform-origin: 0 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 40px 110px rgba(0, 0, 0, .6); opacity: 0; }
+  #capture .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #capture .hl { position: absolute; border: 4px solid var(--green); border-radius: 14px; opacity: 0; box-shadow: 0 0 0 9999px rgba(19, 21, 20, .28); }
+  #capture .blur { position: absolute; border-radius: 8px; background: rgba(180, 188, 184, .96); opacity: 0; }
+  #capture .badge { position: absolute; right: 20px; bottom: 20px; padding: 10px 14px; border-radius: 10px; background: var(--green); color: #fff; font: 700 20px/1 var(--mono); letter-spacing: .08em; opacity: 0; }
+  #qcur { position: absolute; left: 0; top: 0; display: flex; align-items: flex-start; gap: 6px; opacity: 0; z-index: 9; }
+  #qcur svg { width: 36px; height: 36px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .35)); }
+  #qcur span { margin-top: 26px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px; border-radius: 8px; background: var(--green); color: #fff; font: 600 17px/1 var(--sans); white-space: nowrap; }
+  #qcur span img { width: 22px; height: 22px; }
+
+  /* generated OrbitDesk UI (1440×900) */
+  .app { width: 1440px; height: 900px; background: #F6F8F7; color: #131514; font-family: var(--sans); position: relative; overflow: hidden; }
+  .app .top { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: #fff; border-bottom: 1px solid #E4E9E6; font-size: 20px; }
+  .app .logo { width: 34px; height: 34px; border-radius: 9px; background: #1D6A4A; color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .app .crumb { color: #66716C; } .app .crumb b { color: #131514; font-weight: 600; }
+  .app .side { position: absolute; left: 0; top: 64px; bottom: 0; width: 250px; background: #fff; border-right: 1px solid #E4E9E6; padding: 22px 16px; }
+  .app .side div { padding: 12px 14px; border-radius: 10px; font-size: 19px; color: #4F5A55; margin-bottom: 4px; }
+  .app .side .on { background: #E7F4ED; color: #0B6340; font-weight: 600; }
+  .app .main { position: absolute; left: 250px; right: 0; top: 64px; bottom: 0; padding: 40px 56px; }
+  .app h1 { margin: 0 0 8px; font-size: 38px; letter-spacing: -0.02em; } .app .lede { color: #66716C; font-size: 20px; margin-bottom: 30px; }
+  .app .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .app .tool { background: #fff; border: 1px solid #E4E9E6; border-radius: 16px; padding: 24px; }
+  .app .tool b { display: block; font-size: 22px; margin-bottom: 6px; } .app .tool span { color: #66716C; font-size: 18px; }
+  .app .tool .btn { margin-top: 18px; display: inline-flex; height: 44px; padding: 0 18px; align-items: center; border-radius: 10px; background: #131514; color: #fff; font-size: 18px; font-weight: 600; }
+  .app .tool.hot { border-color: #0F7A50; box-shadow: 0 0 0 3px #CFE9D9; }
+  .app .shade { position: absolute; inset: 0; background: rgba(19, 21, 20, .35); }
+  .app .modal { position: absolute; left: 50%; top: 50%; width: 700px; transform: translate(-50%, -50%); background: #fff; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,.25); padding: 34px 38px; }
+  .app .modal .ok { display: inline-flex; gap: 8px; align-items: center; font-size: 17px; color: #0B6340; background: #E3F4EA; padding: 7px 12px; border-radius: 8px; margin-bottom: 16px; }
+  .app .modal h2 { margin: 0 0 6px; font-size: 32px; letter-spacing: -0.02em; } .app .modal p { margin: 0 0 22px; color: #66716C; font-size: 19px; }
+  .app .opt { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border: 1px solid #E4E9E6; border-radius: 14px; margin-bottom: 12px; font-size: 21px; }
+  .app .opt i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #9AA5A0; flex: none; }
+  .app .opt.sel { border-color: #0F7A50; background: #F3FAF6; } .app .opt.sel i { border: 7px solid #0F7A50; }
+  .app .opt small { margin-left: auto; color: #66716C; font-size: 17px; }
+  .app .acct { font-size: 17px; color: #66716C; margin: 18px 0 20px; } .app .acct b { color: #131514; font-weight: 500; }
+  .app .primary { display: inline-flex; height: 52px; padding: 0 24px; align-items: center; border-radius: 12px; background: #0F7A50; color: #fff; font-size: 20px; font-weight: 600; }
+
+  /* publish */
+  #review { position: absolute; left: 560px; top: 856px; width: 800px; height: 100px; border-radius: 18px; background: #fff; color: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 22px 0 28px; box-shadow: 0 24px 70px rgba(0, 0, 0, .45); opacity: 0; }
+  #review span { font-size: 25px; font-weight: 600; } #review span small { display: block; font: 500 17px/1.6 var(--mono); color: #8A6400; font-weight: 500; }
+  #pubbtn { height: 60px; padding: 0 30px; border-radius: 14px; background: var(--ink); color: #fff; display: inline-flex; align-items: center; font: 600 25px/1 var(--sans); white-space: nowrap; }
+  #pubbtn.done { background: var(--green); }
+  #cursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 9; }
+  #cursor svg { width: 44px; height: 44px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .5)); }
+
+  /* end */
+  #tag { position: absolute; left: 0; width: 1920px; top: 250px; text-align: center; font-size: 150px; font-weight: 700; letter-spacing: -0.055em; line-height: 1.04; }
+  #endmark { position: absolute; left: 0; width: 1920px; top: 670px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #endmark b { font-size: 84px; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; }
+  #cta { position: absolute; left: 0; width: 1920px; top: 812px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #cta span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 25px/1 var(--sans); }
+  #cta .url { background: #F2F5F3; color: var(--forest); } #cta .t { border: 1px solid #2F5A45; color: #D5E0DA; font-weight: 500; }
+  #cta .t i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 20; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="mb" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur id="mbg" stdDeviation="0 0"/></filter></svg>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="wwrap"><div id="world">
+    <div class="rule"></div><div class="ticks"></div><div id="marks"></div>
+    <div class="ph" id="p1" style="left:-960px"><div class="line" id="l1"></div>
+      <div class="ui" id="o1"><div class="eyebrow">ORBITDESK · CONNECT AN INTEGRATION</div><div class="acts"><span class="ghost">Cancel</span><span class="prim" id="b1"><span id="b1l">Start sync</span></span></div></div></div>
+    <div class="ph" id="p2" style="left:1240px"><div class="line" id="l2"></div>
+      <div class="ui" id="o2"><div class="eyebrow">SETTINGS</div><div class="list">
+        <div class="row" data-i="0"><i></i>General</div><div class="row" data-i="1"><i></i>Members</div><div class="row" data-i="2"><i></i>Billing</div><div class="row mv" data-i="3"><i></i>Integrations<small id="mvtag">MOVED</small></div></div></div></div>
+    <div class="ph" id="p3" style="left:3440px"><div class="line" id="l3"></div>
+      <div id="o3"><div class="link" id="lk"></div>
+        <div class="pill" id="pa"><b>1</b>Authorize</div><div class="pill new" id="pb"><b>2</b>Confirm workspace</div><div class="pill" id="pc"><b id="pcn">2</b>Continue</div></div></div>
+    <div id="flag">v2.6 SHIPPED</div><div id="pole"></div>
+  </div></div>
+
+  <div class="scr" id="s-docs"><div class="topline" id="docsq"></div></div>
+  <div class="scr" id="s-fam"><div class="mega" id="fam" style="top:420px; font-size:210px"></div></div>
+  <div class="scr" id="s-guess"><div class="mega" id="guess" style="top:420px; font-size:210px"></div></div>
+  <div class="scr" id="s-caught"><div class="topline" id="caught" style="top:130px"></div></div>
+
+  <div id="w1"></div>
+  <div class="scr" id="s-cap"><div id="browser"><div class="bar"><i></i><i></i><i></i><div class="url">app.orbitdesk.example/settings/integrations</div></div><div class="view" id="view"></div></div><div id="vf"><i></i><i></i><i></i><i></i></div></div>
+  <div id="capture"><div class="shot" id="capshot"></div><div class="hl" id="hl"></div><div class="blur" id="blur"></div><div class="badge" id="badge">CAPTURED · REFINED</div></div>
+  <div id="qcur"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#0F7A50" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span><img src="../../assets/helpin/agents/quill.svg" alt="">Quill</span></div>
+
+  <div id="doc"><small>HELP CENTER · INTEGRATIONS</small><h2>Connect your first integration</h2><div class="meta" id="meta">Written for v2.3</div>
+    <p>1. Authorize your issue tracker.</p>
+    <p>2. <span class="old" id="oldtxt">Click <b>Start sync</b>.<i class="strike" id="strike"></i></span><span class="new" id="newtxt" style="display:none"></span></p>
+    <div class="slot"><div class="oldshot" id="oldshot"><i style="left:24px;top:24px;width:170px;height:280px"></i><i style="left:214px;top:24px;width:460px;height:44px"></i><i style="left:214px;top:88px;width:210px;height:130px"></i><i style="left:444px;top:88px;width:210px;height:130px"></i><i style="left:674px;top:88px;width:170px;height:130px"></i></div><div class="shot" id="slotshot"></div><span class="tag" id="slottag">NEW · v2.6</span></div>
+    <div class="stamp" id="stamp">LAST UPDATED<br>3 MONTHS AGO</div><div class="stamp" id="stamp2">UPDATED<br>THIS WEEK</div></div>
+  <div id="review"><span>Connect your first integration<small id="revsub">Proposed update · Not published</small></span><span id="pubbtn">Publish</span></div>
+  <div id="cursor"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+
+  <div id="hrow"><img id="havatar" src="../../assets/helpin/agents/quill.svg" alt=""><span id="hsubj"></span><span id="hverb"></span></div>
+  <div id="hsub"></div>
+
+  <div id="tag"><div id="t1"></div><div id="t2"></div></div>
+  <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+  <div id="cta"><span class="url">helpin.ai</span><span class="t"><i></i>Open source · Coming soon</span></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, expoIn, expoInOut, backOut } from '../../lib/motion.js';
+import { helpinSymbol, css, type, rollWord } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s) => document.querySelector(s);
+const B = 60 / 130, BAR = 4 * B;
+const T = { p1: 0, p2: BAR, p3: 2 * BAR, rewind: 3 * BAR, familiar: 4.5 * BAR, guess: 5 * BAR, drop: 5.5 * BAR, check: 6 * BAR,
+  capture: 8.5 * BAR, fix: 10.5 * BAR, publish: 12.5 * BAR, payoff: 14 * BAR, tag: 15.5 * BAR, total: 17.5 * BAR };
+const PX = [0, 2200, 4400], PAST = -16800; // world x of the three changes, and of your docs (12 weeks back)
+
+// ── Word-by-word rise behind a mask
+function words(el, html) {
+  el.innerHTML = html.split(/(?<!<em)\s+(?![^<]*<\/em>)/).map((w) => `<span class="w"><span>${w}</span></span>`).join(' ');
+  return [...el.querySelectorAll('.w > span')];
+}
+function rise(ws, t, start, gap = 0.06, dur = 0.5) {
+  ws.forEach((w, i) => {
+    const k = expoOut(P(t, start + i * gap, start + i * gap + dur));
+    w.style.transform = k >= 1 ? 'none' : `translateY(${(1 - k) * 145}%)`;
+  });
+}
+const L1 = words($('#l1'), 'You <em>renamed</em> a button.');
+const L2 = words($('#l2'), '<em>Moved</em> a setting.');
+const L3 = words($('#l3'), '<em>Added</em> a step.');
+const DQ = words($('#docsq'), 'And your docs?');
+const FAM = words($('#fam'), 'Sound familiar?');
+const GUESS = words($('#guess'), 'Stop guessing.');
+const CAUGHT = words($('#caught'), 'Your docs. <em>Caught up.</em>');
+const T1 = words($('#t1'), 'You ship.');
+const T2 = words($('#t2'), '<em>Your docs keep up.</em>');
+
+// ── The timeline: day labels this week, week labels going back
+const marks = $('#marks');
+const mark = (x, text, cls = '') => { marks.insertAdjacentHTML('beforeend', `<div class="major" style="left:${x}px"></div><div class="lbl ${cls}" style="left:${x}px">${text}</div>`); };
+mark(PX[0], 'MON'); mark(PX[1], 'WED'); mark(PX[2], 'FRI · THIS WEEK', 'now');
+for (let i = 1; i <= 12; i++) mark(-1400 * i, i === 1 ? 'LAST WEEK' : `${i} WEEKS AGO`, i === 12 ? 'old' : '');
+const FLAGX = PX[2] + 420;
+css($('#flag'), { left: `${FLAGX}px` }); css($('#pole'), { left: `${FLAGX}px` });
+const camX = (t) => keys(t, [[0, 0], [T.p2 - 0.32, 0], [T.p2 + 0.05, PX[1], expoInOut], [T.p3 - 0.32, PX[1]], [T.p3 + 0.05, PX[2], expoInOut],
+  [T.rewind - 0.05, PX[2]], [T.rewind + 0.62, PAST, expoInOut], [T.payoff + 0.35, PAST], [T.payoff + 1.2, PX[2], expoInOut], [T.tag, PX[2]]]);
+
+// ── Generated OrbitDesk UI (crisp HTML): the new step the guide is missing
+const SIDE = `<div class="side"><div>Inbox</div><div>Projects</div><div>Docs</div><div class="on">Settings</div></div>`;
+const TOP = `<div class="top"><span class="logo">O</span><span class="crumb">OrbitDesk / <b>Settings · Integrations</b></span></div>`;
+const TOOLS = `<h1>Integrations</h1><div class="lede">Connect the tools your team already uses.</div><div class="tools">
+  <div class="tool hot"><b>Issue tracker</b><span>Sync tasks and status</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Team chat</b><span>Post updates to channels</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Data warehouse</b><span>Export conversations</span><div class="btn">Connect</div></div></div>`;
+const MODAL = `<div class="shade"></div><div class="modal"><div class="ok">✓ Issue tracker authorized</div><h2>Choose the destination workspace</h2>
+  <p>Which workspace should receive the activity?</p>
+  <div class="opt sel"><i></i>Northstar Support<small>12 members</small></div><div class="opt"><i></i>Northstar Sales<small>8 members</small></div><div class="opt"><i></i>Internal QA<small>3 members</small></div>
+  <div class="acct">Signed in as <b>quill@orbitdesk.example</b></div><span class="primary">Continue</span></div>`;
+const appHTML = (modal) => `<div class="app">${TOP}${SIDE}<div class="main">${TOOLS}</div>${modal ? MODAL : ''}</div>`;
+$('#capshot').innerHTML = appHTML(true); $('#capshot').style.transform = `scale(${1200 / 1440})`;
+$('#slotshot').innerHTML = appHTML(true); $('#slotshot').style.transform = 'translate(-6px, -114px) scale(0.62)';
+
+// Live Quill preview (the website's docs-agent component)
+const quill = siteWindow($('#w1'), { path: '/products/knowledge', focus: '#knowledge-quill .knowledge-scene', hide: ['canvas'], radius: 18 });
+waitFor(quill.view.ready);
+const QBOX = { x: 560, y: 250, w: 800, h: 800 };
+
+const subj = rollWord($('#hsubj'), ['Quill', 'You'], { lineHeight: 1.15 });
+const verb = rollWord($('#hverb'), ['checks.', 'captures.', 'fixes.', 'publish.'], { lineHeight: 1.15 });
+const SUBS = [[T.check, 'Every guide, against the released change.'], [T.capture, 'The new screen, straight from your product.'],
+  [T.fix, 'Adds the missing step. Or drafts a new article.'], [T.publish, 'Nothing goes live without you.']];
+
+const endMark = helpinSymbol({ size: 92, color: '#F2F5F3' });
+$('#end-symbol').append(endMark.node);
+
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+function shoot(w, lt, shots, box, bounds, dur = 0.45) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => fitAspect(r, box.w / box.h, bounds?.());
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.(), SP = 0.45;
+  if (a && b) w.spotlight(lerpRect(a, b, k), SP); else if (b) w.spotlight(b, k * SP); else if (a) w.spotlight(a, (1 - k) * SP); else w.spotlight(null, 0);
+}
+// Stations push up: enter from below, leave upward, blurred only while moving (pixel-still when settled).
+function push(el, t, tin, tout, base = '', dist = 160) {
+  const k = expoOut(P(t, tin, tin + 0.45)), o = expoIn(P(t, tout - 0.3, tout));
+  const on = t >= tin && t < tout, moving = k < 1 || o > 0;
+  el.style.opacity = String(on ? Math.min(1, k * 1.6) * (1 - o) : 0);
+  el.style.transform = `${base} ${moving ? `translateY(${Math.round((1 - k) * dist - o * dist)}px)` : ''}`.trim() || 'none';
+  el.style.filter = moving && on ? `blur(${Math.max(1 - k, o) * 8}px)` : 'none';
+  return on;
+}
+// A big-type screen: shown on [a, b), words rise in, the whole line lifts away at the end.
+function bigScreen(el, ws, t, a, b, gap = 0.07) {
+  const on = t >= a && t < b;
+  const o = expoIn(P(t, b - 0.22, b));
+  css(el, { opacity: String(on ? 1 - o : 0), transform: `translateY(${-o * 120}px) scale(${L(1, 1.06, P(t, a, b))})`, filter: o > 0 ? `blur(${o * 8}px)` : 'none' });
+  if (on) rise(ws, t, a, gap);
+  return on;
+}
+const mix = (a, b, k) => a.map((v, i) => L(v, b[i], k));
+
+// Where the help article sits: [x, y, scale]
+function docPose(t) {
+  if (t < T.familiar) return [460, 300, 1];
+  if (t < T.publish) return [460, 290, 1];
+  if (t < T.payoff) return mix([460, 290, 1], [560, 250, 0.8], expoInOut(P(t, T.publish, T.publish + 0.45)));
+  return mix([560, 250, 0.8], [680, 470, 0.56], expoInOut(P(t, T.payoff, T.payoff + 0.4)));
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 130, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    let fl = 0;
+    for (const [at, a] of [[T.rewind + 0.62, 0.2], [T.rewind + 3 * B, 0.3], [T.drop, 0.75], [T.capture + 1.62, 0.9], [T.publish + 3 * B + 0.05, 0.35], [T.payoff + 1.25, 0.3], [T.tag, 0.2]])
+      if (t >= at) fl = Math.max(fl, a * (1 - P(t, at, at + 0.2)));
+    $('#flash').style.opacity = String(fl);
+
+    // ── the timeline world: camera, motion blur from camera speed, parallax dots
+    const cx = Math.round(camX(t));
+    const v = (camX(t + 1 / 60) - camX(t - 1 / 60)) * 30;
+    const mb = Math.min(28, Math.abs(v) / 700);
+    $('#world').style.transform = `translateX(${960 - cx}px)`;
+    $('#mbg').setAttribute('stdDeviation', `${mb.toFixed(1)} 0`);
+    const worldOn = t < T.familiar || t >= T.payoff;
+    const wo = t < T.familiar ? 1 - P(t, T.familiar - 0.25, T.familiar) : P(t, T.payoff, T.payoff + 0.3) * (1 - P(t, T.tag - 0.1, T.tag + 0.3));
+    css($('#wwrap'), { opacity: String(worldOn ? wo : 0), filter: mb > 0.6 ? 'url(#mb)' : 'none' });
+    $('#dots').style.backgroundPosition = `${Math.round(-cx * 0.25)}px 0`;
+    const phOn = t < T.rewind + 0.7;
+    ['#p1', '#p2', '#p3'].forEach((s) => { $(s).style.visibility = phOn ? 'visible' : 'hidden'; });
+
+    // 1 — You renamed a button: the label is selected and retyped
+    rise(L1, t, T.p1 + 0.05);
+    const c1 = backOut(P(t, 0.3, 0.72), 1.6);
+    css($('#o1'), { opacity: String(P(t, 0.3, 0.4)), transform: c1 >= 1 ? 'none' : `translateY(${(1 - c1) * 80}px) scale(${L(0.85, 1, c1)})` });
+    const b1 = $('#b1l'), lt1 = t - T.p1;
+    if (lt1 < 2 * B - 0.02) { b1.textContent = 'Start sync'; b1.className = lt1 > 1.5 * B ? 'sel' : ''; }
+    else { const s = type(b1, 'Continue', t, { start: T.p1 + 2 * B, cps: 22, caret: false }); b1.className = ''; if (!s || lt1 < 2 * B + 0.7) b1.insertAdjacentHTML('beforeend', '<i class="car"></i>'); }
+    $('#b1').style.transform = lt1 > 3 * B && lt1 < 3 * B + 0.1 ? 'scale(0.95)' : 'none';
+
+    // 2 — Moved a setting: Integrations lifts and jumps to the top of the list
+    rise(L2, t, T.p2 + 0.08);
+    const lt2 = t - T.p2;
+    const c2 = backOut(P(lt2, 0.2, 0.62), 1.6);
+    css($('#o2'), { opacity: String(P(lt2, 0.2, 0.3)), transform: c2 >= 1 ? 'none' : `translateY(${(1 - c2) * 80}px) scale(${L(0.85, 1, c2)})` });
+    const mv = expoInOut(P(lt2, 2 * B, 2 * B + 0.42)), lift = Math.min(P(lt2, 1.5 * B, 1.5 * B + 0.12), 1 - P(lt2, 2 * B + 0.4, 2 * B + 0.55));
+    $('#o2').querySelectorAll('.row').forEach((r) => {
+      const i = +r.dataset.i;
+      const y = i === 3 ? L(3, 0, mv) * 84 : (i + mv) * 84;
+      r.style.transform = `translateY(${Math.round(y)}px)${i === 3 && lift > 0 ? ` scale(${L(1, 1.05, lift)})` : ''}`;
+      if (i === 3) { r.style.boxShadow = lift > 0 ? `0 ${Math.round(18 * lift)}px ${Math.round(40 * lift)}px rgba(0,0,0,${0.22 * lift})` : 'none'; r.style.background = lift > 0.01 || mv > 0.99 ? '#E7F4ED' : '#fff'; r.style.zIndex = '2'; }
+    });
+    $('#mvtag').style.opacity = String(P(lt2, 2 * B + 0.45, 2 * B + 0.55));
+
+    // 3 — Added a step: the flow parts and a new step drops in; v2.6 ships
+    rise(L3, t, T.p3 + 0.08);
+    const lt3 = t - T.p3;
+    const pa = $('#pa'), pb = $('#pb'), pc = $('#pc');
+    const part = expoInOut(P(lt3, 2 * B - 0.25, 2 * B + 0.1)), nb = backOut(P(lt3, 2 * B, 2 * B + 0.35), 2.2);
+    const ax = L(560, 250, part), cxp = L(1040, 1350, part), bx = 800;
+    const pos = (el, x) => { el.style.left = `${Math.round(x - el.offsetWidth / 2)}px`; };
+    pos(pa, ax); pos(pc, cxp); pos(pb, bx);
+    const in3 = (d) => backOut(P(lt3, d, d + 0.4), 1.6);
+    [[pa, 0.25], [pc, 0.33]].forEach(([el, d]) => { const k = in3(d); css(el, { opacity: String(P(lt3, d, d + 0.08)), transform: k >= 1 ? 'none' : `translateY(${(1 - k) * 70}px)` }); });
+    css(pb, { opacity: String(P(lt3, 2 * B, 2 * B + 0.06)), transform: nb >= 1 ? 'none' : `translateY(${(1 - nb) * -140}px) scale(${L(0.6, 1, nb)})` });
+    $('#pcn').textContent = lt3 >= 2 * B + 0.15 ? '3' : '2';
+    css($('#lk'), { left: `${Math.round(ax)}px`, width: `${Math.round(cxp - ax)}px`, opacity: String(P(lt3, 0.35, 0.5)) });
+    const fk = backOut(P(t, T.p3 + 3 * B, T.p3 + 3 * B + 0.35), 2);
+    css($('#flag'), { opacity: String(P(t, T.p3 + 3 * B, T.p3 + 3 * B + 0.05)), transform: fk >= 1 ? 'none' : `scale(${fk}) rotate(${(1 - fk) * -20}deg)` });
+    $('#pole').style.opacity = String(P(t, T.p3 + 3 * B, T.p3 + 3 * B + 0.05));
+
+    // 4 — rewind 12 weeks: "And your docs?" — the guide pops up from the timeline, then the stamp
+    bigScreen($('#s-docs'), DQ, t, T.rewind + 0.5, T.familiar);
+    const doc = $('#doc');
+    const docOn = (t >= T.rewind + 0.62 && t < T.familiar) || (t >= T.fix && t < T.tag + 0.3);
+    const [dx, dy, ds] = docPose(t);
+    let dExtra = '', dOp = 1, dBlur = 0;
+    if (t < T.familiar) {
+      const up = backOut(P(t, T.rewind + 0.62, T.rewind + 1.05), 1.4), out = expoIn(P(t, T.familiar - 0.25, T.familiar));
+      dExtra = up < 1 ? ` perspective(1600px) rotateX(${(1 - up) * 80}deg)` : '';
+      if (out > 0) { dExtra += ` translateY(${out * 500}px)`; dOp = 1 - out; }
+      doc.style.transformOrigin = '50% 100%';
+    } else {
+      doc.style.transformOrigin = '0 0';
+      const k = expoOut(P(t, T.fix, T.fix + 0.45));
+      if (k < 1) { dExtra = ` translateY(${Math.round((1 - k) * 160)}px)`; dOp = Math.min(1, k * 1.6); dBlur = (1 - k) * 8; }
+      const tagOut = expoIn(P(t, T.tag - 0.05, T.tag + 0.3));
+      if (tagOut > 0) { dOp = 1 - tagOut; dExtra += ` translateY(${tagOut * 60}px)`; dBlur = tagOut * 8; }
+      const tilt = t > T.payoff + 0.35 && t < T.payoff + 1.25 ? -Math.min(3, mb / 20) : 0;
+      if (tilt) dExtra += ` rotate(${tilt}deg)`;
+    }
+    const moving = dExtra !== '' || (t >= T.publish && t < T.publish + 0.45) || (t >= T.payoff && t < T.payoff + 0.4);
+    css(doc, { opacity: String(docOn ? dOp : 0), transform: `translate(${dx}px, ${dy}px) scale(${ds})${dExtra}`, filter: dBlur > 0.05 && docOn ? `blur(${dBlur}px)` : 'none' });
+    const sAt = T.rewind + 3 * B, peel = expoIn(P(t, T.fix + 0.35, T.fix + 0.75));
+    const sk = backOut(P(t, sAt, sAt + 0.2), 2.4);
+    css($('#stamp'), { opacity: String(t >= sAt ? 1 - peel : 0), transform: `rotate(${-8 + peel * 30}deg) translate(${peel * 120}px, ${peel * 380}px) scale(${L(1.8, 1, sk)})` });
+
+    // 5 — Sound familiar? / Stop guessing.
+    bigScreen($('#s-fam'), FAM, t, T.familiar, T.guess);
+    bigScreen($('#s-guess'), GUESS, t, T.guess, T.drop);
+
+    // 6 — drop: "Quill checks." big, then it shrinks into the header that rolls through the stations
+    const hOn = t >= T.drop && t < T.payoff;
+    const shrink = expoInOut(P(t, T.check - 0.15, T.check + 0.25)), hk = backOut(P(t, T.drop, T.drop + 0.25), 2);
+    const hOut = P(t, T.payoff - 0.05, T.payoff + 0.25);
+    const big = L(2.3, 1, shrink) * (shrink > 0 ? 1 : L(1.4, 1, hk));
+    css($('#hrow'), { opacity: String(hOn ? 1 - hOut : 0), transform: shrink >= 1 ? 'none' : `translateY(${Math.round(L(430, 0, shrink))}px) scale(${big})` });
+    const ak = backOut(P(t, T.drop + 0.05, T.drop + 0.45), 1.8);
+    css($('#havatar'), { transform: ak >= 1 ? 'none' : `rotate(${(1 - ak) * -200}deg) scale(${ak})`, opacity: String(1 - P(t, T.publish - 0.35, T.publish)) });
+    $('#havatar').style.width = `${Math.round(L(92, 0, expoInOut(P(t, T.publish - 0.35, T.publish))))}px`;
+    subj.update(t, [0, T.publish], 0.35);
+    verb.update(t, [0, T.capture, T.fix, T.publish], 0.35);
+    const sub = SUBS.filter(([at]) => t >= at).pop();
+    const hs = $('#hsub');
+    if (sub && hs.textContent !== sub[1]) hs.textContent = sub[1];
+    const sIn = sub ? brandEase(P(t, sub[0] + 0.2, sub[0] + 0.5)) : 0;
+    const nextSub = SUBS.find(([at]) => at > t);
+    const sOut = nextSub ? P(t, nextSub[0] - 0.3, nextSub[0] - 0.1) : 0;
+    css(hs, { opacity: String(sub && hOn ? sIn * (1 - sOut) * (1 - hOut) : 0), transform: sIn < 1 ? `translateY(${(1 - sIn) * 14}px)` : 'none' });
+
+    // 7 — CHECKS: the live Quill preview
+    quill.place(QBOX);
+    const qOn = push(quill.el, t, T.check + 0.3, T.capture);
+    const qT = t - T.check;
+    const card = () => quill.view.rect(), qel = (s) => () => quill.view.rect(s);
+    const qband = (s, up = 60, down = 60) => () => { const c = card(), r = qel(s)(); return c && r && { x: c.x + 8, w: c.w - 16, y: r.y - up, h: r.h + up + down }; };
+    if (qOn) shoot(quill, qT, [
+      { at: 0, rect: card },
+      { at: 0.4, rect: qband('.ks-agent-request', 80, 90), spot: qel('.ks-evidence') },
+      { at: 1.3, rect: qband('.ks-review-steps', 40, 40), spot: qel('.ks-review-steps') },
+      { at: 2.4, rect: qband('.ks-proposal', 40, 30), spot: qel('.ks-proposal') },
+      { at: 3.4, rect: qband('.ks-review', 200, 30), spot: qel('.ks-review') },
+    ], QBOX, card);
+
+    // 8 — CAPTURES: Quill opens the product, clicks Connect, the new step appears, the shutter fires, the shot is refined
+    const capOn = push($('#s-cap'), t, T.capture, T.capture + 4);
+    if (t >= T.capture + 1.62) { $('#s-cap').style.opacity = '0'; }
+    const cT = t - T.capture;
+    const view = $('#view'), modal = cT >= 0.75;
+    if (view.dataset.m !== String(modal)) { view.innerHTML = appHTML(modal); view.dataset.m = String(modal); }
+    view.style.transform = `scale(${1200 / 1440})`;
+    const vx = 360, vy = 300, sc = 1200 / 1440;
+    const qc = keys(cT, [[0.15, [vx + 1150, vy + 760]], [0.55, [vx + 372 * sc, vy + 312 * sc], expoOut], [0.85, [vx + 372 * sc, vy + 312 * sc]], [1.1, [vx + 540 * sc, vy + 386 * sc], expoOut]]);
+    const press = (cT > 0.6 && cT < 0.7) || (cT > 1.15 && cT < 1.25);
+    css($('#qcur'), { opacity: String(capOn && cT > 0.15 && cT < 1.62 ? 1 : 0), transform: `translate(${Math.round(qc[0])}px, ${Math.round(qc[1])}px) scale(${press ? 0.88 : 1})` });
+    const snap = T.capture + 1.62;
+    css($('#vf'), { opacity: String(capOn ? P(t, snap - 0.4, snap - 0.25) : 0), transform: t < snap - 0.05 ? `scale(${L(1.08, 1, expoOut(P(t, snap - 0.4, snap - 0.1)))})` : 'none' });
+    const ci = expoOut(P(t, snap, snap + 0.5)), co = expoIn(P(t, T.fix - 0.3, T.fix));
+    const shotOn = t >= snap && t < T.fix;
+    css($('#capture'), { opacity: String(shotOn ? 1 - co : 0), transform: `translate(${L(360, 420, ci)}px, ${Math.round(L(300, 296, ci) - co * 160)}px) scale(${L(1, 0.9, ci)}) rotate(${L(0, -1.5, ci)}deg)`, filter: co > 0 && shotOn ? `blur(${co * 8}px)` : 'none' });
+    const rT = t - snap;
+    const hl = expoOut(P(rT, 0.35, 0.65));
+    css($('#hl'), { opacity: String(P(rT, 0.35, 0.45)), left: `${L(300, 346, hl)}px`, top: `${L(300, 311, hl)}px`, width: `${L(600, 508, hl)}px`, height: `${L(120, 62, hl)}px` });
+    css($('#blur'), { opacity: String(P(rT, 0.7, 0.8)), left: '468px', top: '480px', width: '218px', height: '26px' });
+    css($('#badge'), { opacity: String(P(rT, 0.95, 1.05)), transform: `scale(${L(1.5, 1, backOut(P(rT, 0.95, 1.2), 2))})` });
+
+    // 9 — FIXES: stamp peels, the old step is struck and rewritten, the new screenshot drops in
+    const wT = t - T.fix;
+    $('#strike').style.width = `${100 * expoOut(P(wT, 0.55, 0.85))}%`;
+    const nt = $('#newtxt');
+    if (wT >= 1.0) { $('#oldtxt').style.display = 'none'; nt.style.display = 'inline'; type(nt, 'Confirm the destination workspace, then click Continue.', t, { start: T.fix + 1.0, cps: 60, caret: false }); }
+    else { $('#oldtxt').style.display = 'inline'; nt.style.display = 'none'; }
+    const dropK = expoOut(P(wT, 2.1, 2.5));
+    css($('#slotshot'), { opacity: String(wT >= 2.1 ? 1 : 0), transform: `translate(-6px, ${Math.round(-114 - (1 - dropK) * 60)}px) scale(${L(0.75, 0.62, dropK)})` });
+    $('#slottag').style.opacity = String(P(wT, 2.4, 2.5));
+    $('#oldshot').style.opacity = wT >= 2.3 ? '0' : '1';
+    const published = t >= T.publish + 3 * B + 0.05;
+    const meta = $('#meta');
+    const mtxt = published ? 'Published · v2.6 ✓' : wT >= 2.6 ? 'Proposed update · v2.6 · Not published' : 'Written for v2.3';
+    if (meta.textContent !== mtxt) meta.textContent = mtxt;
+    meta.className = 'meta' + (published ? ' pub' : wT >= 2.6 ? ' prop' : '');
+
+    // 10 — YOU PUBLISH: review bar, your cursor, Publish → Published
+    const pT = t - T.publish;
+    const rv = expoOut(P(pT, 0.2, 0.55)), rvOut = P(t, T.payoff - 0.05, T.payoff + 0.2);
+    css($('#review'), { opacity: String(t >= T.publish && t < T.payoff + 0.2 ? P(pT, 0.2, 0.3) * (1 - rvOut) : 0), transform: rv < 1 ? `translateY(${Math.round((1 - rv) * 40)}px)` : 'none' });
+    const cur = keys(pT, [[0.45, [1560, 1100]], [3 * B - 0.1, [1296, 912], expoOut]]);
+    css($('#cursor'), { opacity: String(P(pT, 0.45, 0.55) * (1 - P(t, T.payoff - 0.3, T.payoff))), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px) scale(${pT > 3 * B - 0.03 && pT < 3 * B + 0.09 ? 0.86 : 1})` });
+    $('#pubbtn').textContent = published ? 'Published ✓' : 'Publish';
+    $('#pubbtn').classList.toggle('done', published);
+    $('#revsub').textContent = published ? 'Live in your help center' : 'Proposed update · Not published';
+
+    // 11 — payoff: the guide rides the timeline from 12 weeks ago to this week; "Updated this week"
+    const s2 = T.payoff + 1.25, s2k = backOut(P(t, s2, s2 + 0.2), 2.4);
+    css($('#stamp2'), { opacity: String(t >= s2 ? 1 : 0), transform: `rotate(-8deg) scale(${L(1.8, 1, s2k)})` });
+    bigScreen($('#s-caught'), CAUGHT, t, T.payoff + 1.3, T.tag, 0.08);
+
+    // 12 — tagline
+    const tagOn = t >= T.tag;
+    $('#tag').style.opacity = tagOn ? '1' : '0';
+    if (tagOn) { rise(T1, t, T.tag, 0.08, 0.55); rise(T2, t, T.tag + 2 * B, 0.08, 0.55); }
+    endMark.assemble(P(t, T.tag + 4 * B, T.tag + 6 * B));
+    const mk = brandEase(P(t, T.tag + 4 * B, T.tag + 5 * B)), ck = brandEase(P(t, T.tag + 5 * B, T.tag + 6 * B));
+    css($('#endmark'), { opacity: String(mk), transform: mk < 1 ? `translateY(${(1 - mk) * 20}px)` : 'none' });
+    css($('#cta'), { opacity: String(ck), transform: ck < 1 ? `translateY(${(1 - ck) * 20}px)` : 'none' });
+
+    return quill.view.update(Math.min(Math.max(0, qT) * 1.6, 6.5));
+  } }],
+});
+</script>
+</body>
+</html>

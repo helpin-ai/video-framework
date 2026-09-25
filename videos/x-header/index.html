@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>X header — Azhar (building Helpin)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* X/Twitter header, 1500×500 (render with --scale 2). The profile photo covers the bottom-left
+     (about x 20–360, y 330–500) and mobile crops ~60 px top and bottom, so the copy sits right and centred. */
+  #stage { background: radial-gradient(ellipse 70% 120% at 72% 40%, #11342A, var(--forest) 70%); color: #F2F5F3; }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(184, 221, 187, .10) 1.4px, transparent 1.6px); background-size: 30px 30px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0,0,0,.35) 45%, transparent 70%); }
+  #lines { position: absolute; left: 0; top: 0; width: 1500px; height: 500px; }
+  #sym { position: absolute; left: 120px; top: 72px; opacity: .95; }
+  .copy { position: absolute; left: 600px; top: 88px; width: 860px; }
+  .eyebrow { font: 600 17px/1 var(--mono); letter-spacing: .2em; color: var(--mint); }
+  h1 { margin: 20px 0 0; font-size: 84px; line-height: .98; font-weight: 700; letter-spacing: -0.05em; }
+  h1 em { font-style: normal; color: var(--mint); }
+  .lede { margin-top: 16px; font-size: 28px; line-height: 1.3; font-weight: 500; color: #CFE3D6; letter-spacing: -0.01em; }
+  .row { margin-top: 26px; display: flex; align-items: center; gap: 14px; }
+  .pill { height: 46px; padding: 0 20px; border-radius: 12px; display: inline-flex; align-items: center; gap: 10px; font: 600 21px/1 var(--sans); letter-spacing: 0; }
+  .pill.url { background: #F2F5F3; color: var(--forest); border: 0; }
+  .pill.soon { border: 1px solid #2F5A45; background: transparent; color: #D5E0DA; font-weight: 500; }
+  .pill.soon i { width: 9px; height: 9px; border-radius: 50%; background: var(--mint); }
+  .also { margin-top: 22px; font: 500 17px/1 var(--mono); letter-spacing: .08em; color: #8FB39A; }
+  .also b { color: #CFE3D6; font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <svg id="lines" viewBox="0 0 1500 500"></svg>
+  <div id="sym"></div>
+  <div class="copy">
+    <div class="eyebrow">TECHNICAL FOUNDER · BUILDING WITH AI AGENTS</div>
+    <h1>Building <em>Helpin.</em></h1>
+    <div class="lede">The open-source workspace for your team and AI agents.</div>
+    <div class="row"><span class="pill url">helpin.ai</span><span class="pill soon"><i></i>Open source · Coming soon</span></div>
+    <div class="also">ALSO BUILDING <b>ContentStudio · Usermaven · Replug · Contentpen</b></div>
+  </div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { helpinSymbol, lineBundles } from '../../lib/components.js';
+const sym = helpinSymbol({ size: 150, color: '#F2F5F3' });
+document.querySelector('#sym').append(sym.node);
+const lb = lineBundles(document.querySelector('#lines'), { count: 22, gap: 10, slope: 0.42, cx: 430, cy: 300, spread: 60, alpha: [0.08, 0.28] });
+defineVideo({ width: 1500, height: 500, fps: 30, duration: 1, scenes: [{ id: 'film', start: 0, end: 1, render: () => { sym.assemble(1); lb.update(5); } }] });
+</script>
+</body>
+</html>

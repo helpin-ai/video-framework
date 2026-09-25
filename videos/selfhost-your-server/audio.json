@@ -1,0 +1,187 @@
+{
+  "name": "selfhost-your-server",
+  "duration": 30.476,
+  "video": "../../out/selfhost-your-server/selfhost-your-server.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 4.762,
+      "generate": 8,
+      "from": 0.476,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Tight minimal techno groove at 126 BPM starting instantly on the first beat: a punchy kick on every beat, crisp ticking hi-hats, a pulsing filtered sub bass and small digital blips, building tension with a rising filter toward the end. No melody, no vocals."
+    },
+    {
+      "at": 4.762,
+      "length": 25.714,
+      "generate": 40,
+      "from": 7.619,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Driving melodic techno at 126 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: punchy four-on-the-floor kick, rolling bassline, crisp open hi-hats, bright arpeggiated synth stabs and a hypnotic lead motif. Confident and forward-moving, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "toggle": {
+      "text": "satisfying toggle switch sliding and snapping into place",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "power": {
+      "text": "server powering on, soft electric hum rising with quick bright beeps",
+      "duration": 1,
+      "gain": -11
+    },
+    "keys": {
+      "text": "quiet fast laptop keyboard typing",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "tick": {
+      "text": "tiny crisp digital tick, a terminal check passing",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "ok": {
+      "text": "short bright success beep, a terminal command finishing",
+      "duration": 0.6,
+      "gain": -11
+    },
+    "swap": {
+      "text": "smooth airy swish, a web page loading in",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "keyon": {
+      "text": "small metallic key click locking into place",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "glide": {
+      "text": "smooth gentle glide whoosh, an object floating across",
+      "duration": 0.8,
+      "gain": -13
+    },
+    "settle": {
+      "text": "soft muted tap, a card settling into place",
+      "duration": 0.5,
+      "gain": -13
+    }
+  },
+  "cues": [
+    {
+      "sound": "soft",
+      "at": [
+        6.667,
+        11.429,
+        15.238,
+        19.048,
+        22.857
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        2.381
+      ]
+    },
+    {
+      "sound": "toggle",
+      "at": [
+        2.401
+      ]
+    },
+    {
+      "sound": "glide",
+      "at": [
+        2.681
+      ]
+    },
+    {
+      "sound": "settle",
+      "at": [
+        3.333
+      ]
+    },
+    {
+      "sound": "power",
+      "at": [
+        3.383
+      ]
+    },
+    {
+      "sound": "keys",
+      "at": [
+        7.167,
+        12.029,
+        12.729,
+        15.738
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        9.067,
+        9.317,
+        9.567,
+        9.817,
+        10.017,
+        16.688,
+        16.948,
+        17.208,
+        17.468,
+        17.728,
+        17.988
+      ]
+    },
+    {
+      "sound": "ok",
+      "at": [
+        10.117,
+        18.248
+      ]
+    },
+    {
+      "sound": "swap",
+      "at": [
+        13.529
+      ]
+    },
+    {
+      "sound": "keyon",
+      "at": [
+        20.248,
+        20.548,
+        20.848
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        27.619
+      ]
+    }
+  ]
+}

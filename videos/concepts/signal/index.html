@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Concept B — Signal</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept B: a near-black system map. The request is a packet travelling a node graph;
+     the camera dives into each node, which opens into the live product. Style frame at FORGE. */
+  #stage { background: #0B0D0C; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(#161A18 1px, transparent 1px), linear-gradient(90deg, #161A18 1px, transparent 1px); background-size: 60px 60px; }
+  svg.map { position: absolute; inset: 0; }
+  .node { position: absolute; height: 46px; padding: 0 18px; display: inline-flex; align-items: center; gap: 10px; border-radius: 8px; border: 1px solid #2E3531; background: #111513;
+    font: 500 16px/1 var(--mono); letter-spacing: .12em; color: #8A968F; transform: translate(-50%, -50%); white-space: nowrap; }
+  .node.done { color: #CFE9D9; border-color: #3F6B55; }
+  .node.done i { width: 8px; height: 8px; border-radius: 2px; background: var(--mint); }
+  .node.active { color: #0B0D0C; background: var(--mint); border-color: var(--mint); }
+  .counter { position: absolute; right: 90px; top: 70px; font: 500 22px/1 var(--mono); letter-spacing: .12em; color: #F0C35A; }
+  .cap { position: absolute; left: 110px; top: 560px; width: 620px; }
+  .cap .k { font: 500 20px/1 var(--mono); letter-spacing: .2em; color: var(--mint); }
+  .cap h1 { margin: 22px 0 0; font-size: 80px; line-height: 1.02; font-weight: 600; letter-spacing: -0.04em; color: #F2F5F3; }
+  .cap h1 em { font-style: normal; color: var(--mint); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid"></div>
+  <svg class="map" viewBox="0 0 1920 1080">
+    <path d="M150 200 H470 V300 H760" stroke="#9CDBB3" stroke-width="2" fill="none"/>
+    <path d="M760 300 H1060 V200 H1380 V300 H1700" stroke="#2E3531" stroke-width="2" fill="none"/>
+    <path d="M1060 300 L 1010 470 M1060 300 L 1620 470" stroke="#3F6B55" stroke-width="1.5" fill="none" stroke-dasharray="6 6"/>
+    <rect x="1030" y="292" width="16" height="16" fill="#9CDBB3"/>
+  </svg>
+  <div class="counter">EXPORTED 10,000 / 18,400</div>
+  <section class="scene" id="f" style="visibility:visible">
+    <div class="node done" style="left:150px;top:200px"><i></i>INBOX · MAYA</div>
+    <div class="node done" style="left:470px;top:250px"><i></i>ASK AGENT</div>
+    <div class="node done" style="left:760px;top:300px"><i></i>EXP-142</div>
+    <div class="node active" style="left:1060px;top:300px">FORGE · CODING AGENT</div>
+    <div class="node" style="left:1380px;top:200px">LENS · REVIEW</div>
+    <div class="node" style="left:1700px;top:300px">MAYA · HEARS BACK</div>
+    <div class="cap"><div class="k">04 / FORGE</div><h1>The reason travels <em>with the task.</em></h1></div>
+    <div id="win"></div>
+  </section>
+</div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js';
+import { siteWindow } from '../../../lib/site.js';
+const w = siteWindow(document.querySelector('#win'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 14, dark: true });
+w.el.style.boxShadow = '0 0 0 1px #3F6B55';
+waitFor(w.view.ready);
+defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1, render: () => {
+  w.place({ x: 1010, y: 470, w: 610, h: 560 }); w.camera(1.15, [0, 0.36]); return w.view.update(2.3);
+} }] });
+</script>
+</body>
+</html>

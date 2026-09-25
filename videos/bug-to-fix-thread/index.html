@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — The thread (bug report to reviewed fix)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* Concept A, "The thread": a light editorial world. Maya's request is one green line that
+     is never dropped. The camera tracks it through each station (live helpin.ai previews)
+     and pulls back at the end to show the whole journey, from a stalled export to a complete one.
+     Music is this video's own (warm marimba, 104 BPM) and starts when the thread starts. */
+  #stage { background: #F4F6F5; color: var(--ink); }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(#D3DBD6 1.5px, transparent 1.7px); }
+  #world { position: absolute; left: 0; top: 0; width: 8600px; height: 1080px; transform-origin: 0 0; }
+  #thread { position: absolute; left: 0; top: 0; overflow: visible; }
+
+  .label { position: absolute; font: 500 19px/1 var(--mono); letter-spacing: .2em; color: var(--green); white-space: nowrap; }
+  .cap { position: absolute; font-size: 48px; line-height: 1.08; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); white-space: nowrap; }
+  .cap em { font-style: normal; color: var(--green); }
+  .big { position: absolute; font-size: 76px; line-height: 1.04; font-weight: 600; letter-spacing: -0.035em; color: var(--ink); white-space: nowrap; }
+  .big em { font-style: normal; color: var(--green); }
+  .note { position: absolute; width: 300px; font-size: 19px; line-height: 1.45; color: #66716C; }
+
+  .card { position: absolute; background: #fff; border-radius: 20px; box-shadow: 0 24px 70px rgba(19, 21, 20, .10), 0 0 0 1px #E4E9E6; }
+  .export { width: 700px; height: 250px; }
+  .export h3 { position: absolute; left: 34px; top: 30px; margin: 0; font-size: 30px; letter-spacing: -0.02em; }
+  .export p { position: absolute; left: 34px; top: 72px; margin: 0; font-size: 20px; color: #66716C; }
+  .export .bar { position: absolute; left: 34px; top: 124px; width: 632px; height: 14px; border-radius: 7px; background: #ECEFED; overflow: hidden; }
+  .export .bar i { display: block; height: 100%; width: 0; border-radius: 7px; background: #D9A13A; }
+  .export .row { position: absolute; left: 34px; right: 34px; top: 160px; display: flex; justify-content: space-between; font: 500 21px/1 var(--mono); color: #66716C; }
+  .export .row b { font-weight: 500; }
+  .export .state { color: #8A6400; }
+  .export.done .bar i { background: var(--green); }
+  .export.done .state { color: var(--green); }
+
+  .maya { width: 480px; padding: 26px 28px; }
+  .maya .who { display: flex; gap: 14px; align-items: center; font-weight: 600; font-size: 24px; }
+  .maya .who span { width: 50px; height: 50px; border-radius: 50%; background: #FCE6D8; color: #A8502A; display: grid; place-items: center; font-size: 18px; }
+  .maya .who small { font-weight: 400; color: #66716C; font-size: 20px; }
+  .maya p { margin: 16px 0 0; font-size: 25px; line-height: 1.4; color: #2A2F2C; }
+
+  #endcard { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; }
+  #endcard .inner { display: grid; justify-items: center; gap: 30px; }
+  #endcard .mark { display: flex; align-items: center; gap: 30px; }
+  #endcard .word { font-size: 150px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: var(--ink); margin-top: -10px; }
+  #endcard .line { font-size: 56px; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); }
+  #endcard .line em { font-style: normal; color: var(--green); }
+  #endcard .cta { display: flex; gap: 14px; }
+  #endcard .cta span { height: 62px; padding: 0 28px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 26px/1 var(--sans); }
+  #endcard .cta .url { background: var(--ink); color: #fff; }
+  #endcard .cta .tag { background: #fff; border: 1px solid #CFD6D2; color: var(--ink); font-weight: 500; }
+  #endcard .cta .tag i { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+  #fade { position: absolute; inset: 0; background: #F4F6F5; opacity: 0; }
+
+  /* Artifacts that travel along the thread between stations. */
+  .chip { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px;
+    border-radius: 12px; background: #fff; border: 1px solid #CFE5D6; color: #0B6340; font: 500 20px/1 var(--sans); white-space: nowrap;
+    box-shadow: 0 14px 34px rgba(19, 21, 20, .16); opacity: 0; transform-origin: 50% 50%; }
+  .chip svg { flex: none; }
+  .chip .alt { display: none; }
+  .chip.green { background: #E3F4EA; border-color: #B7DBC5; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="world">
+    <svg id="thread" width="8600" height="1080" viewBox="0 0 8600 1080">
+      <path id="path" fill="none" stroke="#0F7A50" stroke-width="6" stroke-linecap="round" d=""/>
+      <g id="nodes"></g>
+      <circle id="pen" r="12" fill="#0F7A50" stroke="#fff" stroke-width="5"/>
+    </svg>
+
+    <!-- intro: the stalled export -->
+    <div class="big" id="intro-big" style="left:200px; top:190px">Your customer’s export stops at 10,000.<br><em>They need all 18,400.</em></div>
+    <div class="card export" id="ex-start" style="left:200px; top:440px"><h3>Export contacts</h3><p>Northstar · Filtered view</p><div class="bar"><i></i></div><div class="row"><b class="count">0 of 18,400</b><span class="state">exporting…</span></div></div>
+
+    <!-- 01 Maya writes in -->
+    <div class="label" id="l1" style="left:1330px; top:330px">01 — YOUR CUSTOMER WRITES IN</div>
+    <div class="card maya" id="maya" style="left:1330px; top:370px"><div class="who"><span>MC</span><div>Maya Chen <small>· Northstar</small></div></div><p>Our CSV export stops at 10,000 contacts. We need the full list of 18,400.</p></div>
+
+    <!-- 02 Ask Agent -->
+    <div class="label" id="l2" style="left:2560px; top:92px">02 — ASK AGENT</div>
+    <div class="cap" id="c2" style="left:2556px; top:118px">Picked up with <em>the whole history.</em></div>
+    <div id="w2"></div>
+
+    <!-- 03 Coding agent -->
+    <div class="label" id="l3" style="left:4380px; top:92px">03 — CODING AGENT · FORGE</div>
+    <div class="cap" id="c3" style="left:4376px; top:118px">Give coding agents <em>the reason behind the issue.</em></div>
+    <div id="w3"></div>
+    <div class="note" id="n3" style="left:5100px; top:880px">Coding agents need a connected GitHub or GitLab repository.</div>
+
+    <!-- 04 Follow through -->
+    <div class="label" id="l4" style="left:6010px; top:92px">04 — FOLLOW THROUGH</div>
+    <div class="cap" id="c4a" style="left:6006px; top:118px">Reviewed by your team. <em>Released.</em></div>
+    <div class="cap" id="c4b" style="left:6006px; top:118px">And your customer <em>hears back.</em></div>
+    <div id="w4"></div>
+
+    <!-- artifacts carried by the thread -->
+    <div class="chip" id="a1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Maya’s conversation attached</span></div>
+    <div class="chip" id="a2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M6 8.5V21M18 15.5V9a3 3 0 0 0-3-3h-4"/></svg><span class="t">Pull request · ready for review</span></div>
+    <div class="chip green" id="a3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span>Released</span></div>
+
+    <!-- 05 complete -->
+    <div class="label" id="l5" style="left:7400px; top:400px">05 — COMPLETE</div>
+    <div class="card export done" id="ex-end" style="left:7400px; top:440px"><h3>Export contacts</h3><p>Northstar · Filtered view</p><div class="bar"><i></i></div><div class="row"><b class="count">10,000 of 18,400</b><span class="state">exporting…</span></div></div>
+  </div>
+
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="fade"></div>
+  <div id="endcard"><div class="inner">
+    <div class="mark"><span id="end-symbol"></span><span class="word">Helpin</span></div>
+    <div class="line">One request. <em>Carried all the way.</em></div>
+    <div class="cta"><span class="url">helpin.ai</span><span class="tag"><i></i>Open source · Coming soon</span></div>
+  </div></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, backOut, easeIn } from '../../lib/motion.js';
+import { helpinSymbol, css, rise, counter, type } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s) => document.querySelector(s);
+const BAR = 60 / 104 * 4; // 2.3077 s at 104 BPM
+
+// ── The thread: stations left to right, with entry/exit points (world px).
+const W = {
+  ask:    { x: 2556, y: 190, w: 770, h: 820 },
+  coding: { x: 4380, y: 190, w: 680, h: 836 },   // coding card aspect 606×745
+  follow: { x: 6010, y: 220, w: 860, h: 737 },   // follow-up art aspect 356×305
+};
+const PTS = [
+  [577, 571],                         // stall point on the start bar (54.35% of 632 + 234)
+  [1330, 520], [1810, 520],           // through Maya's card
+  [W.ask.x, 560], [W.ask.x + W.ask.w, 560],
+  [W.coding.x, 560], [W.coding.x + W.coding.w, 560],
+  [W.follow.x, 590], [W.follow.x + W.follow.w, 590],
+  [7434, 571],                        // start of the end bar
+];
+// Smooth path through the points (horizontal S-curves between stations).
+let d = `M ${PTS[0][0]} ${PTS[0][1]}`;
+for (let i = 1; i < PTS.length; i++) {
+  const [x0, y0] = PTS[i - 1], [x1, y1] = PTS[i];
+  const inside = [2, 4, 6, 8].includes(i); // straight runs behind cards/windows
+  d += inside ? ` L ${x1} ${y1}` : ` C ${x0 + (x1 - x0) * 0.5} ${y0 + 140 * (i % 2 ? 1 : -1)}, ${x0 + (x1 - x0) * 0.5} ${y1 - 140 * (i % 2 ? 1 : -1)}, ${x1} ${y1}`;
+}
+const path = $('#path');
+path.setAttribute('d', d);
+const LEN = path.getTotalLength();
+// length along the path at which it first reaches world x (x is monotonic along the path)
+const lenAtX = (x) => { let lo = 0, hi = LEN; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; path.getPointAtLength(m).x < x ? (lo = m) : (hi = m); } return hi; };
+const S = PTS.map(([x]) => lenAtX(x));
+path.style.strokeDasharray = `${LEN}`;
+// station nodes (small rings where the thread meets a card)
+PTS.forEach(([x, y], i) => {
+  if (i === 0 || i === PTS.length - 1) return;
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  Object.entries({ cx: x, cy: y, r: 9, fill: '#fff', stroke: '#0F7A50', 'stroke-width': 5 }).forEach(([k, v]) => c.setAttribute(k, v));
+  c.dataset.len = S[i];
+  $('#nodes').appendChild(c);
+});
+
+// ── Live helpin.ai previews placed in the world.
+const ask = siteWindow($('#w2'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 20 });
+const coding = siteWindow($('#w3'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 16, dark: true });
+const follow = siteWindow($('#w4'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 20 });
+for (const w of [ask, follow]) w.el.style.boxShadow = '0 30px 80px rgba(19,21,20,.12), 0 0 0 1px #E4E9E6';
+coding.el.style.boxShadow = '0 30px 80px rgba(19,21,20,.28)';
+[ask, coding, follow].forEach((w) => waitFor(w.view.ready));
+
+const endMark = helpinSymbol({ size: 128, color: '#131514' });
+$('#end-symbol').append(endMark.node);
+
+// Cards land with a small overshoot.
+const land = (el, t, at) => {
+  const k = backOut(Math.min(1, Math.max(0, (t - at) / 0.55)), 1.4);
+  css(el, { opacity: Math.min(1, Math.max(0, (t - at) / 0.2)), transform: `translateY(${(1 - k) * 36}px) scale(${L(0.96, 1, k)})` });
+};
+// Windows rise with a tilt, lean into camera pans (rotateY from camera speed), and float slightly.
+const raise = (w, box, t, at, lean = 0, phase = 0) => {
+  const k = expoOut(P(t, at, at + 1.0));
+  w.place(box);
+  const float = Math.sin(t * 1.3 + phase) * 4;
+  css(w.el, { opacity: Math.min(1, k * 1.6), transform: `perspective(2400px) translateY(${(1 - k) * 120 + float}px) rotateX(${(1 - k) * 12}deg) rotateY(${lean}deg)` });
+};
+
+// Shots: a camera path inside a window. Each shot = { at, rect: () => pageRect, spot?: () => pageRect }.
+// The camera eases from the previous shot's rect to this one's; the spotlight follows the same way.
+// Fit a rect to the window's aspect (grow the short side), then keep it inside `bounds` where it fits.
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) {
+    x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w);
+    y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h);
+  }
+  return { x, y, w, h };
+}
+function shoot(w, lt, shots, dur = 0.8, box, bounds) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : easeInOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => (box ? fitAspect(r, box.w / box.h, bounds?.()) : r);
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.();
+  if (a && b) w.spotlight(lerpRect(a, b, k), 1);
+  else if (b) w.spotlight(b, k);
+  else if (a) w.spotlight(a, 1 - k);
+  else w.spotlight(null, 0);
+}
+const grow = (r, l, t, rr, b) => r && { x: r.x - l, y: r.y - t, w: r.w + l + rr, h: r.h + t + b };
+
+// Artifact: lifts out of one window, flies to the pen, rides the thread, docks into the next window.
+function carry(el, t, { lift, ride, arrive, dock, from, to }) {
+  if (t < lift || t > dock + 0.35) { el.style.opacity = '0'; return; }
+  const pen = (x) => { const q = path.getPointAtLength(Math.max(0, keys(x, penKeys))); return { x: q.x, y: q.y - 46 }; };
+  const centre = (r) => r && { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+  let pos, s = 1.12, o = 1;
+  if (t < lift + 0.35) { pos = centre(from()); const k = backOut(P(t, lift, lift + 0.35), 1.6); s = L(1, 1.12, k); o = P(t, lift, lift + 0.15); }
+  else if (t < ride) { const a = centre(from()), b = pen(ride), k = easeInOut(P(t, lift + 0.35, ride)); pos = a && { x: L(a.x, b.x, k), y: L(a.y, b.y, k) - Math.sin(k * Math.PI) * 60 }; }
+  else if (t < arrive) pos = pen(t);
+  else { const a = pen(arrive), b = centre(to()) || a, k = easeInOut(P(t, arrive, dock)); pos = { x: L(a.x, b.x, k), y: L(a.y, b.y, k) - Math.sin(k * Math.PI) * 50 }; s = L(1.12, 0.9, k); o = 1 - P(t, dock, dock + 0.3); }
+  if (!pos) { el.style.opacity = '0'; return; }
+  css(el, { opacity: String(o), transform: `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%) scale(${s})` });
+}
+
+// ── Timeline (seconds). Stations sit on the 104 BPM bar grid.
+const T = {
+  thread: 1.5 * BAR,            // 3.46  music + thread start
+  maya: 3.0,                    // card lands before the pen arrives
+  ask: 3 * BAR,                 // 6.92
+  coding: 5.5 * BAR,            // 12.69
+  follow: 8 * BAR,              // 18.46
+  end: 10.5 * BAR,              // 24.23
+  pull: 12 * BAR,               // 27.69
+  total: 14 * BAR,              // 32.31
+};
+// Pen position along the path: arrive at each station, wait, cross behind it on departure.
+const penKeys = [
+  [0, 0], [T.thread, 0],
+  [T.thread + 1.4, S[1], easeInOut],                      // to Maya
+  [T.ask - 0.9, S[2], easeInOut], [T.ask + 0.5, S[3], easeInOut],             // on to Ask Agent
+  [T.coding - 0.5, S[4], easeIn], [T.coding + 0.6, S[5], easeInOut],           // cross behind, on to coding
+  [T.follow - 0.5, S[6], easeIn], [T.follow + 0.6, S[7], easeInOut],           // on to follow-up
+  [T.end - 0.5, S[8], easeIn], [T.end + 0.7, S[9], easeInOut],                 // on to the end bar
+];
+// Camera: centre x/y and zoom per station, gliding between them; the last move pulls back to the whole map.
+const camKeys = [
+  [0, [760, 560, 1]], [T.thread + 0.2, [760, 560, 1]],
+  [T.thread + 1.6, [1580, 560, 1], easeInOut],
+  [T.ask - 0.4, [1640, 560, 1.02]], [T.ask + 0.7, [2941, 560, 1], easeInOut],
+  [T.coding - 0.3, [2941, 560, 1.035]], [T.coding + 0.8, [4760, 560, 1], easeInOut],
+  [T.follow - 0.3, [4760, 560, 1.035]], [T.follow + 0.8, [6440, 560, 1], easeInOut],
+  [T.end - 0.3, [6440, 560, 1.035]], [T.end + 0.9, [7750, 560, 1], easeInOut],
+  [T.pull, [7750, 560, 1.03]], [T.pull + 1.6, [4300, 560, 0.215], easeInOut],
+];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 104, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    // camera
+    const [cx, cy, z] = keys(t, camKeys);
+    css($('#world'), { transform: `translate(${960 - cx * z}px, ${540 - cy * z}px) scale(${z})` });
+    // background dots move at 55% of the camera (parallax), windows lean into the pan
+    css($('#dots'), { backgroundSize: `${30 * z}px ${30 * z}px`, backgroundPosition: `${960 - cx * z * 0.55}px ${540 - cy * z * 0.55}px` });
+    const vx = (cx - keys(t - 1 / 30, camKeys)[0]) * 30;
+    const lean = Math.max(-10, Math.min(10, -vx * 0.004));
+
+    // intro: bar fills and stalls at 10,000
+    rise($('#intro-big'), t, 0.15, 0.6, 30, 12);
+    $('#intro-big em').style.opacity = String(brandEase(P(t, 1.9, 2.4)));
+    land($('#ex-start'), t, 0.35);
+    const n = counter($('#ex-start .count'), t, 0.6, 1.8, 0, 10000, { ease: expoOut, suffix: ' of 18,400' });
+    $('#ex-start .bar i').style.width = `${(n / 18400) * 100}%`;
+    $('#ex-start .state').textContent = n >= 10000 ? 'stopped' : 'exporting…';
+
+    // the thread
+    const len = keys(t, penKeys);
+    path.style.strokeDashoffset = String(LEN - len);
+    const p = path.getPointAtLength(Math.max(0, len));
+    const bob = t > T.thread ? Math.sin(t * 6) * 1.5 : 0;
+    const pen = $('#pen');
+    pen.setAttribute('cx', p.x); pen.setAttribute('cy', p.y + bob);
+    pen.style.opacity = String(P(t, T.thread - 0.2, T.thread) * (1 - P(t, T.end + 0.6, T.end + 0.9)));
+    for (const c of $('#nodes').children) c.style.opacity = String(len >= Number(c.dataset.len) - 2 ? 1 : 0);
+
+    // 01 Maya
+    rise($('#l1'), t, T.maya - 0.1, 0.5, 14, 4);
+    land($('#maya'), t, T.maya);
+    type($('#maya p'), 'Our CSV export stops at 10,000 contacts. We need the full list of 18,400.', t, { start: T.maya + 0.25, cps: 52, caret: t < T.maya + 2.4 });
+
+    // 02 Ask Agent: live preview at 2.3× from its 1.5 s mark
+    rise($('#l2'), t, T.ask - 0.6, 0.5, 14, 4); rise($('#c2'), t, T.ask - 0.5, 0.6, 24, 10);
+    raise(ask, W.ask, t, T.ask - 0.6, lean, 0);
+    const aT = t - (T.ask - 0.6);
+    const panel = () => ask.view.rect('.swi-agent');
+    const step = (i) => () => ask.view.rect('.swi-agent-step', i);
+    // detail framing: the panel's full width, a band around the step
+    const band = (i, up = 170, down = 170) => () => { const pn = panel(), st = step(i)(); return pn && st && { x: pn.x - 10, w: pn.w + 20, y: st.y - up, h: st.h + up + down }; };
+    shoot(ask, aT, [
+      { at: 0, rect: () => ask.view.rect() },
+      { at: 0.5, rect: () => grow(panel(), 150, 0, 10, 0) },
+      { at: 1.35, rect: band(1, 210, 150), spot: step(1) },
+      { at: 3.35, rect: band(2), spot: step(2) },
+      { at: 5.05, rect: band(3, 220, 140), spot: step(3) },
+      { at: 6.3, rect: () => grow(panel(), 150, 0, 10, 0) },
+    ]);
+
+    // 03 Coding agent: live preview at 0.85×; start on the diff (left-anchored), then pull back
+    rise($('#l3'), t, T.coding - 0.6, 0.5, 14, 4); rise($('#c3'), t, T.coding - 0.5, 0.6, 24, 10); rise($('#n3'), t, T.coding + 1.2, 0.5, 10, 0);
+    raise(coding, W.coding, t, T.coding - 0.6, lean, 1.7);
+    const cT = t - (T.coding - 0.6);
+    const card = () => coding.view.rect();
+    const el = (sel) => () => coding.view.rect(sel);
+    const cband = (sel, up = 60, down = 60) => () => { const c = card(), r = el(sel)(); return c && r && { x: c.x + 12, w: 500, y: r.y - up, h: r.h + up + down }; };
+    shoot(coding, cT, [
+      { at: 0, rect: card },
+      { at: 0.75, rect: cband('.awa-code-task', 80, 40), spot: el('.awa-code-task small') },
+      { at: 2.0, rect: cband('.awa-code-file', 40, 50), spot: el('.awa-code-file') },
+      { at: 2.75, rect: cband('.awa-answer', 70, 30), spot: el('.awa-answer') },
+      { at: 3.6, rect: cband('.awa-code-review', 120, 40), spot: el('.awa-code-review') },
+      { at: 4.9, rect: card },
+    ], 0.8, W.coding, card);
+
+    // 04 Follow through: caption swaps when the message to Maya appears
+    rise($('#l4'), t, T.follow - 0.6, 0.5, 14, 4);
+    const fT = t - (T.follow - 0.6);
+    rise($('#c4a'), t, T.follow - 0.5, 0.6, 24, 10);
+    if (fT > 4.0) css($('#c4a'), { opacity: 1 - brandEase(P(fT, 4.0, 4.3)) });
+    rise($('#c4b'), t, T.follow - 0.6 + 4.2, 0.6, 24, 10);
+    raise(follow, W.follow, t, T.follow - 0.6, lean, 3.1);
+    const art = () => follow.view.rect();
+    const region = (y0, y1, x0 = 0.05, x1 = 0.95) => () => { const r = art(); return r && { x: r.x + r.w * x0, y: r.y + r.h * y0, w: r.w * (x1 - x0), h: r.h * (y1 - y0) }; };
+    shoot(follow, fT, [
+      { at: 0, rect: art },
+      { at: 0.6, rect: region(0.2, 0.7, 0.02, 0.98), spot: region(0.3, 0.6) },
+      { at: 3.35, rect: region(0.5, 1.0, 0.02, 0.98), spot: region(0.66, 0.96) },
+      { at: 5.0, rect: art },
+    ]);
+
+    // Artifacts ride the thread between stations.
+    carry($('#a1'), t, { lift: T.coding - 1.15, ride: T.coding - 0.5, arrive: T.coding + 0.6, dock: T.coding + 1.1,
+      from: () => ask.toOuter(ask.view.rect('.swi-agent-source')), to: () => coding.toOuter(coding.view.rect('.awa-code-task small')) });
+    carry($('#a2'), t, { lift: T.follow - 1.25, ride: T.follow - 0.5, arrive: T.follow + 0.6, dock: T.follow + 1.05,
+      from: () => coding.toOuter(coding.view.rect('.awa-code-review')), to: () => follow.toOuter(region(0.3, 0.6)()) });
+    // the pull request becomes "Released" on its way into the follow-up
+    $('#a2 .t').textContent = t > T.follow + 0.2 ? 'Reviewed by Sam · released' : 'Pull request · ready for review';
+    $('#a2').classList.toggle('green', t > T.follow + 0.2);
+    carry($('#a3'), t, { lift: T.end - 1.2, ride: T.end - 0.5, arrive: T.end + 0.7, dock: T.end + 1.0,
+      from: () => follow.toOuter(region(0.3, 0.45, 0.62, 0.95)()), to: () => ({ x: 7434, y: 564, w: 20, h: 14 }) });
+
+    // 05 Complete: the end bar fills to 18,400
+    rise($('#l5'), t, T.end - 0.2, 0.5, 14, 4);
+    land($('#ex-end'), t, T.end - 0.3);
+    const m = counter($('#ex-end .count'), t, T.end + 0.8, T.end + 1.9, 10000, 18400, { ease: easeInOut, suffix: ' of 18,400' });
+    $('#ex-end .bar i').style.width = `${(m / 18400) * 100}%`;
+    $('#ex-end .state').textContent = m >= 18400 ? 'complete' : 'exporting…';
+
+    // Pull back, then the end card over the faded map
+    const fade = brandEase(P(t, T.pull + 1.4, T.pull + 2.1));
+    $('#fade').style.opacity = String(fade * 0.82);
+    $('#endcard').style.opacity = String(fade);
+    endMark.assemble(P(t, T.pull + 1.4, T.pull + 2.5));
+    css($('#endcard .inner'), { transform: `translateY(${(1 - fade) * 24}px)` });
+
+    // Previews: return their promises so the frame waits for them
+    const waits = [];
+    if (aT > -0.2 && t < T.coding + 1) waits.push(ask.view.update(1.5 + Math.max(0, aT) * 2.3));
+    if (cT > -0.2 && t < T.follow + 1) waits.push(coding.view.update(Math.max(0, cT) * 0.85));
+    // The site replays this preview every 9.5 s; hold it once Maya's message has landed.
+    if (fT > -0.2 && t < T.pull + 2) waits.push(follow.view.update(Math.min(Math.max(0, fT) * 0.95, 8.0)));
+    return waits.length ? Promise.all(waits) : null;
+  } }],
+});
+</script>
+</body>
+</html>

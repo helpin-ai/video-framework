@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin example reel</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  #handoff { background: var(--forest); }
+
+  #reveal .mark { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; gap: 36px; translate: -50% -50%; }
+  #reveal .word { font-size: 150px; font-weight: 600; letter-spacing: -0.04em; clip-path: inset(0 100% 0 0); }
+  #reveal .tag { position: absolute; left: 0; right: 0; top: 660px; text-align: center; }
+
+  #record { perspective: 2400px; }
+  #record .title { position: absolute; left: 0; right: 0; top: 90px; text-align: center; }
+  #record .shot { left: 50%; top: 250px; width: 1480px; margin-left: -740px; transform-origin: 50% 0; }
+  #record .callout { left: 0; top: 0; }
+
+  #install .term { left: 50%; top: 300px; margin-left: -550px; }
+  #install .title { position: absolute; left: 0; right: 0; top: 130px; text-align: center; }
+  #install .badges { position: absolute; left: 0; right: 0; top: 820px; display: flex; justify-content: center; gap: 18px; }
+
+  #end .stack { display: grid; justify-items: center; gap: 34px; }
+  #end .url { font: 500 30px/1 var(--mono); color: var(--sage); }
+
+  [data-orientation='portrait'] #record .shot { width: 1000px; margin-left: -500px; top: 520px; }
+  [data-orientation='portrait'] #install .term { width: 960px; margin-left: -480px; top: 520px; font-size: 24px; }
+  [data-orientation='portrait'] #install .badges { top: 1180px; flex-wrap: wrap; padding: 0 60px; }
+  [data-orientation='portrait'] #reveal .word { font-size: 120px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <section class="scene" id="handoff"></section>
+
+  <section class="scene" id="reveal">
+    <div class="layer" id="reveal-vortex"></div>
+    <div class="scrim"></div>
+    <div class="mark"><span id="reveal-symbol"></span><span class="word">Helpin</span></div>
+    <div class="tag lede">AI agents that do more than answer.</div>
+  </section>
+
+  <section class="scene" id="record">
+    <div class="title h1">One customer. <span class="sage">One record.</span></div>
+    <div class="shot"><img src="../../assets/helpin/product/workspace-inbox-1920-v4.webp" alt=""><div class="callout"></div></div>
+  </section>
+
+  <section class="scene" id="install">
+    <div class="title h1">Helpin is going <span class="sage">open source.</span></div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i></div><div class="body"></div></div>
+    <div class="badges">
+      <span class="pill"><span class="dot"></span>AGPL-3.0</span>
+      <span class="pill"><span class="dot"></span>Self-host with Docker</span>
+      <span class="pill"><span class="dot"></span>Bring your own models</span>
+    </div>
+  </section>
+
+  <section class="scene center" id="end">
+    <div class="stack">
+      <span id="end-symbol"></span>
+      <div class="display">Helpin</div>
+      <span class="pill"><span class="dot"></span>Open source · Coming soon</span>
+      <div class="url">helpin.ai</div>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, envelope, brandEase, easeInOut, expoOut, stagger } from '../../lib/motion.js';
+import { helpinSymbol, kineticLines, type, vortex, css } from '../../lib/components.js';
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+
+// Scene 1 — the handoff
+const lines = kineticLines($('#handoff'), [
+  'A customer asks a question.',
+  'Support investigates.',
+  'Engineering ships.',
+  '<span class="sage">Someone still has to tell the customer.</span>',
+], { at: [0.3, 1.1, 1.8, 2.6], lineHeight: 104 });
+
+// Scene 2 — logo reveal
+const flow = vortex($('#reveal-vortex'));
+const mark = helpinSymbol({ size: 170 });
+$('#reveal-symbol').append(mark.node);
+
+// Scene 5 — end card
+const endMark = helpinSymbol({ size: 130, spread: 90 });
+$('#end-symbol').append(endMark.node);
+
+const TERM = [
+  ['$ ', 'curl -fsSL https://helpin.ai/install.sh | bash', 0.4],
+  ['$ ', '"$HOME/.local/bin/helpin" install', 2.0],
+];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 120,
+  scenes: [
+    { id: 'handoff', start: 0, end: 4, render: ({ lt }) => {
+      lines.update(lt);
+      const out = easeInOut(P(lt, 3.5, 4));
+      css(lines.block, { transform: `scale(${L(1, 1.15, out)})`, filter: `blur(${out * 14}px)`, opacity: 1 - out });
+    } },
+
+    { id: 'reveal', start: 4, end: 8, render: ({ lt, t }) => {
+      flow.update(t, P(lt, 0, 1.6));
+      mark.assemble(P(lt, 0.2, 1.4));
+      $('#reveal .word').style.clipPath = `inset(0 ${100 - 100 * brandEase(P(lt, 1.2, 1.9))}% 0 0)`;
+      const tag = brandEase(P(lt, 1.9, 2.5));
+      css($('#reveal .tag'), { opacity: tag, transform: `translateY(${(1 - tag) * 24}px)` });
+      $('#reveal').style.opacity = 1 - easeInOut(P(lt, 3.6, 4));
+    } },
+
+    { id: 'record', start: 8, end: 12, render: ({ lt, dur }) => {
+      const k = expoOut(P(lt, 0, 1.4));
+      css($('#record .shot'), { transform: `rotateX(${L(38, 6, k)}deg) translateY(${L(260, 0, k)}px) scale(${L(0.9, 1, k)})`, opacity: P(lt, 0, 0.4) });
+      const title = brandEase(P(lt, 0.2, 0.8));
+      css($('#record .title'), { opacity: title, transform: `translateY(${(1 - title) * 20}px)` });
+      // Callout box glides between regions of the screenshot (x, y, w, h in screenshot px).
+      const box = keys(lt, [[1.4, [470, 90, 560, 150]], [2.3, [470, 90, 560, 150]], [2.7, [1050, 70, 400, 260]], [3.4, [1050, 70, 400, 260]]]);
+      css($('#record .callout'), { left: `${box[0]}px`, top: `${box[1]}px`, width: `${box[2]}px`, height: `${box[3]}px`, opacity: P(lt, 1.3, 1.6) });
+      $('#record').style.opacity = envelope(lt, 0, dur, 0.01, 0.4);
+    } },
+
+    { id: 'install', start: 12, end: 16.5, render: ({ lt, dur }) => {
+      const title = brandEase(P(lt, 0, 0.6));
+      css($('#install .title'), { opacity: title, transform: `translateY(${(1 - title) * 20}px)` });
+      const term = brandEase(P(lt, 0.2, 0.8));
+      css($('#install .term'), { opacity: term, transform: `translateY(${(1 - term) * 40}px)` });
+
+      const body = $('#install .body');
+      body.innerHTML = '';
+      TERM.forEach(([prompt, cmd, at], i) => {
+        if (lt < at) return;
+        const line = document.createElement('div');
+        const span = document.createElement('span');
+        line.append(Object.assign(document.createElement('span'), { className: 'dim', textContent: prompt }), span);
+        body.append(line);
+        type(span, cmd, lt, { start: at, cps: 34, caret: i === TERM.length - 1 || lt < TERM[i + 1][2] });
+      });
+      if (lt > 3.2) body.insertAdjacentHTML('beforeend', '<div class="ok">✓ Helpin is running at http://localhost:8085</div>');
+
+      $$('#install .pill').forEach((p, i) => {
+        const k = brandEase(P(lt, stagger(3.4, i, 0.15), stagger(3.4, i, 0.15) + 0.5));
+        css(p, { opacity: k, transform: `translateY(${(1 - k) * 20}px)` });
+      });
+      $('#install').style.opacity = envelope(lt, 0, dur, 0.01, 0.4);
+    } },
+
+    { id: 'end', start: 16.5, end: 20, render: ({ lt, dur }) => {
+      endMark.assemble(P(lt, 0, 1));
+      $$('#end .stack > :not(#end-symbol)').forEach((el, i) => {
+        const k = brandEase(P(lt, stagger(0.7, i, 0.2), stagger(0.7, i, 0.2) + 0.6));
+        css(el, { opacity: k, transform: `translateY(${(1 - k) * 20}px)` });
+      });
+      $('#end').style.opacity = 1 - P(lt, dur - 0.8, dur);
+    } },
+  ],
+});
+</script>
+</body>
+</html>

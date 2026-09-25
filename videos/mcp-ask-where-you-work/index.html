@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Ask where you work (Helpin MCP)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "Ask where you work": the tab tax (copy, switch, paste, a counter climbing), then one card with two faces.
+     The front is your AI client; each ask flips it over to show what landed in Helpin (board, doc), and the third
+     ask hands the job to a Helpin agent. 128 BPM (beat 0.469 s, bar 1.875 s), future-bass score of its own. HEL-146. */
+  /* the tab tax */
+  #tabs { position: absolute; left: 160px; top: 110px; width: 1600px; height: 860px; border-radius: 22px; background: #fff; color: var(--ink); overflow: hidden; box-shadow: 0 50px 130px rgba(0, 0, 0, .5); }
+  #tabs .strip { height: 66px; background: #E9EDEB; display: flex; align-items: flex-end; gap: 6px; padding: 0 16px; }
+  #tabs .tab { height: 52px; width: 230px; border-radius: 12px 12px 0 0; display: flex; align-items: center; gap: 10px; padding: 0 16px; font: 500 20px/1 var(--sans); color: var(--t3); background: #DDE3E0; white-space: nowrap; overflow: hidden; }
+  #tabs .tab i { width: 18px; height: 18px; border-radius: 5px; flex: none; }
+  #tabs .tab.on { background: #fff; color: var(--ink); font-weight: 600; }
+  #tabs .pane { position: absolute; left: 0; right: 0; top: 66px; bottom: 0; padding: 60px 80px; }
+  #tabs .pane h3 { margin: 0 0 22px; font: 700 40px/1.1 var(--sans); letter-spacing: -0.02em; }
+  #tabs .pane .ln { height: 26px; border-radius: 8px; background: #EEF1EF; margin-bottom: 18px; }
+  #tabs .pane .hl { background: rgba(120, 170, 255, .45); }
+  #tabs .pane .field { height: 76px; border-radius: 14px; border: 2px solid #CFD6D2; display: flex; align-items: center; padding: 0 22px; font-size: 28px; margin-bottom: 18px; }
+  #tabs .pane .field.paste { border-color: #2563EB; background: #F1F6FF; }
+  #kbd { position: absolute; left: 0; top: 0; height: 66px; padding: 0 22px; border-radius: 14px; background: #0B2019; border: 2px solid #2F5A45; color: #F2F5F3; display: flex; align-items: center; font: 700 30px/1 var(--mono); opacity: 0; z-index: 7; }
+  #counter { position: absolute; right: 160px; top: 40px; font: 600 24px/1 var(--mono); letter-spacing: .16em; color: #F28B82; opacity: 0; z-index: 7; }
+  #counter b { font-size: 44px; letter-spacing: 0; margin-left: 12px; color: #FFB4AB; }
+
+  /* the two-faced card */
+  #flipper { position: absolute; left: 260px; top: 200px; width: 1400px; height: 820px; perspective: 3200px; opacity: 0; }
+  #flipper .inner { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .face { position: absolute; inset: 0; border-radius: 26px; overflow: hidden; backface-visibility: hidden; box-shadow: 0 50px 130px rgba(0, 0, 0, .5); }
+  .face.back { transform: rotateY(180deg); background: #F6F8F7; color: var(--ink); }
+  .face.front { background: #FBFBF9; color: #1D1F1E; }
+  .ai .hd { height: 72px; display: flex; align-items: center; gap: 14px; padding: 0 30px; border-bottom: 1px solid #E6E8E4; font: 600 24px/1 var(--sans); color: #4A4E4B; }
+  .ai .hd i { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #CFD6D2, #9AA5A0); }
+  .ai .hd small { margin-left: auto; display: flex; align-items: center; gap: 8px; font: 600 18px/1 var(--mono); color: var(--green); padding: 8px 12px; border-radius: 8px; background: #E3F4EA; }
+  .ai .log { position: absolute; left: 0; right: 0; top: 72px; bottom: 120px; padding: 34px 60px; overflow: hidden; }
+  .ai .you { margin-left: auto; width: fit-content; max-width: 900px; padding: 20px 26px; border-radius: 22px; background: #ECEEEA; font: 500 30px/1.35 var(--sans); margin-bottom: 26px; }
+  .ai .call { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 18px; border-radius: 12px; border: 1px solid #E0E4E1; background: #fff; font: 500 22px/1 var(--mono); color: #4A4E4B; margin-bottom: 10px; width: fit-content; opacity: 0; }
+  .ai .call svg { width: 26px; height: 26px; }
+  .ai .call b { color: var(--green); font-weight: 600; }
+  .ai .ans { font: 500 29px/1.45 var(--sans); max-width: 1100px; margin-top: 18px; opacity: 0; }
+  .ai .ans a { color: var(--green); text-decoration: none; font-weight: 600; }
+  .ai .box { position: absolute; left: 60px; right: 60px; bottom: 30px; height: 70px; border-radius: 18px; border: 1px solid #DADDD8; background: #fff; display: flex; align-items: center; padding: 0 24px; font: 500 26px/1 var(--sans); color: #9AA09C; }
+  /* Helpin back faces */
+  .hp .top { height: 72px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: #fff; border-bottom: 1px solid var(--hairline); font: 700 26px/1 var(--sans); }
+  .hp .top svg { width: 34px; height: 34px; }
+  .hp .top span { font: 500 22px/1 var(--sans); color: var(--t3); }
+  .hp .top small { margin-left: auto; font: 600 17px/1 var(--mono); letter-spacing: .06em; padding: 9px 12px; border-radius: 8px; background: #E3F4EA; color: var(--green-h); }
+  .cols { position: absolute; left: 28px; right: 28px; top: 100px; bottom: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .col { background: #EEF1EF; border-radius: 16px; padding: 16px; }
+  .col h4 { margin: 4px 4px 14px; font: 600 20px/1 var(--mono); letter-spacing: .08em; color: var(--t3); }
+  .tk { background: #fff; border: 1px solid var(--hairline); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; font: 600 22px/1.3 var(--sans); }
+  .tk small { display: block; margin-top: 10px; font: 500 16px/1 var(--mono); color: var(--t3); }
+  .tk.new { border: 2px solid var(--green); box-shadow: 0 0 0 5px #CFE9D9; }
+  .tk.ghost { background: #F6F8F7; color: #9AA5A0; }
+  .docpg { position: absolute; left: 0; right: 0; top: 72px; bottom: 0; }
+  .docpg .side { position: absolute; left: 0; top: 0; bottom: 0; width: 290px; background: #fff; border-right: 1px solid var(--hairline); padding: 22px 16px; }
+  .docpg .side div { font: 500 20px/1 var(--sans); color: var(--t2); padding: 12px 14px; border-radius: 10px; margin-bottom: 4px; }
+  .docpg .side .on { background: #E7F4ED; color: var(--green-h); font-weight: 600; }
+  .docpg .body { position: absolute; left: 290px; right: 0; top: 0; bottom: 0; padding: 50px 70px; background: #fff; }
+  .docpg h1 { margin: 0 0 12px; font-size: 50px; letter-spacing: -0.03em; }
+  .docpg .meta { display: flex; gap: 10px; margin-bottom: 30px; }
+  .docpg .meta span { font: 600 17px/1 var(--mono); padding: 9px 12px; border-radius: 8px; background: #EFF2F0; color: var(--t2); }
+  .docpg .meta span.g { background: #E3F4EA; color: var(--green-h); }
+  .docpg h2 { margin: 26px 0 12px; font-size: 30px; letter-spacing: -0.02em; }
+  .docpg p { margin: 0 0 12px; font-size: 25px; line-height: 1.45; color: #2A2F2C; }
+  #head { position: absolute; left: 0; width: 1920px; top: 64px; text-align: center; font-size: 84px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+  #badge { position: absolute; left: 140px; top: 850px; font: 500 18px/1 var(--mono); letter-spacing: .16em; color: rgba(184, 221, 187, .55); opacity: 0; }
+  #zero { position: absolute; left: 0; width: 1920px; top: 470px; text-align: center; font: 500 26px/1 var(--mono); letter-spacing: .3em; color: rgba(184, 221, 187, .75); opacity: 0; }
+  #zero b { display: block; font: 600 170px/1 var(--sans); letter-spacing: -0.04em; margin-top: 24px; color: #E8EEEA; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+  <div class="lines" id="lines"><div id="l1"></div><div id="l2"></div><div id="l3"></div></div>
+  <div id="side"></div>
+  <div id="badge">OAUTH OR A SCOPED TOKEN · CONTROLLED BETA</div>
+  <div id="rigwrap"><div id="rig">
+  <div class="scr" id="s-tabs" style="opacity:1">
+    <div id="tabs"><div class="strip" id="strip"></div><div class="pane" id="pane"></div></div>
+    <div id="kbd"></div><div id="counter">TAB SWITCHES<b id="cnt">00</b></div>
+  </div>
+  
+  <div id="flipper"><div class="inner" id="inner">
+    <div class="face front ai"><div class="hd"><i></i>Your AI client<small>● helpin connected</small></div><div class="log" id="log"></div><div class="box" id="box">Ask anything…</div></div>
+    <div class="face back hp" id="back"></div>
+  </div></div>
+  
+  </div></div>
+  <div class="scr" id="s-vil"><div class="mega" style="top:430px; font-size:112px" id="vil"></div><div class="sub2" style="top:590px" id="vsub">Copy. Switch. Paste. Repeat.</div></div>
+  <div class="scr" id="s-drop"><div class="mega" style="top:470px; font-size:104px" id="drop"></div></div>
+  <div id="zero">TAB SWITCHES<b>00</b></div>
+  <div class="scr" id="s-pay"><div class="topline" id="pay" style="top:760px; font-size:64px"></div></div>
+  <div id="endwrap"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, expoOut, expoIn, expoInOut, backOut } from '../../lib/motion.js';
+import { helpinSymbol, css, type } from '../../lib/components.js';
+import { KIT_CSS, END_HTML, words, rise, pop, push, reveal, bigScreen, stack, sideCopy, rig, bundles, endCard } from '../../lib/kit.js';
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS;
+$('#endwrap').outerHTML = END_HTML;
+const sym = (size, color = '#131514') => { const m = helpinSymbol({ size, color }); m.assemble(1); return m.node.outerHTML; };
+
+const B = 60 / 128, BAR = 4 * B;
+const T = { vil: 2.5 * BAR, drop: 3.5 * BAR, s1: 4.5 * BAR, s2: 7.5 * BAR, s3: 10 * BAR, payoff: 12.5 * BAR, tag: 14 * BAR, total: 16.5 * BAR };
+const VIL = words($('#vil'), 'The <em>tab tax.</em>');
+const DROP = words($('#drop'), 'Ask where <em>you work.</em>');
+const PAY = words($('#pay'), 'Zero tabs. <em>It’s all in Helpin.</em>');
+const end = endCard($, 'Ask where you work.', '<em>It lands in Helpin.</em>');
+const LN = [[$('#l1'), words($('#l1'), 'Copy it from one tab.'), 0.2], [$('#l2'), words($('#l2'), 'Paste it into another.'), 2 * B], [$('#l3'), words($('#l3'), '<em>Again. And again.</em>'), BAR + B]];
+const side = sideCopy($, [
+  { at: T.s1, eyebrow: '01 · Plan', head: 'Plan it. <em>It’s on the board.</em>', lede: 'Your AI client creates the tasks in Helpin, through MCP.' },
+  { at: T.s2, eyebrow: '02 · Write', head: 'Write it. <em>It’s in your docs.</em>', lede: 'A draft guide, linked to the epic it belongs to.' },
+  { at: T.s3, eyebrow: '03 · Delegate', head: 'Hand it to <em>a Helpin agent.</em>', lede: 'Start an agent run and read the result where you work.' },
+], T.payoff);
+const cam = rig($('#rig'), [[0, 960, 540, 0.62, 1330, 560], [T.s1, 960, 610, 0.72, 1340, 560]]);
+const bg = bundles($);
+
+// ── The tab tax: the same four tabs, again and again, faster and faster
+const TABS = [['AI chat', '#9AA5A0'], ['Tracker', '#6C8EF5'], ['Docs', '#F0C35A'], ['Team chat', '#C58AF0']];
+$('#strip').innerHTML = TABS.map(([n, c]) => `<div class="tab"><i style="background:${c}"></i>${n}</div>`).join('');
+const PANES = [
+  '<h3>Here’s a plan for the SSO pilot</h3><div class="ln hl" style="width:84%"></div><div class="ln hl" style="width:70%"></div><div class="ln hl" style="width:78%"></div><div class="ln" style="width:60%"></div>',
+  '<h3>New task</h3><div class="field paste">Add an admin-only SSO pilot</div><div class="field">Owner</div><div class="field">Sprint</div>',
+  '<h3>Untitled document</h3><div class="field paste">SSO pilot rollout guide</div><div class="ln" style="width:80%"></div><div class="ln" style="width:66%"></div>',
+  '<h3>#rollout</h3><div class="field paste">Here’s the task link → tracker/TASK-…</div><div class="ln" style="width:50%"></div>',
+];
+const SW = [];
+{ let at = 0.2; const seq = [0, 1, 0, 2, 0, 3, 1, 2, 0, 1, 3, 2, 0, 1, 2, 3, 1, 0]; seq.forEach((tab, i) => { SW.push({ at, tab, key: i % 2 ? '⌘V' : '⌘C' }); at += i < 4 ? B : i < 10 ? 0.5 * B : 0.25 * B; }); }
+
+// back faces
+const BOARD = `<div class="top">${sym(34)}Helpin<span>· Projects · Sprint 24</span><small>CREATED VIA MCP</small></div><div class="cols">
+  <div class="col"><h4>READY</h4><div class="tk new" data-n="1">Add an admin-only SSO pilot<small>Sam · Northstar</small></div><div class="tk new" data-n="2">Validate group-to-role mappings<small>Alex · Northstar</small></div><div class="tk new" data-n="3">Prepare the SSO pilot guide<small>Jules · Northstar</small></div></div>
+  <div class="col"><h4>IN PROGRESS</h4><div class="tk ghost">Improve password-reset errors<small>Alex</small></div></div>
+  <div class="col"><h4>IN REVIEW</h4><div class="tk ghost">Add recurring task templates<small>Sam</small></div></div>
+  <div class="col"><h4>DONE</h4><div class="tk ghost">Add a workspace activity digest<small>Jules</small></div></div></div>`;
+const DOC = `<div class="top">${sym(34)}Helpin<span>· Docs · SSO pilot</span><small>CREATED VIA MCP</small></div><div class="docpg"><div class="side"><div>Rollout plan</div><div class="on">SSO pilot rollout guide</div><div>Security checklist</div><div>Admin FAQ</div></div>
+  <div class="body"><h1>SSO pilot rollout guide</h1><div class="meta"><span class="g">Draft</span><span>Linked · Enterprise rollout epic</span></div>
+  <h2>Before you start</h2><p>The pilot is admin-only. Confirm who can sign in with SSO before you invite the team.</p>
+  <h2>Map groups to roles</h2><p>Match each identity-provider group to a workspace role, then test with one admin account.</p></div></div>`;
+
+const ASKS = [
+  { at: T.s1, q: 'Plan the SSO pilot for Northstar and put it on the sprint board.', calls: ['search_workspace', 'create_task', 'create_task', 'create_task'], back: BOARD, flip: 3.1, head: 'Plan it. <em>It’s on the board.</em>' },
+  { at: T.s2, q: 'Draft the rollout guide and link it to the epic.', calls: ['create_document', 'link_document_to_object'], back: DOC, flip: 2.4, head: 'Write it. <em>It’s in your docs.</em>' },
+  { at: T.s3, q: 'Ask Atlas to check the plan for gaps.', calls: ['start_agent_run', 'get_agent_run'], head: 'Delegate it. <em>To your agents.</em>',
+    ans: '<b>Atlas found two gaps:</b> the security review has no owner, and the pilot guide isn’t linked to the Okta task. <a>View the run in Helpin ↗</a>' },
+];
+const CHK = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#0F7A50"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4"/></svg>';
+const SPN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#CFD6D2" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" fill="none" stroke="#0F7A50" stroke-width="3"/></svg>';
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 128, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    bg(t); cam(t); side(t);
+    const lo = brandEase(P(t, T.vil - 0.45, T.vil));
+    css($('#lines'), { opacity: String(t < T.vil ? 1 - lo : 0), filter: lo > 0.001 ? `blur(${(lo * 8).toFixed(2)}px)` : 'none' });
+    if (t < T.vil) stack(t, LN);
+
+    // ── 1: the tab tax
+    const tOn = t < T.vil;
+    const cur = SW.filter((s) => t >= s.at).pop();
+    const idx = cur ? SW.indexOf(cur) : -1;
+    css($('#s-tabs'), { opacity: String(tOn ? brandEase(P(t, 0.1, 0.8)) * (1 - lo) : 0) });
+    if (tOn) {
+      const tabEls = [...document.querySelectorAll('#tabs .tab')];
+      const tab = cur ? cur.tab : 0;
+      tabEls.forEach((e, i) => e.classList.toggle('on', i === tab));
+      const pane = $('#pane');
+      if (pane.dataset.i !== String(tab)) { pane.innerHTML = PANES[tab]; pane.dataset.i = String(tab); }
+      const k = cur ? brandEase(P(t, cur.at, cur.at + 0.22)) : 1;
+      css(pane, { transform: k < 1 ? `translateY(${Math.round((1 - k) * 10)}px)` : 'none', opacity: String(k) });
+      $('#kbd').textContent = cur ? cur.key : '';
+      css($('#kbd'), { opacity: String(cur ? brandEase(P(t, cur.at, cur.at + 0.1)) * (1 - P(t, cur.at + 0.25, cur.at + 0.4)) : 0), transform: 'translate(1420px, 860px)' });
+      const n = Math.max(0, idx + 1);
+      $('#cnt').textContent = String(n).padStart(2, '0');
+      css($('#counter'), { opacity: String(brandEase(P(t, SW[2].at, SW[2].at + 0.4))) });
+
+    }
+    bigScreen($('#s-vil'), VIL, t, T.vil, T.drop);
+    css($('#vsub'), { opacity: String(brandEase(P(t, T.vil + 2 * B, T.vil + 2 * B + 0.3))) });
+    bigScreen($('#s-drop'), DROP, t, T.drop, T.s1);
+
+    // ── 2–4: the two-faced card
+    const fOn = t >= T.s1 && t < T.payoff;
+    const fout = brandEase(P(t, T.payoff - 0.45, T.payoff));
+    push($('#flipper'), t, T.s1, T.payoff);
+    const ask = ASKS.filter((a) => t >= a.at).pop() || ASKS[0];
+    const lt = t - ask.at;
+    // flip angle: 0 = your AI client, 180 = Helpin; each ask starts on the front, flips to the back if it has one
+    let ang = 0;
+    ASKS.forEach((a, i) => {
+      if (!a.back) return;
+      const f = a.at + a.flip, next = ASKS[i + 1];
+      const go = brandEase(P(t, f, f + 0.9)), back = next ? brandEase(P(t, next.at - 0.05, next.at + 0.85)) : 0;
+      if (t >= f && (!next || t < next.at + 0.5)) ang = 180 * go * (1 - back);
+    });
+    const tilt = Math.sin((ang / 180) * Math.PI) * 3;
+    $('#inner').style.transform = ang === 0 ? 'none' : ang === 180 ? 'rotateY(180deg)' : `rotateY(${ang}deg) rotateX(${tilt}deg) scale(${1 - Math.sin((ang / 180) * Math.PI) * 0.05})`;
+    const bk = $('#back');
+    // the back shows the latest Helpin result; swap it only once the card is facing front again
+    const bi = ASKS.reduce((j, a, i) => (a.back && (i === 0 || t >= a.at + 0.5) ? i : j), 0);
+    if (bk.dataset.i !== String(bi)) { bk.innerHTML = ASKS[bi].back; bk.dataset.i = String(bi); }
+    // new cards pulse in on the board
+    bk.querySelectorAll('.tk.new').forEach((c) => { const at = ASKS[0].at + ASKS[0].flip + 0.5 + (+c.dataset.n) * 0.18; pop(c, t, at, { dist: 12 }); });
+
+    // chat log for the current ask
+    const log = $('#log');
+    const q = ask.q;
+    const typedN = Math.max(0, Math.floor((lt - 0.2) * 55));
+    const inBox = lt < 0.2 + q.length / 55 + 0.1;
+    $('#box').textContent = inBox ? (typedN > 0 ? q.slice(0, typedN) + '▍' : 'Ask anything…') : 'Ask anything…';
+    $('#box').style.color = inBox && typedN > 0 ? '#1D1F1E' : '#9AA09C';
+    const sentAt = 0.2 + q.length / 55 + 0.15;
+    let html = lt >= sentAt ? `<div class="you">${q}</div>` : '';
+    ask.calls.forEach((c, i) => {
+      const at = sentAt + 0.35 + i * 0.32, done = at + 0.28;
+      if (lt >= at) html += `<div class="call" style="opacity:${Math.min(1, (lt - at) / 0.08)}">${lt >= done ? CHK : SPN}helpin · <b>${c}</b></div>`;
+    });
+    if (ask.ans) { const at = sentAt + 0.35 + ask.calls.length * 0.32 + 0.4; if (lt >= at) html += `<div class="ans" style="opacity:${Math.min(1, (lt - at) / 0.15)}">${ask.ans}</div>`; }
+    if (log.dataset.h !== html) { log.innerHTML = html; log.dataset.h = html; }
+
+    css($('#badge'), { opacity: String(fOn ? brandEase(P(t, T.s1 + 1.0, T.s1 + 1.6)) * (1 - fout) : 0) });
+
+    // ── payoff: tab switches, zero
+    const pOn = t >= T.payoff && t < T.tag;
+    const zo = brandEase(P(t, T.tag - 0.45, T.tag));
+    reveal($('#zero'), t, T.payoff + 0.1, { out: T.tag });
+    css($('#s-pay'), { opacity: String(pOn ? 1 - zo : 0) });
+    if (pOn) rise(PAY, t, T.payoff + 2 * B);
+
+    end(t, T.tag, B);
+  } }],
+});
+</script>
+</body>
+</html>

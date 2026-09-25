@@ -1,0 +1,34 @@
+{
+  "extends": "audio.json",
+  "label": "rideout",
+  "music": [
+    {
+      "at": 0,
+      "length": 9.25,
+      "gain": -16,
+      "fadeIn": 1.5,
+      "fadeOut": 0.35,
+      "prompt": "Instrumental intro for a tech product launch film, 120 BPM. Opens with a low dark ambient synth pad and a soft ticking closed hi-hat, sparse and tense. Halfway through, a pulsing synth arpeggio enters and a filter sweep and reverse cymbal riser build steadily, peaking right at the very end. No drums before the end. no vocals, no singing."
+    },
+    {
+      "at": 9.0,
+      "length": 28.35,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.35,
+      "prompt": "Instrumental main theme for a modern tech product launch film, 120 BPM. Full band from the very first beat with no intro, no build-up and no fade-in: warm driving analog synth bass, crisp punchy electronic drums, a bright plucked synth hook. Confident and optimistic, steady high energy all the way to the end with no breakdown. No vocals, no singing.",
+      "generate": 32,
+      "from": 2.5
+    },
+    {
+      "at": 37.0,
+      "length": 5.0,
+      "gain": -8,
+      "fadeIn": 0.05,
+      "fadeOut": 4.2,
+      "prompt": "Instrumental main theme for a modern tech product launch film, 120 BPM. Full band from the very first beat with no intro, no build-up and no fade-in: warm driving analog synth bass, crisp punchy electronic drums, a bright plucked synth hook. Confident and optimistic, steady high energy all the way to the end with no breakdown. No vocals, no singing.",
+      "generate": 32,
+      "from": 2.5
+    }
+  ]
+}

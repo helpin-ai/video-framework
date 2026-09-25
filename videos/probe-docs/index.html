@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>probe docs</title><link rel="stylesheet" href="../../lib/brand.css"><style>#stage{background:#fff}</style></head><body><div id="stage">
+<section class="scene" id="q"><div id="c1"></div></section><section class="scene" id="w"><div id="c2"></div></section></div>
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js'; import { siteWindow } from '../../lib/site.js';
+const q = siteWindow(document.querySelector('#c1'), { path: '/products/knowledge', focus: '#knowledge-quill .knowledge-scene', hide: ['canvas'] });
+const w = siteWindow(document.querySelector('#c2'), { path: '/products/knowledge', focus: '.knowledge-screenshot', hide: ['canvas'] });
+[q, w].forEach((x) => waitFor(x.view.ready));
+defineVideo({ width: 1920, height: 1080, fps: 30, scenes: [
+  { id: 'q', start: 0, end: 14, render: ({ lt }) => { q.place({ x: 560, y: 20, w: 800, h: 1040 }); q.camera(1); return q.view.update(lt); } },
+  { id: 'w', start: 14, end: 24, render: ({ lt }) => { w.place({ x: 160, y: 40, w: 1600, h: 1000 }); w.camera(1); return w.view.update(lt); } },
+] });
+</script></body></html>

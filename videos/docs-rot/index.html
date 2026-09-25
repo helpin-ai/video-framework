@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Doc rot (docs that update themselves)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Doc rot", v2: one idea per screen. A help article rots as releases ship; the docs agent checks it,
+     signs in, captures the exact screen the guide describes (generated on the fly as crisp HTML UI),
+     refines it, rewrites the step (or drafts a new article), a person publishes, the page comes back fresh.
+     124 BPM (beat 0.484 s, bar 1.935 s). Charcoal stage + paper. Music is this video's own. HEL-148. */
+  #stage { background: radial-gradient(ellipse 75% 65% at 50% 45%, #1E2220, #0C0E0D); color: #EEF3EF; }
+  .scr { position: absolute; inset: 0; opacity: 0; }
+
+  .mega { position: absolute; left: 0; width: 1920px; text-align: center; font-weight: 700; letter-spacing: -0.055em; line-height: .95; color: #F2F5F3; }
+  .mega em { font-style: normal; color: var(--mint); }
+  .rel { position: absolute; left: 0; top: 0; padding: 14px 22px; border-radius: 12px; font: 700 30px/1 var(--mono); white-space: nowrap; background: #2A2E2C; color: #8C9A93; }
+  .rel.ship { background: var(--mint); color: #0C0E0D; }
+  #slam { position: absolute; left: 0; top: 0; font-size: 200px; line-height: 1; font-weight: 700; letter-spacing: -0.055em; color: #F2F5F3; white-space: nowrap; transform-origin: 0 0; opacity: 0; z-index: 8; }
+  #slam em { font-style: normal; color: var(--mint); }
+  #sub { position: absolute; left: 112px; top: 132px; font-size: 28px; color: #A9B8B0; opacity: 0; white-space: nowrap; z-index: 8; }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 20; }
+  #scanline { position: absolute; top: 0; width: 8px; height: 1080px; background: var(--mint); opacity: 0; }
+
+  #page { position: absolute; left: 0; top: 0; width: 760px; height: 960px; transform-origin: 0 0; border-radius: 10px; background: #fff;
+    box-shadow: 0 40px 110px rgba(0, 0, 0, .55); color: #2E291F; overflow: hidden; opacity: 0; }
+  #page .in { position: absolute; inset: 0; padding: 54px 60px; }
+  #page small, .np small { font: 500 16px/1 var(--mono); letter-spacing: .14em; color: #6E6147; }
+  #page h2 { margin: 16px 0 10px; font-size: 46px; letter-spacing: -0.02em; line-height: 1.08; color: #1F1C15; }
+  #page .meta { font: 500 18px/1 var(--mono); color: #6E6147; margin-bottom: 28px; }
+  #page .meta.fresh { color: #0F7A50; }
+  #page p { margin: 0 0 16px; font-size: 24px; line-height: 1.46; }
+  #page .old { position: relative; display: inline; }
+  #page .strike { position: absolute; left: 0; top: 55%; height: 3px; background: #B42318; width: 0; }
+  #page .new { color: #0B6340; background: #E3F4EA; border-radius: 6px; padding: 2px 6px; }
+  .slot { position: relative; margin: 22px 0; height: 330px; border-radius: 12px; overflow: hidden; border: 2px solid #D9CFB8; background: #EDEFEE; }
+  .slot .shot { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; transform-origin: 0 0; }
+  .slot .tag { position: absolute; right: 12px; top: 12px; padding: 8px 12px; border-radius: 8px; background: #B42318; color: #fff; font: 700 16px/1 var(--mono); letter-spacing: .08em; z-index: 2; }
+  .slot .tag.newtag { background: #0F7A50; }
+  .slot .oldshot { position: absolute; inset: 0; background: linear-gradient(#E4E7E5, #D5D9D7); }
+  .slot .oldshot i { position: absolute; border-radius: 6px; background: #C4CAC7; }
+  .stain { position: absolute; border-radius: 50%; background: radial-gradient(rgba(170, 140, 80, .55) 0%, rgba(170, 140, 80, 0) 70%); pointer-events: none; }
+  #review { position: absolute; left: 0; top: 0; width: 760px; height: 92px; border-radius: 16px; background: #fff; color: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 22px 0 26px; box-shadow: 0 20px 60px rgba(0,0,0,.45); opacity: 0; }
+  #review span { font-size: 22px; font-weight: 600; } #review span small { display: block; font: 500 16px/1.5 var(--mono); color: #8A6400; font-weight: 500; }
+  #pubbtn { height: 54px; padding: 0 26px; border-radius: 12px; background: var(--ink); color: #fff; display: inline-flex; align-items: center; font: 600 22px/1 var(--sans); white-space: nowrap; }
+  #pubbtn.done { background: var(--green); }
+  #toast { position: absolute; left: 0; top: 0; height: 56px; padding: 0 22px; display: inline-flex; align-items: center; gap: 12px; border-radius: 14px; background: #13201A; border: 1px solid #2F5A45; color: var(--mint); font: 500 23px/1 var(--sans); opacity: 0; white-space: nowrap; }
+  #cursor, #acursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 9; }
+  #cursor svg { width: 40px; height: 40px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.5)); }
+  #acursor { display: flex; align-items: flex-start; gap: 6px; }
+  #acursor svg { width: 34px; height: 34px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.35)); }
+  #acursor span { margin-top: 26px; padding: 5px 10px; border-radius: 8px; background: var(--green); color: #fff; font: 600 16px/1 var(--sans); white-space: nowrap; }
+
+  .app { width: 1440px; height: 900px; background: #F6F8F7; color: #131514; font-family: var(--sans); position: relative; overflow: hidden; }
+  .app .top { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: #fff; border-bottom: 1px solid #E4E9E6; font-size: 20px; }
+  .app .logo { width: 34px; height: 34px; border-radius: 9px; background: #1D6A4A; color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .app .crumb { color: #66716C; } .app .crumb b { color: #131514; font-weight: 600; }
+  .app .side { position: absolute; left: 0; top: 64px; bottom: 0; width: 250px; background: #fff; border-right: 1px solid #E4E9E6; padding: 22px 16px; }
+  .app .side div { padding: 12px 14px; border-radius: 10px; font-size: 19px; color: #4F5A55; margin-bottom: 4px; }
+  .app .side .on { background: #E7F4ED; color: #0B6340; font-weight: 600; }
+  .app .main { position: absolute; left: 250px; right: 0; top: 64px; bottom: 0; padding: 40px 56px; }
+  .app h1 { margin: 0 0 8px; font-size: 38px; letter-spacing: -0.02em; } .app .lede { color: #66716C; font-size: 20px; margin-bottom: 30px; }
+  .app .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .app .tool { background: #fff; border: 1px solid #E4E9E6; border-radius: 16px; padding: 24px; }
+  .app .tool b { display: block; font-size: 22px; margin-bottom: 6px; } .app .tool span { color: #66716C; font-size: 18px; }
+  .app .tool .btn { margin-top: 18px; display: inline-flex; height: 44px; padding: 0 18px; align-items: center; border-radius: 10px; background: #131514; color: #fff; font-size: 18px; font-weight: 600; }
+  .app .tool.hot { border-color: #0F7A50; box-shadow: 0 0 0 3px #CFE9D9; }
+  .app .shade { position: absolute; inset: 0; background: rgba(19, 21, 20, .35); }
+  .app .modal { position: absolute; left: 50%; top: 50%; width: 700px; transform: translate(-50%, -50%); background: #fff; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,.25); padding: 34px 38px; }
+  .app .modal .ok { display: inline-flex; gap: 8px; align-items: center; font-size: 17px; color: #0B6340; background: #E3F4EA; padding: 7px 12px; border-radius: 8px; margin-bottom: 16px; }
+  .app .modal h2 { margin: 0 0 6px; font-size: 32px; letter-spacing: -0.02em; } .app .modal p { margin: 0 0 22px; color: #66716C; font-size: 19px; }
+  .app .opt { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border: 1px solid #E4E9E6; border-radius: 14px; margin-bottom: 12px; font-size: 21px; }
+  .app .opt i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #9AA5A0; flex: none; }
+  .app .opt.sel { border-color: #0F7A50; background: #F3FAF6; } .app .opt.sel i { border: 7px solid #0F7A50; }
+  .app .opt small { margin-left: auto; color: #66716C; font-size: 17px; }
+  .app .acct { font-size: 17px; color: #66716C; margin: 18px 0 20px; } .app .acct b { color: #131514; font-weight: 500; }
+  .app .primary { display: inline-flex; height: 52px; padding: 0 24px; align-items: center; border-radius: 12px; background: #0F7A50; color: #fff; font-size: 20px; font-weight: 600; }
+  .app .login { position: absolute; left: 50%; top: 50%; width: 520px; transform: translate(-50%, -50%); background: #fff; border-radius: 22px; border: 1px solid #E4E9E6; padding: 44px; box-shadow: 0 30px 80px rgba(0,0,0,.08); }
+  .app .login h2 { margin: 18px 0 26px; font-size: 32px; } .app .field { height: 58px; border: 1px solid #CFD6D2; border-radius: 12px; padding: 0 18px; display: flex; align-items: center; font-size: 20px; margin-bottom: 14px; color: #131514; }
+  .app .field.label { border: 0; height: auto; padding: 0; margin-bottom: 8px; font-size: 16px; color: #66716C; }
+  .app .login .primary { width: 100%; justify-content: center; margin-top: 10px; }
+
+  #browser { position: absolute; left: 260px; top: 170px; width: 1400px; height: 875px; border-radius: 16px; overflow: hidden; box-shadow: 0 40px 110px rgba(0,0,0,.55); background: #fff; }
+  #browser .bar { height: 50px; background: #EEF1EF; display: flex; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 1px solid #DDE3E0; }
+  #browser .bar i { width: 13px; height: 13px; border-radius: 50%; background: #C9D0CC; } #browser .url { margin-left: 16px; height: 32px; flex: 1; max-width: 700px; border-radius: 8px; background: #fff; display: flex; align-items: center; padding: 0 14px; font: 500 16px/1 var(--mono); color: #4F5A55; }
+  #browser .view { position: absolute; left: 0; top: 50px; width: 1440px; height: 900px; transform-origin: 0 0; }
+  #vf { position: absolute; left: 260px; top: 170px; width: 1400px; height: 875px; opacity: 0; pointer-events: none; }
+  #vf i { position: absolute; width: 64px; height: 64px; border: 5px solid #EEF3EF; }
+  #vf i:nth-child(1) { left: -20px; top: -20px; border-right: 0; border-bottom: 0; } #vf i:nth-child(2) { right: -20px; top: -20px; border-left: 0; border-bottom: 0; }
+  #vf i:nth-child(3) { left: -20px; bottom: -20px; border-right: 0; border-top: 0; } #vf i:nth-child(4) { right: -20px; bottom: -20px; border-left: 0; border-top: 0; }
+  .hud { position: absolute; font: 500 18px/1 var(--mono); letter-spacing: .16em; color: #9FB0A7; white-space: nowrap; }
+  .hud.rec::before { content: ''; display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--mint); margin-right: 10px; }
+
+  #capture { position: absolute; left: 0; top: 0; width: 1200px; height: 750px; transform-origin: 0 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 40px 110px rgba(0,0,0,.6); opacity: 0; }
+  #capture .shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #capture .crop { position: absolute; border: 4px dashed var(--mint); border-radius: 10px; opacity: 0; }
+  #capture .hl { position: absolute; border: 4px solid #0F7A50; border-radius: 14px; opacity: 0; box-shadow: 0 0 0 9999px rgba(19, 21, 20, .28); }
+  #capture .blur { position: absolute; border-radius: 8px; background: rgba(180, 188, 184, .96); opacity: 0; }
+  #capture .badge { position: absolute; right: 20px; bottom: 20px; padding: 10px 14px; border-radius: 10px; background: var(--green); color: #fff; font: 700 20px/1 var(--mono); letter-spacing: .08em; opacity: 0; }
+
+  .np { position: absolute; left: 0; top: 0; width: 760px; height: 960px; transform-origin: 0 0; border-radius: 10px; background: #fff; box-shadow: 0 40px 110px rgba(0,0,0,.55); color: #1F1C15; padding: 54px 60px; opacity: 0; overflow: hidden; }
+  .np .chip { display: inline-block; font: 600 16px/1 var(--mono); letter-spacing: .1em; color: #0B6340; background: #E3F4EA; border-radius: 6px; padding: 8px 12px; }
+  .np h2 { margin: 20px 0 16px; font-size: 44px; letter-spacing: -0.02em; line-height: 1.08; min-height: 96px; }
+  .np .ln { height: 16px; border-radius: 8px; background: #E6EAE8; margin: 14px 0; }
+
+  #tag { position: absolute; left: 0; width: 1920px; top: 250px; text-align: center; font-size: 140px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.02; }
+  #tag div { opacity: 0; } #tag em { font-style: normal; color: var(--mint); }
+  #endmark { position: absolute; left: 0; width: 1920px; top: 640px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #endmark b { font-size: 84px; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; }
+  #cta { position: absolute; left: 0; width: 1920px; top: 790px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #cta span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 25px/1 var(--sans); }
+  #cta .url { background: #F2F5F3; color: #0C0E0D; } #cta .t { border: 1px solid #3A4540; color: #D5E0DA; font-weight: 500; }
+  #cta .t i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="scr" id="s-villain"><div class="mega" style="top:380px; font-size:300px">Doc rot.</div></div>
+  <div class="rel" id="r1">v2.4</div><div class="rel" id="r2">v2.5</div><div class="rel ship" id="r3">v2.6 SHIPPED</div>
+  <div class="scr" id="s-rot"><div class="mega" id="rotline" style="top:960px; font-size:52px; letter-spacing:-0.02em; font-weight:600; color:#9FB0A7">You shipped it. <em style="color:#F0A58F" id="didnt">Your docs didn’t.</em></div></div>
+  <div id="scanline"></div>
+
+  <div id="page"><div class="in">
+    <small>HELP CENTER · INTEGRATIONS</small>
+    <h2>Connect your first integration</h2>
+    <div class="meta" id="meta">Last updated · v2.3</div>
+    <p>1. Open <b>Settings → Integrations</b> and choose your tool.</p>
+    <p>2. <span class="old" id="oldtxt">After authorization, start the first sync.<i class="strike" id="strike"></i></span><span class="new" id="newtxt" style="display:none"></span></p>
+    <div class="slot" id="slot"><div class="oldshot" id="oldshot"><i style="left:20px;top:20px;width:160px;height:280px"></i><i style="left:200px;top:20px;width:420px;height:40px"></i><i style="left:200px;top:80px;width:200px;height:120px"></i><i style="left:420px;top:80px;width:200px;height:120px"></i></div><span class="tag" id="slottag">OUTDATED · v2.3</span></div>
+    <p>3. Choose which fields to sync, then save.</p>
+  </div><div class="stain" id="st1" style="left:420px; top:30px; width:280px; height:200px"></div><div class="stain" id="st2" style="left:20px; top:700px; width:260px; height:220px"></div></div>
+  <div id="review"><span>Connect your first integration<small>Proposed update · Ready for review · Not published</small></span><span id="pubbtn">Publish</span></div>
+  <div id="toast"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.2 4.2L19 7"/></svg>Agent sources refreshed</div>
+
+  <div id="w1"></div>
+  <div class="scr" id="s-shot">
+    <div class="hud rec" style="left:262px; top:1056px">DOCS AGENT · BROWSER</div><div class="hud" id="hudshot" style="left:1470px; top:1056px">SHOT 00 / 01</div>
+    <div id="browser"><div class="bar"><i></i><i></i><i></i><div class="url" id="url">app.orbitdesk.example/login</div></div><div class="view" id="view"></div></div>
+    <div id="vf"><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div id="capture"><div class="shot" id="capshot"></div><div class="crop" id="crop"></div><div class="hl" id="hl"></div><div class="blur" id="blur"></div><div class="badge" id="badge">REFINED</div></div>
+  <div class="np" id="np"><span class="chip">NEW ARTICLE · DRAFT</span><h2 id="nph"></h2><div class="ln" style="width:92%"></div><div class="ln" style="width:80%"></div><div class="slot" id="npslot" style="height:300px"></div><div class="ln" style="width:86%"></div><div class="ln" style="width:70%"></div></div>
+
+  <div id="cursor"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <div id="acursor"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#0F7A50" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Docs agent</span></div>
+
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="slam"></div><div id="sub"></div>
+  <div id="tag"><div id="t1">Docs that ship</div><div id="t2"><em>when you do.</em></div></div>
+  <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+  <div id="cta"><span class="url">helpin.ai</span><span class="t"><i></i>Open source · Coming soon</span></div>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, expoInOut, backOut, easeIn } from '../../lib/motion.js';
+import { helpinSymbol, css, type } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s) => document.querySelector(s);
+const B = 60 / 124, BAR = 4 * B;
+const T = { rot: 1 * BAR, drop: 2 * BAR, checked: 3 * BAR, shot: 5 * BAR, refined: 7 * BAR, rewritten: 8.5 * BAR, drafted: 10.5 * BAR,
+  ready: 11.5 * BAR, click: 12 * BAR, fresh: 13 * BAR, tag: 14.5 * BAR, total: 17 * BAR };
+
+// Generated product UI (crisp HTML: the exact step the guide describes, in the OrbitDesk demo workspace)
+const SIDE = `<div class="side"><div>Inbox</div><div>Projects</div><div>Docs</div><div class="on">Settings</div></div>`;
+const TOP = (crumb) => `<div class="top"><span class="logo">O</span><span class="crumb">OrbitDesk / <b>${crumb}</b></span></div>`;
+const TOOLS = `<h1>Integrations</h1><div class="lede">Connect the tools your team already uses.</div><div class="tools">
+  <div class="tool hot"><b>Issue tracker</b><span>Sync tasks and status</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Team chat</b><span>Post updates to channels</span><div class="btn">Connect</div></div>
+  <div class="tool"><b>Data warehouse</b><span>Export conversations</span><div class="btn">Connect</div></div></div>`;
+const MODAL = `<div class="shade"></div><div class="modal"><div class="ok">✓ Issue tracker authorized</div><h2>Choose the destination workspace</h2>
+  <p>Which workspace should receive the activity?</p>
+  <div class="opt sel"><i></i>Northstar Support<small>12 members</small></div><div class="opt"><i></i>Northstar Sales<small>8 members</small></div><div class="opt"><i></i>Internal QA<small>3 members</small></div>
+  <div class="acct">Signed in as <b>docs-agent@orbitdesk.example</b></div><span class="primary">Confirm and start sync</span></div>`;
+const LOGIN = `<div class="login"><span class="logo" style="width:44px;height:44px;border-radius:12px;background:#1D6A4A;color:#fff;display:grid;place-items:center;font-weight:700">O</span><h2>Sign in to OrbitDesk</h2>
+  <div class="field label">Email</div><div class="field" id="lemail"></div><div class="field label">Password</div><div class="field" id="lpass"></div><span class="primary" id="lbtn">Sign in</span></div>`;
+const appHTML = (state) => state === 'login' ? `<div class="app">${LOGIN}</div>`
+  : `<div class="app">${TOP('Settings · Integrations')}${SIDE}<div class="main">${TOOLS}</div>${state === 'modal' ? MODAL : ''}</div>`;
+$('#capshot').innerHTML = appHTML('modal');
+const slotShot = document.createElement('div'); slotShot.className = 'shot'; slotShot.innerHTML = appHTML('modal'); slotShot.style.opacity = '0'; $('#slot').appendChild(slotShot);
+const npShot = document.createElement('div'); npShot.className = 'shot'; npShot.innerHTML = appHTML('modal'); $('#npslot').appendChild(npShot);
+
+// Live docs-agent preview (the real website component)
+const quill = siteWindow($('#w1'), { path: '/products/knowledge', focus: '#knowledge-quill .knowledge-scene', hide: ['canvas'], radius: 18 });
+quill.el.style.boxShadow = '0 40px 110px rgba(0,0,0,.55)';
+waitFor(quill.view.ready);
+const QBOX = { x: 530, y: 190, w: 860, h: 860 };
+
+const endMark = helpinSymbol({ size: 92, color: '#F2F5F3' });
+$('#end-symbol').append(endMark.node);
+
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+function shoot(w, lt, shots, box, bounds, dur = 0.45) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => fitAspect(r, box.w / box.h, bounds?.());
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.(), SP = 0.45;
+  if (a && b) w.spotlight(lerpRect(a, b, k), SP); else if (b) w.spotlight(b, k * SP); else if (a) w.spotlight(a, (1 - k) * SP); else w.spotlight(null, 0);
+}
+// One screen at a time: enter from the right, exit to the left, blurred only while moving (still when settled).
+function screen(el, t, tin, tout, { base = '', dist = 420 } = {}) {
+  const k = expoOut(P(t, tin, tin + 0.45)), o = expoInOut(P(t, tout - 0.3, tout));
+  const on = t >= tin && t < tout;
+  const moving = k < 1 || o > 0;
+  el.style.opacity = String(on ? Math.min(1, k * 1.6) * (1 - o) : 0);
+  el.style.transform = `${base} ${moving ? `translateX(${(1 - k) * dist - o * dist}px)` : ''}`.trim() || 'none';
+  el.style.filter = moving && on ? `blur(${Math.max(1 - k, o) * 10}px)` : 'none';
+  return on;
+}
+const WORDS = [
+  [T.drop, 'Docs <em>agent.</em>', null, 'center'],
+  [T.checked, 'CHECKED.', 'Against the released change.'],
+  [T.shot, 'SIGNED IN.', 'Opens the product itself.'],
+  [T.shot + 6 * B, 'SHOT.', 'The exact screen the guide needs.'],
+  [T.refined, 'REFINED.', 'Cropped, highlighted, blurred.'],
+  [T.rewritten, 'REWRITTEN.', 'Updates the existing guide…'],
+  [T.drafted, 'DRAFTED.', '…or writes a new one.'],
+  [T.ready, 'READY.', 'Waits for your team.'],
+  [T.click + B, 'PUBLISHED<em>.</em>', 'You publish. Sources refresh.'],
+];
+function words(t) {
+  const cur = WORDS.filter(([at]) => t >= at).pop();
+  const el = $('#slam'), sub = $('#sub');
+  if (!cur || t > T.fresh - 0.1) { el.style.opacity = '0'; sub.style.opacity = '0'; return; }
+  const [at, html, line, mode] = cur;
+  if (el.dataset.at !== String(at)) { el.innerHTML = html; el.dataset.at = String(at); sub.textContent = line || ''; }
+  const w = el.offsetWidth, h = el.offsetHeight;
+  const inK = backOut(P(t, at, at + 0.22), 2.2);
+  const shake = t - at < 0.3 ? Math.sin((t - at) * 120) * 10 * (1 - (t - at) / 0.3) : 0;
+  const hold = mode === 'center';
+  const outK = hold ? 0 : expoInOut(P(t, at + 0.45, at + 0.8));
+  const s = L(L(1.4, 1, inK), 0.36, outK);
+  const x = L(960 - w / 2 + shake, 110, outK), y = L(540 - h / 2, 48, outK);
+  const exit = hold ? easeIn(P(t, T.checked - 0.3, T.checked)) : 0;
+  css(el, { opacity: String(Math.min(1, P(t, at, at + 0.06)) * (1 - exit)), transform: `translate(${x}px, ${y - exit * 100}px) scale(${s})` });
+  const sk = brandEase(P(t, at + 0.7, at + 1.0));
+  css(sub, { opacity: String(line ? sk : 0), transform: `translateY(${(1 - sk) * 12}px)` });
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 124, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    let fl = 0;
+    for (const [at, a] of [[T.rot, 0.25], [T.drop, 0.7], [T.checked, 0.2], [T.shot, 0.2], [T.shot + 6 * B, 0.9], [T.refined, 0.2], [T.rewritten, 0.2], [T.drafted, 0.2], [T.ready, 0.2], [T.click + B, 0.45], [T.fresh, 0.3], [T.tag, 0.3]])
+      if (t >= at) fl = Math.max(fl, a * (1 - P(t, at, at + 0.2)));
+    $('#flash').style.opacity = String(fl);
+    words(t);
+
+    // 1 — "Doc rot." alone; releases zip past
+    if (screen($('#s-villain'), t, 0, T.rot)) $('#s-villain .mega').style.transform = `scale(${L(1.3, 1, backOut(P(t, 0, 0.25), 2))})`;
+    const zipAt = [0.5 * B, 1.5 * B];
+    ['#r1', '#r2'].forEach((sel, i) => {
+      const k = easeInOut(P(t, zipAt[i], zipAt[i] + 0.6));
+      css($(sel), { opacity: String(t >= zipAt[i] && k < 1 ? 1 : 0), transform: `translate(${L(1980, -300, k)}px, ${[200, 820][i]}px) rotate(${[-4, 3][i]}deg)` });
+    });
+
+    // 2 — the page alone, rotting as releases hit it
+    screen($('#s-rot'), t, T.rot, T.drop);
+    const hits = [T.rot + 0.5 * B, T.rot + 1.5 * B, T.rot + 2.5 * B];
+    const rot = Math.min(1, hits.reduce((a, h) => a + P(t, h, h + 0.25) / 3, 0)) * (1 - expoOut(P(t, T.fresh + 0.2, T.fresh + 1.4)));
+    const k3 = expoOut(P(t, hits[2], hits[2] + 0.3));
+    css($('#r3'), { opacity: String(t >= hits[2] && t < T.drop - 0.2 ? 1 : 0), transform: `translate(${L(1980, 1170, k3)}px, ${L(60, 70, k3)}px) rotate(4deg) scale(${L(1.5, 1.1, k3)})` });
+    $('#strike').style.width = `${100 * expoOut(P(t, hits[1], hits[1] + 0.3))}%`;
+    $('#slottag').style.opacity = String(P(t, hits[2], hits[2] + 0.1));
+    $('#didnt').style.opacity = String(P(t, T.rot + 3 * B, T.rot + 3 * B + 0.1));
+    const pageOn = (t >= T.rot && t < T.drop) || (t >= T.rewritten && t < T.drafted) || (t >= T.ready && t < T.tag);
+    const pageIn = t < T.drop ? T.rot : t < T.drafted ? T.rewritten : T.ready;
+    const pageOut = t < T.drop ? T.drop : t < T.drafted ? T.drafted : T.tag;
+    const pg = $('#page');
+    const quake = t > hits[0] && t < T.drop ? Math.sin(t * 70) * 3 * P(t, hits[2], T.drop) : 0;
+    const review = t >= T.ready && t < T.fresh;
+    const py = review ? 172 : 60, ps = review ? 0.88 : 1, px = 960 - 380 * ps;
+    if (pageOn) screen(pg, t, pageIn, pageOut, { base: `translate(${px + quake}px, ${py}px) rotate(${t < T.drop ? -2 : 0}deg) scale(${ps})` });
+    else pg.style.opacity = '0';
+    css(pg, { background: `rgb(${Math.round(L(255, 238, rot))}, ${Math.round(L(255, 227, rot))}, ${Math.round(L(255, 198, rot))})` });
+    $('#page .in').style.filter = rot > 0.01 ? `sepia(${rot * 0.45})` : 'none';
+    $('#st1').style.opacity = String(Math.min(1, rot * 1.4)); $('#st2').style.opacity = String(Math.max(0, rot * 1.4 - 0.4));
+    $('#meta').textContent = t > T.fresh + 0.6 ? 'Updated just now · v2.6 ✓' : 'Last updated · v2.3';
+    $('#meta').classList.toggle('fresh', t > T.fresh + 0.6);
+
+    // 3 — drop: a scan line across the whole screen
+    const sl = P(t, T.drop, T.drop + 0.55);
+    css($('#scanline'), { opacity: String(sl > 0 && sl < 1 ? 1 : 0), left: `${L(-10, 1930, easeInOut(sl))}px` });
+
+    // 4 — CHECKED: the live docs-agent preview, big and centred
+    const qOn = t >= T.checked && t < T.shot;
+    quill.place(QBOX);
+    const qk = expoOut(P(t, T.checked, T.checked + 0.45)), qo = expoInOut(P(t, T.shot - 0.3, T.shot));
+    const qMoving = qk < 1 || qo > 0;
+    css(quill.el, { opacity: String(qOn ? Math.min(1, qk * 1.6) * (1 - qo) : 0), transform: qMoving ? `translateX(${(1 - qk) * 420 - qo * 420}px)` : 'none', filter: qMoving && qOn ? `blur(${Math.max(1 - qk, qo) * 10}px)` : 'none' });
+    const qT = t - T.checked;
+    const card = () => quill.view.rect(), qel = (s) => () => quill.view.rect(s);
+    const qband = (s, up = 60, down = 60) => () => { const c = card(), r = qel(s)(); return c && r && { x: c.x + 8, w: c.w - 16, y: r.y - up, h: r.h + up + down }; };
+    shoot(quill, qT, [
+      { at: 0, rect: card },
+      { at: 0.4, rect: qband('.ks-agent-request', 80, 90), spot: qel('.ks-evidence') },
+      { at: 1.4, rect: qband('.ks-review-steps', 40, 40), spot: qel('.ks-review-steps') },
+      { at: 2.6, rect: qband('.ks-proposal', 40, 30), spot: qel('.ks-proposal') },
+      { at: 3.4, rect: qband('.ks-review', 200, 30), spot: qel('.ks-review') },
+    ], QBOX, card);
+
+    // 5 — SIGNED IN → SHOT: the agent drives a browser; the shutter fires on the workspace step
+    const shotOn = screen($('#s-shot'), t, T.shot, T.refined);
+    const sT = t - T.shot;
+    const state = sT < 1.3 ? 'login' : sT < 2.1 ? 'tools' : 'modal';
+    const view = $('#view');
+    if (view.dataset.state !== state) { view.innerHTML = appHTML(state); view.dataset.state = state; }
+    view.style.transform = `scale(${1400 / 1440})`;
+    $('#url').textContent = state === 'login' ? 'app.orbitdesk.example/login' : 'app.orbitdesk.example/settings/integrations';
+    if (state === 'login') {
+      type($('#lemail'), 'docs-agent@orbitdesk.example', t, { start: T.shot + 0.2, cps: 45, caret: sT < 0.85 });
+      $('#lpass').textContent = '•'.repeat(Math.max(0, Math.min(12, Math.floor((sT - 0.85) * 40))));
+    }
+    const bx = 260, by = 220, sc = 1400 / 1440;
+    const ac = keys(sT, [[0.9, [bx + 900, by + 700]], [1.15, [bx + 720 * sc, by + 555 * sc], expoOut], [1.7, [bx + 720 * sc, by + 555 * sc]], [1.95, [bx + 380 * sc, by + 360 * sc], expoOut], [2.4, [bx + 380 * sc, by + 360 * sc]], [2.7, [bx + 560 * sc, by + 380 * sc], expoOut]]);
+    css($('#acursor'), { opacity: String(shotOn && sT > 0.85 && sT < 3.3 ? 1 : 0), transform: `translate(${ac[0]}px, ${ac[1]}px) scale(${(sT > 1.12 && sT < 1.22) || (sT > 1.92 && sT < 2.02) ? 0.88 : 1})` });
+    const snap = T.shot + 6 * B;
+    css($('#vf'), { opacity: String(shotOn ? P(t, snap - 0.5, snap - 0.2) : 0), transform: `scale(${L(1.06, 1, expoOut(P(t, snap - 0.5, snap - 0.1)))})` });
+    $('#hudshot').textContent = t >= snap ? 'SHOT 01 / 01' : 'SHOT 00 / 01';
+
+    // 6 — REFINED: the captured screen, big and crisp; crop, highlight the choice, blur the account email
+    const cap = $('#capture');
+    const cIn = expoOut(P(t, snap, snap + 0.5));
+    const capOn = t >= snap && t < T.rewritten;
+    const cOut = expoInOut(P(t, T.rewritten - 0.3, T.rewritten));
+    css(cap, { opacity: String(capOn ? 1 - cOut : 0), transform: `translate(${L(260, 360, cIn) - cOut * 420}px, ${L(220, 190, cIn)}px) scale(${L(1400 / 1200, 1, cIn)}) rotate(${L(0, -1.5, cIn)}deg)`, filter: cOut > 0 && capOn ? `blur(${cOut * 10}px)` : 'none' });
+    $('#capshot').style.transform = `scale(${1200 / 1440})`;
+    const rT = t - T.refined;
+    const crop = expoOut(P(rT, 0.1, 0.5));
+    css($('#crop'), { opacity: String(P(rT, 0.1, 0.2)), left: `${L(10, 300, crop)}px`, top: `${L(10, 150, crop)}px`, width: `${L(1180, 600, crop)}px`, height: `${L(730, 450, crop)}px` });
+    const hl = expoOut(P(rT, 0.6, 0.9));
+    css($('#hl'), { opacity: String(P(rT, 0.6, 0.7)), left: `${L(300, 346, hl)}px`, top: `${L(300, 311, hl)}px`, width: `${L(600, 508, hl)}px`, height: `${L(120, 62, hl)}px` });
+    css($('#blur'), { opacity: String(P(rT, 1.05, 1.2)), left: '468px', top: '480px', width: '255px', height: '26px' });
+    css($('#badge'), { opacity: String(P(rT, 1.35, 1.45)), transform: `scale(${L(1.5, 1, backOut(P(rT, 1.35, 1.6), 2))})` });
+
+    // 7 — REWRITTEN: the page, big: the refined shot drops into the slot, the struck step rewrites
+    const dropIn = expoOut(P(t, T.rewritten + 0.35, T.rewritten + 0.75));
+    slotShot.style.opacity = String(t >= T.rewritten + 0.35 ? 1 : 0);
+    slotShot.style.transform = `translate(-150px, -110px) scale(${L(0.62, 0.5, dropIn)})`;
+    $('#oldshot').style.opacity = t >= T.rewritten + 0.5 ? '0' : '1';
+    $('#slottag').textContent = t >= T.rewritten + 0.5 ? 'NEW · v2.6' : 'OUTDATED · v2.3';
+    $('#slottag').classList.toggle('newtag', t >= T.rewritten + 0.5);
+    const nt = $('#newtxt');
+    if (t >= T.rewritten + 1.1) { $('#oldtxt').style.display = 'none'; nt.style.display = 'inline'; type(nt, 'After authorization, confirm which workspace should receive the activity. Then start the first sync.', t, { start: T.rewritten + 1.1, cps: 60, caret: false }); }
+    else { $('#oldtxt').style.display = 'inline'; nt.style.display = 'none'; }
+
+    // 8 — DRAFTED: …or a new article
+    if (screen($('#np'), t, T.drafted, T.ready, { base: 'translate(580px, 60px)' })) type($('#nph'), 'Choose the destination workspace', t, { start: T.drafted + 0.3, cps: 34, caret: false });
+    [...$('#np').querySelectorAll('.ln, .slot')].forEach((e, i) => { e.style.opacity = String(P(t, T.drafted + 1.0 + i * 0.1, T.drafted + 1.2 + i * 0.1)); });
+    npShot.style.transform = 'translate(-150px, -110px) scale(0.5)';
+
+    // 9 — READY → a person publishes → PUBLISHED, sources refresh
+    const rv = P(t, T.ready + 0.3, T.ready + 0.6), rvOut = P(t, T.fresh, T.fresh + 0.3);
+    css($('#review'), { opacity: String(t < T.tag ? rv * (1 - rvOut) : 0), transform: `translate(580px, ${60 + (1 - rv) * 20}px)` });
+    const cur = keys(t, [[T.ready + 0.6, [1500, 1080]], [T.click - 0.1, [1250, 100], expoOut]]);
+    css($('#cursor'), { opacity: String(P(t, T.ready + 0.6, T.ready + 0.7) * (1 - P(t, T.click + 0.6, T.click + 0.8))), transform: `translate(${cur[0]}px, ${cur[1]}px) scale(${t > T.click - 0.05 && t < T.click + 0.08 ? 0.88 : 1})` });
+    $('#pubbtn').textContent = t >= T.click + 0.05 ? 'Published ✓' : 'Publish';
+    $('#pubbtn').classList.toggle('done', t >= T.click + 0.05);
+    const tk = backOut(P(t, T.click + B + 0.9, T.click + B + 1.2), 1.8);
+    css($('#toast'), { opacity: String(P(t, T.click + B + 0.9, T.click + B + 1.0) * (1 - rvOut)), transform: `translate(1380px, ${980 - tk * 16}px) scale(${L(0.8, 1, tk)})` });
+
+    // 11 — tagline
+    const tg = (at) => backOut(P(t, at, at + 0.22), 2.2);
+    css($('#t1'), { opacity: String(P(t, T.tag, T.tag + 0.06)), transform: `scale(${L(1.35, 1, tg(T.tag))})` });
+    css($('#t2'), { opacity: String(P(t, T.tag + B, T.tag + B + 0.06)), transform: `scale(${L(1.35, 1, tg(T.tag + B))})` });
+    endMark.assemble(P(t, T.tag + 2 * B, T.tag + 4 * B));
+    const mk = brandEase(P(t, T.tag + 2 * B, T.tag + 3 * B)), ck = brandEase(P(t, T.tag + 3 * B, T.tag + 4 * B));
+    css($('#endmark'), { opacity: String(mk), transform: `translateY(${(1 - mk) * 20}px)` });
+    css($('#cta'), { opacity: String(ck), transform: `translateY(${(1 - ck) * 20}px)` });
+
+    return quill.view.update(Math.min(Math.max(0, qT) * 1.55, 6.5));
+  } }],
+});
+</script>
+</body>
+</html>

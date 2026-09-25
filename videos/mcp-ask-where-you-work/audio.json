@@ -1,0 +1,210 @@
+{
+  "name": "mcp-ask-where-you-work",
+  "duration": 30.938,
+  "video": "../../out/mcp-ask-where-you-work/mcp-ask-where-you-work.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 6.563,
+      "generate": 10,
+      "from": 1.40625,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Loud, frantic and playful drum groove at 128 BPM at full volume from the very first beat, no quiet intro: punchy kick on every beat, tight snappy snares, fast ticking hi-hats, clicky typing-like percussion and hand claps, getting busier and ending in a snare roll. Drums and percussion only: no melody, no chords, no bass notes, no vocals."
+    },
+    {
+      "at": 6.563,
+      "length": 24.375,
+      "generate": 40,
+      "from": 8.4375,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Euphoric future bass track at 128 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: bright wobbling supersaw chords, punchy snappy drums, deep sub bass and sparkling synth plucks. Uplifting and modern, like a tech product launch. Full energy all the way through with no breakdown and no big ending hit. No vocals, no singing, no vocal chops."
+    }
+  ],
+  "sounds": {
+    "tabswitch": {
+      "text": "very short fast swipe whoosh, switching browser tabs",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "shortcut": {
+      "text": "crisp double keyboard key press, a quick copy paste shortcut",
+      "duration": 0.5,
+      "gain": -16
+    },
+    "typing": {
+      "text": "light fast laptop keyboard typing, a chat message being typed",
+      "duration": 1.2,
+      "gain": -14
+    },
+    "send": {
+      "text": "short airy message send swoosh",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "tick": {
+      "text": "tiny soft glassy confirmation tick",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "flip": {
+      "text": "quick card flip whoosh with a soft paper snap",
+      "duration": 0.6,
+      "gain": -12
+    },
+    "cardpop": {
+      "text": "soft bubbly pop, a card appearing on a board",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "answer": {
+      "text": "warm two-note chime, a reply arriving",
+      "duration": 0.6,
+      "gain": -11
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "chime": {
+      "text": "soft warm single bell chime, calm and satisfying",
+      "duration": 1,
+      "gain": -12
+    }
+  },
+  "cues": [
+    {
+      "sound": "tabswitch",
+      "at": [
+        0.2,
+        0.669,
+        1.137,
+        1.606,
+        2.075,
+        2.309,
+        2.544,
+        2.778,
+        3.013,
+        3.247,
+        3.481,
+        3.598,
+        3.716,
+        3.833,
+        3.95,
+        4.067,
+        4.184,
+        4.302
+      ]
+    },
+    {
+      "sound": "shortcut",
+      "at": [
+        0.22,
+        0.689,
+        1.157,
+        1.626,
+        2.095,
+        2.329,
+        2.564,
+        2.798,
+        3.033,
+        3.267,
+        3.501,
+        3.618,
+        3.736,
+        3.853,
+        3.97,
+        4.087,
+        4.204,
+        4.322
+      ]
+    },
+    {
+      "sound": "typing",
+      "at": [
+        8.637,
+        14.262,
+        18.95
+      ]
+    },
+    {
+      "sound": "send",
+      "at": [
+        9.951,
+        15.285,
+        19.773
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        10.581,
+        10.901,
+        11.221,
+        11.541,
+        15.915,
+        16.235,
+        20.403,
+        20.723
+      ]
+    },
+    {
+      "sound": "flip",
+      "at": [
+        11.537,
+        16.462,
+        14.012,
+        18.7
+      ]
+    },
+    {
+      "sound": "cardpop",
+      "at": [
+        12.217,
+        12.397,
+        12.578
+      ]
+    },
+    {
+      "sound": "answer",
+      "at": [
+        21.163
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        28.125
+      ]
+    },
+    {
+      "sound": "soft",
+      "at": [
+        4.688,
+        6.563,
+        8.438,
+        14.063,
+        18.75
+      ]
+    },
+    {
+      "sound": "chime",
+      "at": [
+        23.538
+      ]
+    }
+  ]
+}

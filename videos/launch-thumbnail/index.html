@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin launch — thumbnail</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* LinkedIn/X thumbnail for the launch reel. Single frame; render with --stills 0.5.
+     The centre (≈960,540) stays clear because feeds draw a play button there. */
+  #stage { background: #06120E; }
+  #plate { position: absolute; inset: 0; width: 1920px; height: 1080px; transform: scale(1.04); transform-origin: 50% 45%; }
+  #bundles { position: absolute; inset: 0; opacity: .75; }
+  .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4, 14, 11, .72) 0%, rgba(4, 14, 11, .35) 45%, rgba(4, 14, 11, 0) 70%); }
+
+  .logo { position: absolute; left: 130px; top: 104px; display: flex; align-items: center; gap: 18px; }
+  .logo b { font-size: 50px; font-weight: 600; letter-spacing: -0.04em; color: #EEF3EF; }
+  .eyebrow { position: absolute; left: 134px; top: 318px; font: 400 22px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: #8DBE9E; }
+  .headline { position: absolute; left: 128px; top: 360px; font-size: 128px; line-height: 1.02; font-weight: 600; letter-spacing: -0.05em; color: #EEF3EF; }
+  .headline .sage { color: var(--sage); }
+  .underline { position: absolute; left: 132px; top: 632px; }
+  .sub { position: absolute; left: 132px; top: 690px; width: 700px; font-size: 36px; line-height: 1.35; color: rgba(236, 244, 239, .78); }
+  .cta { position: absolute; left: 132px; top: 872px; display: flex; gap: 16px; }
+  .cta span { height: 64px; padding: 0 28px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 28px/1 var(--sans); }
+  .cta .url { background: #EEF3EF; color: #0B1A14; }
+  .cta .tag { background: rgba(8, 20, 16, .6); border: 1px solid rgba(220, 240, 228, .18); color: #E4ECE7; font-weight: 500; }
+  .cta .tag i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+
+  /* The "customer hears back" card from the new ending, in its final state. */
+  .card {
+    position: absolute; left: 1090px; top: 170px; width: 960px; border-radius: 32px; overflow: hidden;
+    background: #fff; color: #131514; box-shadow: 0 60px 160px rgba(0, 0, 0, .6);
+    transform: perspective(2400px) rotateY(-10deg) scale(.8); transform-origin: 0% 50%;
+  }
+  .card::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 55%, rgba(120,130,125,.16) 100%); }
+  .head { display: flex; align-items: center; gap: 22px; padding: 28px 34px; border-bottom: 1px solid #E6E9E7; }
+  .avatar { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; font: 600 22px/1 var(--sans); background: #FCE6D8; color: #A8502A; }
+  .who { flex: 1; }
+  .who b { display: block; font-size: 32px; font-weight: 600; }
+  .who span { font-size: 23px; color: #6B736F; }
+  .resolved { height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border-radius: 999px; font: 500 21px/1 var(--sans); background: #E3F4EA; color: #0F7A50; }
+  .body { padding: 30px 34px 32px; display: grid; gap: 26px; }
+  .bubble { justify-self: start; max-width: 720px; padding: 20px 26px; border-radius: 22px 22px 22px 6px; background: #F1F3F2; font-size: 25px; line-height: 1.4; color: #2A2F2C; }
+  .bubble small { display: block; font-size: 19px; color: #7A827E; margin-bottom: 6px; }
+  .event { display: flex; gap: 20px; align-items: flex-start; }
+  .tick { flex: none; width: 46px; height: 46px; border-radius: 50%; background: #1E8A5B; display: grid; place-items: center; }
+  .event b { display: block; font-size: 28px; font-weight: 600; }
+  .event span { font-size: 23px; color: #5F6863; }
+  .draft { border: 1.5px solid #BEE2CB; background: #F3FAF6; border-radius: 20px; padding: 22px 26px 24px; }
+  .draft .label { display: flex; align-items: center; gap: 12px; font: 500 17px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #0F7A50; margin-bottom: 14px; }
+  .appicon { width: 34px; height: 34px; border-radius: 9px; background: #1D6A4A; display: grid; place-items: center; }
+  .draft p { margin: 0; font-size: 26px; line-height: 1.45; color: #1B211E; }
+  .actions { display: flex; justify-content: flex-end; align-items: center; gap: 18px; font-size: 21px; color: #7A827E; }
+  .sent { height: 58px; width: 150px; display: grid; place-items: center; border-radius: 14px; font: 600 23px/1 var(--sans); background: #E3F4EA; color: #0F7A50; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="plate" src="../launch-ending/plate.png" alt="">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+  <div class="shade"></div>
+
+  <section class="scene" id="thumb">
+    <div class="logo"><span id="logo-symbol"></span><b>Helpin</b></div>
+    <div class="eyebrow">Open source · AGPL-3.0</div>
+    <div class="headline">Helpin is going<br><span class="sage">open source.</span></div>
+    <svg class="underline" width="700" height="20" viewBox="0 0 700 20"><path d="M3 13 C 170 3, 470 4, 696 11" fill="none" stroke="#9CDBB3" stroke-width="6" stroke-linecap="round"/></svg>
+    <div class="sub">AI agents that do more than answer.</div>
+    <div class="cta"><span class="url">helpin.ai</span><span class="tag"><i></i>Coming soon</span></div>
+
+    <div class="card">
+      <div class="head">
+        <div class="avatar">MC</div>
+        <div class="who"><b>Maya Chen</b><span>Support · CSV export stops early</span></div>
+        <span class="resolved">✓ Resolved</span>
+      </div>
+      <div class="body">
+        <div class="bubble"><small>Maya · Northstar</small>Our CSV export stops at 10,000 rows when filters are on.</div>
+        <div class="event">
+          <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><b>EXP-142 merged</b><span>Reviewed and merged by Sam Rivera</span></div>
+        </div>
+        <div class="draft">
+          <div class="label"><span class="appicon" id="draft-icon"></span>Support agent · Draft reply</div>
+          <p>Hi Maya, the fix for filtered CSV exports is live. Your exports now include every row. Thanks for flagging it!</p>
+        </div>
+        <div class="actions"><span>Reply to Maya</span><span class="sent">✓ Sent</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { helpinSymbol, lineBundles } from '../../lib/components.js';
+
+const $ = (s) => document.querySelector(s);
+const logo = helpinSymbol({ size: 58 }); logo.assemble(1); $('#logo-symbol').append(logo.node);
+const icon = helpinSymbol({ size: 22 }); icon.assemble(1); $('#draft-icon').append(icon.node);
+const bundles = lineBundles($('#bundles'), { cx: 1180, cy: 560 });
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: 1,
+  scenes: [{ id: 'thumb', start: 0, end: 1 }],
+  render: () => bundles.update(10),
+});
+</script>
+</body>
+</html>

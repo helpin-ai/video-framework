@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Concept B — Shutter</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept B: the docs agent as a photographer. Black stage, camera HUD in mono, a viewfinder over the
+     live product, shutter flashes, polaroid screenshots that develop (refine) and fly into the article. */
+  #stage { background: #070808; color: #EEF3EF; }
+  .hud { position: absolute; font: 500 18px/1 var(--mono); letter-spacing: .16em; color: #9FB0A7; }
+  .rec { color: var(--mint); } .rec::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--mint); margin-right: 10px; }
+  .vf { position: absolute; left: 700px; top: 120px; width: 1100px; height: 720px; }
+  .vf i { position: absolute; width: 60px; height: 60px; border: 4px solid #EEF3EF; }
+  .vf i:nth-child(1) { left: -18px; top: -18px; border-right: 0; border-bottom: 0; } .vf i:nth-child(2) { right: -18px; top: -18px; border-left: 0; border-bottom: 0; }
+  .vf i:nth-child(3) { left: -18px; bottom: -18px; border-right: 0; border-top: 0; } .vf i:nth-child(4) { right: -18px; bottom: -18px; border-left: 0; border-top: 0; }
+  .polaroid { position: absolute; left: 150px; top: 520px; width: 470px; padding: 18px 18px 64px; background: #F5F4EF; border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); transform: rotate(-7deg); }
+  .polaroid img { width: 100%; display: block; border-radius: 3px; filter: contrast(1.02); }
+  .polaroid span { position: absolute; left: 22px; bottom: 20px; font: 500 18px/1 var(--mono); color: #3E4743; }
+  .polaroid b { position: absolute; right: 18px; bottom: 16px; font: 700 16px/1 var(--mono); color: #fff; background: var(--green); padding: 7px 10px; border-radius: 6px; }
+  .head { position: absolute; left: 110px; top: 170px; font-size: 64px; line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
+  .head em { font-style: normal; color: var(--mint); }
+</style></head><body><div id="stage"><section class="scene" id="f" style="visibility:visible">
+  <div class="hud rec" style="left:110px; top:70px">DOCS AGENT · BROWSER</div>
+  <div class="hud" style="left:1480px; top:70px">SHOT 03 / 05 · 1440×900</div>
+  <div class="head">It signs in.<br><em>It takes the shot.</em></div>
+  <div class="vf"><i></i><i></i><i></i><i></i><div id="win"></div></div>
+  <div class="polaroid"><img src="../../../assets/helpin/product/workspace-knowledge-1920-v3.webp"><span>Settings → Integrations</span><b>REFINED</b></div>
+</section></div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js'; import { siteWindow } from '../../../lib/site.js';
+const w = siteWindow(document.querySelector('#win'), { path: '/products/knowledge', focus: '.knowledge-screenshot', hide: ['canvas'], radius: 10 });
+w.el.style.boxShadow = 'none'; waitFor(w.view.ready);
+defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1, render: () => { w.place({ x: 0, y: 0, w: 1100, h: 720 }); w.camera(1, [0.5, 0.5], w.view.rect('.knowledge-screenshot > div')); return w.view.update(6); } }] });
+</script></body></html>

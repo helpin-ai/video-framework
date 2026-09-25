@@ -1,0 +1,113 @@
+/* Helpin video brand layer: tokens, type, stage and reusable pieces.
+   Colours match helpin/website/public/brand/kit/helpin-palette.css and /new. */
+
+@import url('../node_modules/@fontsource/instrument-sans/400.css');
+@import url('../node_modules/@fontsource/instrument-sans/500.css');
+@import url('../node_modules/@fontsource/instrument-sans/600.css');
+@import url('../node_modules/@fontsource/instrument-sans/700.css');
+@import url('../node_modules/@fontsource/jetbrains-mono/400.css');
+@import url('../node_modules/@fontsource/jetbrains-mono/500.css');
+
+:root {
+  --forest: #081B16;
+  --forest-2: #0C2620;
+  --green: #0F7A50;
+  --green-h: #0B6340;
+  --sage: #B8DDBB;
+  --mint: #9CDBB3;
+  --mist: #E7F4ED;
+  --ink: #131514;
+  --t2: #4F5A55;
+  --t3: #66716C;
+  --surface: #F6F8F7;
+  --hairline: #E4E9E6;
+  --white: #FFFFFF;
+  --amber: #F0C35A;
+
+  --sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+body { font-family: var(--sans); color: var(--white); -webkit-font-smoothing: antialiased; }
+
+#stage {
+  position: absolute; left: 0; top: 0;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--forest);
+}
+
+/* A scene fills the stage; it is hidden by the runtime outside its window. */
+.scene { position: absolute; inset: 0; visibility: hidden; }
+.center { display: grid; place-items: center; text-align: center; }
+.layer { position: absolute; inset: 0; }
+
+/* Type scale sized for 1080p; portrait videos get slightly smaller display type. */
+.display { font-size: 112px; line-height: 1.02; letter-spacing: -0.035em; font-weight: 600; }
+.h1 { font-size: 84px; line-height: 1.06; letter-spacing: -0.03em; font-weight: 600; }
+.h2 { font-size: 56px; line-height: 1.12; letter-spacing: -0.02em; font-weight: 500; }
+.lede { font-size: 34px; line-height: 1.35; color: var(--sage); font-weight: 400; }
+.mono { font-family: var(--mono); }
+.sage { color: var(--sage); }
+.mint { color: var(--mint); }
+.green { color: var(--green); }
+[data-orientation='portrait'] .display { font-size: 96px; }
+[data-orientation='portrait'] .h1 { font-size: 72px; }
+
+/* Pill / badge, as on the site. */
+.pill {
+  display: inline-flex; align-items: center; gap: 12px;
+  height: 52px; padding: 0 24px; border-radius: 999px;
+  border: 1px solid rgba(184, 221, 187, .28); background: rgba(15, 122, 80, .16);
+  font: 500 22px/1 var(--mono); letter-spacing: .04em; color: var(--sage);
+}
+.pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+
+/* Soft dark scrim to keep text readable over busy backgrounds. */
+.scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 50% 50%, rgba(8, 27, 22, .9), rgba(8, 27, 22, 0) 70%); }
+
+/* Product screenshot in a device-less frame. */
+.shot {
+  position: absolute; border-radius: 18px; overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, .55), 0 0 0 1px rgba(184, 221, 187, .18);
+  background: var(--white);
+}
+.shot img { display: block; width: 100%; height: auto; }
+
+/* Highlight ring for calling out part of a screenshot. */
+.callout {
+  position: absolute; border-radius: 12px;
+  border: 3px solid var(--mint); box-shadow: 0 12px 32px rgba(0, 0, 0, .28);
+}
+
+/* Terminal window. */
+.term {
+  position: absolute; width: 1100px; border-radius: 16px; overflow: hidden;
+  background: #0B1411; border: 1px solid rgba(184, 221, 187, .2);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, .5);
+  font: 400 28px/1.6 var(--mono); color: #D7E6DC;
+}
+.term .bar { height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: #0F1D18; }
+.term .bar i { width: 14px; height: 14px; border-radius: 50%; background: #2A3A33; }
+.term .body { padding: 26px 32px 32px; white-space: pre-wrap; min-height: 300px; }
+.term .ok { color: var(--mint); }
+.term .dim { color: #6F8A7E; }
+.caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -0.15em; background: var(--mint); margin-left: 2px; }
+
+/* Helpin symbol: 8 pieces, animated individually by components.js. */
+.symbol { overflow: visible; }
+.symbol path { transform-box: fill-box; transform-origin: center; }
+
+/* Preview transport (never shown while rendering). */
+.hv-transport {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 64px; z-index: 10;
+  display: flex; align-items: center; gap: 14px; padding: 0 18px;
+  background: #0d0f0e; border-top: 1px solid #222; font: 13px/1 var(--mono); color: #bbb;
+}
+.hv-transport button { font: inherit; color: #ddd; background: #1c201e; border: 1px solid #333; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+.hv-transport button:hover { background: #26302b; }
+.hv-transport input { flex: 1; accent-color: var(--green); }
+.hv-time { width: 120px; font-variant-numeric: tabular-nums; }
+.hv-scenes { display: flex; gap: 6px; }

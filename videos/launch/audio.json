@@ -1,0 +1,232 @@
+{
+  "name": "launch",
+  "duration": 42,
+  "video": "../../out/launch/launch-picture.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 9.25,
+      "gain": -16,
+      "fadeIn": 1.5,
+      "fadeOut": 0.35,
+      "prompt": "Instrumental intro for a tech product launch film, 120 BPM. Opens with a low dark ambient synth pad and a soft ticking closed hi-hat, sparse and tense. Halfway through, a pulsing synth arpeggio enters and a filter sweep and reverse cymbal riser build steadily, peaking right at the very end. No drums before the end. no vocals, no singing."
+    },
+    {
+      "at": 9.0,
+      "length": 22.5,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.5,
+      "prompt": "Instrumental main theme for a modern tech product launch film, 120 BPM. Full band from the very first beat with no intro, no build-up and no fade-in: warm driving analog synth bass, crisp punchy electronic drums, a bright plucked synth hook. Confident and optimistic, steady high energy all the way to the end with no breakdown. No vocals, no singing.",
+      "generate": 32,
+      "from": 2.5
+    },
+    {
+      "at": 31.2,
+      "length": 10.8,
+      "gain": -7,
+      "fadeIn": 0.4,
+      "fadeOut": 2.5,
+      "prompt": "Instrumental outro for a tech product launch film, 120 BPM. Calm and stripped back: soft round synth bass and gentle electric piano chords, focused and hopeful, no heavy drums. Resolves into one sustained warm final chord that rings out with a long reverb tail. no vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "key": {
+      "text": "single soft muted synth key hit, subtle UI accent, clean, short",
+      "duration": 0.6,
+      "gain": -10
+    },
+    "pop": {
+      "text": "soft bubbly UI pop, app icon appearing, clean, very short",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "glitch": {
+      "text": "short digital glitch stutter, data signal breaking up",
+      "duration": 0.7,
+      "gain": -9
+    },
+    "riser": {
+      "text": "reverse cymbal riser swelling up, building tension",
+      "duration": 1.0,
+      "gain": -8
+    },
+    "impact": {
+      "text": "deep cinematic impact boom with subtle sub bass, tech trailer hit",
+      "duration": 2.5,
+      "gain": -4
+    },
+    "shimmer": {
+      "text": "bright magical shimmer, pieces clicking into place, sparkle chime",
+      "duration": 1.2,
+      "gain": -11
+    },
+    "whoosh": {
+      "text": "fast clean airy whoosh transition, modern UI",
+      "duration": 0.7,
+      "gain": -10
+    },
+    "click": {
+      "text": "soft crisp UI mouse click, minimal",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "typing": {
+      "text": "fast typing on a quiet low-profile laptop keyboard",
+      "duration": 2.0,
+      "gain": -12
+    },
+    "ding": {
+      "text": "soft gentle notification ding, task completed, pleasant",
+      "duration": 0.6,
+      "gain": -12
+    },
+    "chime": {
+      "text": "warm success chime, two ascending notes, satisfying",
+      "duration": 1.2,
+      "gain": -8
+    },
+    "final": {
+      "text": "big warm cinematic final hit with long shimmering reverb tail, logo reveal ending",
+      "duration": 5,
+      "gain": -4
+    },
+    "sent": {
+      "text": "short soft swoosh of a chat message being sent, pleasant modern app UI sound",
+      "duration": 0.6,
+      "gain": -11
+    }
+  },
+  "cues": [
+    {
+      "sound": "key",
+      "at": [
+        0.3,
+        1.3,
+        2.0,
+        2.7,
+        3.5
+      ]
+    },
+    {
+      "sound": "pop",
+      "at": [
+        5.3,
+        5.4,
+        5.5,
+        5.6,
+        5.7,
+        5.8,
+        5.9,
+        6.0,
+        6.1,
+        6.2
+      ]
+    },
+    {
+      "sound": "glitch",
+      "at": 7.2
+    },
+    {
+      "sound": "riser",
+      "at": 8.0
+    },
+    {
+      "sound": "impact",
+      "at": 9.0
+    },
+    {
+      "sound": "shimmer",
+      "at": 10.6
+    },
+    {
+      "sound": "whoosh",
+      "at": 10.9
+    },
+    {
+      "sound": "whoosh",
+      "at": 14.0,
+      "gain": -13
+    },
+    {
+      "sound": "click",
+      "at": [
+        16.0,
+        16.7,
+        17.4
+      ]
+    },
+    {
+      "sound": "whoosh",
+      "at": 19.0,
+      "gain": -13
+    },
+    {
+      "sound": "typing",
+      "at": 19.4
+    },
+    {
+      "sound": "ding",
+      "at": [
+        22.4,
+        23.2,
+        24.0,
+        24.8
+      ]
+    },
+    {
+      "sound": "whoosh",
+      "at": [
+        26.0,
+        26.8,
+        27.6,
+        28.4,
+        29.2,
+        30.0,
+        30.8
+      ],
+      "gain": -15
+    },
+    {
+      "sound": "ding",
+      "at": 32.03,
+      "gain": -14
+    },
+    {
+      "sound": "key",
+      "at": 32.55,
+      "gain": -13
+    },
+    {
+      "sound": "click",
+      "at": 33.43
+    },
+    {
+      "sound": "sent",
+      "at": 33.53
+    },
+    {
+      "sound": "whoosh",
+      "at": 34.6,
+      "gain": -15
+    },
+    {
+      "sound": "typing",
+      "at": 34.75,
+      "trim": 0.65
+    },
+    {
+      "sound": "ding",
+      "at": 35.92,
+      "gain": -16
+    },
+    {
+      "sound": "chime",
+      "at": 36.32
+    }
+  ]
+}

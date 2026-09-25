@@ -1,0 +1,267 @@
+{
+  "name": "support-say-it-once",
+  "duration": 31.475,
+  "video": "../../out/support-say-it-once/support-say-it-once.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 7.869,
+      "generate": 10,
+      "from": 0,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Sparse bouncy percussion at 122 BPM starting instantly on the first beat: conga hits, rim clicks and hand claps with a strong dub delay so every hit echoes and repeats, a muted kick on every beat, building tension and getting busier toward the end. Percussion only: no melody, no chords, no bass notes, no vocals."
+    },
+    {
+      "at": 7.869,
+      "length": 23.607,
+      "generate": 45,
+      "from": 15.738,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Upbeat Afro house track at 122 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: driving four-on-the-floor kick, shakers and congas, warm rolling bass, bright piano chords and a catchy plucked kalimba riff. Joyful, warm and confident, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit; the groove just keeps rolling. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "pop": {
+      "text": "soft bubbly chat message pop, clean modern interface",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "qstamp": {
+      "text": "quick flat chat notification ping, slightly annoying repeated message",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "typing": {
+      "text": "light fast laptop keyboard typing, a chat message being typed",
+      "duration": 1.2,
+      "gain": -14
+    },
+    "transfer": {
+      "text": "phone call transfer tone, two short descending beeps",
+      "duration": 0.8,
+      "gain": -10
+    },
+    "sweep": {
+      "text": "quick reverse swoosh, a chat window being wiped clean",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "angry": {
+      "text": "short comedic low thud with a buzzy frustrated wobble",
+      "duration": 0.6,
+      "gain": -9
+    },
+    "cascade": {
+      "text": "a rapid cascade of many chat notification pops multiplying and echoing, building into a dense swarm",
+      "duration": 1.6,
+      "gain": -8
+    },
+    "slam": {
+      "text": "deep punchy thump, bold text slamming onto the screen, tight and modern",
+      "duration": 0.6,
+      "gain": -8
+    },
+    "suck": {
+      "text": "fast reverse suction whoosh, everything pulled into one point",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "impact": {
+      "text": "bright punchy impact with a warm sub drop and a short shimmer tail",
+      "duration": 1.2,
+      "gain": -7
+    },
+    "whoosh": {
+      "text": "smooth quick vertical swish, a page scrolling fast",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "blip": {
+      "text": "tiny soft glassy data blip",
+      "duration": 0.5,
+      "gain": -16
+    },
+    "tick": {
+      "text": "tiny crisp UI tick, a checklist item appearing",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "join": {
+      "text": "friendly soft door chime, someone joining a chat",
+      "duration": 0.8,
+      "gain": -11
+    },
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "send": {
+      "text": "message sent swoosh, short and airy",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "received": {
+      "text": "warm two-note message received chime",
+      "duration": 0.6,
+      "gain": -11
+    },
+    "success": {
+      "text": "bright happy success sparkle chime",
+      "duration": 0.8,
+      "gain": -11
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    }
+  },
+  "cues": [
+    {
+      "sound": "pop",
+      "at": [
+        0.02,
+        0.984,
+        2.705,
+        10.086,
+        11.786,
+        14.37,
+        18.055
+      ]
+    },
+    {
+      "sound": "qstamp",
+      "at": [
+        2.213,
+        4.082
+      ]
+    },
+    {
+      "sound": "typing",
+      "at": [
+        0.12,
+        11.836,
+        18.455
+      ]
+    },
+    {
+      "sound": "transfer",
+      "at": [
+        1.475,
+        3.246
+      ]
+    },
+    {
+      "sound": "sweep",
+      "at": [
+        1.667,
+        3.634
+      ]
+    },
+    {
+      "sound": "angry",
+      "at": [
+        4.525
+      ]
+    },
+    {
+      "sound": "cascade",
+      "at": [
+        5.164
+      ]
+    },
+    {
+      "sound": "slam",
+      "at": [
+        5.902
+      ]
+    },
+    {
+      "sound": "suck",
+      "at": [
+        7.749
+      ]
+    },
+    {
+      "sound": "impact",
+      "at": [
+        7.869
+      ]
+    },
+    {
+      "sound": "whoosh",
+      "at": [
+        9.836,
+        13.77,
+        17.705,
+        21.639,
+        24.59
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        10.536,
+        10.936,
+        11.336
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        12.986,
+        13.106,
+        13.226,
+        14.67,
+        14.916,
+        15.162,
+        15.408
+      ]
+    },
+    {
+      "sound": "join",
+      "at": [
+        14.12
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        22.623
+      ]
+    },
+    {
+      "sound": "send",
+      "at": [
+        22.673
+      ]
+    },
+    {
+      "sound": "received",
+      "at": [
+        23.41
+      ]
+    },
+    {
+      "sound": "success",
+      "at": [
+        24.098
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        29.508
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Concept A — The thread</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept A: light editorial world. One green line — Maya's request — runs unbroken through
+     every station; the camera tracks along it. Style frame at the Ask Agent station. */
+  #stage { background: #F4F6F5; color: var(--ink); }
+  .dots { position: absolute; inset: 0; background-image: radial-gradient(#D5DDD8 1.4px, transparent 1.6px); background-size: 30px 30px; }
+  .label { position: absolute; left: 120px; top: 118px; font: 500 20px/1 var(--mono); letter-spacing: .2em; color: var(--green); }
+  .headline { position: absolute; left: 116px; top: 156px; font-size: 60px; line-height: 1.04; font-weight: 600; letter-spacing: -0.035em; color: var(--ink); }
+  .headline em { font-style: normal; color: var(--green); }
+  svg.thread { position: absolute; inset: 0; }
+  .card { position: absolute; background: #fff; border-radius: 20px; box-shadow: 0 30px 80px rgba(19, 21, 20, .12), 0 0 0 1px #E4E9E6; }
+  .maya { left: 70px; top: 610px; width: 420px; padding: 24px 26px; }
+  .maya .who { display: flex; gap: 14px; align-items: center; font-weight: 600; font-size: 24px; }
+  .maya .who span { width: 48px; height: 48px; border-radius: 50%; background: #FCE6D8; color: #A8502A; display: grid; place-items: center; font-size: 18px; }
+  .maya p { margin: 14px 0 0; font-size: 24px; line-height: 1.4; color: #2A2F2C; }
+  .stn { position: absolute; font: 500 16px/1 var(--mono); letter-spacing: .16em; color: #66716C; }
+  .dark-peek { left: 1500px; top: 330px; width: 560px; height: 520px; background: #0E1110; border-radius: 20px; box-shadow: 0 30px 80px rgba(19,21,20,.25); color: #D9E2DC; padding: 30px; font-size: 22px; }
+  .dark-peek b { display: block; font-size: 28px; margin: 14px 0 18px; color: #fff; }
+  .dark-peek code { display: block; font: 400 19px/1.8 var(--mono); color: #9FB5A8; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="dots"></div>
+  <svg class="thread" viewBox="0 0 1920 1080"><path d="M -20 700 C 200 700, 300 700, 490 690 S 600 560, 700 560 S 1300 560, 1400 600 S 1600 640, 1960 620" fill="none" stroke="#0F7A50" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="490" cy="690" r="11" fill="#fff" stroke="#0F7A50" stroke-width="5"/><circle cx="1400" cy="600" r="11" fill="#fff" stroke="#0F7A50" stroke-width="5"/></svg>
+  <section class="scene" id="f" style="visibility:visible">
+    <div class="label">02 — ASK AGENT</div>
+    <div class="headline">One request.<br><em>One unbroken thread.</em></div>
+    <div class="stn" style="left:74px; top:580px">01 — MAYA · NORTHSTAR</div>
+    <div class="card maya"><div class="who"><span>MC</span>Maya Chen</div><p>Our export stops at 10,000 contacts. We need all 18,400.</p></div>
+    <div id="win"></div>
+    <div class="stn" style="left:1504px; top:300px">03 — CODING AGENT</div>
+    <div class="card dark-peek"><span style="font:400 17px/1 var(--mono);color:#7E8983">EXP-142</span><b>Fix incomplete CSV exports</b><code>− return firstPage.rows;<br>+ while (nextCursor) {<br>+   await appendNextPage(rows);</code></div>
+  </section>
+</div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js';
+import { siteWindow } from '../../../lib/site.js';
+const w = siteWindow(document.querySelector('#win'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 20 });
+w.el.style.boxShadow = '0 40px 100px rgba(19,21,20,.16), 0 0 0 1px #E4E9E6';
+waitFor(w.view.ready);
+defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1, render: () => {
+  w.place({ x: 700, y: 190, w: 720, h: 840 }); w.camera(1, [0.5, 0.5], '.swi-agent'); return w.view.update(13.5);
+} }] });
+</script>
+</body>
+</html>

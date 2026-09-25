@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Bug report to fix ready for review</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* Pilot of the use-case series (HEL-142). Storyboard: Helpin Docs → GTM → Use-case videos.
+     Product UI is the live helpin.ai website preview, rendered frame-exactly via lib/site.js. */
+  #stage { background: #06120E; }
+  #plate { position: absolute; inset: 0; width: 1920px; height: 1080px; transform-origin: 50% 45%; }
+  #black { position: absolute; inset: 0; background: #000; opacity: 0; z-index: 20; }
+
+  .eyebrow { font: 400 20px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: #8DBE9E; }
+  .headline { font-weight: 600; letter-spacing: -0.045em; color: #EEF3EF; }
+  .headline .sage { color: var(--sage); }
+  .copy { position: absolute; left: 120px; width: 660px; }
+  .copy .headline { font-size: 78px; line-height: 1.02; margin: 26px 0 30px; }
+  .note { font-size: 20px; line-height: 1.45; color: rgba(236, 244, 239, .55); margin-top: 26px; width: 560px; }
+  .status { display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 22px; border-radius: 999px;
+    background: rgba(8, 20, 16, .6); border: 1px solid rgba(220, 240, 228, .18); font: 500 24px/1 var(--sans); color: #E4ECE7; }
+  .status i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); flex: none; }
+  .status b { font-weight: 600; color: #fff; }
+  .status .roll { color: var(--sage); }
+
+  /* 1 — hook */
+  #hook .l1 { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-size: 56px; font-weight: 500; letter-spacing: -0.02em; color: #EEF3EF; }
+  #hook .ghost { position: absolute; left: 0; right: 0; top: 330px; text-align: center; font-size: 460px; line-height: 1; font-weight: 600; letter-spacing: -0.06em; color: var(--sage); opacity: 0; font-variant-numeric: tabular-nums; }
+  #hook .num { position: absolute; left: 0; right: 0; top: 360px; text-align: center; font-size: 300px; line-height: 1; font-weight: 600; letter-spacing: -0.05em; color: #fff; font-variant-numeric: tabular-nums; }
+  #hook .unit { position: absolute; left: 0; right: 0; top: 690px; text-align: center; font: 400 24px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: #8DBE9E; }
+  #hook .l2 { position: absolute; left: 0; right: 0; top: 790px; text-align: center; font-size: 64px; font-weight: 600; letter-spacing: -0.035em; color: var(--sage); }
+
+  /* 5 — word beats */
+  #beats .word { position: absolute; left: 0; right: 0; top: 380px; text-align: center; font-size: 240px; font-weight: 600; letter-spacing: -0.06em; color: #EEF3EF; line-height: 1; }
+  #beats .line { position: absolute; left: 0; right: 0; top: 470px; text-align: center; font-size: 110px; font-weight: 600; letter-spacing: -0.05em; color: #EEF3EF; }
+  #beats .line .sage { color: var(--sage); }
+
+  /* 6 — end card */
+  #end .mark { position: absolute; left: 0; right: 0; top: 280px; display: flex; justify-content: center; align-items: center; gap: 40px; }
+  #end .word { font-size: 190px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: #EEF3EF; margin-top: -12px; }
+  #end .line { position: absolute; left: 0; right: 0; top: 560px; text-align: center; font-size: 60px; font-weight: 600; letter-spacing: -0.035em; color: #EEF3EF; }
+  #end .line .sage { color: var(--sage); }
+  #end .cta { position: absolute; left: 0; right: 0; top: 700px; display: flex; justify-content: center; gap: 16px; }
+  #end .cta span { height: 66px; padding: 0 32px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 28px/1 var(--sans); }
+  #end .cta .url { background: #EEF3EF; color: #0B1A14; }
+  #end .cta .tag { background: rgba(8, 20, 16, .6); border: 1px solid rgba(220, 240, 228, .18); color: #E4ECE7; font-weight: 500; }
+  #end .cta .tag i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="plate" src="../launch-ending/plate.png" alt="">
+
+  <section class="scene" id="hook">
+    <div class="ghost">18,400</div>
+    <div class="l1">Maya exports her contacts.</div>
+    <div class="num">0</div>
+    <div class="unit">contacts exported</div>
+    <div class="l2">She needs all 18,400.</div>
+  </section>
+
+  <section class="scene" id="support">
+    <div class="copy" style="top: 250px">
+      <div class="eyebrow">Beyond the inbox</div>
+      <div class="headline">When a reply isn’t enough, <span class="sage">move the work forward.</span></div>
+      <div class="status"><i></i><b>Ask Agent</b><span class="roll" id="roll-support"></span></div>
+    </div>
+  </section>
+
+  <section class="scene" id="coding">
+    <div class="copy" style="top: 290px">
+      <div class="eyebrow">Coding agent · Forge</div>
+      <div class="headline">Give coding agents the <span class="sage">reason behind the issue.</span></div>
+      <div class="status"><i></i><b>Forge</b><span class="roll" id="roll-coding"></span></div>
+      <div class="note">Coding agents need a connected GitHub or GitLab repository.</div>
+    </div>
+  </section>
+
+  <section class="scene" id="follow">
+    <div class="copy" style="top: 300px">
+      <div class="eyebrow">Follow through</div>
+      <div class="headline">And Maya <span class="sage">hears back.</span></div>
+      <div class="note" style="font-size: 26px; color: rgba(236,244,239,.7)">A follow-up after release, with the approvals your team requires.</div>
+    </div>
+  </section>
+
+  <section class="scene" id="beats">
+    <div class="word"></div>
+    <div class="line">One customer <span class="sage">history.</span></div>
+  </section>
+
+  <section class="scene" id="end">
+    <div class="mark"><span id="end-symbol"></span><span class="word">Helpin</span></div>
+    <div class="line">From customer request <span class="sage">to reviewed fix.</span></div>
+    <div class="cta"><span class="url">helpin.ai</span><span class="tag"><i></i>Open source · Coming soon</span></div>
+  </section>
+
+  <div id="black"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, easeInOut, expoOut, easeIn } from '../../lib/motion.js';
+import { helpinSymbol, css, rise, leave, counter, rollWord, zoomThrough } from '../../lib/components.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+// Live website previews (helpin.ai via the framework proxy), one window per scene.
+const supportWin = siteWindow($('#support'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 22 });
+const codingWin = siteWindow($('#coding'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 18, dark: true });
+const followWin = siteWindow($('#follow'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 22 });
+[supportWin, codingWin, followWin].forEach((w) => waitFor(w.view.ready));
+
+const rollSupport = rollWord($('#roll-support'), ['Reviewing the request', 'Using EXP-142', 'Preparing a fix', 'Sent to Sam for review']);
+const rollCoding = rollWord($('#roll-coding'), ['Reading Maya’s request', 'Writing the change', 'Running the tests', 'Pull request open · Not merged']);
+
+const endMark = helpinSymbol({ size: 170 });
+$('#end-symbol').append(endMark.node);
+
+const BEATS = [['Request.', 0.0], ['Task.', 0.5], ['Fix.', 1.0], ['Review.', 1.5], ['Reply.', 2.0]];
+
+// Window entrance: rise from below with a slight 3D tilt (reference: X launch reels).
+const enter = (w, lt, box, start = 0.1) => {
+  const k = expoOut(P(lt, start, start + 1.0));
+  w.place(box);
+  css(w.el, { opacity: Math.min(1, k * 1.6), transform: `perspective(2400px) translateY(${(1 - k) * 140}px) rotateX(${(1 - k) * 14}deg)` });
+};
+const hold = (el, lt, dur, out = 0.4) => (lt > dur - out ? leave(el, lt, dur - out, out) : css(el, { opacity: 1, filter: 'none' }));
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 120,
+  scenes: [
+    // 0–3.5 Hook: the export counts up and stalls at 10,000; she needs 18,400. Zoom through the number.
+    { id: 'hook', start: 0, end: 3.5, render: ({ lt }) => {
+      rise($('#hook .l1'), lt, 0.1);
+      rise($('#hook .unit'), lt, 0.5, 0.5, 14, 4);
+      const n = counter($('#hook .num'), lt, 0.45, 1.7, 0, 10000, { ease: expoOut });
+      const stall = P(lt, 1.7, 2.1);
+      const jit = lt > 1.7 && lt < 2.1 ? Math.sin(lt * 90) * 6 * (1 - stall) : 0;
+      css($('#hook .num'), { transform: `translateX(${jit}px)`, color: n >= 10000 ? '#F0C35A' : '#fff', opacity: P(lt, 0.4, 0.6) });
+      css($('#hook .ghost'), { opacity: 0.09 * brandEase(P(lt, 2.0, 2.6)), transform: `scale(${L(1.08, 1, brandEase(P(lt, 2.0, 2.8)))})` });
+      rise($('#hook .l2'), lt, 2.1, 0.6, 24, 10);
+      zoomThrough($('#hook'), lt, 3.05, 0.45, { origin: '50% 48%', scale: 6 });
+    } },
+
+    // 3.5–9.0 Support → Ask Agent (live site preview at 2.3× speed).
+    { id: 'support', start: 3.5, end: 9.0, render: ({ lt, dur }) => {
+      const [eb, hl, st] = $$('#support .copy > *');
+      rise(eb, lt, 0.1); rise(hl, lt, 0.15, 0.6, 34, 14); rise(st, lt, 0.45);
+      rollSupport.update(lt, [0, 1.35, 3.4, 5.1]);
+      enter(supportWin, lt, { x: 880, y: 90, w: 900, h: 900 });
+      // Open on the whole workspace, then glide onto the Ask Agent panel once it's there.
+      // The panel is taller than the window, so widen the target leftwards into the inbox; the panel sits flush right.
+      const panel = supportWin.view.rect('.swi-agent');
+      const wide = panel && { x: panel.x - panel.w * 0.34, y: panel.y, w: panel.w * 1.34, h: panel.h };
+      const cam = lerpRect(supportWin.view.rect(), wide, easeInOut(P(lt, 0.5, 1.6)));
+      supportWin.camera(L(1.0, 1.05, easeInOut(P(lt, 1.6, dur))), [0.5, 0.5], cam);
+      hold($('#support'), lt, dur, 0.35);
+      return supportWin.view.update(1.5 + lt * 2.3);
+    } },
+
+    // 9.0–15.0 Coding agent (dark site preview); camera starts on the diff, then pulls back.
+    { id: 'coding', start: 9.0, end: 15.0, render: ({ lt, dur }) => {
+      const [eb, hl, st, nt] = $$('#coding .copy > *');
+      rise(eb, lt, 0.1); rise(hl, lt, 0.15, 0.6, 34, 14); rise(st, lt, 0.45); rise(nt, lt, 0.8, 0.5, 10, 0);
+      rollCoding.update(lt, [0, 1.0, 2.6, 4.0]);
+      enter(codingWin, lt, { x: 990, y: 80, w: 748, h: 920 }, 0.05); // card aspect 606×745
+      const z = keys(lt, [[0, 1.35], [1.6, 1.35], [3.0, 1.0, easeInOut]]);
+      // Anchor the zoom to the card's left edge (fx 0) so the title isn't cropped, then recentre.
+      const fx = keys(lt, [[0, 0], [1.6, 0], [3.0, 0.5, easeInOut]]);
+      const fy = keys(lt, [[0, 0.42], [1.6, 0.42], [3.0, 0.5, easeInOut]]);
+      codingWin.camera(z, [fx, fy]);
+      hold($('#coding'), lt, dur, 0.35);
+      return codingWin.view.update(lt * 0.8);
+    } },
+
+    // 15.0–21.0 Follow through: released → Helpin AI → Maya, approved by Sam, sent after release.
+    { id: 'follow', start: 15.0, end: 21.0, render: ({ lt, dur }) => {
+      const [eb, hl, nt] = $$('#follow .copy > *');
+      rise(eb, lt, 0.1); rise(hl, lt, 0.15, 0.6, 34, 14); rise(nt, lt, 0.5);
+      enter(followWin, lt, { x: 900, y: 170, w: 860, h: 737 }, 0.05);
+      followWin.camera(keys(lt, [[0, 1.0], [3.6, 1.0], [5.2, 1.28, easeInOut]]), [0.5, 0.82]);
+      hold($('#follow'), lt, dur, 0.35);
+      return followWin.view.update(lt * 0.95);
+    } },
+
+    // 21.0–25.0 One word per beat, then the line.
+    { id: 'beats', start: 21.0, end: 25.0, render: ({ lt, dur }) => {
+      const cur = BEATS.filter(([, at]) => lt >= at).pop();
+      const w = $('#beats .word');
+      w.textContent = cur ? cur[0] : '';
+      const k = cur ? brandEase(P(lt, cur[1], cur[1] + 0.3)) : 0;
+      css(w, { opacity: lt < 2.5 ? k : 1 - easeIn(P(lt, 2.4, 2.6)), transform: `translateY(${(1 - k) * 40}px) scale(${L(1.06, 1, k)})`, filter: k < 1 ? `blur(${(1 - k) * 8}px)` : 'none' });
+      rise($('#beats .line'), lt, 2.55, 0.6, 30, 12);
+      hold($('#beats'), lt, dur, 0.35);
+    } },
+
+    // 25.0–30.0 End card; music rides out, picture fades to black.
+    { id: 'end', start: 25.0, end: 30.0, render: ({ lt }) => {
+      endMark.assemble(P(lt, 0, 1.1));
+      rise($('#end .word'), lt, 0.5, 0.6, 20, 10);
+      rise($('#end .line'), lt, 0.9, 0.6, 24, 10);
+      rise($('#end .cta'), lt, 1.3, 0.6, 20, 8);
+    } },
+  ],
+  render: ({ t }) => {
+    // Background never stops moving: slow push-in and drift.
+    css($('#plate'), { transform: `scale(${L(1.04, 1.12, t / 30)}) translate(${L(0, -30, t / 30)}px, 0)` });
+    $('#black').style.opacity = String(easeInOut(P(t, 29.1, 30)));
+  },
+});
+</script>
+</body>
+</html>

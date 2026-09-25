@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Your server (self-host Helpin)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "Your server": a switch asks "Who runs it?", flips to Your server, and the Helpin workspace jumps from the cloud
+     onto your hardware. Station titles are giant CLI commands that shrink into the terminal prompt:
+     helpin install → localhost:8085 → helpin doctor → Settings → AI. 126 BPM (beat 0.476 s, bar 1.905 s),
+     melodic-techno score of its own. HEL-145. */
+  /* opener */
+  #sw { position: absolute; left: 610px; top: 70px; width: 700px; text-align: center; }
+  #sw small { display: block; font: 600 24px/1 var(--mono); letter-spacing: .18em; color: var(--mint); margin-bottom: 18px; }
+  #sw .track { position: relative; height: 92px; border-radius: 46px; background: #0B2019; border: 2px solid #2F5A45; display: flex; }
+  #sw .track span { flex: 1; display: grid; place-items: center; font: 600 34px/1 var(--sans); color: #8FB39A; position: relative; z-index: 2; }
+  #knob { position: absolute; left: 6px; top: 6px; width: 340px; height: 76px; border-radius: 38px; background: #F2F5F3; }
+  #sw .track span.on { color: var(--forest); }
+  #s-open { position: absolute; inset: 0; }
+  #cloud { position: absolute; left: 140px; top: 700px; width: 720px; height: 150px; }
+  #cloud .pad { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; border-radius: 35px; background: rgba(184, 221, 187, .12); border: 2px dashed rgba(184, 221, 187, .35); }
+  #cloud small, #srv small { position: absolute; left: 0; right: 0; bottom: -52px; text-align: center; font: 600 22px/1 var(--mono); letter-spacing: .16em; color: #8FB39A; }
+  #srv { position: absolute; left: 1060px; top: 610px; width: 720px; height: 290px; }
+  #srv .box { position: absolute; left: 40px; right: 40px; bottom: 0; height: 240px; border-radius: 22px; background: linear-gradient(#1A2E27, #10201A); border: 2px solid #2F5A45; padding: 26px 30px; }
+  #srv .u { height: 50px; border-radius: 10px; background: #0B1712; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; padding: 0 16px; }
+  #srv .u i { width: 12px; height: 12px; border-radius: 50%; background: #34463F; }
+  #srv .u b { margin-left: auto; width: 120px; height: 8px; border-radius: 4px; background: #22352D; }
+  #ws { position: absolute; left: 0; top: 0; width: 640px; height: 400px; border-radius: 22px; background: #fff; color: var(--ink); box-shadow: 0 40px 100px rgba(0, 0, 0, .5); overflow: hidden; transform-origin: 50% 100%; }
+  #ws .top { height: 70px; display: flex; align-items: center; gap: 14px; padding: 0 24px; border-bottom: 1px solid var(--hairline); font: 700 28px/1 var(--sans); }
+  #ws .top svg { width: 28px; height: 28px; }
+  #ws .top small { margin-left: auto; font: 600 15px/1 var(--mono); letter-spacing: .08em; padding: 7px 10px; border-radius: 7px; background: #EFF2F0; color: var(--t2); }
+  #ws .side { position: absolute; left: 0; top: 70px; bottom: 0; width: 190px; padding: 14px 10px; border-right: 1px solid var(--hairline); }
+  #ws .side div { font: 500 22px/1 var(--sans); color: var(--t2); padding: 9px 10px; border-radius: 8px; margin-bottom: 3px; }
+  #ws .side .on { background: #E7F4ED; color: var(--green-h); font-weight: 600; }
+  #ws .main { position: absolute; left: 190px; right: 0; top: 70px; bottom: 0; padding: 16px; }
+  #ws .main i { display: block; height: 40px; border-radius: 8px; background: #F1F3F2; margin-bottom: 10px; }
+
+  /* commands */
+  #cmd { position: absolute; left: 0; top: 0; font: 600 150px/1 var(--mono); letter-spacing: -0.03em; color: #F2F5F3; white-space: nowrap; transform-origin: 0 0; opacity: 0; z-index: 8; }
+  #cmd em { color: var(--mint); }
+  #hsub { position: absolute; left: 0; width: 1920px; top: 70px; text-align: center; font-size: 38px; font-weight: 600; color: #A9C7B3; opacity: 0; letter-spacing: -0.01em; }
+  .term { position: absolute; left: 310px; top: 150px; width: 1300px; height: 680px; border-radius: 22px; background: #07120E; border: 2px solid #1F3A30; box-shadow: 0 50px 130px rgba(0, 0, 0, .55); overflow: hidden; opacity: 0; }
+  .term .bar { height: 50px; display: flex; align-items: center; gap: 10px; padding: 0 20px; border-bottom: 1px solid #1A2E26; }
+  .term .bar i { width: 13px; height: 13px; border-radius: 50%; background: #25382F; }
+  .term .bar span { margin-left: 14px; font: 500 17px/1 var(--mono); color: #6F8E7C; }
+  .term .body { padding: 34px 40px; font: 500 30px/1.62 var(--mono); color: #CFE3D6; white-space: pre; }
+  .term .p { color: var(--mint); } .term .dim { color: #5E7D6B; } .term .ok { color: var(--mint); } .term .sel { color: #07120E; background: var(--mint); padding: 0 8px; border-radius: 6px; }
+  .term .run { color: #F0C35A; }
+  #browser { position: absolute; left: 310px; top: 150px; width: 1300px; height: 700px; border-radius: 20px; background: #F6F8F7; box-shadow: 0 50px 130px rgba(0, 0, 0, .55); overflow: hidden; opacity: 0; color: var(--ink); }
+  #browser .bar { height: 60px; background: #EEF1EF; display: flex; align-items: center; gap: 10px; padding: 0 20px; border-bottom: 1px solid #DDE3E0; }
+  #browser .bar i { width: 13px; height: 13px; border-radius: 50%; background: #C9D0CC; }
+  #browser .url { margin-left: 16px; height: 38px; width: 560px; border-radius: 9px; background: #fff; display: flex; align-items: center; padding: 0 16px; font: 500 22px/1 var(--mono); color: var(--t2); }
+  #signup { position: absolute; left: 390px; top: 110px; width: 520px; padding: 44px; border-radius: 24px; background: #fff; border: 1px solid var(--hairline); box-shadow: 0 30px 80px rgba(0, 0, 0, .08); }
+  #signup h2 { margin: 18px 0 8px; font-size: 36px; letter-spacing: -0.02em; } #signup p { margin: 0 0 24px; color: var(--t3); font-size: 20px; }
+  #signup .lb { font-size: 17px; color: var(--t3); margin-bottom: 8px; }
+  #signup .f { height: 60px; border: 1px solid #CFD6D2; border-radius: 12px; padding: 0 18px; display: flex; align-items: center; font-size: 22px; margin-bottom: 18px; }
+  #signup .go { height: 58px; border-radius: 12px; background: var(--green); color: #fff; display: grid; place-items: center; font: 600 22px/1 var(--sans); }
+  #inbox { position: absolute; left: 0; top: 60px; right: 0; bottom: 0; opacity: 0; }
+  #inbox .top { height: 70px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: #fff; border-bottom: 1px solid var(--hairline); font: 700 24px/1 var(--sans); }
+  #inbox .top svg { width: 32px; height: 32px; }
+  #inbox .top small { margin-left: auto; font: 600 17px/1 var(--mono); letter-spacing: .08em; padding: 9px 12px; border-radius: 8px; background: #E3F4EA; color: var(--green-h); }
+  #inbox .side { position: absolute; left: 0; top: 70px; bottom: 0; width: 250px; background: #fff; border-right: 1px solid var(--hairline); padding: 20px 14px; }
+  #inbox .side div { font: 500 21px/1 var(--sans); color: var(--t2); padding: 13px 14px; border-radius: 10px; margin-bottom: 4px; }
+  #inbox .side .on { background: #E7F4ED; color: var(--green-h); font-weight: 600; }
+  #inbox .main { position: absolute; left: 250px; right: 0; top: 70px; bottom: 0; padding: 40px 50px; }
+  #inbox h1 { margin: 0 0 8px; font-size: 44px; letter-spacing: -0.03em; } #inbox .lede { font-size: 22px; color: var(--t3); margin-bottom: 30px; }
+  #inbox .steps div { display: flex; align-items: center; gap: 16px; height: 76px; padding: 0 22px; border-radius: 14px; background: #fff; border: 1px solid var(--hairline); margin-bottom: 12px; font-size: 24px; opacity: 0; }
+  #inbox .steps b { width: 34px; height: 34px; border-radius: 50%; background: #EFF2F0; display: grid; place-items: center; font: 700 17px/1 var(--mono); color: var(--t2); }
+  #models { position: absolute; left: 260px; top: 150px; width: 1400px; height: 700px; opacity: 0; }
+  .prov { position: absolute; top: 60px; width: 420px; height: 300px; border-radius: 24px; background: #fff; color: var(--ink); box-shadow: 0 40px 100px rgba(0, 0, 0, .45); padding: 34px; opacity: 0; }
+  .prov b { display: block; font-size: 38px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .prov span { font-size: 21px; color: var(--t3); }
+  .prov .key { position: absolute; left: 34px; right: 34px; bottom: 34px; height: 64px; border-radius: 14px; border: 2px dashed #CFD6D2; display: flex; align-items: center; gap: 12px; padding: 0 18px; font: 500 22px/1 var(--mono); color: var(--t3); }
+  .prov .key.on { border: 2px solid var(--green); background: #F3FAF6; color: var(--green-h); }
+  #agentsRow { position: absolute; left: 0; right: 0; top: 440px; display: flex; justify-content: center; gap: 18px; }
+  #agentsRow div { height: 86px; padding: 0 26px 0 14px; border-radius: 43px; background: #0B2019; border: 2px solid #2F5A45; display: flex; align-items: center; gap: 14px; font: 600 26px/1 var(--sans); color: #E6F0EA; opacity: 0; }
+  #agentsRow img { width: 56px; height: 56px; }
+  #agentsRow small { font: 600 18px/1 var(--mono); color: var(--mint); letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+  <div class="lines" id="lines"><div id="l1"></div><div id="l2"></div><div id="l3"></div></div>
+  <div id="side"></div>
+  <div id="rigwrap"><div id="rig">
+  <div class="scr" id="s-open" style="opacity:1">
+    <div id="sw"><small>WHO RUNS IT?</small><div class="track"><div id="knob"></div><span id="o1" class="on">Helpin Cloud</span><span id="o2">Your server</span></div></div>
+    <div id="cloud"><div class="pad"></div><small>HELPIN CLOUD</small></div>
+    <div id="srv"><div class="box"><div class="u"><i></i><i></i><b></b></div><div class="u"><i></i><i></i><b></b></div><div class="u"><i></i><i></i><b></b></div></div><small>YOUR SERVER</small></div>
+    <div id="ws"><div class="top"><span id="wsym"></span>Helpin<small id="wtag">CLOUD</small></div><div class="side"><div class="on">Inbox</div><div>Docs</div><div>Projects</div><div>CRM</div><div>Agents</div></div><div class="main"><i></i><i></i><i style="width:70%"></i><i></i><i style="width:55%"></i></div></div>
+  </div>
+  <div class="term" id="t-install"><div class="bar"><i></i><i></i><i></i><span>~ — zsh</span></div><div class="body" id="ib"></div></div>
+  <div id="browser"><div class="bar"><i></i><i></i><i></i><div class="url" id="url">localhost:8085</div></div>
+    <div id="signup"><span id="ssym"></span><h2>Create your workspace</h2><p>Your Helpin, on your machine.</p><div class="lb">Organization</div><div class="f" id="org"></div><div class="lb">Workspace</div><div class="f" id="wsn"></div><div class="go">Create workspace</div></div>
+    <div id="inbox"><div class="top"><span id="isym"></span>Northstar<small>SELF-HOSTED</small></div><div class="side"><div class="on">Inbox</div><div>Help center</div><div>Docs</div><div>Projects</div><div>CRM</div><div>Agents</div></div>
+      <div class="main"><h1>Welcome to Helpin</h1><div class="lede">Start your first support conversation.</div><div class="steps"><div><b>1</b>Allow your website’s origin</div><div><b>2</b>Copy the support snippet into your site</div><div><b>3</b>Send a message, reply from the inbox</div></div></div></div></div>
+  <div class="term" id="t-doctor"><div class="bar"><i></i><i></i><i></i><span>~ — zsh</span></div><div class="body" id="db"></div></div>
+  <div id="models">
+    <div class="prov" style="left:0"><b>Anthropic</b><span>Your API key</span><div class="key" id="k1">⌁ Add key</div></div>
+    <div class="prov" style="left:490px"><b>OpenAI</b><span>Your API key</span><div class="key" id="k2">⌁ Add key</div></div>
+    <div class="prov" style="left:980px"><b>OpenRouter</b><span>Your API key</span><div class="key" id="k3">⌁ Add key</div></div>
+    <div id="agentsRow"><div><img src="../../assets/helpin/agents/echo.svg" alt="">Echo<small>MODEL · YOURS</small></div><div><img src="../../assets/helpin/agents/quill.svg" alt="">Quill<small>MODEL · YOURS</small></div><div><img src="../../assets/helpin/agents/forge.svg" alt="">Forge<small>MODEL · YOURS</small></div></div>
+  </div>
+  <div class="cursor" id="cursor"></div>
+  </div></div>
+  <div class="scr" id="s-free"><div class="mega" style="top:470px; font-size:104px" id="free"></div></div>
+  <div class="scr" id="s-pay"><div class="topline" id="pay" style="top:130px"></div></div>
+  <div id="endwrap"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, brandEase } from '../../lib/motion.js';
+import { helpinSymbol, css, type } from '../../lib/components.js';
+import { KIT_CSS, END_HTML, CURSOR_SVG, words, rise, pop, push, bigScreen, stack, sideCopy, rig, bundles, endCard } from '../../lib/kit.js';
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS;
+$('#endwrap').outerHTML = END_HTML;
+$('#cursor').innerHTML = CURSOR_SVG;
+[['#wsym', 34, '#131514'], ['#ssym', 52, '#0F7A50'], ['#isym', 32, '#131514']].forEach(([s, size, color]) => { const m = helpinSymbol({ size, color }); m.assemble(1); $(s).append(m.node); });
+
+const B = 60 / 126, BAR = 4 * B;
+const T = { l2: 2 * B, l3: BAR, flip: BAR + B, land: BAR + 3 * B, free: 2.5 * BAR, install: 3.5 * BAR, open: 6 * BAR, doctor: 8 * BAR, models: 10 * BAR,
+  payoff: 12 * BAR, tag: 13.5 * BAR, total: 16 * BAR };
+const LN = [[$('#l1'), words($('#l1'), 'Your customer history.'), 0.15], [$('#l2'), words($('#l2'), 'Your team’s work.'), T.l2], [$('#l3'), words($('#l3'), '<em>Who runs it?</em>'), T.l3]];
+const FREE = words($('#free'), 'Run Helpin yourself. <em>Free.</em>');
+const PAY = words($('#pay'), 'Your server. <em>Same Helpin.</em>');
+const end = endCard($, 'Same product.', '<em>You choose who runs it.</em>');
+const side = sideCopy($, [
+  { at: T.install, eyebrow: '01 · Install', head: 'Install it with <em>the CLI.</em>', lede: 'It downloads and verifies the bundle, generates secrets and starts Helpin.' },
+  { at: T.open, eyebrow: '02 · Sign up', head: 'Open it on <em>your machine.</em>', lede: 'Create your account and workspace at localhost:8085.' },
+  { at: T.doctor, eyebrow: '03 · Check', head: 'Check before <em>you troubleshoot.</em>', lede: 'helpin doctor checks Docker, services, API readiness and HTTPS.' },
+  { at: T.models, eyebrow: '04 · Your models', head: 'Your providers. <em>Your keys.</em>', lede: 'Connect Anthropic, OpenAI or OpenRouter, and choose the model for each agent.' },
+], T.payoff);
+const cam = rig($('#rig'), [[0, 960, 500, 0.64, 1370, 540], [T.install, 960, 490, 0.8, 1330, 560], [T.models, 960, 420, 0.7, 1320, 560], [T.payoff, 1420, 600, 0.85, 960, 670]]);
+const bg = bundles($);
+
+// terminal scripts: [time, html]
+const P_ = '<span class="p">~ $</span> ';
+function termLines(el, t, lines) {
+  const html = lines.filter(([at]) => t >= at).map(([at, h, typed]) => {
+    if (typed) { const n = Math.max(0, Math.floor((t - at) * 30)); return P_ + typed.slice(0, n) + (n < typed.length ? '▍' : ''); }
+    return h;
+  }).join('\n');
+  if (el.dataset.h !== html) { el.innerHTML = html; el.dataset.h = html; }
+}
+const spin = (t, at, done, label) => t >= done ? `<span class="ok">✓</span> ${label}` : `<span class="run">${'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'[Math.floor((t - at) * 12) % 10]}</span> ${label}`;
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 126, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    bg(t); cam(t); side(t);
+
+    // ── 1: the question on the left, the switch on the right
+    const oOn = t < T.free;
+    const lo = brandEase(P(t, T.free - 0.45, T.free));
+    css($('#lines'), { opacity: String(oOn ? 1 - lo : 0), filter: lo > 0.001 ? `blur(${(lo * 8).toFixed(2)}px)` : 'none' });
+    if (oOn) stack(t, LN);
+    const openVis = t < T.free || (t >= T.payoff && t < T.tag);
+    const oin = t < T.free ? brandEase(P(t, 0.3, 1.0)) * (1 - lo) : brandEase(P(t, T.payoff, T.payoff + 0.6)) * (1 - brandEase(P(t, T.tag - 0.45, T.tag)));
+    css($('#s-open'), { opacity: String(openVis ? oin : 0) });
+    const kf = brandEase(P(t, T.flip, T.flip + 0.45));
+    $('#knob').style.transform = kf > 0 ? `translateX(${Math.round(kf * 344)}px)` : 'none';
+    $('#o1').classList.toggle('on', kf < 0.5); $('#o2').classList.toggle('on', kf >= 0.5);
+    const je = brandEase(P(t, T.flip + 0.3, T.land));
+    const x0 = 180, y0 = 380, x1 = 1100, y1 = 260;
+    const arc = -Math.sin(Math.PI * je) * 140;
+    const onServer = t >= T.land || t >= T.payoff;
+    const wx = t >= T.payoff ? x1 : L(x0, x1, je), wy = t >= T.payoff ? y1 : L(y0, y1, je) + arc;
+    css($('#ws'), { transform: `translate(${Math.round(wx)}px, ${Math.round(wy)}px)` });
+    $('#sw').style.opacity = t >= T.payoff ? '0' : '1'; $('#cloud').style.opacity = t >= T.payoff ? '0' : '1';
+    $('#wtag').textContent = onServer ? 'YOUR SERVER' : 'CLOUD';
+    $('#srv').querySelectorAll('.u i').forEach((led, i) => { led.style.background = onServer && t >= T.land + i * 0.08 ? (i % 2 ? '#9CDBB3' : '#5FD08F') : '#34463F'; });
+    const cur = keys(t, [[T.l3, [1500, 1080]], [T.flip - 0.05, [1130, 170], brandEase]]);
+    css($('#cursor'), { opacity: String(P(t, T.l3, T.l3 + 0.2) * (1 - P(t, T.flip + 0.5, T.flip + 0.8))), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px)` });
+
+    // ── 2: Run Helpin yourself. Free.
+    bigScreen($('#s-free'), FREE, t, T.free, T.install);
+
+    // ── 3: helpin install
+    push($('#t-install'), t, T.install, T.open);
+    const i0 = T.install + 0.5;
+    termLines($('#ib'), t, [
+      [i0 - 0.2, `${P_}curl -fsSL https://helpin.ai/install.sh | bash`], [i0 - 0.2, '<span class="dim">✓ helpin CLI installed · checksum verified</span>'],
+      [i0, null, 'helpin install'],
+      [i0 + 0.7, '? Where will Helpin run?'],
+      [i0 + 0.75, t < i0 + 1.3 ? '  ❯ local   <span class="dim">this computer</span>\n    server  <span class="dim">a public host</span>' : '  ❯ <span class="sel">local</span>   <span class="dim">this computer</span>\n    server  <span class="dim">a public host</span>'],
+      [i0 + 1.5, spin(t, i0 + 1.5, i0 + 1.9, 'Downloading the bundle')],
+      [i0 + 1.75, spin(t, i0 + 1.75, i0 + 2.15, 'Verifying its checksum')],
+      [i0 + 2.0, spin(t, i0 + 2.0, i0 + 2.4, 'Generating secrets')],
+      [i0 + 2.25, spin(t, i0 + 2.25, i0 + 2.65, 'Starting services')],
+      [i0 + 2.5, spin(t, i0 + 2.5, i0 + 2.85, 'Checking the API')],
+      [i0 + 2.95, '\n<span class="ok">✓ Helpin is running  →  http://localhost:8085</span>'],
+    ]);
+
+    // ── 4: localhost:8085 — sign up, create the workspace
+    push($('#browser'), t, T.open, T.doctor);
+    const o0 = T.open + 0.6;
+    type($('#org'), 'Northstar', t, { start: o0, cps: 20, caret: t < o0 + 0.6 });
+    type($('#wsn'), 'Support', t, { start: o0 + 0.7, cps: 20, caret: t >= o0 + 0.7 && t < o0 + 1.2 });
+    const into = brandEase(P(t, o0 + 1.5, o0 + 2.1));
+    css($('#signup'), { opacity: String(1 - into), filter: into > 0.001 && into < 1 ? `blur(${(into * 6).toFixed(2)}px)` : 'none' });
+    css($('#inbox'), { opacity: String(into), transform: into < 1 ? `translateY(${Math.round((1 - into) * 20)}px)` : 'none' });
+    [...document.querySelectorAll('#inbox .steps div')].forEach((d, i) => pop(d, t, o0 + 2.0 + i * 0.25));
+
+    // ── 5: helpin doctor
+    push($('#t-doctor'), t, T.doctor, T.models);
+    const d0 = T.doctor + 0.5;
+    const checks = ['Docker', 'Compose configuration', 'Required services', 'API readiness', 'HTTPS', 'Secret file permissions'];
+    termLines($('#db'), t, [[d0, null, 'helpin doctor'], ...checks.map((c, i) => [d0 + 0.7 + i * 0.26, spin(t, d0 + 0.7 + i * 0.26, d0 + 0.95 + i * 0.26, c)]),
+      [d0 + 0.7 + 6 * 0.26 + 0.25, '\n<span class="ok">All checks passed.</span>']]);
+
+    // ── 6: Settings → AI
+    push($('#models'), t, T.models, T.payoff);
+    [...document.querySelectorAll('.prov')].forEach((p, i) => pop(p, t, T.models + 0.3 + i * 0.12, { dist: 20 }));
+    [['#k1', 1.2], ['#k2', 1.5], ['#k3', 1.8]].forEach(([s, d]) => { const on = t >= T.models + d; const el = $(s); const txt = on ? '✓ sk-•••• your key' : '⌁ Add key'; if (el.textContent !== txt) el.textContent = txt; el.classList.toggle('on', on); });
+    [...document.querySelectorAll('#agentsRow div')].forEach((d, i) => pop(d, t, T.models + 2.3 + i * 0.15));
+
+    // ── 7: payoff
+    const pOn = t >= T.payoff && t < T.tag;
+    css($('#s-pay'), { opacity: String(pOn ? 1 - brandEase(P(t, T.tag - 0.45, T.tag)) : 0) });
+    if (pOn) rise(PAY, t, T.payoff + 0.2);
+
+    end(t, T.tag, B);
+  } }],
+});
+</script>
+</body>
+</html>

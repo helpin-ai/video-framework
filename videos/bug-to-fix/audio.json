@@ -1,0 +1,41 @@
+{
+  "name": "bug-to-fix",
+  "duration": 30,
+  "video": "../../out/bug-to-fix/bug-to-fix.mp4",
+  "master": { "lufs": -14, "fadeOut": 1.2 },
+
+  "music": [
+    { "at": 0, "length": 3.75, "gain": -16, "fadeIn": 0.4, "fadeOut": 0.3,
+      "prompt": "Instrumental intro for a tech product launch film, 120 BPM. Opens with a low dark ambient synth pad and a soft ticking closed hi-hat, sparse and tense. Halfway through, a pulsing synth arpeggio enters and a filter sweep and reverse cymbal riser build steadily, peaking right at the very end. No drums before the end. no vocals, no singing." },
+    { "at": 3.5, "length": 26.5, "gain": -7, "generate": 32, "from": 2.5, "fadeIn": 0.03, "fadeOut": 3.5,
+      "prompt": "Instrumental main theme for a modern tech product launch film, 120 BPM. Full band from the very first beat with no intro, no build-up and no fade-in: warm driving analog synth bass, crisp punchy electronic drums, a bright plucked synth hook. Confident and optimistic, steady high energy all the way to the end with no breakdown. No vocals, no singing." }
+  ],
+
+  "sounds": {
+    "key":     { "text": "single soft muted synth key hit, subtle UI accent, clean, short", "duration": 0.6, "gain": -10 },
+    "tick":    { "text": "rapid digital counter ticking, numbers rolling up quickly, clean modern UI", "duration": 1.3, "gain": -14 },
+    "glitch":  { "text": "short digital glitch stutter, data signal breaking up", "duration": 0.7, "gain": -11 },
+    "riser":   { "text": "reverse cymbal riser swelling up, building tension", "duration": 1.0, "gain": -10 },
+    "whoosh":  { "text": "fast clean airy whoosh transition, modern UI", "duration": 0.7, "gain": -11 },
+    "pop":     { "text": "soft bubbly UI pop, app icon appearing, clean, very short", "duration": 0.5, "gain": -13 },
+    "click":   { "text": "soft crisp UI mouse click, minimal", "duration": 0.5, "gain": -14 },
+    "ding":    { "text": "soft gentle notification ding, task completed, pleasant", "duration": 0.6, "gain": -15 },
+    "sent":    { "text": "short soft swoosh of a chat message being sent, pleasant modern app UI sound", "duration": 0.6, "gain": -11 },
+    "shimmer": { "text": "bright magical shimmer, pieces clicking into place, sparkle chime", "duration": 1.2, "gain": -13 }
+  },
+
+  "cues": [
+    { "sound": "key",     "at": [0.1, 2.1] },
+    { "sound": "tick",    "at": 0.45 },
+    { "sound": "glitch",  "at": 1.7 },
+    { "sound": "riser",   "at": 2.5 },
+    { "sound": "whoosh",  "at": [3.05, 8.65, 14.65, 20.65, 24.65] },
+    { "sound": "pop",     "at": [3.6, 9.05, 15.05] },
+    { "sound": "ding",    "at": [4.37, 5.02, 6.98, 8.28, 11.5, 12.75, 17.1] },
+    { "sound": "click",   "at": [4.85, 6.9, 8.6, 10.0, 11.6, 13.0], "gain": -17 },
+    { "sound": "key",     "at": [9.75, 12.13], "gain": -13 },
+    { "sound": "sent",    "at": 18.7 },
+    { "sound": "key",     "at": [21.0, 21.5, 22.0, 22.5, 23.0], "gain": -8 },
+    { "sound": "shimmer", "at": [23.55, 25.9] }
+  ]
+}

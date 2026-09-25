@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Concept A — Doc rot</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept A: time-lapse decay. Charcoal stage, a paper help article that ages with every release
+     (yellowing, OUTDATED screenshot, struck lines) until the docs agent's scan beam refreshes it. */
+  #stage { background: radial-gradient(ellipse 70% 60% at 45% 50%, #1D201E, #0E100F); }
+  .page { position: absolute; left: 820px; top: 110px; width: 760px; height: 900px; background: #F1E8D2; border-radius: 6px;
+    box-shadow: 0 40px 100px rgba(0,0,0,.55); padding: 54px 60px; color: #3B3528; transform: rotate(-2deg); filter: sepia(.35) saturate(.8); }
+  .page small { font: 500 16px/1 var(--mono); letter-spacing: .14em; color: #7C6F55; }
+  .page h2 { margin: 16px 0 24px; font-size: 44px; letter-spacing: -0.02em; color: #2E291F; }
+  .page p { margin: 0 0 14px; font-size: 22px; line-height: 1.5; }
+  .page s { text-decoration-color: #B42318; text-decoration-thickness: 3px; }
+  .shot { position: relative; margin: 22px 0; height: 300px; border-radius: 10px; overflow: hidden; border: 2px solid #CDBF9F; }
+  .shot img { width: 100%; filter: grayscale(1) contrast(.8) brightness(1.05); }
+  .tag { position: absolute; right: 14px; top: 14px; padding: 8px 14px; border-radius: 8px; background: #B42318; color: #fff; font: 700 18px/1 var(--mono); letter-spacing: .08em; }
+  .stain { position: absolute; width: 220px; height: 160px; border-radius: 50%; background: radial-gradient(#C9B383 0%, transparent 70%); opacity: .5; }
+  .villain { position: absolute; left: 110px; top: 300px; font-size: 190px; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; line-height: .95; }
+  .sub { position: absolute; left: 116px; top: 520px; font-size: 40px; color: #9FB0A7; width: 620px; line-height: 1.25; }
+  .ver { position: absolute; font: 700 30px/1 var(--mono); color: #0E100F; background: var(--mint); padding: 14px 22px; border-radius: 12px; }
+  .ver.old { background: #2A2E2C; color: #6F7D76; }
+</style></head><body><div id="stage"><section class="scene" id="f" style="visibility:visible">
+  <div class="ver old" style="left:1620px; top:150px; transform: rotate(4deg)">v2.4</div>
+  <div class="ver old" style="left:1660px; top:260px; transform: rotate(-3deg)">v2.5</div>
+  <div class="ver" style="left:1600px; top:380px; transform: rotate(3deg) scale(1.25)">v2.6 SHIPPED</div>
+  <div class="page">
+    <div class="stain" style="left:420px; top:40px"></div><div class="stain" style="left:40px; top:620px"></div>
+    <small>HELP CENTER · INTEGRATIONS</small>
+    <h2>Connect your first integration</h2>
+    <p>1. Open <b>Settings → Integrations</b> and choose your tool.</p>
+    <p><s>2. After authorization, start the first sync.</s></p>
+    <div class="shot"><img src="../../../assets/helpin/product/workspace-knowledge-1920-v3.webp"><span class="tag">OUTDATED · v2.3</span></div>
+    <p><s>3. The sync runs for every workspace.</s></p>
+  </div>
+  <div class="villain">Doc rot.</div>
+  <div class="sub">You shipped it. Your docs didn’t.</div>
+</section></div>
+<script type="module">import { defineVideo } from '../../../lib/runtime.js'; defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1 }] });</script></body></html>

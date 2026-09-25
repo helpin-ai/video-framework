@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Say it once (Echo answers, your team sends)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Say it once": your customer is transferred three times and asked the same question each time, until
+     "Could you describe the issue?" multiplies into a wall ("The restart."). Echo remembers: one thread, top to
+     bottom, with margin notes (answers → hands off → drafts → you send). Nobody asks again.
+     Brand forest + white product cards. 122 BPM (beat 0.492 s, bar 1.967 s), Afro-house score of its own. HEL-144. */
+  #stage { background: radial-gradient(ellipse 85% 75% at 50% 40%, #0E2A22, var(--forest) 72%); color: #F2F5F3; }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(184, 221, 187, .09) 1.6px, transparent 1.8px); background-size: 44px 44px; }
+  em { font-style: normal; color: var(--mint); }
+  .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0 .03em .24em; margin: 0 -.03em -.24em; }
+  .w > span { display: inline-block; }
+  .scr { position: absolute; inset: 0; opacity: 0; }
+  .mega { position: absolute; left: 0; width: 1920px; text-align: center; font-weight: 700; letter-spacing: -0.055em; line-height: 1; white-space: nowrap; }
+  .sub2 { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 46px; font-weight: 600; letter-spacing: -0.02em; color: #A9C7B3; }
+
+  /* the opener: a customer chat widget that keeps restarting */
+  #open { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+  #chat { position: absolute; left: 510px; top: 250px; width: 900px; height: 580px; border-radius: 30px; background: #fff; color: var(--ink); box-shadow: 0 50px 130px rgba(0, 0, 0, .5); overflow: hidden; }
+  #chat .hd { height: 116px; display: flex; align-items: center; gap: 20px; padding: 0 34px; border-bottom: 1px solid var(--hairline); position: relative; }
+  #chat .av { position: relative; width: 68px; height: 68px; flex: none; }
+  #chat .av img { position: absolute; inset: 0; width: 68px; height: 68px; border-radius: 50%; }
+  #chat .nm { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+  #chat .nm small { display: block; font: 500 18px/1.5 var(--mono); letter-spacing: .1em; color: var(--t3); }
+  #chat .on { margin-left: auto; display: flex; align-items: center; gap: 10px; font: 500 20px/1 var(--mono); color: var(--green); }
+  #chat .on i { width: 12px; height: 12px; border-radius: 50%; background: var(--green); }
+  .bub { position: absolute; padding: 22px 28px; border-radius: 28px; font: 500 34px/1.3 var(--sans); letter-spacing: -0.01em; white-space: nowrap; }
+  .bub.them { background: #EFF2F0; color: var(--ink); border-bottom-left-radius: 8px; }
+  .bub.me { background: var(--green); color: #fff; border-bottom-right-radius: 8px; }
+  #q { left: 40px; top: 160px; } #a { right: 40px; top: 310px; }
+  #xfer { position: absolute; left: 0; right: 0; top: 460px; text-align: center; opacity: 0; }
+  #xfer span { display: inline-flex; align-items: center; gap: 12px; height: 64px; padding: 0 28px; border-radius: 32px; background: #FFF4D6; color: #7A5A00; font: 600 28px/1 var(--sans); }
+  #wall .bub { opacity: 0; }
+
+  /* the thread */
+  #twrap { position: absolute; inset: 0; overflow: hidden; }
+  #tw { position: absolute; left: 0; top: 0; width: 1920px; height: 1400px; transform-origin: 0 0; }
+  #panel { position: absolute; left: 700px; top: 0; width: 980px; height: 1330px; border-radius: 28px; background: #fff; color: var(--ink); box-shadow: 0 50px 130px rgba(0, 0, 0, .5); overflow: hidden; }
+  #panel .hd { height: 104px; display: flex; align-items: center; gap: 18px; padding: 0 34px; border-bottom: 1px solid var(--hairline); }
+  #panel .hd img { width: 58px; height: 58px; border-radius: 50%; }
+  #panel .hd b { font-size: 30px; letter-spacing: -0.02em; } #panel .hd small { font: 500 18px/1 var(--mono); color: var(--t3); margin-left: 6px; }
+  #panel .hd .ch { margin-left: auto; display: flex; gap: 10px; }
+  #panel .hd .ch span { font: 500 18px/1 var(--mono); padding: 9px 12px; border-radius: 8px; background: #EFF2F0; color: var(--t2); }
+  .msg { position: absolute; display: flex; gap: 16px; align-items: flex-start; opacity: 0; }
+  .msg img { width: 50px; height: 50px; border-radius: 50%; flex: none; }
+  .msg .b { padding: 18px 24px; border-radius: 22px; font: 500 28px/1.38 var(--sans); }
+  .msg.cust { left: 34px; } .msg.cust .b { background: #EFF2F0; border-top-left-radius: 6px; }
+  .msg.team { right: 34px; flex-direction: row-reverse; } .msg.team .b { background: #E3F4EA; color: #0B3B27; border-top-right-radius: 6px; width: 700px; }
+  .msg .who { font: 600 18px/1 var(--mono); letter-spacing: .06em; color: var(--t3); margin-bottom: 8px; }
+  #status { position: absolute; right: 34px; top: 250px; display: flex; align-items: center; gap: 14px; font: 500 24px/1 var(--mono); color: var(--green); opacity: 0; }
+  #status img { width: 50px; height: 50px; }
+  .chips { display: flex; gap: 10px; margin-top: 14px; }
+  .chips span { font: 500 18px/1 var(--mono); padding: 10px 12px; border-radius: 9px; background: #fff; border: 1px solid #BFE0CC; color: var(--green-h); opacity: 0; }
+  .sys { position: absolute; left: 0; right: 0; text-align: center; opacity: 0; }
+  .sys span { display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px; border-radius: 22px; background: #EFF2F0; font: 600 21px/1 var(--sans); color: var(--t2); }
+  .sys img { width: 30px; height: 30px; border-radius: 50%; }
+  #find { position: absolute; left: 34px; right: 34px; top: 626px; border-radius: 20px; border: 2px solid #BFE0CC; background: #F6FBF8; padding: 22px 28px; opacity: 0; }
+  #find .t { font: 700 19px/1 var(--mono); letter-spacing: .12em; color: var(--green); display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  #find .t img { width: 30px; height: 30px; }
+  #find .r { display: flex; gap: 18px; padding: 11px 0; border-top: 1px solid #DCEEE3; font-size: 25px; opacity: 0; }
+  #find .r b { width: 150px; flex: none; font: 600 19px/1.6 var(--mono); letter-spacing: .06em; color: var(--t3); }
+  #comp { position: absolute; left: 34px; right: 34px; top: 950px; height: 214px; border-radius: 20px; border: 2px solid var(--green); background: #fff; padding: 20px 26px; opacity: 0; }
+  #comp .t { font: 700 18px/1 var(--mono); letter-spacing: .1em; color: #8A6400; display: flex; align-items: center; gap: 10px; }
+  #comp .t img { width: 28px; height: 28px; }
+  #comp .tx { margin-top: 14px; font: 500 27px/1.38 var(--sans); color: var(--ink); height: 112px; }
+  #comp .bt { position: absolute; right: 22px; bottom: 18px; display: flex; gap: 12px; }
+  #comp .bt span { height: 50px; padding: 0 22px; border-radius: 12px; display: inline-flex; align-items: center; font: 600 22px/1 var(--sans); }
+  #comp .bt .ed { border: 1px solid #CFD6D2; color: var(--t2); } #comp .bt .sd { background: var(--ink); color: #fff; }
+  #comp .bt .sd.done { background: var(--green); }
+  .note { position: absolute; left: 60px; width: 590px; text-align: right; opacity: 0; }
+  .note small { display: block; font: 600 22px/1 var(--mono); letter-spacing: .18em; color: var(--mint); margin-bottom: 12px; }
+  .note b { display: block; font-size: 80px; line-height: 1; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; }
+  .note span { display: block; margin-top: 14px; font-size: 29px; line-height: 1.3; color: #A9C7B3; }
+  #cursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 9; }
+  #cursor svg { width: 44px; height: 44px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .5)); }
+
+  .topline { position: absolute; left: 0; width: 1920px; top: 70px; text-align: center; font-size: 96px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+  #tag { position: absolute; left: 0; width: 1920px; top: 250px; text-align: center; font-size: 150px; font-weight: 700; letter-spacing: -0.055em; line-height: 1.04; }
+  #endmark { position: absolute; left: 0; width: 1920px; top: 670px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #endmark b { font-size: 84px; font-weight: 700; letter-spacing: -0.05em; color: #F2F5F3; }
+  #cta { position: absolute; left: 0; width: 1920px; top: 812px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #cta span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 600 25px/1 var(--sans); }
+  #cta .url { background: #F2F5F3; color: var(--forest); } #cta .t { border: 1px solid #2F5A45; color: #D5E0DA; font-weight: 500; }
+  #cta .t i { width: 10px; height: 10px; border-radius: 50%; background: var(--mint); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 20; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="mb" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur id="mbg" stdDeviation="0 0"/></filter></svg>
+<div id="stage">
+  <div id="dots"></div>
+
+  <div id="open">
+    <div id="wall"></div>
+    <div id="chat">
+      <div class="hd"><div class="av"><img src="../../assets/helpin/avatars/aisha.webp" alt=""><img src="../../assets/helpin/avatars/dev.webp" alt=""><img src="../../assets/helpin/avatars/lin.webp" alt=""></div>
+        <div class="nm"><div><span id="rep"></span></div><small><span id="team"></span></small></div><div class="on"><i></i>Online</div></div>
+      <div class="bub them" id="q"></div>
+      <div class="bub me" id="a"></div>
+      <div id="xfer"><span id="xfertx">↻ Transferred to Billing</span></div>
+    </div>
+  </div>
+
+  <div class="scr" id="s-villain"><div class="mega" style="top:370px; font-size:250px" id="vil"></div><div class="sub2" style="top:660px" id="vsub">Every transfer, your customer starts over.</div></div>
+  <div class="scr" id="s-echo"><img src="../../assets/helpin/agents/echo.svg" id="echoav" style="position:absolute; left:840px; top:170px; width:240px; height:240px" alt=""><div class="mega" style="top:500px; font-size:190px" id="echol"></div><div class="sub2" style="top:730px" id="echosub">Helpin’s support agent.</div></div>
+
+  <div id="twrap"><div id="tw">
+    <div class="note" id="n1" style="top:250px"><small>ECHO</small><b>answers.</b><span>From your docs and Priya’s history.</span></div>
+    <div class="note" id="n2" style="top:620px"><small>ECHO</small><b>hands off.</b><span>The findings, not just the ticket.</span></div>
+    <div class="note" id="n3" style="top:940px"><small>ECHO</small><b>drafts.</b><span>A reply, ready for your review.</span></div>
+    <div class="note" id="n4" style="top:1140px"><small>YOU</small><b>send.</b><span>Priya never repeats herself.</span></div>
+    <div id="panel">
+      <div class="hd"><img src="../../assets/helpin/avatars/priya.webp" alt=""><b>Priya Shah</b><small>Brightpath · Pro plan</small><div class="ch"><span>Chat</span><span>Billing</span></div></div>
+      <div class="msg cust" id="m1" style="top:136px"><img src="../../assets/helpin/avatars/priya.webp" alt=""><div class="b">We were charged twice for September.</div></div>
+      <div id="status"><span id="stx"></span><img src="../../assets/helpin/agents/echo.svg" alt=""></div>
+      <div class="msg team" id="m2" style="top:240px"><img src="../../assets/helpin/agents/echo.svg" alt=""><div><div class="b"><div class="who">ECHO · SUPPORT AGENT</div><span id="m2tx"></span></div>
+        <div class="chips"><span>Billing history</span><span>Guide · Duplicate charges</span><span>Earlier chat · Aug 12</span></div></div></div>
+      <div class="sys" id="join" style="top:568px"><span><img src="../../assets/helpin/avatars/sam.webp" alt="">Sam Rivera joined · Echo’s findings attached</span></div>
+      <div id="find"><div class="t"><img src="../../assets/helpin/agents/echo.svg" alt="">HANDOFF FROM ECHO</div>
+        <div class="r"><b>ASKED</b>Charged twice for September</div><div class="r"><b>FOUND</b>$49 charged twice on Sep 1, same card</div>
+        <div class="r"><b>CHECKED</b>Billing guide · Duplicate charges</div><div class="r"><b>NEXT</b>Refund the duplicate charge</div></div>
+      <div id="comp"><div class="t"><img src="../../assets/helpin/agents/echo.svg" alt="">DRAFTED BY ECHO · FOR SAM’S REVIEW</div><div class="tx" id="ctx"></div>
+        <div class="bt"><span class="ed">Edit</span><span class="sd" id="send">Send</span></div></div>
+      <div class="msg team" id="m4" style="top:950px"><img src="../../assets/helpin/avatars/sam.webp" alt=""><div class="b"><div class="who">SAM RIVERA</div>Hi Priya, I have everything Echo found. You were charged twice on Sep 1, so I’ve refunded the duplicate $49.</div></div>
+      <div class="msg cust" id="m5" style="top:1150px"><img src="../../assets/helpin/avatars/priya.webp" alt=""><div class="b">That was quick. Thank you!</div></div>
+      <div class="sys" id="done" style="top:1262px"><span style="background:#E3F4EA;color:#0B6340">✓ Resolved in one conversation</span></div>
+    </div>
+  </div></div>
+  <div id="cursor"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+
+  <div class="scr" id="s-one"><div class="topline" id="one"></div></div>
+  <div id="tag"><div id="t1"></div><div id="t2"></div></div>
+  <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+  <div id="cta"><span class="url">helpin.ai</span><span class="t"><i></i>Open source · Coming soon</span></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, expoOut, expoIn, expoInOut, backOut, rand } from '../../lib/motion.js';
+import { helpinSymbol, css, type, rollWord } from '../../lib/components.js';
+
+const $ = (s) => document.querySelector(s);
+const B = 60 / 122, BAR = 4 * B;
+const T = { r1: 0, r2: BAR, r3: 2 * BAR, burst: 2 * BAR + 2.5 * B, villain: 3 * BAR, drop: 4 * BAR,
+  s1: 5 * BAR, s2: 7 * BAR, s3: 9 * BAR, s4: 11 * BAR, payoff: 12.5 * BAR, tag: 14 * BAR, total: 16 * BAR };
+
+function words(el, html) {
+  el.innerHTML = html.split(/(?<!<em)\s+(?![^<]*<\/em>)/).map((w) => `<span class="w"><span>${w}</span></span>`).join(' ');
+  return [...el.querySelectorAll('.w > span')];
+}
+function rise(ws, t, start, gap = 0.06, dur = 0.5) {
+  ws.forEach((w, i) => {
+    const k = expoOut(P(t, start + i * gap, start + i * gap + dur));
+    w.style.transform = k >= 1 ? 'none' : `translateY(${(1 - k) * 145}%)`;
+  });
+}
+const pop = (el, t, at, { dist = 30, from = 0.85, s = 1.7 } = {}) => {
+  const k = backOut(P(t, at, at + 0.35), s);
+  css(el, { opacity: String(P(t, at, at + 0.06)), transform: k >= 1 ? 'none' : `translateY(${(1 - k) * dist}px) scale(${L(from, 1, k)})` });
+};
+const VIL = words($('#vil'), 'The <em>restart.</em>');
+const ECHO = words($('#echol'), 'Echo <em>remembers.</em>');
+const ONE = words($('#one'), 'One thread. <em>No restarts.</em>');
+const T1 = words($('#t1'), 'Say it once.');
+const T2 = words($('#t2'), '<em>Your team already knows.</em>');
+
+// ── Opener: three reps, one question, three times
+const Q = 'Hi! Could you describe the issue?';
+const ROUNDS = [
+  { at: T.r1, q: T.r1 + 0.12, typed: true, a: T.r1 + 2 * B, ans: 'We were charged twice for September.', x: T.r1 + 3 * B, xt: '↻ Transferred to Billing' },
+  { at: T.r2, q: T.r2 + 0.5 * B, a: T.r2 + 1.5 * B, ans: 'As I said: charged twice. September.', x: T.r2 + 2.6 * B, xt: '↻ Transferred to Accounts' },
+  { at: T.r3, q: T.r3 + 0.3 * B, a: T.r3 + 1.2 * B, ans: 'For the THIRD time: charged. twice.' },
+];
+const rep = rollWord($('#rep'), ['Alex', 'Jo', 'Kim'], { lineHeight: 1.2 });
+const team = rollWord($('#team'), ['SUPPORT', 'BILLING', 'ACCOUNTS'], { lineHeight: 1.5 });
+const avs = [...document.querySelectorAll('#chat .av img')];
+
+// the wall of the same question
+const wall = $('#wall');
+const COPIES = [];
+for (let r = -13; r <= 13; r++) for (let c = -6; c <= 6; c++) {
+  if (r === 0 && c === 0) continue;
+  const gx = c * 700 + (r % 2 ? 350 : 0), gy = r * 150;
+  const cust = rand(r * 31 + c * 7) < 0.14;
+  const el = document.createElement('div');
+  el.className = `bub ${cust ? 'me' : 'them'}`;
+  el.textContent = cust ? ['As I said…', 'Charged twice.', 'Again?', 'I already explained this.'][Math.floor(rand(r + c * 3) * 4)] : Q;
+  wall.appendChild(el);
+  COPIES.push({ el, gx, gy, d: Math.hypot(gx, gy * 2.2) });
+}
+const maxD = Math.max(...COPIES.map((c) => c.d));
+
+const endMark = helpinSymbol({ size: 92, color: '#F2F5F3' });
+$('#end-symbol').append(endMark.node);
+
+// Offsets inside the thread world (#tw)
+const offs = (el) => { let x = 0, y = 0; for (let e = el; e && e.id !== 'tw'; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; } return { x, y, w: el.offsetWidth, h: el.offsetHeight }; };
+const M2 = 'I can see both: $49 charged twice on Sep 1, same card. Refunds need a teammate, so I’m bringing in Sam with what I found.';
+const DRAFT = 'Hi Priya, I have everything Echo found. You were charged twice on Sep 1, so I’ve refunded the duplicate $49.';
+const camY = (t) => keys(t, [[T.s2, 0], [T.s2 + 0.5, 380, expoInOut], [T.s3, 380], [T.s3 + 0.5, 690, expoInOut], [T.s4, 690], [T.s4 + 0.5, 830, expoInOut]]);
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 122, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    let fl = 0;
+    for (const [at, a] of [[T.villain, 0.3], [T.drop, 0.75], [T.s4 + 2 * B, 0.3], [T.payoff, 0.2], [T.tag, 0.2]])
+      if (t >= at) fl = Math.max(fl, a * (1 - P(t, at, at + 0.2)));
+    $('#flash').style.opacity = String(fl);
+
+    // ── 1–3: the widget, restarting
+    const round = t < T.r2 ? 0 : t < T.r3 ? 1 : 2, R = ROUNDS[round];
+    rep.update(t, [0, T.r2, T.r3], 0.3); team.update(t, [0, T.r2, T.r3], 0.3);
+    avs.forEach((im, i) => { im.style.opacity = String(i === round ? Math.min(1, P(t, R.at - 0.2, R.at) + (i === 0 ? 1 : 0)) : i === round - 1 ? 1 - P(t, R.at - 0.2, R.at) : 0); });
+    const ck = backOut(P(t, 0, 0.4), 1.6);
+    const openOn = t < T.drop + 0.4;
+    // restart sweep: messages slide out left at the end of each round
+    const sweepAt = round < 2 ? ROUNDS[round + 1].at : Infinity;
+    const sw = expoIn(P(t, sweepAt - 0.28, sweepAt));
+    const qEl = $('#q'), aEl = $('#a');
+    if (R.typed) type(qEl, Q, t, { start: R.q, cps: 60, caret: false }); else if (qEl.textContent !== Q) qEl.textContent = Q;
+    const qk = R.typed ? 1 : backOut(P(t, R.q, R.q + 0.3), 2);
+    css(qEl, { opacity: String(R.typed ? (t >= R.q ? 1 : 0) : P(t, R.q, R.q + 0.05)) * (1 - sw), transform: `translateX(${-sw * 500}px) scale(${R.typed ? 1 : L(1.35, 1, qk)})`, filter: sw > 0 ? `blur(${sw * 10}px)` : 'none' });
+    if (qk >= 1 && sw === 0) qEl.style.transform = 'none';
+    aEl.textContent = R.ans;
+    const ak = backOut(P(t, R.a, R.a + 0.35), 1.7);
+    const shake = round === 2 && t > R.a + 0.1 && t < R.a + 0.6 ? Math.round(Math.sin((t - R.a) * 90) * 12 * (1 - (t - R.a) / 0.6)) : 0;
+    css(aEl, { opacity: String(P(t, R.a, R.a + 0.06) * (1 - sw)), transform: sw > 0 ? `translateX(${-sw * 500}px)` : ak >= 1 && !shake ? 'none' : `translate(${shake}px, ${(1 - ak) * 40}px) scale(${L(0.85, 1, ak)})`, filter: sw > 0 ? `blur(${sw * 10}px)` : 'none' });
+    const xk = backOut(P(t, R.x ?? Infinity, (R.x ?? Infinity) + 0.3), 2);
+    $('#xfertx').textContent = R.xt || '';
+    css($('#xfer'), { opacity: String(R.x ? P(t, R.x, R.x + 0.05) * (1 - sw) : 0), transform: xk >= 1 ? 'none' : `scale(${L(0.6, 1, xk)}) rotate(${(1 - xk) * -8}deg)` });
+
+    // ── the burst: the question copies outward, the camera pulls back into a wall
+    const qx = 510 + qEl.offsetLeft + qEl.offsetWidth / 2, qy = 250 + qEl.offsetTop + qEl.offsetHeight / 2;
+    const pb = expoInOut(P(t, T.burst, T.burst + 1.0));
+    const collapse = P(t, T.drop - 0.05, T.drop + 0.3);
+    const sc = L(1, 0.3, pb) * (ck < 1 ? L(0.9, 1, ck) : 1);
+    const rot = L(0, -5, pb);
+    css($('#open'), { opacity: String(openOn ? (t < T.drop ? 1 : 1 - collapse) : 0), transform: sc === 1 && rot === 0 ? 'none' : `translate(${qx}px, ${qy}px) rotate(${rot}deg) scale(${sc}) translate(${-qx}px, ${-qy}px)` });
+    $('#chat').style.opacity = String(ck > 0 ? Math.min(1, P(t, 0, 0.1)) : 0);
+    const dim = t >= T.villain ? L(1, 0.25, P(t, T.villain, T.villain + 0.2)) : 1;
+    wall.style.opacity = String(dim);
+    $('#chat').style.filter = t >= T.villain ? `brightness(${dim})` : 'none';
+    if (t >= T.burst - 0.1 && openOn) {
+      COPIES.forEach((c, i) => {
+        const at = T.burst + 0.05 + (c.d / maxD) * 0.9;
+        const k = backOut(P(t, at, at + 0.3), 2);
+        const back = expoIn(P(t, T.drop - 0.05 + (1 - c.d / maxD) * 0.12, T.drop + 0.25));
+        const x = qx + c.gx * (1 - back) - c.el.offsetWidth / 2, y = qy + c.gy * (1 - back) - c.el.offsetHeight / 2;
+        css(c.el, { opacity: String(P(t, at, at + 0.05) * (1 - back)), left: `${x}px`, top: `${y}px`, transform: k >= 1 && back === 0 ? 'none' : `scale(${L(0.4, 1, k) * (1 - back * 0.7)})` });
+      });
+    } else COPIES.forEach((c) => { c.el.style.opacity = '0'; });
+
+    // ── villain + Echo
+    const vOn = t >= T.villain && t < T.drop;
+    const vk = backOut(P(t, T.villain, T.villain + 0.25), 2.2);
+    css($('#s-villain'), { opacity: String(vOn ? 1 - P(t, T.drop - 0.1, T.drop) : 0), transform: vk < 1 ? `scale(${L(1.3, 1, vk)})` : 'none' });
+    if (vOn) rise(VIL, t, T.villain, 0.1);
+    css($('#vsub'), { opacity: String(brandEase(P(t, T.villain + 2 * B, T.villain + 2 * B + 0.3))) });
+    const eOn = t >= T.drop && t < T.s1;
+    const eo = expoIn(P(t, T.s1 - 0.3, T.s1));
+    css($('#s-echo'), { opacity: String(eOn ? 1 - eo : 0), transform: eo > 0 ? `translateY(${-eo * 160}px)` : 'none', filter: eo > 0 ? `blur(${eo * 8}px)` : 'none' });
+    if (eOn) rise(ECHO, t, T.drop + 0.1, 0.1);
+    const ek = backOut(P(t, T.drop + 0.05, T.drop + 0.5), 1.8);
+    $('#echoav').style.transform = ek >= 1 ? 'none' : `rotate(${(1 - ek) * -200}deg) scale(${ek})`;
+    css($('#echosub'), { opacity: String(brandEase(P(t, T.drop + 2 * B, T.drop + 2 * B + 0.3))) });
+
+    // ── the thread: one conversation, top to bottom; the camera scrolls, notes ride in the margin
+    const tOn = t >= T.s1 && t < T.tag + 0.3;
+    const tin = expoOut(P(t, T.s1, T.s1 + 0.5)), tagOut = expoIn(P(t, T.tag - 0.05, T.tag + 0.3));
+    const cy = Math.round(camY(t));
+    const v = Math.abs(camY(t + 1 / 60) - camY(t - 1 / 60)) * 30;
+    const mb = Math.min(24, v / 150);
+    // payoff: pull back to the whole thread
+    const pk = expoInOut(P(t, T.payoff, T.payoff + 0.6));
+    const ps = L(1, 0.6, pk), px = L(0, 960 - 880 * 0.6, pk), py = L(140 - cy, 200, pk);
+    let tf = pk > 0 ? `translate(${px}px, ${py}px) scale(${ps})` : `translateY(${140 - cy + Math.round((1 - tin) * 200)}px)`;
+    if (tagOut > 0) tf += ` translateY(${tagOut * 80}px)`;
+    css($('#tw'), { transform: tf });
+    css($('#twrap'), { opacity: String(tOn ? Math.min(1, tin * 1.6) * (1 - tagOut) : 0), filter: (mb > 0.6 || tin < 1 || tagOut > 0) && tOn ? (tin < 1 || tagOut > 0 ? `blur(${Math.max(1 - tin, tagOut) * 8}px)` : 'url(#mb)') : 'none' });
+    $('#mbg').setAttribute('stdDeviation', `0 ${mb.toFixed(1)}`);
+
+    const l1 = t - T.s1;
+    pop($('#m1'), t, T.s1 + 0.25);
+    const st = l1 < 1.1 ? 'Checking billing history…' : l1 < 1.5 ? 'Reading the billing guide…' : 'Found an earlier chat · Aug 12';
+    if ($('#stx').textContent !== st) $('#stx').textContent = st;
+    css($('#status'), { opacity: String(P(l1, 0.65, 0.75) * (1 - P(l1, 1.85, 1.95))) });
+    pop($('#m2'), t, T.s1 + 1.95);
+    type($('#m2tx'), M2, t, { start: T.s1 + 2.0, cps: 115, caret: false });
+    [...document.querySelectorAll('#m2 .chips span')].forEach((c, i) => pop(c, t, T.s1 + 3.15 + i * 0.12, { dist: 12 }));
+
+    pop($('#join'), t, T.s2 + 0.35, { dist: 16 });
+    pop($('#find'), t, T.s2 + 0.6, { dist: 40, from: 0.94, s: 1.4 });
+    [...document.querySelectorAll('#find .r')].forEach((r, i) => { const at = T.s2 + 0.9 + i * 0.5 * B; const k = expoOut(P(t, at, at + 0.35)); css(r, { opacity: String(P(t, at, at + 0.1)), transform: k >= 1 ? 'none' : `translateX(${(1 - k) * 40}px)` }); });
+
+    const sent = t >= T.s4 + 2 * B + 0.05;
+    const cOut = P(t, T.s4 + 2 * B + 0.05, T.s4 + 2 * B + 0.2);
+    pop($('#comp'), t, T.s3 + 0.35, { dist: 40, from: 0.94, s: 1.4 });
+    if (cOut > 0) $('#comp').style.opacity = String(1 - cOut);
+    type($('#ctx'), DRAFT, t, { start: T.s3 + 0.75, cps: 80, caret: t < T.s3 + 0.75 + DRAFT.length / 80 });
+    $('#send').textContent = sent ? 'Sent ✓' : 'Send';
+    $('#send').classList.toggle('done', sent);
+    pop($('#m4'), t, T.s4 + 2 * B + 0.1, { dist: 24 });
+    pop($('#m5'), t, T.s4 + 3.6 * B);
+    pop($('#done'), t, T.s4 + 5 * B, { dist: 14 });
+
+    [[$('#n1'), T.s1 + 0.4], [$('#n2'), T.s2 + 0.35], [$('#n3'), T.s3 + 0.35], [$('#n4'), T.s4 + 0.35]].forEach(([n, at]) => {
+      const k = expoOut(P(t, at, at + 0.5));
+      css(n, { opacity: String(P(t, at, at + 0.1)), transform: k >= 1 ? 'none' : `translateX(${(1 - k) * -60}px)` });
+    });
+
+    // your cursor clicks Send
+    const sd = offs($('#send'));
+    const sx = sd.x + sd.w / 2, sy = sd.y + sd.h / 2 + 140 - cy;
+    const cur = keys(t, [[T.s4 + 0.3, [1700, 1120]], [T.s4 + 2 * B - 0.1, [sx - 6, sy - 8], expoOut]]);
+    css($('#cursor'), { opacity: String(P(t, T.s4 + 0.3, T.s4 + 0.4) * (1 - P(t, T.s4 + 2 * B + 0.5, T.s4 + 2 * B + 0.7))), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px) scale(${t > T.s4 + 2 * B - 0.03 && t < T.s4 + 2 * B + 0.09 ? 0.86 : 1})` });
+
+    // ── payoff line
+    const oOn = t >= T.payoff + 0.45 && t < T.tag;
+    css($('#s-one'), { opacity: String(oOn ? 1 - tagOut : 0) });
+    if (oOn) rise(ONE, t, T.payoff + 0.45, 0.08);
+
+    // ── tagline
+    const tagOn = t >= T.tag;
+    $('#tag').style.opacity = tagOn ? '1' : '0';
+    if (tagOn) { rise(T1, t, T.tag + 0.1, 0.08, 0.55); rise(T2, t, T.tag + 2 * B, 0.08, 0.55); }
+    endMark.assemble(P(t, T.tag + 4 * B, T.tag + 6 * B));
+    const mk = brandEase(P(t, T.tag + 4 * B, T.tag + 5 * B)), ck2 = brandEase(P(t, T.tag + 5 * B, T.tag + 6 * B));
+    css($('#endmark'), { opacity: String(mk), transform: mk < 1 ? `translateY(${(1 - mk) * 20}px)` : 'none' });
+    css($('#cta'), { opacity: String(ck2), transform: ck2 < 1 ? `translateY(${(1 - ck2) * 20}px)` : 'none' });
+  } }],
+});
+</script>
+</body>
+</html>

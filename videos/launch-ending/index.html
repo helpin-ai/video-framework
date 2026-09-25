@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin launch — new ending</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* Matches the original launch reel (reference/helpin-launch-friend.mp4) from 31.3 s:
+     same background plate, left text column + right card/terminal layout. */
+  #stage { background: #06120E; }
+  #plate { position: absolute; inset: 0; width: 1920px; height: 1080px; transform-origin: 50% 45%; }
+  #bundles { position: absolute; inset: 0; }
+  #black { position: absolute; inset: 0; background: #000; opacity: 0; }
+
+  .eyebrow { font: 400 20px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: #8DBE9E; }
+  .headline { font-weight: 600; letter-spacing: -0.045em; color: #EEF3EF; }
+  .headline .sage { color: var(--sage); }
+  .sub { font-size: 28px; line-height: 1.45; color: rgba(236, 244, 239, .66); }
+  .reveal { will-change: transform, opacity, filter; }
+
+  /* Scene: the loop closes */
+  #loop .copy { position: absolute; left: 130px; top: 318px; width: 660px; }
+  #loop .headline { font-size: 84px; line-height: 1.0; margin: 28px 0 34px; }
+  #loop .card {
+    position: absolute; left: 840px; top: 150px; width: 960px; border-radius: 32px; overflow: hidden;
+    background: #fff; color: #131514; box-shadow: 0 50px 140px rgba(0, 0, 0, .55);
+    transform-origin: 0% 50%;
+  }
+  #loop .card::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 55%, rgba(120,130,125,.16) 100%); }
+  .card .head { display: flex; align-items: center; gap: 22px; padding: 28px 34px; border-bottom: 1px solid #E6E9E7; }
+  .avatar { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; font: 600 22px/1 var(--sans); background: #FCE6D8; color: #A8502A; }
+  .head .who { flex: 1; }
+  .head .who b { display: block; font-size: 32px; font-weight: 600; letter-spacing: -0.01em; }
+  .head .who span { font-size: 23px; color: #6B736F; }
+  .status { position: relative; height: 44px; min-width: 150px; }
+  .status span { position: absolute; right: 0; top: 0; height: 44px; display: inline-flex; align-items: center; gap: 8px; padding: 0 18px; border-radius: 999px; font: 500 21px/1 var(--sans); white-space: nowrap; }
+  .status .open { background: #FFF4D6; color: #8A6400; }
+  .status .resolved { background: #E3F4EA; color: #0F7A50; }
+  .card .body { padding: 30px 34px 32px; display: grid; gap: 26px; }
+  .bubble { justify-self: start; max-width: 720px; padding: 20px 26px; border-radius: 22px 22px 22px 6px; background: #F1F3F2; font-size: 25px; line-height: 1.4; color: #2A2F2C; }
+  .bubble small { display: block; font-size: 19px; color: #7A827E; margin-bottom: 6px; }
+  .event { display: flex; gap: 20px; align-items: flex-start; }
+  .tick { flex: none; width: 46px; height: 46px; border-radius: 50%; background: #1E8A5B; display: grid; place-items: center; }
+  .event b { display: block; font-size: 28px; font-weight: 600; }
+  .event span { font-size: 23px; color: #5F6863; }
+  .draft { border: 1.5px solid #BEE2CB; background: #F3FAF6; border-radius: 20px; padding: 22px 26px 24px; overflow: hidden; }
+  .draft .label { display: flex; align-items: center; gap: 12px; font: 500 17px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #0F7A50; margin-bottom: 14px; }
+  .appicon { width: 34px; height: 34px; border-radius: 9px; background: #1D6A4A; display: grid; place-items: center; }
+  .draft p { margin: 0; font-size: 26px; line-height: 1.45; color: #1B211E; }
+  .draft p i { font-style: normal; }
+  .actions { display: flex; justify-content: flex-end; align-items: center; gap: 18px; font-size: 21px; color: #7A827E; }
+  .send { position: relative; height: 58px; width: 150px; }
+  .send span { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; font: 600 23px/1 var(--sans); }
+  .send .go { background: #0F7A50; color: #fff; }
+  .send .done { background: #E3F4EA; color: #0F7A50; }
+  #cursor { position: absolute; left: 0; top: 0; width: 34px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.35)); }
+
+  /* Scene: open source */
+  #oss .copy { position: absolute; left: 140px; top: 250px; width: 800px; }
+  #oss .headline { font-size: 118px; line-height: 1.04; margin: 26px 0 0; }
+  #oss .underline { display: block; margin: 6px 0 44px; }
+  #oss .badges { display: flex; flex-wrap: wrap; gap: 14px; width: 680px; }
+  .badge { display: inline-flex; align-items: center; gap: 12px; height: 54px; padding: 0 20px; border-radius: 9px;
+    background: rgba(8, 20, 16, .55); border: 1px solid rgba(220, 240, 228, .14); font-size: 25px; color: #E4ECE7; }
+  .badge i { font-style: normal; font-family: var(--mono); color: #8DBE9E; font-size: 20px; }
+  #oss .term {
+    left: 1031px; top: 231px; width: 778px; height: 598px; border-radius: 20px;
+    background: rgba(9, 12, 11, .94); border: 1px solid rgba(255, 255, 255, .08); font: 400 23px/39px var(--mono); color: #D9E2DC;
+  }
+  #oss .term .bar { height: 52px; gap: 9px; padding: 0 20px; background: rgba(255,255,255,.03); border-bottom: 1px solid rgba(255,255,255,.06); font-size: 17px; color: #7E8983; }
+  #oss .term .bar i { width: 13px; height: 13px; background: #3A403D; }
+  #oss .term .bar em { font-style: normal; margin-left: 14px; }
+  #oss .term .body { padding: 26px 30px; min-height: 0; }
+  .term .p { color: #8DBE9E; }
+  .term .ok { color: #57C08A; }
+  .term .dim { color: #A7B1AB; }
+  .term u { text-underline-offset: 6px; text-decoration-color: rgba(217,226,220,.6); }
+
+  /* Scene: end card */
+  #end .mark { position: absolute; left: 0; right: 0; top: 300px; display: flex; justify-content: center; align-items: center; gap: 40px; }
+  #end .word { font-size: 202px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: #EEF3EF; margin-top: -12px; }
+  #end .line { position: absolute; left: 0; right: 0; top: 590px; text-align: center; font-size: 66px; font-weight: 600; letter-spacing: -0.035em; color: #EEF3EF; }
+  #end .line .sage { color: var(--sage); }
+  #end .cta { position: absolute; left: 0; right: 0; top: 730px; display: flex; justify-content: center; }
+  #end .cta span { height: 70px; padding: 0 38px; display: inline-flex; align-items: center; border-radius: 12px; background: #EEF3EF; color: #0B1A14; font: 600 30px/1 var(--sans); letter-spacing: -0.01em; }
+  #end-glow { position: absolute; inset: 0; background: radial-gradient(ellipse 45% 40% at 50% 42%, rgba(120, 220, 160, .22), rgba(0,0,0,0) 70%); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="plate" src="plate.png" alt="">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+
+  <section class="scene" id="loop">
+    <div class="copy">
+      <div class="eyebrow reveal">Close the loop</div>
+      <div class="headline reveal" data-line="0">And the customer<br><span class="sage">hears back.</span></div>
+      <div class="sub reveal">The agent drafts the reply from the same record. You send it.</div>
+    </div>
+    <div class="card">
+      <div class="head">
+        <div class="avatar">MC</div>
+        <div class="who"><b>Maya Chen</b><span>Support · CSV export stops early</span></div>
+        <div class="status"><span class="open">● Open</span><span class="resolved">✓ Resolved</span></div>
+      </div>
+      <div class="body">
+        <div class="bubble"><small>Maya · Northstar</small>Our CSV export stops at 10,000 rows when filters are on.</div>
+        <div class="event">
+          <div class="tick"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><b>EXP-142 merged</b><span>Reviewed and merged by Sam Rivera</span></div>
+        </div>
+        <div class="draft">
+          <div class="label"><span class="appicon" id="draft-icon"></span>Support agent · Draft reply</div>
+          <p id="draft-text"></p>
+        </div>
+        <div class="actions"><span>Reply to Maya</span><div class="send"><span class="go">Send</span><span class="done">✓ Sent</span></div></div>
+      </div>
+    </div>
+    <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg>
+  </section>
+
+  <section class="scene" id="oss">
+    <div class="copy">
+      <div class="eyebrow reveal">Open source · AGPL-3.0</div>
+      <div class="headline reveal">Helpin is going<br><span class="sage">open source.</span></div>
+      <svg class="underline" width="620" height="18" viewBox="0 0 620 18"><path id="ul" d="M3 12 C 150 3, 420 4, 616 10" fill="none" stroke="#9CDBB3" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1"/></svg>
+      <div class="badges">
+        <span class="badge"><i>§</i>AGPL-3.0</span>
+        <span class="badge"><i>▣</i>Self-host with Docker</span>
+        <span class="badge">Bring your own models</span>
+        <span class="badge"><i>{ }</i>SDKs + MCP</span>
+      </div>
+    </div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i><em>helpin · local setup</em></div><div class="body" id="term"></div></div>
+  </section>
+
+  <section class="scene" id="end">
+    <div id="end-glow"></div>
+    <div class="mark reveal"><span id="end-symbol"></span><span class="word">Helpin</span></div>
+    <div class="line reveal">Open source. <span class="sage">Coming soon.</span></div>
+    <div class="cta reveal"><span>helpin.ai</span></div>
+  </section>
+
+  <div id="black"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, clamp, brandEase, easeInOut, expoOut, keys } from '../../lib/motion.js';
+import { helpinSymbol, css, rise, leave, terminal, stagePoint, lineBundles } from '../../lib/components.js';
+
+// This page renders the launch reel from frame 937 (31.233 s, the first clean frame after the
+// module montage) to 42 s. A(abs) maps absolute reel time to this page's local time.
+const OFFSET = 937 / 30;
+const A = (abs) => abs - OFFSET;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+// Small white symbols for the app icons.
+const smallSymbol = () => {
+  const s = helpinSymbol({ size: 22 });
+  s.assemble(1);
+  return s.node;
+};
+$('#draft-icon').append(smallSymbol());
+
+// Draft reply, revealed word by word.
+const DRAFT = 'Hi Maya, the fix for filtered CSV exports is live. Your exports now include every row. Thanks for flagging it!';
+const words = DRAFT.split(' ');
+$('#draft-text').innerHTML = words.map((w) => `<i>${w} </i>`).join('');
+const wordEls = $$('#draft-text i');
+
+// Terminal script: [local time, html]. Typed lines have a third element: the command.
+const TERM = [
+  [0.15, '<span class="p">$ </span>', 'curl -fsSL https://helpin.ai/install.sh | bash'],
+  [0.82, '<span class="ok">✓</span> Helpin CLI installed'],
+  [0.95, ''],
+  [0.98, '<span class="p">$ </span>', 'helpin install'],
+  [1.22, '<span class="dim">Helpin Community setup</span>'],
+  [1.32, '<span class="ok">✓</span> Release downloaded and verified'],
+  [1.44, '<span class="ok">✓</span> Configuration and secrets saved'],
+  [1.56, '<span class="ok">✓</span> Helpin services are ready'],
+  [1.66, ''],
+  [1.72, '→ Open <u>http://localhost:8085</u>'],
+];
+
+// End-card line bundles: two families of parallel lines crossing in an X, like the original.
+const bundles = $('#bundles');
+const drawBundles = lineBundles(bundles, { count: 26 });
+
+// Aim the cursor at the real Send button.
+const SEND = stagePoint($('.send'), 0.45, 0.55);
+
+const endSymbol = helpinSymbol({ size: 178 });
+endSymbol.assemble(1);
+$('#end-symbol').append(endSymbol.node);
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: A(42),
+  scenes: [
+    // 31.3–34.6 — the loop closes (music breakdown starts)
+    { id: 'loop', start: 0, end: A(34.6), render: ({ lt }) => {
+      const [eyebrow, headline, sub] = $$('#loop .copy > *');
+      rise(eyebrow, lt, 0.05);
+      rise(headline, lt, 0.12, 0.6, 34, 14);
+      rise(sub, lt, 0.4);
+
+      const c = expoOut(P(lt, 0.12, 0.95));
+      css($('#loop .card'), { opacity: clamp(c * 1.6), transform: `perspective(2200px) translateX(${(1 - c) * 120}px) rotateY(${(1 - c) * -9}deg)` });
+      rise($('#loop .bubble'), lt, 0.35, 0.45, 14, 4);
+      rise($('#loop .event'), lt, 0.8, 0.4, 14, 4);                 // 32.1 ding
+
+      const d = brandEase(P(lt, 1.2, 1.55));                       // 32.5 draft opens
+      css($('#loop .draft'), { opacity: d, transform: `translateY(${(1 - d) * 16}px)` });
+      wordEls.forEach((w, i) => { w.style.opacity = brandEase(P(lt, 1.32 + i * 0.03, 1.32 + i * 0.03 + 0.18)); });
+      rise($('#loop .actions'), lt, 1.4, 0.4, 10, 0);
+
+      // Cursor glides to Send, clicks at 2.2 (33.5), reply is sent at 2.3 (33.6).
+      const cur = keys(lt, [[1.6, [SEND.x + 40, 1060]], [2.15, [SEND.x, SEND.y], expoOut]]);
+      const press = lt > 2.18 && lt < 2.3 ? 0.9 : 1;
+      css($('#cursor'), { opacity: P(lt, 1.6, 1.75) * (1 - P(lt, 2.7, 2.9)), transform: `translate(${cur[0]}px, ${cur[1]}px) scale(${press})` });
+      const sent = brandEase(P(lt, 2.28, 2.5));
+      css($('.send'), { transform: `scale(${lt > 2.18 && lt < 2.3 ? 0.95 : 1})` });
+      css($('.send .go'), { opacity: 1 - sent });
+      css($('.send .done'), { opacity: sent });
+      css($('.status .open'), { opacity: 1 - brandEase(P(lt, 2.35, 2.6)) });
+      css($('.status .resolved'), { opacity: brandEase(P(lt, 2.35, 2.6)), transform: `scale(${L(0.9, 1, brandEase(P(lt, 2.35, 2.7)))})` });
+
+      if (lt > 2.95) leave($('#loop'), lt, 2.95, 0.35);
+      else css($('#loop'), { opacity: 1, filter: 'none' });
+    } },
+
+    // 34.6–37.0 — Helpin is going open source
+    { id: 'oss', start: A(34.6), end: A(37), render: ({ lt }) => {
+      const [eyebrow, headline, , badges] = $$('#oss .copy > *');
+      rise(eyebrow, lt, 0);
+      rise(headline, lt, 0.05, 0.6, 34, 14);
+      $('#ul').style.strokeDashoffset = String(1 - brandEase(P(lt, 0.45, 0.95)));
+      $$('.badge', badges).forEach((b, i) => rise(b, lt, 0.55 + i * 0.08, 0.45, 16, 6));
+      const tk = expoOut(P(lt, 0.05, 0.7));
+      css($('#oss .term'), { opacity: clamp(tk * 1.5), transform: `translateY(${(1 - tk) * 40}px)` });
+
+      terminal($('#term'), TERM, lt, { cps: 80, caretSolidUntil: 1.75, caretColor: '#8DBE9E' });
+
+      if (lt > 2.05) leave($('#oss'), lt, 2.05, 0.35);
+      else css($('#oss'), { opacity: 1, filter: 'none' });
+    } },
+
+    // 37.0–42.0 — end card on the final hit
+    { id: 'end', start: A(37), end: A(42), render: ({ lt }) => {
+      css($('#end-glow'), { opacity: keys(lt, [[0, 0], [0.12, 1, expoOut], [2.5, 0.35]]) });
+      const m = expoOut(P(lt, 0, 0.9));
+      css($('#end .mark'), { opacity: clamp(m * 1.4), transform: `scale(${L(1.12, 1, m)})`, filter: m < 1 ? `blur(${(1 - m) * 16}px)` : 'none' });
+      rise($('#end .line'), lt, 0.75, 0.6, 26, 10);
+      rise($('#end .cta'), lt, 1.1, 0.6, 20, 8);
+    } },
+  ],
+  render: ({ t }) => {
+    // Background plate: exact match at the splice (t = 0), then a slow push-in.
+    $('#plate').style.transform = `scale(${L(1, 1.045, easeInOut(P(t, 0, A(42))))})`;
+    // Line bundles draw in on the final hit, then drift slowly.
+    const endT = t - A(37);
+    drawBundles.update(endT);
+    bundles.style.opacity = endT < 0 ? 0 : 0.85;
+    bundles.style.transform = `translateX(${Math.max(0, endT) * -6}px)`;
+    // Fade to black over the last 0.9 s as the music rings out.
+    $('#black').style.opacity = String(easeInOut(P(t, A(41.1), A(42))));
+  },
+});
+</script>
+</body>
+</html>

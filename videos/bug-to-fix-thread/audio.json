@@ -1,0 +1,164 @@
+{
+  "name": "bug-to-fix-thread",
+  "duration": 32.31,
+  "video": "../../out/bug-to-fix-thread/bug-to-fix-thread.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.0
+  },
+  "music": [
+    {
+      "at": 3.46,
+      "length": 28.85,
+      "generate": 34,
+      "from": 1.0,
+      "gain": -8,
+      "fadeIn": 0.05,
+      "fadeOut": 3.0,
+      "prompt": "Warm organic instrumental groove at 104 BPM that starts immediately at full groove on the first beat, with no intro and no fade-in: bright plucked marimba melody, soft hand claps on the backbeat, a round warm upright-style bass, a light kick and shaker. Playful, optimistic, human and handmade, like a thoughtful product film. Steady energy all the way through with no build-ups and no breakdowns, ending on a warm sustained chord. No vocals, no singing, no electronic synth leads."
+    }
+  ],
+  "sounds": {
+    "tick": {
+      "text": "soft wooden counter ticking quickly, like small beads clicking on an abacus, gentle and organic",
+      "duration": 1.4,
+      "gain": -15
+    },
+    "stall": {
+      "text": "a small wooden mechanism clunking to a stop, soft and dull, organic",
+      "duration": 0.7,
+      "gain": -11
+    },
+    "pen": {
+      "text": "felt-tip pen drawing one smooth continuous line on paper, close and soft",
+      "duration": 2.0,
+      "gain": -16
+    },
+    "land": {
+      "text": "a paper card placed gently on a wooden desk, soft thud with a light paper rustle",
+      "duration": 0.6,
+      "gain": -12
+    },
+    "tap": {
+      "text": "single soft wooden block tap, warm and minimal",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "swish": {
+      "text": "soft airy paper swish, like a sheet sliding across a table, gentle",
+      "duration": 0.8,
+      "gain": -14
+    },
+    "kalimba": {
+      "text": "one tiny soft kalimba note, pleasant and bright",
+      "duration": 0.6,
+      "gain": -15
+    },
+    "chime": {
+      "text": "warm two-note marimba chime rising, positive and soft, task complete",
+      "duration": 1.2,
+      "gain": -10
+    }
+  },
+  "cues": [
+    {
+      "sound": "tap",
+      "at": [
+        0.15,
+        1.9
+      ]
+    },
+    {
+      "sound": "land",
+      "at": [
+        0.35,
+        3.0,
+        6.32,
+        12.09,
+        17.86,
+        23.93
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": 0.6,
+      "trim": 1.2
+    },
+    {
+      "sound": "stall",
+      "at": 1.8
+    },
+    {
+      "sound": "pen",
+      "at": [
+        3.46,
+        6.02,
+        12.19,
+        17.96,
+        23.73
+      ],
+      "trim": 1.3
+    },
+    {
+      "sound": "swish",
+      "at": [
+        6.52,
+        12.39,
+        18.16,
+        23.93,
+        27.69
+      ]
+    },
+    {
+      "sound": "kalimba",
+      "at": [
+        7.19,
+        7.84,
+        9.8,
+        11.1,
+        11.75,
+        12.8,
+        14.44,
+        15.03,
+        15.62,
+        19.96
+      ]
+    },
+    {
+      "sound": "chime",
+      "at": [
+        21.54,
+        26.13
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": 25.03,
+      "trim": 1.1,
+      "gain": -17
+    },
+    {
+      "sound": "tap",
+      "at": 29.09,
+      "gain": -12
+    },
+    {
+      "sound": "tap",
+      "at": [
+        11.54,
+        17.21,
+        23.03
+      ],
+      "gain": -12
+    },
+    {
+      "sound": "kalimba",
+      "at": [
+        13.79,
+        19.51,
+        25.23
+      ],
+      "gain": -13
+    }
+  ]
+}

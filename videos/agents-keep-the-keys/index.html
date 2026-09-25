@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Keep the keys (agent roles, tools and approvals)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "Keep the keys": would you let AI refund $4,800, email 2,300 customers, merge to main? All or nothing?
+     You set the rules: a role, three-position switches per tool (Off / Ask / Auto), a trigger, then a live run
+     that pauses for your approval. 124 BPM (beat 0.484 s, bar 1.935 s), cinematic-hybrid score of its own. */
+  #risk { position: absolute; left: 0; width: 1920px; top: 0; height: 1080px; }
+  #weyebrow { position: absolute; left: 140px; top: 320px; font: 500 24px/1 var(--mono); letter-spacing: .3em; color: rgba(242, 139, 130, .85); opacity: 0; }
+  #risk small { position: absolute; left: 0; width: 1920px; top: 150px; text-align: center; font: 600 26px/1 var(--mono); letter-spacing: .2em; color: #F28B82; opacity: 0; }
+  .rk { position: absolute; left: 460px; top: 300px; width: 1000px; height: 440px; border-radius: 30px; background: #fff; color: var(--ink); box-shadow: 0 50px 130px rgba(0, 0, 0, .5); padding: 50px 60px; opacity: 0; }
+  .rk .ic { font: 700 20px/1 var(--mono); letter-spacing: .12em; color: var(--t3); }
+  .rk b { display: block; margin: 26px 0 16px; font-size: 92px; letter-spacing: -0.045em; line-height: 1; }
+  .rk span { font-size: 28px; color: var(--t3); }
+  .rk .run { position: absolute; right: 60px; bottom: 50px; height: 84px; padding: 0 40px; border-radius: 20px; background: #B8473D; color: #fff; display: flex; align-items: center; gap: 12px; font: 700 34px/1 var(--sans); }
+  #vs { position: absolute; left: 0; width: 1920px; top: 560px; display: flex; justify-content: center; gap: 40px; opacity: 0; }
+  #vs div { width: 440px; height: 96px; border-radius: 22px; border: 1px solid #2F5A45; display: grid; place-items: center; font: 500 30px/1 var(--sans); color: #8FB39A; }
+  #vs div.on { background: #F2F5F3; color: var(--forest); border-color: #F2F5F3; }
+
+  /* the agent config */
+  #cfg { position: absolute; left: 360px; top: 270px; width: 1200px; height: 560px; overflow: hidden; opacity: 0; }
+  #cfg .hd { height: 130px; display: flex; align-items: center; gap: 22px; padding: 0 40px; border-bottom: 1px solid var(--hairline); }
+  #cfg .hd img { width: 80px; height: 80px; } #cfg .hd b { font-size: 44px; letter-spacing: -0.03em; } #cfg .hd span { font: 600 20px/1 var(--mono); color: var(--t3); letter-spacing: .08em; }
+  #cfg .sec { padding: 30px 40px 0; }
+  #cfg .lb { font: 700 19px/1 var(--mono); letter-spacing: .12em; color: var(--t3); margin-bottom: 14px; }
+  #cfg .box { min-height: 150px; border-radius: 16px; border: 2px solid var(--green); background: #F6FBF8; padding: 22px 26px; font: 500 30px/1.45 var(--sans); color: var(--ink); }
+  #cfg .chips { display: flex; gap: 12px; margin-top: 22px; }
+  #cfg .chips span { font: 600 21px/1 var(--mono); padding: 12px 16px; border-radius: 10px; background: #EFF2F0; color: var(--t2); opacity: 0; }
+
+  /* the control board */
+  #board { position: absolute; left: 260px; top: 250px; width: 1400px; height: 700px; opacity: 0; }
+  .ctl { position: absolute; left: 0; width: 1400px; height: 130px; border-radius: 24px; background: #fff; color: var(--ink); display: flex; align-items: center; padding: 0 36px; box-shadow: 0 30px 80px rgba(0, 0, 0, .4); opacity: 0; }
+  .ctl .nm { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; } .ctl .nm small { display: block; font: 500 20px/1.5 var(--mono); color: var(--t3); letter-spacing: .04em; }
+  .sw3 { margin-left: auto; position: relative; width: 540px; height: 76px; border-radius: 38px; background: #EEF1EF; display: flex; }
+  .sw3 span { flex: 1; display: grid; place-items: center; font: 700 24px/1 var(--mono); letter-spacing: .08em; color: #9AA5A0; position: relative; z-index: 2; }
+  .sw3 i { position: absolute; left: 6px; top: 6px; width: 172px; height: 64px; border-radius: 32px; background: #9AA5A0; }
+  .sw3 span.on { color: #fff; }
+
+  /* the trigger */
+  #trig { position: absolute; left: 0; width: 1920px; top: 380px; height: 360px; opacity: 0; }
+  .tn { position: absolute; top: 90px; height: 150px; border-radius: 26px; background: #fff; color: var(--ink); display: flex; align-items: center; gap: 22px; padding: 0 36px; box-shadow: 0 40px 100px rgba(0, 0, 0, .45); font: 600 42px/1.2 var(--sans); opacity: 0; }
+  .tn small { display: block; font: 700 19px/1.4 var(--mono); letter-spacing: .1em; color: var(--t3); }
+  .tn img { width: 76px; height: 76px; }
+  #wire { position: absolute; left: 740px; top: 163px; height: 5px; width: 0; border-radius: 3px; background: var(--mint); }
+  #pulse { position: absolute; top: 152px; width: 26px; height: 26px; border-radius: 50%; background: var(--mint); opacity: 0; }
+  #other { position: absolute; left: 0; width: 1920px; top: 310px; display: flex; justify-content: center; gap: 14px; }
+  #other span { font: 600 22px/1 var(--mono); padding: 12px 16px; border-radius: 10px; border: 2px solid #2F5A45; color: #A9C7B3; opacity: 0; }
+
+  /* the run */
+  #run { position: absolute; left: 410px; top: 240px; width: 1100px; height: 640px; overflow: hidden; opacity: 0; }
+  #run .hd { height: 100px; display: flex; align-items: center; gap: 18px; padding: 0 34px; border-bottom: 1px solid var(--hairline); font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  #run .hd img { width: 56px; height: 56px; } #run .hd small { margin-left: auto; font: 600 19px/1 var(--mono); padding: 10px 14px; border-radius: 9px; }
+  .step { display: flex; align-items: center; gap: 18px; height: 88px; padding: 0 34px; border-bottom: 1px solid var(--hairline); font-size: 28px; opacity: 0; }
+  .step svg { width: 38px; height: 38px; flex: none; }
+  .step small { margin-left: auto; font: 500 19px/1 var(--mono); color: var(--t3); }
+  #gate { margin: 18px 34px; border-radius: 20px; border: 3px solid #E0B840; background: #FFF8E1; padding: 22px 26px; display: flex; align-items: center; gap: 20px; opacity: 0; }
+  #gate b { font-size: 30px; letter-spacing: -0.02em; display: block; } #gate span { font-size: 22px; color: #7A5A00; }
+  #gate .bt { margin-left: auto; display: flex; gap: 12px; }
+  #gate .bt i { height: 62px; padding: 0 26px; border-radius: 14px; display: inline-flex; align-items: center; font: 600 25px/1 var(--sans); font-style: normal; }
+  #gate .bt .dn { border: 2px solid #D9C27A; color: #7A5A00; } #gate .bt .ok { background: var(--ink); color: #fff; }
+  #gate .bt .ok.done { background: var(--green); }
+  #head { position: absolute; left: 0; width: 1920px; top: 80px; text-align: center; font-size: 80px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="bundles" viewBox="0 0 1920 1080"></svg>
+  <div id="weyebrow">WOULD YOU LET AI…</div>
+  <div class="lines" id="lines"><div id="l1"></div><div id="l2"></div><div id="l3"></div></div>
+  <div id="side"></div>
+  <div id="rigwrap"><div id="rig">
+  <div id="risk"><small id="wy">WOULD YOU LET AI…</small>
+    <div class="rk"><div class="ic">BILLING</div><b>Refund $4,800?</b><span>To 12 customers, right now.</span><div class="run">Run ▶</div></div>
+    <div class="rk"><div class="ic">EMAIL</div><b>Email 2,300 customers?</b><span>A pricing update, drafted a minute ago.</span><div class="run">Send ▶</div></div>
+    <div class="rk"><div class="ic">CODE</div><b>Merge to main?</b><span>14 files changed.</span><div class="run">Merge ▶</div></div>
+    <div class="rk"><div class="ic">CRM</div><b>Delete 40 contacts?</b><span>Marked as duplicates.</span><div class="run">Delete ▶</div></div>
+  </div>
+  
+  <div class="card" id="cfg"><div class="hd"><img src="../../assets/helpin/agents/echo.svg" alt=""><div><b>Echo</b><br><span>SUPPORT AGENT</span></div></div>
+    <div class="sec"><div class="lb">ROLE</div><div class="box" id="role"></div>
+      <div class="chips"><span>Knowledge · Help center</span><span>Knowledge · Earlier conversations</span><span>Hand off · Billing team</span></div></div></div>
+
+  <div id="board">
+    <div class="ctl" style="top:0"><div class="nm">Search the help center<small>KNOWLEDGE</small></div><div class="sw3"><i></i><span>OFF</span><span>ASK</span><span>AUTO</span></div></div>
+    <div class="ctl" style="top:160px"><div class="nm">Read billing history<small>BILLING · READ</small></div><div class="sw3"><i></i><span>OFF</span><span>ASK</span><span>AUTO</span></div></div>
+    <div class="ctl" style="top:320px"><div class="nm">Issue a refund<small>BILLING · WRITE</small></div><div class="sw3"><i></i><span>OFF</span><span>ASK</span><span>AUTO</span></div></div>
+    <div class="ctl" style="top:480px"><div class="nm">Email every customer<small>EMAIL · BULK</small></div><div class="sw3"><i></i><span>OFF</span><span>ASK</span><span>AUTO</span></div></div>
+  </div>
+
+  <div id="trig"><div class="tn" id="tn1" style="left:300px"><div><small>WHEN</small>A new chat arrives</div></div><div id="wire"></div><div id="pulse"></div>
+    <div class="tn" id="tn2" style="left:1160px"><img src="../../assets/helpin/agents/echo.svg" alt=""><div><small>START</small>Echo, with its tools</div></div>
+    <div id="other"><span>A schedule</span><span>A GitHub or GitLab event</span><span>A workspace change</span></div></div>
+
+  <div class="card" id="run"><div class="hd"><img src="../../assets/helpin/agents/echo.svg" alt="">Run · Priya Shah’s chat<small id="rstat">RUNNING</small></div>
+    <div class="step" id="r1"></div><div class="step" id="r2"></div>
+    <div id="gate"><div><b>Refund $49 to Priya Shah?</b><span>Duplicate charge on Sep 1 · Echo needs your approval</span></div><div class="bt"><i class="dn">Decline</i><i class="ok" id="appr">Approve</i></div></div>
+    <div class="step" id="r3"></div><div class="step" id="r4"></div></div>
+  <div class="cursor" id="cursor"></div>
+  
+  </div></div>
+  <div class="scr" id="s-vil"><div class="mega" style="top:360px; font-size:112px" id="vil"></div><div id="vs"><div id="vs1">AI does nothing</div><div id="vs2">AI does everything</div></div></div>
+  <div class="scr" id="s-drop"><div class="mega" style="top:470px; font-size:104px" id="drop"></div></div>
+  <div class="scr" id="s-pay"><div class="mega" style="top:400px; font-size:100px" id="pay1"></div><div class="mega" style="top:520px; font-size:100px" id="pay2"></div></div>
+  <div id="endwrap"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+  <div id="flash"></div>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, brandEase } from '../../lib/motion.js';
+import { css, type } from '../../lib/components.js';
+import { KIT_CSS, END_HTML, CURSOR_SVG, words, rise, pop, push, bigScreen, stack, sideCopy, rig, bundles, endCard } from '../../lib/kit.js';
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS;
+$('#endwrap').outerHTML = END_HTML;
+
+const B = 60 / 124, BAR = 4 * B;
+const T = { vil: 2.5 * BAR, drop: 3.5 * BAR, role: 4.5 * BAR, tools: 6.5 * BAR, trig: 9 * BAR, run: 10.5 * BAR, payoff: 13 * BAR, tag: 14.5 * BAR, total: 16.5 * BAR };
+const LN = [[$('#l1'), words($('#l1'), 'Agents can do real work.'), 0.3], [$('#l2'), words($('#l2'), 'Refunds. Emails. Merges.'), 4 * B], [$('#l3'), words($('#l3'), '<em>Would you let it?</em>'), BAR + 3 * B]];
+const VIL = words($('#vil'), 'All or <em>nothing?</em>');
+const DROP = words($('#drop'), 'You set <em>the rules.</em>');
+const P1 = words($('#pay1'), 'It does the work.'), P2 = words($('#pay2'), '<em>You hold the keys.</em>');
+const end = endCard($, 'Delegate the job.', '<em>Keep control of the actions.</em>');
+const side = sideCopy($, [
+  { at: T.role, eyebrow: '01 · Role', head: 'Make the <em>role clear.</em>', lede: 'Give each agent a job, the knowledge it can use, and when to hand off.' },
+  { at: T.tools, eyebrow: '02 · Tools', head: 'Choose what <em>it can do.</em>', lede: 'Allow a tool, ask for approval first, or switch it off.' },
+  { at: T.trig, eyebrow: '03 · Trigger', head: 'Decide when it <em>gets to work.</em>', lede: 'A new chat, a schedule, a GitHub or GitLab event, or a workspace change.' },
+  { at: T.run, eyebrow: '04 · Run', head: 'Approve <em>what matters.</em>', lede: 'Follow the run. Risky steps wait for you.' },
+], T.payoff);
+const cam = rig($('#rig'), [[0, 960, 520, 0.66, 1330, 560], [T.role, 960, 555, 0.72, 1340, 560], [T.trig, 900, 560, 0.68, 1330, 560], [T.run, 960, 560, 0.72, 1340, 560]]);
+const bg = bundles($);
+const rks = [...document.querySelectorAll('.rk')];
+$('#cursor').innerHTML = CURSOR_SVG;
+// switch targets: 0 off, 1 ask, 2 auto
+const SWT = [2, 2, 1, 0];
+const SWC = ['#9AA5A0', '#C8962A', '#0F7A50'];
+const CHK = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#0F7A50"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4"/></svg>';
+const STEPS = [['#r1', 'Read the help center: duplicate charges', 'KNOWLEDGE'], ['#r2', 'Checked billing history: two charges on Sep 1', 'BILLING · READ'], ['#r3', 'Refund issued: $49', 'BILLING · WRITE'], ['#r4', 'Replied to Priya with the details', 'CHAT']];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 124, duration: T.total,
+  scenes: [{ id: 'film', start: 0, end: T.total, render: ({ t }) => {
+    bg(t); cam(t); side(t);
+
+    // ── 1: the question on the left; risky actions dissolve one into the next on the right
+    const oOn = t < T.vil, lo = brandEase(P(t, T.vil - 0.45, T.vil));
+    css($('#weyebrow'), { opacity: String(oOn ? brandEase(P(t, 0.05, 0.6)) * (1 - lo) : 0) });
+    css($('#lines'), { opacity: String(oOn ? 1 - lo : 0), filter: lo > 0.001 ? `blur(${(lo * 8).toFixed(2)}px)` : 'none' });
+    if (oOn) stack(t, LN);
+    $('#risk').style.opacity = String(oOn ? 1 - lo : 0);
+    $('#wy').style.opacity = '0';
+    rks.forEach((r, i) => {
+      const at = 0.4 + i * 2 * B, nx = 0.4 + (i + 1) * 2 * B;
+      const k = brandEase(P(t, at, at + 0.5)), o = i === 3 ? 0 : brandEase(P(t, nx - 0.1, nx + 0.35));
+      const on = t >= at && t < nx + 0.35;
+      css(r, { opacity: String(on ? k * (1 - o) : 0), transform: k < 1 || o > 0 ? `translateY(${Math.round((1 - k) * 24 - o * 16)}px)` : 'none', filter: on && (k < 1 || o > 0) ? `blur(${(Math.max(1 - k, o) * 8).toFixed(2)}px)` : 'none' });
+    });
+
+    // ── villain: all or nothing
+    bigScreen($('#s-vil'), VIL, t, T.vil, T.drop);
+    const flip = Math.floor(P(t, T.vil + 0.5, T.drop - 0.3) * 4) % 2;
+    css($('#vs'), { opacity: String(brandEase(P(t, T.vil + 0.4, T.vil + 0.9))) });
+    $('#vs1').classList.toggle('on', t >= T.vil + 0.5 && flip === 0); $('#vs2').classList.toggle('on', t >= T.vil + 0.5 && flip === 1);
+    bigScreen($('#s-drop'), DROP, t, T.drop, T.role);
+
+    // ── 2: the role
+    push($('#cfg'), t, T.role, T.tools);
+    type($('#role'), 'Answer customers in live chat from your help center and earlier conversations. Hand the conversation to a teammate when it needs a person.', t, { start: T.role + 0.5, cps: 70, caret: t < T.role + 2.6 });
+    [...document.querySelectorAll('#cfg .chips span')].forEach((c, i) => pop(c, t, T.role + 2.7 + i * 0.3));
+
+    // ── 3: the switches settle into place, one per beat
+    push($('#board'), t, T.tools, T.trig);
+    [...document.querySelectorAll('.ctl')].forEach((c, i) => {
+      pop(c, t, T.tools + 0.3 + i * 0.12);
+      const at = T.tools + 1.1 + i * 2 * B;
+      const k = brandEase(P(t, at, at + 0.45));
+      const target = SWT[i], pos = t >= at ? L(1, target, k) : 1;
+      const knob = c.querySelector('.sw3 i');
+      knob.style.transform = `translateX(${Math.round(pos * 178)}px)`;
+      knob.style.background = t >= at ? SWC[target] : SWC[1];
+      c.querySelectorAll('.sw3 span').forEach((sp, j) => sp.classList.toggle('on', j === Math.round(pos)));
+      c.style.boxShadow = '0 30px 80px rgba(0,0,0,.4)';
+    });
+
+    // ── 4: the trigger
+    push($('#trig'), t, T.trig, T.run);
+    pop($('#tn1'), t, T.trig + 0.3); pop($('#tn2'), t, T.trig + 0.8);
+    const wk = brandEase(P(t, T.trig + 0.6, T.trig + 1.2));
+    $('#wire').style.width = `${Math.round(wk * 410)}px`;
+    const pk = P(t, T.trig + 1.5, T.trig + 2.2);
+    css($('#pulse'), { opacity: String(pk > 0 && pk < 1 ? Math.sin(pk * Math.PI) : 0), left: `${Math.round(L(740, 1130, brandEase(pk)))}px` });
+    [...document.querySelectorAll('#other span')].forEach((sp, i) => pop(sp, t, T.trig + 1.7 + i * 0.15));
+
+    // ── 5: the run, the approval gate, your click
+    push($('#run'), t, T.run, T.payoff);
+    const appr = T.run + 3.3;
+    STEPS.forEach(([sel, txt, tag], i) => {
+      const at = i < 2 ? T.run + 0.5 + i * 0.6 : appr + 0.4 + (i - 2) * 0.6;
+      const html = `${CHK}${txt}<small>${tag}</small>`;
+      if ($(sel).dataset.h !== html) { $(sel).innerHTML = html; $(sel).dataset.h = html; }
+      pop($(sel), t, at);
+    });
+    pop($('#gate'), t, T.run + 1.9);
+    const approved = t >= appr;
+    $('#appr').textContent = approved ? 'Approved ✓' : 'Approve';
+    $('#appr').classList.toggle('done', approved);
+    const st = $('#rstat');
+    const stt = t < T.run + 1.9 ? 'RUNNING' : !approved ? 'WAITING FOR APPROVAL' : t < appr + 1.2 ? 'RUNNING' : 'DONE ✓';
+    if (st.textContent !== stt) st.textContent = stt;
+    css(st, { background: stt.startsWith('WAIT') ? '#FFF4D6' : stt.startsWith('DONE') ? '#E3F4EA' : '#EFF2F0', color: stt.startsWith('WAIT') ? '#7A5A00' : stt.startsWith('DONE') ? '#0B6340' : '#4F5A55' });
+    const cur = keys(t, [[T.run + 2.1, [1700, 1100]], [appr - 0.1, [1352, 545], brandEase]]);
+    const cOn = t > T.run + 2.1 && t < appr + 0.7;
+    css($('#cursor'), { opacity: String(cOn ? brandEase(P(t, T.run + 2.1, T.run + 2.4)) * (1 - P(t, appr + 0.4, appr + 0.7)) : 0), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px)` });
+
+    // ── payoff
+    const pOn = t >= T.payoff && t < T.tag;
+    css($('#s-pay'), { opacity: String(pOn ? 1 - brandEase(P(t, T.tag - 0.45, T.tag)) : 0) });
+    if (pOn) { rise(P1, t, T.payoff + 0.1); rise(P2, t, T.payoff + 2 * B); }
+
+    end(t, T.tag, B);
+  } }],
+});
+</script>
+</body>
+</html>

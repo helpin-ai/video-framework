@@ -1,0 +1,268 @@
+{
+  "name": "docs-caught-up",
+  "duration": 32.308,
+  "video": "../../out/docs-caught-up/docs-caught-up.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 10.154,
+      "generate": 12,
+      "from": 0,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Crisp shuffled UK garage percussion at 130 BPM starting instantly on the first beat: swung 2-step hi-hats, rimshots, finger snaps and a muted kick, tight and bouncy, with a light rising filter sweep building toward the end. Percussion only: no melody, no chords, no bass notes, no vocals."
+    },
+    {
+      "at": 10.154,
+      "length": 22.154,
+      "generate": 26,
+      "from": 3.692,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "High-energy UK garage 2-step track at 130 BPM that starts immediately at full energy on the very first beat, no intro and no fade-in: swung shuffled drums, punchy kick and crisp snare, a warm bouncing sub bass, bright chopped organ stabs and a catchy plucked synth hook. Confident and playful, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit; the groove just keeps rolling. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "whip": {
+      "text": "fast airy whip-pan whoosh, short and clean",
+      "duration": 0.6,
+      "gain": -9
+    },
+    "rewind": {
+      "text": "fast tape rewind zip, high-pitched spinning whoosh, playful",
+      "duration": 0.9,
+      "gain": -8
+    },
+    "ffwd": {
+      "text": "rising fast-forward whoosh, bright and quick",
+      "duration": 1,
+      "gain": -8
+    },
+    "pop": {
+      "text": "soft bubbly UI pop, clean modern interface",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "click": {
+      "text": "crisp trackpad click",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "typing": {
+      "text": "quick soft mechanical keyboard typing burst",
+      "duration": 1,
+      "gain": -13
+    },
+    "slide": {
+      "text": "short smooth UI swish, a list item sliding into place",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "blip": {
+      "text": "short bright glassy notification blip",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "ship": {
+      "text": "cheerful two-note marimba ding, success",
+      "duration": 0.8,
+      "gain": -10
+    },
+    "stamp": {
+      "text": "heavy rubber stamp thump on paper on a wooden desk",
+      "duration": 0.5,
+      "gain": -7
+    },
+    "hit": {
+      "text": "tight punchy low tom hit with a snap, bold text slam",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "impact": {
+      "text": "deep punchy sub bass impact with a short bright whoosh, modern",
+      "duration": 1,
+      "gain": -7
+    },
+    "roll": {
+      "text": "quick soft mechanical tick-tick roll, a counter flipping",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "shutter": {
+      "text": "crisp camera shutter click with a quick flash",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "peel": {
+      "text": "quick paper sticker peel rip",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "scribble": {
+      "text": "fast marker pen strike-through swipe on paper",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "drop": {
+      "text": "soft airy whoosh ending in a light paper tap, a photo dropped into place",
+      "duration": 0.6,
+      "gain": -11
+    },
+    "success": {
+      "text": "short warm success chime, two ascending notes",
+      "duration": 0.8,
+      "gain": -10
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    }
+  },
+  "cues": [
+    {
+      "sound": "whip",
+      "at": [
+        1.506,
+        3.352,
+        10.927
+      ]
+    },
+    {
+      "sound": "rewind",
+      "at": [
+        5.458
+      ]
+    },
+    {
+      "sound": "ffwd",
+      "at": [
+        26.146
+      ]
+    },
+    {
+      "sound": "pop",
+      "at": [
+        0.3,
+        2.046,
+        3.942,
+        4.022,
+        4.615,
+        6.158
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        0.692,
+        1.385,
+        16.312,
+        16.872,
+        24.462
+      ]
+    },
+    {
+      "sound": "typing",
+      "at": [
+        0.923,
+        20.385
+      ]
+    },
+    {
+      "sound": "slide",
+      "at": [
+        2.769,
+        23.277
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        3.219,
+        11.777,
+        12.677,
+        13.777,
+        14.777,
+        17.662,
+        18.262,
+        21.785
+      ]
+    },
+    {
+      "sound": "ship",
+      "at": [
+        5.077
+      ]
+    },
+    {
+      "sound": "stamp",
+      "at": [
+        6.923,
+        27.096
+      ]
+    },
+    {
+      "sound": "hit",
+      "at": [
+        8.308,
+        9.231
+      ]
+    },
+    {
+      "sound": "impact",
+      "at": [
+        10.154
+      ]
+    },
+    {
+      "sound": "roll",
+      "at": [
+        15.392,
+        19.085,
+        22.777
+      ]
+    },
+    {
+      "sound": "shutter",
+      "at": [
+        17.312
+      ]
+    },
+    {
+      "sound": "peel",
+      "at": [
+        19.735
+      ]
+    },
+    {
+      "sound": "scribble",
+      "at": [
+        19.935
+      ]
+    },
+    {
+      "sound": "drop",
+      "at": [
+        21.485
+      ]
+    },
+    {
+      "sound": "success",
+      "at": [
+        24.512
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        30.462
+      ]
+    }
+  ]
+}

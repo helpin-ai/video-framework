@@ -1,0 +1,196 @@
+{
+  "name": "docs-rot",
+  "duration": 32.903,
+  "video": "../../out/docs-rot/docs-rot.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 3.95,
+      "generate": 10,
+      "from": 2.0,
+      "gain": -5,
+      "fadeIn": 0.1,
+      "fadeOut": 0.05,
+      "prompt": "Dark tense percussion loop at 124 BPM: dry clock-like ticks, low tom hits and a muted kick, steady and ominous, like time running out. Percussion only: no melody, no chords, no bass notes, no vocals."
+    },
+    {
+      "at": 3.87,
+      "length": 29.032,
+      "generate": 32,
+      "from": 0.5,
+      "gain": -7,
+      "fadeIn": 0.02,
+      "fadeOut": 3.0,
+      "prompt": "Bright energetic electronic house groove at 124 BPM that starts immediately at full energy on the first beat, no intro and no fade-in: crisp house drums, punchy claps, a bouncy bass line, bright piano stabs and shimmering synth arpeggios. Confident and uplifting, like a modern product launch. Full energy all the way through with no breakdown, ending on a bright sustained chord. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "tick": {
+      "text": "dry clock ticking, close and crisp",
+      "duration": 1.0,
+      "gain": -12
+    },
+    "zip": {
+      "text": "fast bright whoosh of a small object flying past",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "age": {
+      "text": "paper crinkling and aging, a short dry rustle",
+      "duration": 0.7,
+      "gain": -12
+    },
+    "slam": {
+      "text": "deep punchy thump with a short paper snap, bold text slamming onto the screen, modern and tight",
+      "duration": 0.6,
+      "gain": -8
+    },
+    "scan": {
+      "text": "futuristic scanner beam sweeping across a page, bright rising hum",
+      "duration": 1.2,
+      "gain": -10
+    },
+    "shutter": {
+      "text": "crisp camera shutter click with a quick flash",
+      "duration": 0.5,
+      "gain": -8
+    },
+    "develop": {
+      "text": "soft rising shimmer as a photo develops",
+      "duration": 0.8,
+      "gain": -13
+    },
+    "pen": {
+      "text": "fast pen scribble correcting a line of text",
+      "duration": 0.8,
+      "gain": -12
+    },
+    "click": {
+      "text": "crisp mouse click",
+      "duration": 0.5,
+      "gain": -9
+    },
+    "blip": {
+      "text": "short bright positive UI blip, clean",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "publish": {
+      "text": "bright uplifting confirmation chime, published successfully, sparkle",
+      "duration": 1.3,
+      "gain": -8
+    }
+  },
+  "cues": [
+    {
+      "sound": "tick",
+      "at": [
+        0.0,
+        0.968,
+        1.935,
+        2.903
+      ],
+      "trim": 0.968,
+      "gain": -7
+    },
+    {
+      "sound": "slam",
+      "at": [
+        0.02,
+        3.871,
+        5.806,
+        9.677,
+        13.548,
+        16.452,
+        20.323,
+        22.258,
+        23.71,
+        28.065,
+        28.548
+      ]
+    },
+    {
+      "sound": "zip",
+      "at": [
+        0.242,
+        0.726,
+        1.935,
+        5.756,
+        9.627,
+        16.402,
+        20.273,
+        22.208,
+        25.111,
+        16.802
+      ]
+    },
+    {
+      "sound": "age",
+      "at": [
+        2.177,
+        2.661,
+        3.145
+      ]
+    },
+    {
+      "sound": "blip",
+      "at": [
+        3.387,
+        6.2,
+        7.2,
+        8.4,
+        9.2,
+        13.648,
+        14.148,
+        14.598,
+        14.898,
+        21.323,
+        24.61,
+        25.761,
+        29.032
+      ]
+    },
+    {
+      "sound": "click",
+      "at": [
+        10.827,
+        11.627,
+        12.377,
+        23.226
+      ]
+    },
+    {
+      "sound": "scan",
+      "at": [
+        3.871,
+        25.361
+      ]
+    },
+    {
+      "sound": "shutter",
+      "at": 12.581
+    },
+    {
+      "sound": "develop",
+      "at": [
+        12.681,
+        25.461
+      ]
+    },
+    {
+      "sound": "pen",
+      "at": [
+        17.552,
+        20.623
+      ]
+    },
+    {
+      "sound": "publish",
+      "at": 23.74
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "name": "crm-up-to-speed",
+  "duration": 32,
+  "video": "../../out/crm-up-to-speed/crm-up-to-speed.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 8,
+      "generate": 10,
+      "from": 0,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Urgent ticking tension at 120 BPM at full volume from the very first beat, no quiet intro: fast staccato pizzicato strings, a ticking clock, a pulsing muted kick and building hi-hats, like a countdown before a big moment, rising to the end. No vocals."
+    },
+    {
+      "at": 8,
+      "length": 24,
+      "generate": 40,
+      "from": 4,
+      "gain": -6,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Groovy nu-disco track at 120 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: four-on-the-floor disco drums, a funky octave bass line, chopped rhythm guitar, lush disco strings and bright synth stabs. Confident and upbeat, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "tock": {
+      "text": "loud crisp clock tick, a countdown second",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "send": {
+      "text": "short airy message send swoosh",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "typingdots": {
+      "text": "soft muffled typing indicator bubbles, faint and waiting",
+      "duration": 0.8,
+      "gain": -16
+    },
+    "keys": {
+      "text": "light fast laptop keyboard typing",
+      "duration": 1.2,
+      "gain": -14
+    },
+    "fly": {
+      "text": "quick swooping whoosh, a card flying in and landing softly",
+      "duration": 0.6,
+      "gain": -14
+    },
+    "fold": {
+      "text": "satisfying paper fold and stack, cards collapsing into one",
+      "duration": 0.6,
+      "gain": -9
+    },
+    "tick": {
+      "text": "tiny crisp UI tick, a list item appearing",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "slide": {
+      "text": "smooth UI slide swish, a card moving across columns",
+      "duration": 0.5,
+      "gain": -11
+    },
+    "why": {
+      "text": "soft bubbly pop, a note appearing",
+      "duration": 0.5,
+      "gain": -12
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "chime": {
+      "text": "soft warm single bell chime, calm and satisfying",
+      "duration": 1,
+      "gain": -12
+    },
+    "swell": {
+      "text": "gentle rising synth pad swell with soft shimmering strings, calm build, no drums",
+      "duration": 2.0,
+      "gain": -10
+    }
+  },
+  "cues": [
+    {
+      "sound": "tock",
+      "at": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "sound": "send",
+      "at": [
+        0.8,
+        1.6,
+        2.4,
+        3.2
+      ]
+    },
+    {
+      "sound": "typingdots",
+      "at": [
+        1.25,
+        2.05,
+        2.85,
+        3.65
+      ]
+    },
+    {
+      "sound": "keys",
+      "at": [
+        10.5
+      ]
+    },
+    {
+      "sound": "fly",
+      "at": [
+        11.8,
+        12.15,
+        12.5,
+        12.85
+      ]
+    },
+    {
+      "sound": "fold",
+      "at": [
+        15
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        15.8,
+        16.3,
+        16.8,
+        17.3
+      ]
+    },
+    {
+      "sound": "slide",
+      "at": [
+        20.6
+      ]
+    },
+    {
+      "sound": "why",
+      "at": [
+        21.5,
+        22.1,
+        22.7
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        29
+      ]
+    },
+    {
+      "sound": "soft",
+      "at": [
+        6,
+        8,
+        10,
+        15,
+        20,
+        24
+      ]
+    },
+    {
+      "sound": "chime",
+      "at": [
+        24.1
+      ]
+    },
+    {
+      "sound": "swell",
+      "at": [
+        6.05
+      ]
+    }
+  ]
+}

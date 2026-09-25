@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Concept C — Release train</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>
+  /* Concept C: two lanes. Top lane = product releases rolling by; bottom lane = docs. Every release
+     drops a green connector into the docs lane where the docs agent's live preview does the update. */
+  #stage { background: #EEF2F7; color: var(--ink); }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(#DDE4EC 1px, transparent 1px), linear-gradient(90deg, #DDE4EC 1px, transparent 1px); background-size: 48px 48px; }
+  .lane { position: absolute; left: 0; right: 0; height: 2px; background: #9AA8B8; }
+  .lab { position: absolute; left: 60px; font: 600 18px/1 var(--mono); letter-spacing: .18em; color: #5B6B7D; }
+  .car { position: absolute; top: 160px; height: 76px; padding: 0 26px; display: inline-flex; align-items: center; gap: 14px; border-radius: 14px; background: #fff; border: 2px solid #C5D0DC; font: 600 24px/1 var(--sans); box-shadow: 0 10px 30px rgba(30,50,80,.12); }
+  .car b { font: 700 18px/1 var(--mono); color: #fff; background: var(--green); padding: 7px 10px; border-radius: 7px; }
+  .drop { position: absolute; left: 1206px; top: 236px; width: 6px; height: 170px; background: var(--green); border-radius: 3px; }
+  .head { position: absolute; left: 60px; top: 520px; font-size: 92px; line-height: 1; font-weight: 700; letter-spacing: -0.05em; }
+  .head em { font-style: normal; color: var(--green); }
+</style></head><body><div id="stage"><div class="grid"></div><section class="scene" id="f" style="visibility:visible">
+  <div class="lab" style="top:110px">PRODUCT · RELEASES</div><div class="lane" style="top:198px"></div>
+  <div class="car" style="left:180px">v2.5 · Bulk export</div>
+  <div class="car" style="left:980px">Change #284 · Workspace check <b>SHIPPED</b></div>
+  <div class="car" style="left:1640px">v2.7</div>
+  <div class="drop"></div>
+  <div class="lab" style="top:420px">DOCS</div><div class="lane" style="top:450px"></div>
+  <div class="head">Every release.<br><em>Documented.</em></div>
+  <div id="win"></div>
+</section></div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js'; import { siteWindow } from '../../../lib/site.js';
+const w = siteWindow(document.querySelector('#win'), { path: '/products/knowledge', focus: '#knowledge-quill .knowledge-scene', hide: ['canvas'], radius: 18 });
+w.el.style.boxShadow = '0 30px 80px rgba(30,50,80,.18), 0 0 0 1px #D5DEE8'; waitFor(w.view.ready);
+defineVideo({ width: 1920, height: 1080, fps: 30, duration: 1, scenes: [{ id: 'f', start: 0, end: 1, render: () => { w.place({ x: 900, y: 406, w: 620, h: 640 }); w.camera(1, [0.5, 0.35]); return w.view.update(9); } }] });
+</script></body></html>

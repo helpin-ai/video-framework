@@ -1,0 +1,177 @@
+{
+  "name": "meeting-someone-owns-it",
+  "duration": 30.968,
+  "video": "../../out/meeting-someone-owns-it/meeting-someone-owns-it.mp4",
+  "master": {
+    "lufs": -14,
+    "fadeOut": 1.2
+  },
+  "music": [
+    {
+      "at": 0,
+      "length": 7.258,
+      "generate": 10,
+      "from": 0,
+      "gain": -7,
+      "fadeIn": 0.03,
+      "fadeOut": 0.05,
+      "prompt": "Playful swing drum groove at 124 BPM at full volume from the very first beat, no quiet intro: brushed swing snare, ride cymbal, finger snaps and a walking upright bass, a little cheeky and suspenseful, building toward the end. No horns, no melody, no vocals."
+    },
+    {
+      "at": 7.258,
+      "length": 23.71,
+      "generate": 40,
+      "from": 0,
+      "gain": -5,
+      "fadeIn": 0.02,
+      "fadeOut": 2.5,
+      "prompt": "Energetic electro swing track at 124 BPM that starts immediately at full energy and full volume on the very first beat, with no quiet intro, no build-up and no fade-in: punchy electronic drums with swing, bold brass stabs, a walking bass line, vintage piano chords and clarinet licks. Joyful, cheeky and confident, like a modern product launch. Full energy all the way through with no breakdown and no big ending hit. No vocals, no singing."
+    }
+  ],
+  "sounds": {
+    "join": {
+      "text": "video call join chime, soft two-tone bloop",
+      "duration": 0.8,
+      "gain": -10
+    },
+    "speech": {
+      "text": "soft speech bubble pop",
+      "duration": 0.5,
+      "gain": -14
+    },
+    "leave": {
+      "text": "video call leave sound, a short descending bloop",
+      "duration": 0.5,
+      "gain": -10
+    },
+    "tick": {
+      "text": "tiny crisp UI tick, a list item appearing",
+      "duration": 0.5,
+      "gain": -15
+    },
+    "highlight": {
+      "text": "bright marker highlight squeak with a soft ding",
+      "duration": 0.6,
+      "gain": -10
+    },
+    "morph": {
+      "text": "magical quick morph whoosh with a soft shimmer, an object transforming",
+      "duration": 0.8,
+      "gain": -13
+    },
+    "caution": {
+      "text": "soft gentle two-note alert tone, a note of caution",
+      "duration": 0.6,
+      "gain": -12
+    },
+    "paper": {
+      "text": "light paper envelope slide and fold",
+      "duration": 0.6,
+      "gain": -12
+    },
+    "sparkle": {
+      "text": "light soft shimmer sparkle, subtle",
+      "duration": 1,
+      "gain": -15
+    },
+    "soft": {
+      "text": "soft airy whoosh, gentle and smooth, a screen dissolving into the next",
+      "duration": 0.8,
+      "gain": -15
+    },
+    "papernote": {
+      "text": "soft paper rustle, a sticky note placed gently",
+      "duration": 0.6,
+      "gain": -14
+    }
+  },
+  "cues": [
+    {
+      "sound": "join",
+      "at": [
+        0
+      ]
+    },
+    {
+      "sound": "speech",
+      "at": [
+        0.3,
+        0.968,
+        1.355,
+        1.742
+      ]
+    },
+    {
+      "sound": "leave",
+      "at": [
+        2.903,
+        3.194,
+        3.484,
+        3.774
+      ]
+    },
+    {
+      "sound": "tick",
+      "at": [
+        9.794,
+        10.035,
+        10.277,
+        10.519,
+        10.761,
+        24.694,
+        24.935,
+        25.177,
+        25.419
+      ]
+    },
+    {
+      "sound": "highlight",
+      "at": [
+        11.794
+      ]
+    },
+    {
+      "sound": "morph",
+      "at": [
+        13.548,
+        17.419,
+        21.29
+      ]
+    },
+    {
+      "sound": "caution",
+      "at": [
+        14.748
+      ]
+    },
+    {
+      "sound": "paper",
+      "at": [
+        21.59
+      ]
+    },
+    {
+      "sound": "sparkle",
+      "at": [
+        29.032
+      ]
+    },
+    {
+      "sound": "soft",
+      "at": [
+        7.258,
+        9.194,
+        13.548,
+        17.419,
+        21.29,
+        24.194
+      ]
+    },
+    {
+      "sound": "papernote",
+      "at": [
+        3.871
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>__NAME__</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* Scene-specific styles go here. */
+</style>
+</head>
+<body>
+<div id="stage">
+  <section class="scene center" id="intro"><div class="display">Hello, <span class="sage">Helpin</span>.</div></section>
+  <section class="scene center" id="outro"><div class="h2 sage">helpin.ai</div></section>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { rise, leave, css } from '../../lib/components.js';
+
+const $ = (s) => document.querySelector(s);
+
+// Enter with rise(), exit with leave() in the last 0.4 s of each scene.
+const scene = (id, { lt, dur }) => {
+  if (lt > dur - 0.4) leave($(`#${id}`), lt, dur - 0.4);
+  else css($(`#${id}`), { opacity: 1, filter: 'none' });
+};
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 120,
+  scenes: [
+    { id: 'intro', start: 0, end: 3, render: (ctx) => {
+      rise($('#intro .display'), ctx.lt, 0.2, 0.7, 34, 14);
+      scene('intro', ctx);
+    } },
+    { id: 'outro', start: 3, end: 5, render: (ctx) => {
+      rise($('#outro .h2'), ctx.lt, 0.1);
+      scene('outro', ctx);
+    } },
+  ],
+});
+</script>
+</body>
+</html>
