@@ -16,7 +16,10 @@
   .dock { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; opacity: 0; }
   .dock img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   /* stacking: sky < hourly docks (1–5, later hours on top) < sunrise/dusk plate < sections < clock < cursor */
-  #plate { z-index: 8; } #scrim { z-index: 9; } .v { z-index: 10; } #clock { z-index: 11; } #stage .cursor { z-index: 12; }
+  #plate { z-index: 8; } #scrim { z-index: 9; }
+  /* the sunrise plate's laptop lid carries a faint maker's logo from frame ~60: a tracked soft blur covers it */
+  #lidfix { position: absolute; left: 0; top: 0; width: 170px; height: 170px; margin: -85px 0 0 -85px; border-radius: 50%; z-index: 8; opacity: 0;
+    backdrop-filter: blur(12px); -webkit-mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); } .v { z-index: 10; } #clock { z-index: 11; } #stage .cursor { z-index: 12; }
   .dock i { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 14, 30, .5) 0%, rgba(20, 14, 30, 0) 34%, rgba(20, 14, 30, 0) 70%, rgba(20, 14, 30, .35) 100%); }
   #sun { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; }
   #moon { position: absolute; left: 1560px; top: 150px; width: 110px; height: 110px; border-radius: 50%; background: #F4F1E6; box-shadow: -26px 8px 0 0 #121335 inset, 0 0 60px rgba(244, 241, 230, .35); opacity: 0; }
@@ -71,7 +74,7 @@
   <div id="sky"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div>
   <div class="dock" id="dockA"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><i></i></div>
   <div class="dock" id="dockB"><img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><i></i></div>
-  <img id="plate" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt=""><div id="scrim"></div>
+  <img id="plate" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt=""><div id="lidfix"></div><div id="scrim"></div>
 
   <!-- 9:00 the brief -->
   <div class="v" id="v1"><div id="apps"></div>
@@ -242,6 +245,10 @@ defineVideo({
       scr = pOp;
     }
     css(plate, { opacity: String(pOp), filter: pf });
+    // track the lid logo (measured on frames 66, 100 and 139 of the sunrise plate)
+    const sf = t < 4.0 ? 46 + Math.floor(t * 24) : 0;
+    const lp = keys(sf, [[55, [563, 723]], [66, [563, 723]], [100, [553, 750]], [139, [620, 767]], [142, [623, 768]]]);
+    css($('#lidfix'), { opacity: String(sf >= 55 ? pOp : 0), transform: `translate(${Math.round(lp[0])}px, ${Math.round(lp[1])}px)` });
     $('#scrim').style.opacity = String(scr);
     let wait = null;
     if (src && plate.dataset.src !== src) { plate.dataset.src = src; plate.src = src; wait = plate.decode().catch(() => {}); }

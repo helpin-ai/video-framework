@@ -1,0 +1,499 @@
+{
+ "name": "launch-everywhere",
+ "duration": 50,
+ "video": "../../out/launch-everywhere/launch-everywhere.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.2
+ },
+ "voice": {
+  "from": "vo.json",
+  "gain": 0,
+  "duck": {
+   "threshold": 0.03,
+   "ratio": 5,
+   "attack": 20,
+   "release": 380,
+   "sfx": false
+  }
+ },
+ "music": [
+  {
+   "gain": -5,
+   "at": 0,
+   "length": 10.5,
+   "generate": 12,
+   "from": 0.275,
+   "fadeIn": 0.02,
+   "fadeOut": 0.04,
+   "prompt": "Modern minimal electronic at exactly 120 BPM in A minor, a premium tech product launch: crisp tight drums, round sub bass, plucked synths, airy pads, clean and confident. No vocals. The intro: it starts immediately, sparse and tense, with muted plucked hits on the beat over a soft sub-bass pulse; hi-hats creep in and it builds steadily with a rising filter sweep that peaks at the very end, ready for a drop. No silence at the start."
+  },
+  {
+   "gain": -5,
+   "at": 10.5,
+   "length": 23,
+   "generate": 27,
+   "from": 0.08,
+   "fadeIn": 0.01,
+   "fadeOut": 0.03,
+   "prompt": "Modern minimal electronic at exactly 120 BPM in A minor, a premium tech product launch: crisp tight drums, round sub bass, plucked synths, airy pads, clean and confident. No vocals. It starts immediately at full groove on the first beat, like a drop: punchy kick, round bass and bouncing plucks, playful and driving, steady energy with small variations. No breaks, no build-downs and no ending."
+  },
+  {
+   "gain": -5,
+   "at": 33.5,
+   "length": 4,
+   "generate": 10,
+   "from": 0.03,
+   "fadeIn": 0.01,
+   "fadeOut": 0.03,
+   "prompt": "Modern minimal electronic at exactly 120 BPM in A minor, a premium tech product launch: crisp tight drums, round sub bass, plucked synths, airy pads, clean and confident. No vocals. Stripped back and dramatic: only deep sub-bass hits and a clap on the beat, with space between them. It starts immediately with a hit on the first beat."
+  },
+  {
+   "gain": -5,
+   "at": 37.5,
+   "length": 12.5,
+   "generate": 14,
+   "from": 0.03,
+   "fadeIn": 0.01,
+   "fadeOut": 1.5,
+   "prompt": "Modern minimal electronic at exactly 120 BPM in A minor, a premium tech product launch: crisp tight drums, round sub bass, plucked synths, airy pads, clean and confident. No vocals. It starts immediately at full groove on the first beat, warm and uplifting, with a soft pad opening up. In the last four seconds the drums drop out and the pad settles gently. No final hit."
+  }
+ ],
+ "sounds": {
+  "cut": {
+   "text": "a crisp hard cut in a film trailer: a soft camera shutter click with a short low thump",
+   "duration": 0.5,
+   "gain": -13
+  },
+  "shatter": {
+   "text": "a photo breaking apart into dozens of small paper tiles, airy and light, not glass, not harsh",
+   "duration": 1,
+   "gain": -15
+  },
+  "cascade": {
+   "text": "many small paper cards landing on a table in quick succession, soft taps",
+   "duration": 1.2,
+   "gain": -18
+  },
+  "thread": {
+   "text": "a thread pulled fast through fabric, a soft rising zip",
+   "duration": 1.2,
+   "gain": -14
+  },
+  "stitch": {
+   "text": "a single tiny soft plucked string, like a needle catching a thread",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "tilt": {
+   "text": "a deep airy whoosh, a huge sheet of paper rotating in the air",
+   "duration": 1,
+   "gain": -16
+  },
+  "collapse": {
+   "text": "a reverse whoosh sucking everything into one point, ending in a soft tight thock",
+   "duration": 1,
+   "gain": -13
+  },
+  "mark": {
+   "text": "a warm bright synth chime, an elegant logo reveal, short",
+   "duration": 1.5,
+   "gain": -13
+  },
+  "letters": {
+   "text": "soft quick letter taps, like type setting into place, five light clicks",
+   "duration": 0.6,
+   "gain": -20
+  },
+  "blip": {
+   "text": "a tiny soft round blip",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "tick": {
+   "text": "a tiny soft UI tick, very short",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "draw": {
+   "text": "a smooth pen stroke drawing a long line, soft swish",
+   "duration": 0.7,
+   "gain": -17
+  },
+  "type": {
+   "text": "soft fast typing on a laptop keyboard for a second and a half",
+   "duration": 1.5,
+   "gain": -17
+  },
+  "enter": {
+   "text": "a crisp keyboard enter key press",
+   "duration": 0.5,
+   "gain": -14
+  },
+  "burst": {
+   "text": "a sparkly particle burst, airy shimmer spreading out",
+   "duration": 1,
+   "gain": -15
+  },
+  "fly": {
+   "text": "a fast airy whoosh flying through space as cards rush past the camera",
+   "duration": 1.3,
+   "gain": -14
+  },
+  "bead": {
+   "text": "a small soft wooden bead click onto a string",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "pop": {
+   "text": "soft bubbly UI pop",
+   "duration": 0.5,
+   "gain": -17
+  },
+  "msg": {
+   "text": "a soft warm chat message notification pop",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "handoff": {
+   "text": "a smooth light whoosh of a card being passed across a table",
+   "duration": 0.6,
+   "gain": -17
+  },
+  "stamp": {
+   "text": "a satisfying soft rubber stamp thump on paper",
+   "duration": 0.5,
+   "gain": -14
+  },
+  "keys": {
+   "text": "three quick soft keyboard taps",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "scan": {
+   "text": "a soft electronic scan sweep, gentle",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "check": {
+   "text": "soft bright check-mark ding, satisfying",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "scribble": {
+   "text": "a quick pen strike-through on paper, soft",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "knob": {
+   "text": "a smooth toggle switch sliding across with a soft click at the end",
+   "duration": 0.6,
+   "gain": -15
+  },
+  "click": {
+   "text": "crisp trackpad click",
+   "duration": 0.5,
+   "gain": -12
+  },
+  "success": {
+   "text": "short warm two-note success chime, soft",
+   "duration": 0.8,
+   "gain": -16
+  },
+  "slam": {
+   "text": "a deep soft bass thump with a short tail, bold text slamming onto a dark screen",
+   "duration": 0.8,
+   "gain": -11
+  },
+  "swoosh": {
+   "text": "a clean short swoosh, a screen transition, smooth",
+   "duration": 0.6,
+   "gain": -19
+  },
+  "digit": {
+   "text": "a heavy soft thud as a big number lands, with a tiny click",
+   "duration": 0.6,
+   "gain": -13
+  },
+  "wind": {
+   "text": "a rope winding into a ball, a soft swirling whoosh that spins up",
+   "duration": 2,
+   "gain": -15
+  },
+  "gather": {
+   "text": "a soft inward swoosh gathering everything to the centre, ends quietly",
+   "duration": 0.8,
+   "gain": -15
+  },
+  "chime": {
+   "text": "a single warm soft bell tone with a long gentle tail, calm",
+   "duration": 2,
+   "gain": -15
+  },
+  "rise": {
+   "text": "a soft airy rising swell, big letters rising into frame",
+   "duration": 1.5,
+   "gain": -17
+  }
+ },
+ "cues": [
+  {
+   "sound": "cut",
+   "at": [
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "sound": "msg",
+   "at": [
+    0.15,
+    1.15,
+    2.15,
+    3.25
+   ]
+  },
+  {
+   "sound": "shatter",
+   "at": [
+    5.5
+   ]
+  },
+  {
+   "sound": "cascade",
+   "at": [
+    5.62
+   ]
+  },
+  {
+   "sound": "thread",
+   "at": [
+    8.25
+   ]
+  },
+  {
+   "sound": "stitch",
+   "at": [
+    8.642,
+    8.732,
+    8.797,
+    8.85,
+    8.896,
+    8.948,
+    9.012,
+    9.099
+   ]
+  },
+  {
+   "sound": "tilt",
+   "at": [
+    8.5
+   ]
+  },
+  {
+   "sound": "collapse",
+   "at": [
+    9.5
+   ]
+  },
+  {
+   "sound": "mark",
+   "at": [
+    10.5
+   ]
+  },
+  {
+   "sound": "letters",
+   "at": [
+    11
+   ]
+  },
+  {
+   "sound": "blip",
+   "at": [
+    13.7
+   ]
+  },
+  {
+   "sound": "tick",
+   "at": [
+    12.25,
+    12.5,
+    12.75,
+    13,
+    13.25,
+    23.1,
+    23.25,
+    23.4
+   ]
+  },
+  {
+   "sound": "draw",
+   "at": [
+    13.75
+   ]
+  },
+  {
+   "sound": "type",
+   "at": [
+    14.25
+   ]
+  },
+  {
+   "sound": "enter",
+   "at": [
+    16
+   ]
+  },
+  {
+   "sound": "burst",
+   "at": [
+    16.02
+   ]
+  },
+  {
+   "sound": "fly",
+   "at": [
+    16.12
+   ]
+  },
+  {
+   "sound": "bead",
+   "at": [
+    17.82,
+    17.94,
+    18.06,
+    18.18,
+    18.3,
+    18.42,
+    18.54
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    19.8,
+    19.95,
+    20.1,
+    20.25,
+    38.777,
+    40.019,
+    40.369,
+    40.569
+   ]
+  },
+  {
+   "sound": "handoff",
+   "at": [
+    21.4,
+    22,
+    24.5,
+    26.5,
+    28
+   ]
+  },
+  {
+   "sound": "stamp",
+   "at": [
+    23.6,
+    25.8,
+    27.55,
+    29.5
+   ]
+  },
+  {
+   "sound": "keys",
+   "at": [
+    25.05
+   ]
+  },
+  {
+   "sound": "scan",
+   "at": [
+    26.6
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    26.85,
+    27.05,
+    27.25
+   ]
+  },
+  {
+   "sound": "scribble",
+   "at": [
+    28.35
+   ]
+  },
+  {
+   "sound": "knob",
+   "at": [
+    31.7
+   ]
+  },
+  {
+   "sound": "click",
+   "at": [
+    32.75
+   ]
+  },
+  {
+   "sound": "success",
+   "at": [
+    32.8
+   ]
+  },
+  {
+   "sound": "slam",
+   "at": [
+    33.5,
+    35
+   ]
+  },
+  {
+   "sound": "swoosh",
+   "at": [
+    36.75,
+    13.5,
+    19.5,
+    30.25,
+    37.5,
+    41
+   ]
+  },
+  {
+   "sound": "digit",
+   "at": [
+    37.55
+   ]
+  },
+  {
+   "sound": "wind",
+   "at": [
+    41.1
+   ]
+  },
+  {
+   "sound": "gather",
+   "at": [
+    44.5
+   ]
+  },
+  {
+   "sound": "chime",
+   "at": [
+    44.95
+   ]
+  },
+  {
+   "sound": "rise",
+   "at": [
+    47.5
+   ]
+  }
+ ]
+}

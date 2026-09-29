@@ -1,0 +1,566 @@
+{
+ "voice": "Lily - Velvety Actress",
+ "total": 48.743,
+ "lines": [
+  {
+   "id": "once",
+   "text": "Once.",
+   "at": 0.35,
+   "start": 0.35,
+   "end": 0.675,
+   "file": "out/audio-cache/vo-once-a3a2f85e6b193fa6.mp3",
+   "words": [
+    {
+     "w": "Once.",
+     "s": 0.35,
+     "e": 0.675
+    }
+   ]
+  },
+  {
+   "id": "twice",
+   "text": "Twice.",
+   "at": 1.3,
+   "start": 1.3,
+   "end": 1.811,
+   "file": "out/audio-cache/vo-twice-7537fba743659418.mp3",
+   "words": [
+    {
+     "w": "Twice.",
+     "s": 1.3,
+     "e": 1.811
+    }
+   ]
+  },
+  {
+   "id": "three",
+   "text": "Three times.",
+   "at": 2.2,
+   "start": 2.2,
+   "end": 3.222,
+   "file": "out/audio-cache/vo-three-5e38cb9b9250bb7e.mp3",
+   "words": [
+    {
+     "w": "Three",
+     "s": 2.2,
+     "e": 2.49
+    },
+    {
+     "w": "times.",
+     "s": 2.537,
+     "e": 3.222
+    }
+   ]
+  },
+  {
+   "id": "over",
+   "text": "Every handoff, your customer starts over.",
+   "at": 3.4,
+   "start": 3.4,
+   "end": 5.443,
+   "file": "out/audio-cache/vo-over-74526bb30ac5ac1f.mp3",
+   "words": [
+    {
+     "w": "Every",
+     "s": 3.4,
+     "e": 3.737
+    },
+    {
+     "w": "handoff,",
+     "s": 3.795,
+     "e": 4.201
+    },
+    {
+     "w": "your",
+     "s": 4.224,
+     "e": 4.34
+    },
+    {
+     "w": "customer",
+     "s": 4.387,
+     "e": 4.747
+    },
+    {
+     "w": "starts",
+     "s": 4.793,
+     "e": 5.107
+    },
+    {
+     "w": "over.",
+     "s": 5.165,
+     "e": 5.443
+    }
+   ]
+  },
+  {
+   "id": "wall",
+   "text": "Their story is everywhere.",
+   "at": 6,
+   "start": 6,
+   "end": 7.672,
+   "file": "out/audio-cache/vo-wall-38fa444cd08c68c1.mp3",
+   "words": [
+    {
+     "w": "Their",
+     "s": 6,
+     "e": 6.232
+    },
+    {
+     "w": "story",
+     "s": 6.279,
+     "e": 6.697
+    },
+    {
+     "w": "is",
+     "s": 6.755,
+     "e": 6.836
+    },
+    {
+     "w": "everywhere.",
+     "s": 6.894,
+     "e": 7.672
+    }
+   ]
+  },
+  {
+   "id": "record",
+   "text": "One customer. One record.",
+   "at": 11,
+   "start": 11,
+   "end": 13.043,
+   "file": "out/audio-cache/vo-record-bd09b1a26db1adc4.mp3",
+   "words": [
+    {
+     "w": "One",
+     "s": 11,
+     "e": 11.221
+    },
+    {
+     "w": "customer.",
+     "s": 11.267,
+     "e": 11.778
+    },
+    {
+     "w": "One",
+     "s": 11.952,
+     "e": 12.161
+    },
+    {
+     "w": "record.",
+     "s": 12.219,
+     "e": 13.043
+    }
+   ]
+  },
+  {
+   "id": "ask",
+   "text": "Ask anything.",
+   "at": 16,
+   "start": 16,
+   "end": 16.929,
+   "file": "out/audio-cache/vo-ask-d7bd0d70128d3fc8.mp3",
+   "words": [
+    {
+     "w": "Ask",
+     "s": 16,
+     "e": 16.348
+    },
+    {
+     "w": "anything.",
+     "s": 16.43,
+     "e": 16.929
+    }
+   ]
+  },
+  {
+   "id": "story",
+   "text": "Get the whole story.",
+   "at": 17,
+   "start": 17,
+   "end": 18.486,
+   "file": "out/audio-cache/vo-story-82f733b50ca29a19.mp3",
+   "words": [
+    {
+     "w": "Get",
+     "s": 17,
+     "e": 17.197
+    },
+    {
+     "w": "the",
+     "s": 17.232,
+     "e": 17.313
+    },
+    {
+     "w": "whole",
+     "s": 17.372,
+     "e": 17.58
+    },
+    {
+     "w": "story.",
+     "s": 17.615,
+     "e": 18.486
+    }
+   ]
+  },
+  {
+   "id": "agents",
+   "text": "AI agents that do more than answer.",
+   "at": 19.2,
+   "start": 19.2,
+   "end": 21.661,
+   "file": "out/audio-cache/vo-agents-9f66cea777b8b54a.mp3",
+   "words": [
+    {
+     "w": "AI",
+     "s": 19.2,
+     "e": 19.606
+    },
+    {
+     "w": "agents",
+     "s": 19.653,
+     "e": 20.001
+    },
+    {
+     "w": "that",
+     "s": 20.036,
+     "e": 20.164
+    },
+    {
+     "w": "do",
+     "s": 20.222,
+     "e": 20.361
+    },
+    {
+     "w": "more",
+     "s": 20.431,
+     "e": 20.582
+    },
+    {
+     "w": "than",
+     "s": 20.605,
+     "e": 20.721
+    },
+    {
+     "w": "answer.",
+     "s": 20.767,
+     "e": 21.661
+    }
+   ]
+  },
+  {
+   "id": "echo",
+   "text": "Echo answers from your docs.",
+   "at": 22.05,
+   "start": 22.05,
+   "end": 23.908,
+   "file": "out/audio-cache/vo-echo-1948165bee422986.mp3",
+   "words": [
+    {
+     "w": "Echo",
+     "s": 22.05,
+     "e": 22.352
+    },
+    {
+     "w": "answers",
+     "s": 22.445,
+     "e": 22.863
+    },
+    {
+     "w": "from",
+     "s": 22.909,
+     "e": 23.037
+    },
+    {
+     "w": "your",
+     "s": 23.095,
+     "e": 23.211
+    },
+    {
+     "w": "docs.",
+     "s": 23.257,
+     "e": 23.908
+    }
+   ]
+  },
+  {
+   "id": "forge",
+   "text": "Forge prepares the fix.",
+   "at": 24.55,
+   "start": 24.55,
+   "end": 26.268,
+   "file": "out/audio-cache/vo-forge-a0eb1f67a72f50f9.mp3",
+   "words": [
+    {
+     "w": "Forge",
+     "s": 24.55,
+     "e": 24.933
+    },
+    {
+     "w": "prepares",
+     "s": 24.968,
+     "e": 25.351
+    },
+    {
+     "w": "the",
+     "s": 25.398,
+     "e": 25.467
+    },
+    {
+     "w": "fix.",
+     "s": 25.525,
+     "e": 26.268
+    }
+   ]
+  },
+  {
+   "id": "lens",
+   "text": "Lens reviews it.",
+   "at": 26.55,
+   "start": 26.55,
+   "end": 27.711,
+   "file": "out/audio-cache/vo-lens-47675917406810c2.mp3",
+   "words": [
+    {
+     "w": "Lens",
+     "s": 26.55,
+     "e": 26.887
+    },
+    {
+     "w": "reviews",
+     "s": 26.956,
+     "e": 27.293
+    },
+    {
+     "w": "it.",
+     "s": 27.363,
+     "e": 27.711
+    }
+   ]
+  },
+  {
+   "id": "quill",
+   "text": "Quill updates the docs.",
+   "at": 28.05,
+   "start": 28.05,
+   "end": 30.047,
+   "file": "out/audio-cache/vo-quill-2d3733c071d5fb74.mp3",
+   "words": [
+    {
+     "w": "Quill",
+     "s": 28.05,
+     "e": 28.422
+    },
+    {
+     "w": "updates",
+     "s": 28.538,
+     "e": 29.002
+    },
+    {
+     "w": "the",
+     "s": 29.06,
+     "e": 29.13
+    },
+    {
+     "w": "docs.",
+     "s": 29.165,
+     "e": 30.047
+    }
+   ]
+  },
+  {
+   "id": "approve",
+   "text": "You choose when they ask first.",
+   "at": 30.5,
+   "start": 30.5,
+   "end": 32.404,
+   "file": "out/audio-cache/vo-approve-9d59e179514503a4.mp3",
+   "words": [
+    {
+     "w": "You",
+     "s": 30.5,
+     "e": 30.674
+    },
+    {
+     "w": "choose",
+     "s": 30.744,
+     "e": 30.999
+    },
+    {
+     "w": "when",
+     "s": 31.022,
+     "e": 31.127
+    },
+    {
+     "w": "they",
+     "s": 31.162,
+     "e": 31.278
+    },
+    {
+     "w": "ask",
+     "s": 31.324,
+     "e": 31.533
+    },
+    {
+     "w": "first.",
+     "s": 31.603,
+     "e": 32.404
+    }
+   ]
+  },
+  {
+   "id": "oss",
+   "text": "Open source.",
+   "at": 33.5,
+   "start": 33.5,
+   "end": 34.661,
+   "file": "out/audio-cache/vo-oss-66dfa86ff9cc61ed.mp3",
+   "words": [
+    {
+     "w": "Open",
+     "s": 33.5,
+     "e": 33.883
+    },
+    {
+     "w": "source.",
+     "s": 33.964,
+     "e": 34.661
+    }
+   ]
+  },
+  {
+   "id": "servers",
+   "text": "Your data, on your servers.",
+   "at": 35,
+   "start": 35,
+   "end": 36.718,
+   "file": "out/audio-cache/vo-servers-c8b84adb98c497f9.mp3",
+   "words": [
+    {
+     "w": "Your",
+     "s": 35,
+     "e": 35.221
+    },
+    {
+     "w": "data,",
+     "s": 35.267,
+     "e": 35.673
+    },
+    {
+     "w": "on",
+     "s": 35.708,
+     "e": 35.836
+    },
+    {
+     "w": "your",
+     "s": 35.894,
+     "e": 36.01
+    },
+    {
+     "w": "servers.",
+     "s": 36.057,
+     "e": 36.718
+    }
+   ]
+  },
+  {
+   "id": "team",
+   "text": "Built by the team behind ContentStudio and Usermaven.",
+   "at": 37.5,
+   "start": 37.5,
+   "end": 41.169,
+   "file": "out/audio-cache/vo-team-e33adcee670ea17c.mp3",
+   "words": [
+    {
+     "w": "Built",
+     "s": 37.5,
+     "e": 37.779
+    },
+    {
+     "w": "by",
+     "s": 37.848,
+     "e": 37.953
+    },
+    {
+     "w": "the",
+     "s": 37.999,
+     "e": 38.069
+    },
+    {
+     "w": "team",
+     "s": 38.115,
+     "e": 38.359
+    },
+    {
+     "w": "behind",
+     "s": 38.417,
+     "e": 38.707
+    },
+    {
+     "w": "ContentStudio",
+     "s": 38.777,
+     "e": 39.659
+    },
+    {
+     "w": "and",
+     "s": 39.741,
+     "e": 39.903
+    },
+    {
+     "w": "Usermaven.",
+     "s": 40.019,
+     "e": 41.169
+    }
+   ]
+  },
+  {
+   "id": "tagline",
+   "text": "Every handoff keeps the story.",
+   "at": 41.5,
+   "start": 41.5,
+   "end": 43.358,
+   "file": "out/audio-cache/vo-tagline-97e1ec5782a58635.mp3",
+   "words": [
+    {
+     "w": "Every",
+     "s": 41.5,
+     "e": 41.813
+    },
+    {
+     "w": "handoff",
+     "s": 41.86,
+     "e": 42.197
+    },
+    {
+     "w": "keeps",
+     "s": 42.255,
+     "e": 42.464
+    },
+    {
+     "w": "the",
+     "s": 42.51,
+     "e": 42.58
+    },
+    {
+     "w": "story.",
+     "s": 42.626,
+     "e": 43.358
+    }
+   ]
+  },
+  {
+   "id": "name",
+   "text": "Helpin.",
+   "at": 45,
+   "start": 45,
+   "end": 45.743,
+   "file": "out/audio-cache/vo-name-a69b440762b9bd3f.mp3",
+   "words": [
+    {
+     "w": "Helpin.",
+     "s": 45,
+     "e": 45.743
+    }
+   ]
+  }
+ ]
+}

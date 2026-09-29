@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>one-prompt</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  :root { --paper: #F2F0EB; --ink: #151716; --em: #0F7A50; --em2: #13A165; --red: #D5412B; --grey: #8C918E; --line: #E2E0DA; }
+  #stage { background: radial-gradient(120% 95% at 50% 42%, #FAF9F6 0%, #F2F0EB 58%, #E3E0D8 100%); color: var(--ink); }
+  .scene { position: absolute; inset: 0; transform-origin: 50% 50%; }
+  .abs { position: absolute; }
+  .hl { font: 700 120px/1.02 var(--sans); letter-spacing: -0.045em; color: var(--ink); white-space: nowrap; }
+  .st { position: relative; white-space: nowrap; }
+  .st.abs { position: absolute; }
+  .st .ch { opacity: 0; }
+  .caret { position: absolute; left: 0; top: 0; margin: 0; display: block; background: var(--em2); border-radius: 0.05em; opacity: 0; box-shadow: 0 0 0.25em rgba(19, 161, 101, .35); }
+  .red { color: var(--red); font-style: normal; }
+  .gr { color: var(--em); font-style: normal; }
+  .note { font: 500 26px/1 var(--mono); color: var(--ink); letter-spacing: 0; white-space: nowrap; }
+  .note .b, .eb .b { color: var(--em); }
+  .eb { font: 500 34px/1 var(--sans); letter-spacing: -0.01em; color: var(--ink); white-space: nowrap; }
+  .center-x { left: 50%; transform: translateX(-50%); }
+
+  /* odometer */
+  .odo { display: inline-flex; line-height: 1; vertical-align: top; }
+  .oc { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; -webkit-mask-image: linear-gradient(transparent 0, #000 9%, #000 91%, transparent 100%); }
+  .os { display: block; will-change: transform; }
+  .os b { display: block; height: 1em; line-height: 1em; font-weight: 700; text-align: center; }
+
+  /* tiles and cards */
+  .tile { position: absolute; width: 104px; height: 104px; margin: -52px 0 0 -52px; border-radius: 26px; background: #fff; display: grid; place-items: center; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 14px 34px rgba(21, 23, 22, .10); }
+  .card { background: #fff; border-radius: 22px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 60px rgba(21, 23, 22, .12); }
+
+  /* hand-off window */
+  #win { left: 440px; top: 210px; width: 1040px; height: 560px; overflow: hidden; }
+  #win .bar { height: 50px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font: 500 17px var(--mono); color: #9A9E9B; }
+  #win .bar i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: #DAD8D2; margin-left: 7px; }
+  #win .body { display: grid; grid-template-columns: 1fr 1fr; height: 510px; }
+  #win .left { padding: 44px 40px; border-right: 1px solid var(--line); }
+  #win .left h3 { margin: 0 0 22px; font: 600 34px/1.15 var(--sans); letter-spacing: -0.02em; display: flex; gap: 16px; align-items: center; }
+  #win .left h3 span.ic { width: 44px; height: 44px; border: 2.5px solid var(--ink); border-radius: 10px; display: grid; place-items: center; font: 600 22px var(--mono); }
+  #win .ph { height: 12px; border-radius: 6px; background: #EEECE7; margin: 12px 0; }
+  #win .prog { margin-top: 70px; display: flex; align-items: center; gap: 16px; font: 500 20px var(--sans); color: #8E928F; }
+  #win .track { flex: 1; height: 8px; background: #EEECE7; border-radius: 4px; overflow: hidden; }
+  #win .fill { height: 100%; width: 20%; background: #6F7571; border-radius: 4px; }
+  #win .right { padding: 36px 36px; }
+  #win .step { display: flex; align-items: center; gap: 18px; height: 64px; font: 500 24px var(--sans); }
+  #win .step .n { width: 26px; font-weight: 700; }
+  #win .step .s { margin-left: auto; font: 600 15px var(--sans); padding: 6px 12px; border-radius: 20px; background: #F1F0EC; color: #9A9E9B; }
+  #win .step .s.done { background: #E3F3EA; color: #1E8A55; }
+  #win .spin { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; border: 3px solid #E0DED8; border-top-color: #6F7571; }
+  #win .btns { position: absolute; right: 36px; bottom: 30px; display: flex; gap: 14px; }
+  #win .btn { font: 600 20px var(--sans); padding: 12px 22px; border-radius: 12px; border: 1px solid var(--line); color: #8E928F; background: #fff; }
+  #win .btn.next { background: var(--ink); color: #fff; border-color: var(--ink); }
+  #tip { position: absolute; font: 500 16px var(--sans); background: var(--ink); color: #fff; padding: 8px 12px; border-radius: 8px; white-space: nowrap; }
+
+  /* terminals */
+  .term { position: absolute; border-radius: 22px; overflow: hidden; border: 0; }
+  .term.dark { background: #151716; box-shadow: 0 30px 70px rgba(21, 23, 22, .28); color: #E8EAE8; }
+  .term .hd { height: 50px; display: flex; align-items: center; padding: 0 20px; gap: 8px; font: 500 18px var(--mono); color: #7E8481; position: relative; }
+  .term .hd i { width: 13px; height: 13px; border-radius: 50%; display: inline-block; }
+  .term .hd .ttl { position: absolute; left: 0; right: 0; text-align: center; }
+  .term .ln { font: 500 26px/46px var(--mono); padding: 0 34px; white-space: nowrap; }
+  .term .ln .p { color: #3FCB8B; }
+  .term .dim { color: #7E8481; }
+  .term .err { color: #FF6B55; }
+
+  /* category tiles in the 5 → 1 build */
+  .cat { position: absolute; display: flex; align-items: center; gap: 16px; padding: 18px 26px 18px 20px; border-radius: 20px; background: #fff; box-shadow: 0 14px 34px rgba(21, 23, 22, .10); font: 500 27px var(--mono); color: #5F6662; white-space: nowrap; }
+
+  /* icon */
+  #icon { position: absolute; left: 0; top: 0; background: var(--em); display: grid; place-items: center; box-shadow: 0 24px 60px rgba(15, 122, 80, .30); z-index: 5; }
+  #icon img { width: 70%; height: 70%; }
+  #ring { position: absolute; left: 0; top: 0; border-radius: 50%; border: 3px solid var(--em2); z-index: 4; }
+
+  .pill { display: inline-flex; align-items: center; gap: 12px; height: auto; padding: 12px 22px; border: 0; border-radius: 40px; background: #fff; box-shadow: 0 8px 22px rgba(21, 23, 22, .08); font: 600 26px/1.2 var(--sans); letter-spacing: -0.005em; color: var(--ink); }
+  .pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--em2); }
+  .client { position: absolute; display: flex; align-items: center; gap: 16px; padding: 18px 30px 18px 20px; border-radius: 50px; background: #fff; box-shadow: 0 14px 34px rgba(21, 23, 22, .12); font: 600 32px var(--sans); letter-spacing: -0.01em; white-space: nowrap; }
+  .client img { width: 48px; height: 48px; }
+  .darkpill { position: absolute; background: var(--ink); color: #EDEFEC; font: 500 24px var(--mono); padding: 14px 26px; border-radius: 40px; white-space: nowrap; }
+  .darkpill .sep { color: #5B615E; margin: 0 10px; }
+  .darkpill .g { color: #5FD69E; }
+
+  /* demo terminal (light) */
+  .term.light { background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 30px 70px rgba(21, 23, 22, .14); color: var(--ink); }
+  .term.light .hd { border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 600; justify-content: space-between; height: 58px; padding: 0 28px; }
+  .term.light .hd span:last-child { color: #9A9E9B; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+  .term.light .hd span:last-child i { width: 10px; height: 10px; background: var(--em2); }
+  .prompt { margin: 28px 28px 18px; padding: 20px 24px; border-radius: 14px; background: #F3F2EE; font: 500 27px var(--mono); white-space: nowrap; }
+  .call { padding: 0 34px; margin-top: 16px; }
+  .call .fn { font: 600 26px/40px var(--mono); white-space: nowrap; }
+  .call .fn i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--em2); margin-right: 14px; vertical-align: 2px; }
+  .call .res { font: 500 24px/36px var(--mono); color: #7A807C; padding-left: 26px; white-space: nowrap; }
+  .done { padding: 0 34px; margin-top: 26px; font: 600 26px/38px var(--mono); color: var(--em); white-space: nowrap; }
+  #badge { position: absolute; background: var(--ink); color: #fff; font: 600 22px var(--mono); padding: 13px 22px; border-radius: 30px; white-space: nowrap; display: flex; align-items: center; gap: 12px; }
+  #badge .ok { width: 26px; height: 26px; border-radius: 50%; background: var(--em2); display: grid; place-items: center; font-size: 16px; }
+
+  /* pricing */
+  .pcard { position: absolute; width: 420px; height: 150px; padding: 26px 30px; }
+  .pcard .lab { font: 500 22px var(--sans); color: #8E928F; }
+  .pcard .val { font: 700 64px/1 var(--sans); letter-spacing: -0.03em; margin-top: 14px; }
+  .pcard .lock { position: absolute; right: 30px; bottom: 30px; width: 40px; height: 40px; border-radius: 12px; background: #E3F3EA; display: grid; place-items: center; }
+
+  #cta { position: absolute; background: var(--em); color: #fff; font: 600 36px var(--sans); padding: 24px 44px; border-radius: 60px; white-space: nowrap; box-shadow: 0 18px 40px rgba(15, 122, 80, .28); overflow: hidden; }
+  #ripple { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.45); left: 0; top: 0; }
+  canvas { position: absolute; left: 0; top: 0; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="vb1" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="0 2"/></filter>
+    <filter id="vb2" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="0 5"/></filter>
+    <filter id="vb3" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="0 10"/></filter>
+    <filter id="vb4" x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation="0 16"/></filter>
+  </defs>
+</svg>
+<div id="stage">
+
+  <!-- 1 · Hook: three lines stream in, each with a bracket note -->
+  <section class="scene" id="hook">
+    <div class="abs" id="hookBlock" style="left:170px; top:330px;">
+      <div class="hl st" id="h1">Five tools.</div>
+      <div class="hl st" id="h2" style="margin-top:28px">Five bills.</div>
+      <div class="hl st" id="h3" style="margin-top:28px">Zero shared context.</div>
+    </div>
+    <div class="note st abs" id="n1" style="right:170px"><span class="b">[</span> support · projects · crm · meetings · docs <span class="b">]</span></div>
+    <div class="note st abs" id="n2" style="right:170px"><span class="b">[</span> per seat, per tool <span class="b">]</span></div>
+    <div class="note st abs" id="n3" style="right:170px"><span class="b">[</span> between them <span class="b">]</span></div>
+  </section>
+
+  <!-- 2 · One customer question touches 1 → 5 tools -->
+  <section class="scene" id="touch">
+    <div class="eb st abs" id="touchEb" style="top:190px"><span class="b">[</span> One customer question touches <span class="b">]</span></div>
+    <div class="hl abs" id="touchNum" style="top:430px; font-size:250px; line-height:1;"><span class="odo" id="odoTouch"></span><span id="touchWord"> tool</span><span id="touchS">s</span></div>
+    <div id="tiles"></div>
+  </section>
+
+  <!-- 3 · The copy-paste hand-off -->
+  <section class="scene" id="handoff">
+    <div class="card abs" id="win">
+      <div class="bar"><span>Hand-off helper v2.1</span><span><i></i><i></i><i></i></span></div>
+      <div class="body">
+        <div class="left">
+          <h3><span class="ic">#</span>Move ticket #4821 to engineering</h3>
+          <div class="ph" style="width:86%"></div><div class="ph" style="width:64%"></div>
+          <div class="prog"><span id="stepOf">Step 1 of 5</span><div class="track"><div class="fill" id="fill"></div></div><span id="pct">20%</span></div>
+        </div>
+        <div class="right">
+          <div class="step"><span class="n">1</span>Copy the ticket<span class="s" id="s1">Pending</span></div>
+          <div class="step"><span class="n">2</span>Paste it into the tracker<span class="s" id="s2">Pending</span></div>
+          <div class="step"><span class="n">3</span>Find the CRM record<span class="s" id="s3">Pending</span><span class="spin" id="spin"></span></div>
+          <div class="step"><span class="n">4</span>Update the docs<span class="s">Pending</span></div>
+          <div class="step"><span class="n">5</span>Tell the customer<span class="s">Pending</span></div>
+        </div>
+      </div>
+      <div class="btns"><span class="btn">Back</span><span class="btn next" id="next">Next →</span></div>
+    </div>
+    <div id="tip">Please wait…</div>
+    <div class="eb st abs" id="handEb" style="top:860px"><span class="b">[</span> Same copy-paste. Every hand-off. <span class="b">]</span></div>
+  </section>
+
+  <!-- 4 · The dot matrix -->
+  <section class="scene" id="dots">
+    <canvas id="dotsCv"></canvas>
+    <div class="abs st" id="d1" style="top:506px; font:600 60px/1 var(--sans); letter-spacing:-0.03em;">Hundreds of customer conversations.</div>
+    <div class="abs st" id="d2" style="top:506px; font:600 60px/1 var(--sans); letter-spacing:-0.03em;">Most of them <em class="red">never reach</em> the roadmap.</div>
+    <div class="abs st" id="d3" style="top:506px; font:600 60px/1 var(--sans); letter-spacing:-0.03em;">You still pay for a seat in <em class="red">every tool.</em></div>
+  </section>
+
+  <!-- 5 · Seats -->
+  <section class="scene" id="seats">
+    <div class="eb st abs" id="seatEb" style="top:280px"><span class="b">[</span> Your team grew. So did the <em class="red">bills.</em> <span class="b">]</span></div>
+    <div class="hl abs" id="seatNum" style="top:390px; font-size:230px; line-height:1;"><span class="odo" id="odoSeats"></span><span> seats</span></div>
+    <div class="note st abs" id="seatNote" style="top:660px"><span class="b">[</span> 12 people × 5 tools <span class="b">]</span></div>
+    <div class="abs" id="every" style="top:750px; font:700 56px/1 var(--sans); letter-spacing:-0.03em; white-space:nowrap;"><span>Every.</span> <span>Single.</span> <span>Month.</span></div>
+  </section>
+
+  <!-- 6 · Your team works with AI agents now -->
+  <section class="scene" id="agents">
+    <div class="eb st abs" id="agEb1" style="top:170px"><span class="b">[</span> Your team works with AI agents now <span class="b">]</span></div>
+    <div class="eb st abs" id="agEb2" style="top:170px"><span class="b">[</span> And your tools <em class="red">can't</em> share the story <span class="b">]</span></div>
+    <div class="term dark" id="term1" style="left:220px; top:310px; width:800px; height:420px;">
+      <div class="hd"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="ttl">agent</span></div>
+      <div class="ln st" id="tq" style="margin-top:22px"><span class="p">&gt;</span> why is Northstar upset, and is it fixed?</div>
+      <div class="ln st dim" id="tc"><span id="tcDot">●</span> Connecting to your tools…</div>
+      <div class="ln st err" id="te">✕ The story is split across 5 tools.</div>
+      <div class="ln st dim" id="te2">&nbsp;&nbsp;3 tickets · 1 task · 0 links between them</div>
+    </div>
+    <svg class="abs" id="wire" width="1920" height="1080" style="left:0; top:0; overflow:visible">
+      <line id="wireL" x1="1030" y1="520" x2="1250" y2="520" stroke="#B9BCB8" stroke-width="3" stroke-dasharray="8 9" stroke-linecap="round"/>
+      <circle id="wireDot" r="8" fill="#D5412B" cx="1030" cy="520"/>
+      <g id="wireX" transform="translate(1140 520)"><circle r="24" fill="#D5412B"/><path d="M-8 -8 L8 8 M8 -8 L-8 8" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+    </svg>
+    <div id="toolStack"></div>
+  </section>
+
+  <!-- 7 · 5 tools → 1 workspace -->
+  <section class="scene" id="five">
+    <div class="hl abs" id="fiveLine" style="top:430px; font-size:220px; line-height:1; left:0;"><span class="odo" id="odoFive"></span><span class="st" id="fTools"> tools.</span><span class="st abs" id="fWork" style="left:0; top:0"> workspace.</span></div>
+    <div id="cats"></div>
+  </section>
+
+  <!-- 8 · Helpin -->
+  <section class="scene" id="reveal">
+    <div class="hl st abs" id="word" style="font-size:190px; line-height:1; top:0; left:0;">Helpin</div>
+    <div class="abs st" id="sub" style="top:640px; font:500 46px/1 var(--sans); letter-spacing:-0.02em;">The open-source workspace your team and <em class="gr">AI agents</em> share.</div>
+    <div class="abs" id="chips" style="top:736px; display:flex; gap:16px;"><span class="pill"><span class="dot"></span>Support</span><span class="pill"><span class="dot"></span>Projects</span><span class="pill"><span class="dot"></span>CRM</span><span class="pill"><span class="dot"></span>Meetings</span><span class="pill"><span class="dot"></span>Docs</span></div>
+  </section>
+
+  <!-- 9 · Plug in the AI client you already use -->
+  <section class="scene" id="hub">
+    <div class="hl st abs" id="hubH" style="top:130px; font-size:84px;">Plug in the AI client you <em class="gr">already use.</em></div>
+    <svg class="abs" id="paths" width="1920" height="1080" style="left:0; top:0; overflow:visible"><defs></defs></svg>
+    <div class="client" id="c0"><img src="logos/claude.svg" alt="">Claude</div>
+    <div class="client" id="c1"><img src="logos/codex.svg" alt="">Codex</div>
+    <div class="client" id="c2"><img src="logos/cursor.svg" alt="">Cursor</div>
+    <div class="client" id="c3"><img src="logos/vscode.svg" alt="">VS Code</div>
+    <div class="darkpill" id="row"><span class="g">MCP (beta)</span><span class="sep">·</span>SDKs<span class="sep">·</span>CLI<span class="sep">·</span>Events</div>
+  </section>
+
+  <!-- 10 · One prompt -->
+  <section class="scene" id="demo">
+    <div class="eb st abs" id="demoEb" style="top:96px"><span class="b">[</span> One prompt. The whole story. <span class="b">]</span></div>
+    <div class="term light" id="term2" style="left:170px; top:180px; width:1000px; height:740px;">
+      <div class="hd"><span>claude</span><span><i></i>helpin · mcp</span></div>
+      <div class="prompt st" id="dq"><span style="color:var(--em)">&gt;</span> which customers are waiting on the export fix?</div>
+      <div class="call" id="k0"><div class="fn st"><i></i>helpin.list_support_conversations</div><div class="res st">└ 23 conversations about the export</div></div>
+      <div class="call" id="k1"><div class="fn st"><i></i>helpin.search_workspace</div><div class="res st">└ EXP-142 · Customer export · In review</div></div>
+      <div class="call" id="k2"><div class="fn st"><i></i>helpin.get_task_context</div><div class="res st">└ PR #284 · the fix, ready for review</div></div>
+      <div class="call" id="k3"><div class="fn st"><i></i>helpin.add_task_comment</div><div class="res st">└ 23 waiting customers linked</div></div>
+      <div class="done st" id="kd">✓ Done. When it ships, you approve the follow-up.</div>
+    </div>
+    <canvas id="demoCv"></canvas>
+    <div class="note abs" id="demoLab" style="left:1262px; top:198px; font-size:20px; color:#8E928F;">conversations</div>
+    <div id="badge"><span>EXP-142 · <b id="bcount">0</b> waiting</span><span class="ok">✓</span></div>
+  </section>
+
+  <!-- 11 · Every module. Every teammate. One price per workspace. -->
+  <section class="scene" id="price">
+    <div class="hl st abs" id="p1" style="top:250px; font-size:100px;">Every module. Every teammate.</div>
+    <div class="hl st abs" id="p2" style="top:370px; font-size:100px; color:var(--em)">One price per workspace.</div>
+    <div class="card pcard" id="pc1" style="left:510px; top:560px;"><div class="lab">Teammates</div><div class="val" id="team">12</div></div>
+    <div class="card pcard" id="pc2" style="left:990px; top:560px;"><div class="lab">Per-seat fees</div><div class="val" style="color:var(--em)">$0</div>
+      <div class="lock"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E8A55" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div></div>
+    <div class="abs st" id="p3" style="top:780px; font:500 32px/1 var(--sans); color:#6F7571;">Self-host free, or let us run it, with AI included.</div>
+  </section>
+
+  <!-- 12 · The end -->
+  <section class="scene" id="end">
+    <div class="hl st abs" id="word2" style="font-size:170px; line-height:1; top:0; left:0;">Helpin</div>
+    <div id="cta">Start free at helpin.ai<span id="ripple"></span></div>
+    <div class="note st abs" id="endNote" style="top:780px; color:#6F7571;">open source <span class="b">·</span> self-host free <span class="b">·</span> helpin cloud</div>
+  </section>
+
+  <div id="ring"></div>
+  <div id="icon"><img src="../../assets/helpin/helpin-symbol-white.svg" alt=""></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { css, cursor } from '../../lib/components.js';
+import { P, L, keys, clamp, easeIn, easeOut, easeInOut, brandEase, backOut, spring, rand } from '../../lib/motion.js';
+import { MUSIC, B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const f1 = (v) => v.toFixed(1);
+
+// ── Kit ───────────────────────────────────────────────────────────────────────
+// Enter on a blur-rise at a, leave on a blur-out ending at b.
+function vis(el, t, a, b = Infinity, { dy = 22, blur = 10, inDur = 0.32, outDur = 0.22, extra = '' } = {}) {
+  const ki = brandEase(P(t, a, a + inDur)), ko = easeIn(P(t, b - outDur, b));
+  const o = ki * (1 - ko);
+  css(el, { opacity: o, transform: `${extra} translateY(${f1((1 - ki) * dy)}px) scale(${(1 - ko * 0.03).toFixed(3)})`, filter: (1 - ki) + ko > 0.001 ? `blur(${f1((1 - ki) * blur + ko * 12)}px)` : 'none' });
+  return o;
+}
+// A pop with a little spring.
+function pop(el, t, a, { from = 0.4, dur = 0.55, bounce = 0.3, b = Infinity, extra = '' } = {}) {
+  const k = t < a ? 0 : spring(t - a, dur, bounce), ko = easeIn(P(t, b - 0.22, b));
+  css(el, { opacity: clamp(P(t, a, a + 0.12)) * (1 - ko), transform: `${extra} scale(${(L(from, 1, k) * (1 - ko * 0.1)).toFixed(4)})`, filter: ko > 0 ? `blur(${f1(ko * 10)}px)` : 'none' });
+}
+// Beat-synced blink: on for the first 55% of every beat.
+const blinkOn = (t) => ((((t - MUSIC.first) / MUSIC.period) % 1) + 1) % 1 < 0.55;
+
+// Streaming text: every character fades in at `cps`, and an emerald caret leads.
+const STREAMS = [];
+function mkStream(el) {
+  const walk = (node) => {
+    for (const c of [...node.childNodes]) {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        for (const ch of c.textContent) { const s = document.createElement('span'); s.className = 'ch'; s.textContent = ch; f.appendChild(s); }
+        c.replaceWith(f);
+      } else if (c.nodeType === 1 && !c.classList.contains('caret')) walk(c);
+    }
+  };
+  walk(el);
+  const caret = document.createElement('i'); caret.className = 'caret'; el.appendChild(caret);
+  const s = { el, chars: [...el.querySelectorAll('.ch')], caret, pos: [], fs: 0, w: 0 };
+  STREAMS.push(s);
+  return s;
+}
+function measure(s) {
+  s.fs = parseFloat(getComputedStyle(s.el).fontSize);
+  s.pos = s.chars.map((c) => ({ l: c.offsetLeft, w: c.offsetWidth, y: c.offsetTop, h: c.offsetHeight }));
+  s.w = s.el.offsetWidth;
+}
+// Returns the number of characters shown. `back` deletes from the end at backCps.
+// `lead` shows the caret that many seconds before typing starts (only where no other caret is on screen).
+function stream(s, t, t0, { cps = 55, fade = 0.06, caret = true, back = null, backCps = 45, caretUntil = Infinity, caretW = 0.34, lead = 0 } = {}) {
+  const n = s.chars.length;
+  let shown = 0;
+  for (let i = 0; i < n; i++) {
+    const a = t0 + i / cps;
+    let k = P(t, a, a + fade);
+    if (back != null && t >= back + (n - 1 - i) / backCps) k = 0;
+    s.chars[i].style.opacity = k;
+    if (k > 0) shown = i + 1;
+  }
+  if (!caret || t < t0 - lead || t >= caretUntil) { s.caret.style.opacity = 0; return shown; }
+  const doneAt = t0 + (n - 1) / cps + fade;
+  const busy = (t >= t0 && t < doneAt + 0.12) || (back != null && t >= back && t < back + n / backCps + 0.12);
+  const p = shown ? s.pos[shown - 1] : s.pos[0];
+  const x = shown ? p.l + p.w : p.l;
+  const cw = s.fs * caretW, ch = s.fs * 0.74;
+  css(s.caret, { opacity: busy || blinkOn(t) ? 1 : 0, width: `${f1(cw)}px`, height: `${f1(ch)}px`, transform: `translate(${f1(x + s.fs * 0.05)}px, ${f1(p.y + (p.h - ch) / 2 + s.fs * 0.02)}px)` });
+  return shown;
+}
+const caretXY = (s, shown) => { const p = shown ? s.pos[shown - 1] : s.pos[0]; return { x: (shown ? p.l + p.w : p.l) + s.fs * 0.05 + s.fs * 0.17, y: p.y + p.h / 2 + s.fs * 0.02 }; };
+
+// Odometer: columns of 0–9 twice over; pos is a float digit position. Vertical motion blur from speed.
+function mkOdo(host, cols) {
+  host.innerHTML = '';
+  return Array.from({ length: cols }, () => {
+    const c = document.createElement('span'); c.className = 'oc';
+    const s = document.createElement('span'); s.className = 'os';
+    s.innerHTML = Array.from({ length: 20 }, (_, i) => `<b>${i % 10}</b>`).join('');
+    c.appendChild(s); host.appendChild(c); return s;
+  });
+}
+function setCol(stack, pos, speed) {
+  const p = ((pos % 10) + 10) % 10;
+  const v = Math.abs(speed);
+  stack.style.transform = `translateY(${(-p).toFixed(4)}em)`;
+  stack.style.filter = v < 0.04 ? 'none' : `url(#vb${v < 0.12 ? 1 : v < 0.3 ? 2 : v < 0.6 ? 3 : 4})`;
+}
+// A number's columns from a continuous value v (odometer carry: a column turns only as the one below wraps).
+const colPos = (v, i) => { if (i === 0) return ((v % 10) + 10) % 10; const pl = 10 ** i; const frac = Math.max(0, (v % pl) - (pl - 1)); return (Math.floor(v / pl) % 10) + frac; };
+function odoValue(cols, v, vPrev) {
+  cols.forEach((c, k) => { const i = cols.length - 1 - k; let d = colPos(v, i) - colPos(vPrev, i); if (d > 5) d -= 10; if (d < -5) d += 10; setCol(c, colPos(v, i), d); });
+}
+// Colour mix.
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, k) => { const A = hex(a), Bc = hex(b); return `rgb(${A.map((x, i) => Math.round(L(x, Bc[i], k))).join(',')})`; };
+const INK = '#151716', RED = '#D5412B', EM = '#0F7A50', EM2 = '#13A165';
+
+// DPR-sized canvas.
+function mkCanvas(cv, w, h, x = 0, y = 0) {
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  css(cv, { width: `${w}px`, height: `${h}px`, left: `${x}px`, top: `${y}px` });
+  const cx = cv.getContext('2d'); cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return cx;
+}
+const circle = (cx, x, y, r) => { cx.beginPath(); cx.arc(x, y, Math.max(0, r), 0, Math.PI * 2); };
+
+// ── Setup ─────────────────────────────────────────────────────────────────────
+const S = {};
+for (const el of $$('.st')) S[el.id || `s${STREAMS.length}`] = mkStream(el);
+const callS = $$('.call').map((c) => ({ fn: STREAMS.find((s) => s.el === c.querySelector('.fn')), res: STREAMS.find((s) => s.el === c.querySelector('.res')) }));
+
+const odoTouch = mkOdo($('#odoTouch'), 1);
+const odoSeats = mkOdo($('#odoSeats'), 2);
+const odoFive = mkOdo($('#odoFive'), 1);
+
+let LOGOS = [];
+// Wordmark-shaped logos (Zoom, Zoho) read small in a square; give them more room.
+const WIDE = { zoom: 1.6, zoho: 1.6 };
+const logoSvg = (l, size) => { const z = size * (WIDE[l.slug] || 1); return `<svg viewBox="0 0 24 24" width="${z}" height="${z}"><path d="${l.d}" fill="${l.fill}"/></svg>`; };
+// Around the big number: two tools per count (support, projects, CRM, meetings, docs).
+const TILE_AT = { intercom: [400, 380], zendesk: [1530, 750], linear: [1520, 370], jira: [400, 760], hubspot: [215, 570], zoho: [1705, 565], zoom: [760, 895], googlemeet: [1160, 895], notion: [1170, 330], confluence: [750, 330] };
+const TILE_ORDER = ['intercom', 'zendesk', 'linear', 'jira', 'hubspot', 'zoho', 'zoom', 'googlemeet', 'notion', 'confluence'];
+// The five category tiles in the 5 → 1 build, and the tool stack the agent can't reach.
+const CATS = [['intercom', 'support', 300, 240], ['linear', 'projects', 1400, 230], ['hubspot', 'crm', 230, 800], ['zoom', 'meetings', 1400, 820], ['notion', 'docs', 830, 900]];
+
+waitFor((async () => {
+  LOGOS = await (await fetch('logos.json')).json();
+  const L_ = Object.fromEntries(LOGOS.map((l) => [l.slug, l]));
+  $('#tiles').innerHTML = TILE_ORDER.map((k) => `<div class="tile" data-k="${k}" style="left:${TILE_AT[k][0]}px; top:${TILE_AT[k][1]}px">${logoSvg(L_[k], 54)}</div>`).join('');
+  $('#cats').innerHTML = CATS.map(([k, name, x, y]) => `<div class="cat" data-k="${k}" style="left:${x}px; top:${y}px">${logoSvg(L_[k], 42)}${name}</div>`).join('');
+  $('#toolStack').innerHTML = CATS.map(([k, name], i) => `<div class="cat" style="left:1255px; top:${318 + i * 86}px; width:400px">${logoSvg(L_[k], 34)}${name}<span style="margin-left:auto; width:120px; height:10px; border-radius:5px; background:#EEECE7"></span></div>`).join('');
+  await document.fonts.load('700 100px "Instrument Sans"');
+  await document.fonts.load('600 60px "Instrument Sans"');
+  await document.fonts.load('500 26px "JetBrains Mono"');
+  await document.fonts.load('600 26px "JetBrains Mono"');
+  await document.fonts.ready;
+  layout();
+})());
+
+// Measured geometry, after fonts load.
+const G = {};
+function layout() {
+  for (const s of STREAMS) measure(s);
+  // centre the centred lines
+  for (const id of ['touchEb', 'handEb', 'd1', 'd2', 'd3', 'seatEb', 'seatNote', 'agEb1', 'agEb2', 'hubH', 'demoEb', 'p1', 'p2', 'p3', 'sub', 'endNote']) {
+    const el = $(`#${id}`); el.style.left = `${f1(960 - el.offsetWidth / 2)}px`;
+  }
+  // hook notes sit on their line's middle
+  G.hookLines = ['h1', 'h2', 'h3'].map((id) => $(`#${id}`).offsetTop + $(`#${id}`).offsetHeight / 2);
+  // number lines: widths for centring
+  const tn = $('#touchNum');
+  G.touchS = $('#touchS').offsetWidth; G.touchW = tn.offsetWidth;
+  const sn = $('#seatNum'); sn.style.left = `${f1(960 - sn.offsetWidth / 2)}px`;
+  $('#every').style.left = `${f1(960 - $('#every').offsetWidth / 2)}px`;
+  G.every = [...$('#every').children];
+  // five: "5 tools." and "1 workspace." widths
+  const fl = $('#fiveLine');
+  G.odoW = $('#odoFive').offsetWidth;
+  G.fToolsW = S.fTools.w; G.fWorkW = S.fWork.w;
+  S.fWork.el.style.left = `${G.odoW}px`;
+  // the lock-ups (icon + word)
+  G.word = { w: S.word.w, h: S.word.el.offsetHeight };
+  G.word2 = { w: S.word2.w, h: S.word2.el.offsetHeight };
+  // hub chips around the centre
+  const HUBC = [960, 600];
+  G.hub = HUBC;
+  const CL = [[520, 430], [1400, 430], [520, 770], [1400, 770]];
+  G.clients = CL.map(([x, y], i) => { const el = $(`#c${i}`); const w = el.offsetWidth, h = el.offsetHeight; css(el, { left: `${f1(x - w / 2)}px`, top: `${f1(y - h / 2)}px` }); return { el, x, y, w, h }; });
+  const row = $('#row'); css(row, { left: `${f1(960 - row.offsetWidth / 2)}px`, top: '930px' });
+  // dotted paths from each chip to the icon
+  const svg = $('#paths');
+  G.paths = G.clients.map((c, i) => {
+    const sx = c.x + (c.x < 960 ? c.w / 2 + 14 : -c.w / 2 - 14), sy = c.y;
+    const ex = HUBC[0] + (c.x < 960 ? -92 : 92), ey = HUBC[1] + (c.y < HUBC[1] ? -40 : 40);
+    const mx = (sx + ex) / 2;
+    const d = `M${sx} ${sy} C ${mx} ${sy}, ${mx} ${ey}, ${ex} ${ey}`;
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', d); p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#A9ADA9'); p.setAttribute('stroke-width', '5'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-dasharray', '0.1 13');
+    svg.appendChild(p);
+    const dots = [0, 1].map(() => { const c2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c2.setAttribute('r', '8'); c2.setAttribute('fill', EM2); svg.appendChild(c2); return c2; });
+    return { p, len: p.getTotalLength(), dots };
+  });
+  // demo badge under the dot panel
+  const bd = $('#badge'); css(bd, { left: `${f1(1486 - bd.offsetWidth / 2)}px`, top: '850px' });
+  G.badge = { x: 1486, y: 850 + bd.offsetHeight / 2 };
+  // end CTA
+  const cta = $('#cta'); css(cta, { left: `${f1(960 - cta.offsetWidth / 2)}px`, top: '600px' });
+  G.cta = { x: 960, y: 600 + cta.offsetHeight / 2, w: cta.offsetWidth, h: cta.offsetHeight };
+}
+
+// ── Dot matrix ────────────────────────────────────────────────────────────────
+const dcx = mkCanvas($('#dotsCv'), 1920, 1080);
+const DOTS = [];
+for (let gy = 0; gy < 23; gy++) for (let gx = 0; gx < 40; gx++) {
+  const x = 24 + gx * 48, y = 12 + gy * 48;
+  if (Math.abs(x - 960) < 690 && Math.abs(y - 540) < 104) continue;
+  DOTS.push({ x, y, d: Math.hypot(x - 960, (y - 540) * 1.7), hol: rand(gx * 31 + gy * 7 + 1) < 0.74, j: rand(gx * 13 + gy * 29 + 5) });
+}
+function drawDots(t) {
+  dcx.clearRect(0, 0, 1920, 1080);
+  for (const d of DOTS) {
+    const a = B(N.dots) + (d.d / 1600) * 0.55 + d.j * 0.08;
+    const ex = B(N.dotsOut) + (1 - d.d / 1600) * 0.2 + d.j * 0.05;
+    const s = backOut(P(t, a, a + 0.3)) * (1 - easeIn(P(t, ex, ex + 0.2)));
+    if (s <= 0.001) continue;
+    const hk = d.hol ? brandEase(P(t, B(N.hollow) + (d.x / 1920) * 0.45 + d.j * 0.07, B(N.hollow) + (d.x / 1920) * 0.45 + d.j * 0.07 + 0.25)) : 0;
+    const rk = P(t, B(N.red) + (d.x / 1920) * 0.45 + d.j * 0.07, B(N.red) + (d.x / 1920) * 0.45 + d.j * 0.07 + 0.18);
+    const r = 12 * s, col = mix(INK, RED, rk);
+    if (hk < 0.001) { circle(dcx, d.x, d.y, r); dcx.fillStyle = col; dcx.fill(); }
+    else { const lw = L(r, 2.6, hk); circle(dcx, d.x, d.y, r - lw / 2); dcx.lineWidth = lw; dcx.strokeStyle = col; dcx.stroke(); }
+  }
+}
+
+// Demo panel: conversations; 23 light up, then fly into the badge.
+const DPX = 1230, DPY = 230;
+const qcx = mkCanvas($('#demoCv'), 520, 700, DPX, DPY);
+const QD = [];
+for (let gy = 0; gy < 12; gy++) for (let gx = 0; gx < 10; gx++) QD.push({ x: 28 + gx * 48, y: 26 + gy * 48, j: rand(gx * 7 + gy * 19 + 3) });
+const HOT = QD.map((d, i) => [rand(i * 17 + 3), i]).sort((a, b) => a[0] - b[0]).slice(0, 23).map(([, i]) => i);
+HOT.forEach((i, k) => { QD[i].hot = true; QD[i].k = k; });
+function drawDemo(t) {
+  qcx.clearRect(0, 0, 520, 700);
+  const t0 = B(N.demo) + 0.1;
+  for (const [i, d] of QD.entries()) {
+    const a = t0 + (d.y / 600) * 0.4 + d.j * 0.1;
+    const s = backOut(P(t, a, a + 0.3));
+    if (s <= 0.001) continue;
+    const r = 10 * s;
+    // base: a hollow grey ring
+    if (!d.hot) { circle(qcx, d.x, d.y, r - 1.3); qcx.lineWidth = 2.6; qcx.strokeStyle = '#C3C6C2'; qcx.stroke(); continue; }
+    const lit = B(N.calls) + 0.2 + d.k * 0.025;
+    const lk = P(t, lit, lit + 0.15);
+    const fly = B(N.badge) + 0.1 + d.k * 0.02;
+    const fk = easeInOut(P(t, fly, fly + 0.45));
+    // the ring that stays
+    circle(qcx, d.x, d.y, r - 1.3); qcx.lineWidth = 2.6; qcx.strokeStyle = mix('#C3C6C2', EM2, lk); qcx.stroke();
+    if (lk <= 0 || fk >= 1) continue;
+    // the lit dot, flying to the badge on a curve
+    const bx = G.badge.x - DPX - 40 + (d.k % 5) * 6, by = G.badge.y - DPY;
+    const x = L(d.x, bx, fk) + Math.sin(fk * Math.PI) * (d.x < 240 ? -60 : 60) * 0.5, y = L(d.y, by, fk * fk);
+    const rr = r * (1 + 0.35 * Math.sin(lk * Math.PI)) * (1 - fk * 0.6);
+    circle(qcx, x, y, rr); qcx.fillStyle = EM2; qcx.globalAlpha = 1 - fk * 0.3; qcx.fill(); qcx.globalAlpha = 1;
+  }
+}
+
+// ── Scenes ────────────────────────────────────────────────────────────────────
+const drift = (el, t, a, b, amt = 0.025) => { el.style.transform = `scale(${(1 + amt * P(t, a, b)).toFixed(4)})`; };
+let prevT = 0;
+
+function hook({ t }) {
+  const sc = $('#hook');
+  drift(sc, t, 0, B(N.touch));
+  const beats = [N.hook, N.bills, N.zero];
+  ['h1', 'h2', 'h3'].forEach((id, i) => {
+    const a = B(beats[i]);
+    const next = i < 2 ? B(beats[i + 1]) : Infinity;
+    stream(S[id], t, a, { cps: 44, caretUntil: next, lead: i === 0 ? 0.15 : 0 });
+  });
+  // the block re-centres as lines stack
+  $('#hookBlock').style.transform = `translateY(${f1(keys(t, [[B(N.bills), 150], [B(N.bills) + 0.35, 75, brandEase], [B(N.zero), 75], [B(N.zero) + 0.35, 0, brandEase]]))}px)`;
+  ['n1', 'n2', 'n3'].forEach((id, i) => {
+    const el = $(`#${id}`);
+    const y = 330 + G.hookLines[i] + keys(t, [[B(N.bills), 150], [B(N.bills) + 0.35, 75, brandEase], [B(N.zero), 75], [B(N.zero) + 0.35, 0, brandEase]]);
+    el.style.top = `${f1(y - 13)}px`;
+    stream(S[id], t, B(beats[i] + 1), { cps: 70, caret: false });
+  });
+  const o = 1 - easeIn(P(t, B(N.hookOut), B(N.hookOut) + 0.22));
+  css($('#hookBlock'), { opacity: o, filter: o < 1 ? `blur(${f1((1 - o) * 12)}px)` : 'none' });
+  for (const id of ['n1', 'n2', 'n3']) css($(`#${id}`), { opacity: o });
+}
+
+function touch({ t }) {
+  const sc = $('#touch');
+  drift(sc, t, B(N.touch), B(N.touchOut + 0.5), 0.03);
+  const out = B(N.touchOut + 0.5);
+  stream(S.touchEb, t, B(N.touch), { cps: 70, caret: false });
+  vis($('#touchEb'), t, B(N.touch) - 0.1, out, { dy: 0, blur: 0, inDur: 0.01 });
+  // the count: 1 → 5, one per beat
+  const pos = (tt) => 1 + [1, 2, 3, 4].reduce((acc, i) => acc + backOut(P(tt, B(N.roll + i - 1), B(N.roll + i - 1) + 0.28), 1.3), 0);
+  setCol(odoTouch[0], pos(t), pos(t) - pos(t - 1 / 30));
+  const sK = P(t, B(N.roll), B(N.roll) + 0.2);
+  $('#touchS').style.opacity = sK;
+  const num = $('#touchNum');
+  const w = G.touchW - G.touchS * (1 - sK);
+  const grey = P(t, B(N.grey), B(N.grey) + 0.35);
+  css(num, { left: `${f1(960 - w / 2)}px`, color: mix(INK, '#A8ABA7', grey) });
+  vis(num, t, B(N.touch), out, { dy: 30 });
+  // two tiles per count
+  $$('#tiles .tile').forEach((el, i) => {
+    const a = B(N.touch + Math.floor(i / 2)) + (i % 2) * 0.12;
+    const bob = Math.sin(t * 1.7 + i) * 6;
+    pop(el, t, a, { from: 0.2, b: out, extra: `translateY(${f1(bob)}px)` });
+    el.style.filter = `${el.style.filter === 'none' ? '' : el.style.filter} grayscale(${grey.toFixed(2)})`.trim();
+    if (grey > 0) el.style.opacity = String(parseFloat(el.style.opacity) * (1 - grey * 0.6));
+  });
+}
+
+function handoff({ t }) {
+  const sc = $('#handoff');
+  drift(sc, t, B(N.handoff), B(N.handoffOut + 0.5), 0.03);
+  const out = B(N.handoffOut + 0.5);
+  const win = $('#win');
+  const ko = easeIn(P(t, B(N.handoffOut), out));
+  const ki = brandEase(P(t, B(N.handoff), B(N.handoff) + 0.4));
+  css(win, { opacity: ki * (1 - ko), transform: `translateY(${f1((1 - ki) * 80)}px) scale(${(1.14 * L(0.94, 1, ki) * L(1, 0.2, ko)).toFixed(4)})`, filter: ko > 0 ? `blur(${f1(ko * 8)}px)` : 'none' });
+  // steps
+  const st = (el, at) => { const d = t >= at; el.textContent = d ? 'Done' : 'Pending'; el.classList.toggle('done', d); el.style.transform = `scale(${(1 + 0.15 * Math.sin(P(t, at, at + 0.25) * Math.PI)).toFixed(3)})`; };
+  st($('#s1'), B(N.handoff + 1)); st($('#s2'), B(N.handoff + 2));
+  const spinning = t >= B(N.handoff + 3);
+  $('#s3').style.display = spinning ? 'none' : ''; $('#spin').style.display = spinning ? '' : 'none';
+  $('#spin').style.transform = `rotate(${Math.round((t - B(N.handoff + 3)) * 540)}deg)`;
+  const pct = t >= B(N.handoff + 2) ? 60 : t >= B(N.handoff + 1) ? 40 : 20;
+  $('#fill').style.width = `${L(20, 60, easeOut(P(t, B(N.handoff + 1), B(N.handoff + 2) + 0.2)))}%`;
+  $('#pct').textContent = `${pct}%`;
+  $('#stepOf').textContent = `Step ${t >= B(N.handoff + 2) ? 3 : t >= B(N.handoff + 1) ? 2 : 1} of 5`;
+  // cursor clicks Next → "Please wait…"
+  // the window is scaled 1.14 about its centre (960, 490)
+  const nx = G.next ??= (() => { const r = $('#next'); return { x: 960 + (1040 - 36 - r.offsetWidth / 2 - 520) * 1.14, y: 490 + (560 - 30 - r.offsetHeight / 2 - 280) * 1.14 }; })();
+  const click = B(N.handoff + 4);
+  const cp = keys(t, [[B(N.handoff + 2.5), [1500, 1000]], [click - 0.05, [nx.x + 6, nx.y + 4], brandEase]]);
+  const cur = G.cursor1 ??= cursor(sc);
+  css(cur, { transform: `translate(${f1(cp[0])}px, ${f1(cp[1])}px) scale(${t >= click && t < click + 0.12 ? 0.86 : 1})`, opacity: P(t, B(N.handoff + 2.5), B(N.handoff + 2.7)) * (1 - ko) });
+  $('#next').style.transform = `scale(${t >= click && t < click + 0.12 ? 0.95 : 1})`;
+  const tip = $('#tip');
+  css(tip, { left: `${f1(nx.x - 60)}px`, top: `${f1(nx.y - 74)}px` });
+  vis(tip, t, click + 0.08, out, { dy: 8, blur: 4, inDur: 0.18 });
+  stream(S.handEb, t, B(N.handoff + 2), { cps: 70, caret: false });
+  vis($('#handEb'), t, B(N.handoff + 2) - 0.05, out, { dy: 0, blur: 0, inDur: 0.01 });
+}
+
+function dots({ t }) {
+  drift($('#dots'), t, B(N.dots), B(N.dotsOut + 0.5), 0.03);
+  drawDots(t);
+  const seq = [['d1', N.dots + 0.3, N.hollow - 0.3], ['d2', N.hollow, N.red - 0.3], ['d3', N.red, N.dotsOut + 0.4]];
+  for (const [id, a, b] of seq) {
+    stream(S[id], t, B(a), { cps: 70, caret: t < B(b) - 0.2, caretW: 0.3 });
+    const el = $(`#${id}`); const ko = easeIn(P(t, B(b) - 0.2, B(b)));
+    css(el, { opacity: t < B(a) - 0.3 ? 0 : 1 - ko, filter: ko > 0 ? `blur(${f1(ko * 10)}px)` : 'none' });
+  }
+}
+
+function seats({ t }) {
+  drift($('#seats'), t, B(N.seats), B(N.seatsOut + 0.5), 0.03);
+  const out = B(N.seatsOut + 0.5);
+  stream(S.seatEb, t, B(N.seats), { cps: 70, caret: false });
+  vis($('#seatEb'), t, B(N.seats) - 0.05, out, { dy: 0, blur: 0, inDur: 0.01 });
+  const v = (tt) => L(12, 60, easeInOut(P(tt, B(N.seatRoll), B(N.seatRoll + 2.6))));
+  odoValue(odoSeats, v(t), v(t - 1 / 30));
+  const num = $('#seatNum');
+  num.style.color = mix(INK, RED, P(t, B(N.seatRoll + 2.4), B(N.seatRoll + 2.8)));
+  vis(num, t, B(N.seats) + 0.05, out, { dy: 30 });
+  stream(S.seatNote, t, B(N.seatRoll) + 0.1, { cps: 60, caret: false });
+  vis($('#seatNote'), t, B(N.seatRoll), out, { dy: 0, blur: 0, inDur: 0.01 });
+  G.every.forEach((el, i) => { const a = B(N.every + i); pop(el, t, a, { from: 0.6, b: out }); el.style.display = 'inline-block'; el.style.color = i === 2 ? RED : INK; });
+}
+
+function agents({ t }) {
+  drift($('#agents'), t, B(N.agents), B(N.five), 0.025);
+  const out = B(N.five);
+  // eyebrow swaps at "can't"
+  stream(S.agEb1, t, B(N.agents), { cps: 70, caret: false });
+  vis($('#agEb1'), t, B(N.agents) - 0.05, B(N.cant), { dy: 0, inDur: 0.01 });
+  stream(S.agEb2, t, B(N.cant), { cps: 70, caret: false });
+  vis($('#agEb2'), t, B(N.cant) - 0.05, out, { dy: 0, blur: 0, inDur: 0.01 });
+  // the terminal
+  const term = $('#term1');
+  const ki = brandEase(P(t, B(N.agents), B(N.agents) + 0.4));
+  css(term, { opacity: ki * (1 - easeIn(P(t, out - 0.2, out))), transform: `translateY(${f1((1 - ki) * 60)}px)` });
+  stream(S.tq, t, B(N.agents + 0.6), { cps: 26, caretUntil: B(N.connect), lead: 0.3 });
+  stream(S.tc, t, B(N.connect), { cps: 80, caret: false });
+  $('#tcDot').style.opacity = t < B(N.snap) ? (blinkOn(t) ? 1 : 0.3) : 1;
+  $('#tcDot').style.color = t >= B(N.snap) ? RED : '';
+  stream(S.te, t, B(N.cant + 0.5), { cps: 60, caret: false });
+  stream(S.te2, t, B(N.cant + 1.2), { cps: 80, caretUntil: out });
+  // the wire to the tools
+  const wk = easeOut(P(t, B(N.connect), B(N.connect + 1.2)));
+  const wl = $('#wireL');
+  wl.setAttribute('x2', f1(L(1030, 1245, wk)));
+  wl.style.opacity = t >= B(N.connect) ? 1 : 0;
+  const broke = P(t, B(N.snap), B(N.snap) + 0.2);
+  wl.setAttribute('stroke', mix('#B9BCB8', '#E8B2A8', broke));
+  const dp = ((t - B(N.connect)) / 0.9) % 1;
+  const dx = t < B(N.snap) ? L(1030, 1245, dp) * 1 : 1140;
+  $('#wireDot').setAttribute('cx', f1(Math.min(dx, L(1030, 1245, wk))));
+  $('#wireDot').style.opacity = t >= B(N.connect) + 0.1 && t < B(N.snap) ? 1 : 0;
+  const xk = t < B(N.snap) ? 0 : spring(t - B(N.snap), 0.5, 0.35);
+  $('#wireX').setAttribute('transform', `translate(1140 520) scale(${xk.toFixed(3)})`);
+  // the tools, greyed
+  $$('#toolStack .cat').forEach((el, i) => {
+    const a = B(N.connect) + 0.3 + i * 0.08;
+    vis(el, t, a, out, { dy: 16, blur: 6 });
+    el.style.filter = `${el.style.filter === 'none' ? '' : el.style.filter} grayscale(${(0.4 + 0.6 * broke).toFixed(2)})`;
+    el.style.opacity = String(parseFloat(el.style.opacity) * (1 - 0.45 * broke));
+  });
+  vis($('#wire'), t, B(N.connect), out, { dy: 0, blur: 0, inDur: 0.01 });
+}
+
+function five({ t }) {
+  const sc = $('#five');
+  const a = B(N.five), drop = B(N.drop);
+  // slow push-in through the quiet
+  sc.style.transform = `scale(${(1 + 0.06 * easeInOut(P(t, a, drop))).toFixed(4)})`;
+  // the digit: 5, then 4 · 3 · 2 · 1 on the build
+  const cnt = (tt) => 5 - [0, 1, 2, 3].reduce((acc, i) => acc + backOut(P(tt, B(N.count + i), B(N.count + i) + 0.25), 1.2), 0);
+  setCol(odoFive[0], cnt(t), cnt(t) - cnt(t - 1 / 30));
+  // "tools." streams in, backspaces on 61.5, "workspace." streams in
+  const back = B(N.workspace);
+  stream(S.fTools, t, a + 0.15, { cps: 30, back, backCps: 40, caretUntil: back + 0.2 });
+  stream(S.fWork, t, back + 0.18, { cps: 36, caretUntil: drop });
+  // centring as the width changes
+  const w = G.odoW + keys(t, [[back, G.fToolsW], [back + 0.45, G.fWorkW, brandEase]]);
+  const line = $('#fiveLine');
+  const green = P(t, back + 0.2, back + 0.5);
+  const ko = P(t, drop, drop + 0.15);
+  css(line, { left: `${f1(960 - w / 2)}px`, color: mix(INK, EM, green), opacity: P(t, a, a + 0.12) * (1 - ko), filter: ko > 0 ? `blur(${f1(ko * 10)}px)` : 'none' });
+  // the category tiles drift, then fly into the caret one per count (the fifth with "workspace.")
+  const shown = S.fTools.chars.filter((c) => parseFloat(c.style.opacity) > 0).length;
+  const cs = t < back + 0.2 ? S.fTools : S.fWork;
+  const cshown = cs === S.fTools ? shown : S.fWork.chars.filter((c) => parseFloat(c.style.opacity) > 0).length;
+  const cxy = caretXY(cs, cshown);
+  const lineLeft = 960 - w / 2 + G.odoW;
+  // stage coordinates of the caret (the scene scales about the centre)
+  const scl = 1 + 0.06 * easeInOut(P(t, a, drop));
+  const tx = lineLeft + cxy.x, ty = 430 + cxy.y;
+  $$('#cats .cat').forEach((el, i) => {
+    const [k, name, x0, y0] = CATS[i];
+    const fly = i < 4 ? B(N.count + i) - 0.05 : back + 0.25;
+    const fk = easeIn(P(t, fly, fly + 0.32));
+    const drx = Math.sin(t * 0.9 + i * 1.7) * 14, dry = Math.cos(t * 0.8 + i) * 10;
+    const w0 = el.offsetWidth, h0 = el.offsetHeight;
+    const x = L(x0 + drx, tx - w0 / 2, fk), y = L(y0 + dry, ty - h0 / 2, fk);
+    const ki = brandEase(P(t, a + 0.3 + i * 0.12, a + 0.65 + i * 0.12));
+    css(el, { left: `${f1(x)}px`, top: `${f1(y)}px`, opacity: ki * (1 - P(t, fly + 0.24, fly + 0.32)), transform: `scale(${(L(0.9, 1, ki) * (1 - fk * 0.85)).toFixed(3)})`, filter: `grayscale(.5) ${fk > 0 ? `blur(${f1(fk * 3)}px)` : ''}` });
+  });
+  // caret pulse on each absorb
+  const pulses = [0, 1, 2, 3].map((i) => B(N.count + i) + 0.27).concat([back + 0.57]);
+  const pk = Math.max(...pulses.map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.12)));
+  for (const s of [S.fTools, S.fWork]) s.caret.style.boxShadow = `0 0 ${f1(0.25 + pk * 0.6)}em rgba(19,161,101,${(0.35 + pk * 0.5).toFixed(2)})`;
+}
+
+// The icon: the caret grows into the Helpin icon on the drop, then travels through the reveal, the hub and the end.
+function iconLayer(t) {
+  const icon = $('#icon'), ring = $('#ring');
+  const drop = B(N.drop);
+  let show = false, x = 0, y = 0, w = 0, h = 0, r = 0, img = 1;
+  const lock = (W, size, y0) => { const total = size + size * 0.22 + W; return { x: 960 - total / 2 + size / 2, y: y0 }; };
+  if (t >= drop - 0.001 && t < B(N.hubOut + 0.5)) {
+    show = true;
+    // where the caret sits at the drop: after "1 workspace.", centred, in the scene pushed in to 1.06
+    const cxy = caretXY(S.fWork, S.fWork.chars.length);
+    const tx = 960 - (G.odoW + G.fWorkW) / 2 + G.odoW + cxy.x, ty = 430 + cxy.y;
+    const c = { x: 960 + (tx - 960) * 1.06, y: 540 + (ty - 540) * 1.06, s: S.fWork.fs * 1.06 };
+    const L1 = lock(G.word.w, 180, 450);
+    const k1 = brandEase(P(t, drop, drop + 0.4)); // caret → square at centre
+    const k2 = brandEase(P(t, drop + 0.5, drop + 0.95)); // move into the lock-up
+    const k3 = brandEase(P(t, B(N.revealOut), B(N.revealOut) + 0.55)); // to the hub centre
+    const cw = c.s * 0.34, chh = c.s * 0.74;
+    const sz = L(L(cw, 220, k1), 180, k2);
+    const hh = L(L(chh, 220, k1), 180, k2);
+    x = L(L(L(c.x, 960, k1), L1.x, k2), G.hub[0], k3);
+    y = L(L(L(c.y, 540, k1), L1.y, k2), G.hub[1], k3);
+    w = L(sz, 170, k3); h = L(hh, 170, k3); r = L(L(c.s * 0.02, 52, k1), 40, k3);
+    img = P(t, drop + 0.2, drop + 0.45);
+    // hub pulses as the dots arrive
+    const pulses = [0, 1, 2, 3].map((i) => B(N.flow) + 0.55 + i * 0.12);
+    const pk = Math.max(0, ...pulses.map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.1)));
+    w *= 1 + pk * 0.06; h *= 1 + pk * 0.06;
+    const ko = easeIn(P(t, B(N.hubOut), B(N.hubOut + 0.5)));
+    icon.style.opacity = 1 - ko;
+    icon.style.filter = ko > 0 ? `blur(${f1(ko * 10)}px)` : 'none';
+  } else if (t >= B(N.end)) {
+    show = true;
+    const e = B(N.end);
+    const L2 = lock(G.word2.w, 150, 430);
+    const k1 = spring(t - e, 0.7, 0.25);
+    const k2 = brandEase(P(t, e + 0.9, e + 1.35));
+    const sz = L(0, 200, k1);
+    x = L(960, L2.x, k2); y = L(470, L2.y, k2); w = h = L(sz, 150, k2); r = w * 0.26; img = P(t, e + 0.1, e + 0.3);
+    icon.style.opacity = 1; icon.style.filter = 'none';
+    // the ring around the icon before the lock-up
+    const rk = P(t, e + 0.05, e + 0.9);
+    const rr = L(140, 330, easeOut(rk));
+    css(ring, { display: 'block', width: `${f1(rr * 2)}px`, height: `${f1(rr * 2)}px`, transform: `translate(${f1(960 - rr)}px, ${f1(470 - rr)}px)`, opacity: (Math.sin(rk * Math.PI) * 0.55).toFixed(3) });
+  }
+  if (!(t >= B(N.end))) ring.style.display = 'none';
+  // the drop ring
+  if (t >= drop && t < drop + 0.9) {
+    const rk = P(t, drop + 0.1, drop + 0.9);
+    const rr = L(120, 520, easeOut(rk));
+    css(ring, { display: 'block', width: `${f1(rr * 2)}px`, height: `${f1(rr * 2)}px`, transform: `translate(${f1(960 - rr)}px, ${f1(540 - rr)}px)`, opacity: ((1 - rk) * 0.7).toFixed(3) });
+  }
+  icon.style.display = show ? 'grid' : 'none';
+  if (show) css(icon, { width: `${f1(w)}px`, height: `${f1(h)}px`, borderRadius: `${f1(r)}px`, transform: `translate(${f1(x - w / 2)}px, ${f1(y - h / 2)}px)` });
+  icon.querySelector('img').style.opacity = img;
+  icon.querySelector('img').style.transform = `scale(${L(0.5, 1, brandEase(img)).toFixed(3)}) rotate(${f1((1 - brandEase(img)) * -30)}deg)`;
+}
+
+function reveal({ t }) {
+  const drop = B(N.drop), out = B(N.revealOut + 0.5);
+  const ko = easeIn(P(t, B(N.revealOut), out));
+  // "Helpin" streams in beside the icon
+  const size = 180, total = size + size * 0.22 + G.word.w;
+  const wx = 960 - total / 2 + size + size * 0.22;
+  css($('#word'), { left: `${f1(wx)}px`, top: `${f1(450 - G.word.h / 2)}px`, opacity: 1 - ko, filter: ko > 0 ? `blur(${f1(ko * 12)}px)` : 'none' });
+  stream(S.word, t, drop + 0.75, { cps: 24, caretUntil: B(N.sub) });
+  stream(S.sub, t, B(N.sub), { cps: 80, caret: false });
+  vis($('#sub'), t, B(N.sub) - 0.05, out, { dy: 0, inDur: 0.01 });
+  const chips = $$('#chips .pill');
+  const row = $('#chips'); row.style.left = `${f1(960 - row.offsetWidth / 2)}px`;
+  chips.forEach((el, i) => pop(el, t, B(N.chips + i * 0.5), { from: 0.5, b: out }));
+}
+
+function hub({ t }) {
+  const out = B(N.hubOut + 0.5);
+  drift($('#hub'), t, B(N.hub), out, 0.02);
+  stream(S.hubH, t, B(N.hub), { cps: 60, caretUntil: B(N.clients) + 0.2, caretW: 0.3 });
+  vis($('#hubH'), t, B(N.hub) - 0.05, out, { dy: 0, inDur: 0.01 });
+  G.clients.forEach((c, i) => pop(c.el, t, B(N.clients + i * 0.5), { from: 0.4, b: out }));
+  G.paths.forEach((p, i) => {
+    const a = B(N.clients + i * 0.5) + 0.15;
+    const k = easeOut(P(t, a, a + 0.5));
+    // the dotted line draws on from the chip
+    const nd = Math.floor((p.len * k) / 13);
+    p.p.setAttribute('stroke-dasharray', nd > 0 ? `${'0.1 13 '.repeat(nd)}0.1 ${f1(p.len + 20)}` : `0 ${f1(p.len + 20)}`);
+    p.p.setAttribute('opacity', (1 - easeIn(P(t, B(N.hubOut), out))).toFixed(3));
+    p.dots.forEach((d, j) => {
+      const s = B(N.flow) + i * 0.12 + j * 0.28;
+      const u = easeInOut(P(t, s, s + 0.55));
+      const pt = p.p.getPointAtLength(u * p.len);
+      d.setAttribute('cx', f1(pt.x)); d.setAttribute('cy', f1(pt.y));
+      d.setAttribute('opacity', (t >= s && u < 1 ? 1 : 0).toString());
+    });
+  });
+  pop($('#row'), t, B(N.row), { from: 0.6, b: out });
+}
+
+function demo({ t }) {
+  const out = B(N.demoOut + 0.5);
+  drift($('#demo'), t, B(N.demo), out, 0.02);
+  const term = $('#term2');
+  vis(term, t, B(N.demo), out, { dy: 60, blur: 8, inDur: 0.4 });
+  stream(S.dq, t, B(N.demo) + 0.35, { cps: 36, caretUntil: B(N.calls) - 0.05, caretW: 0.5, lead: 0.3 });
+  callS.forEach((c, i) => {
+    const a = B(N.calls + i * N.callGap);
+    stream(c.fn, t, a, { cps: 90, caret: false });
+    stream(c.res, t, a + 0.3, { cps: 90, caret: false });
+    const el = $(`#k${i}`);
+    el.querySelector('i').style.opacity = t < a ? 0 : (t < a + 0.3 ? (Math.floor(t * 10) % 2 ? 1 : 0.3) : 1);
+  });
+  stream(S.kd, t, B(N.done), { cps: 70, caretUntil: out, caretW: 0.5 });
+  drawDemo(t);
+  vis($('#demoCv'), t, B(N.demo), out, { dy: 0, blur: 8, inDur: 0.2 });
+  vis($('#demoLab'), t, B(N.demo) + 0.2, out, { dy: 0 });
+  // the badge counts the arrivals
+  const arrived = HOT.filter((i) => t >= B(N.badge) + 0.1 + QD[i].k * 0.02 + 0.45).length;
+  $('#bcount').textContent = String(arrived);
+  pop($('#badge'), t, B(N.badge), { from: 0.5, b: out });
+  stream(S.demoEb, t, B(N.done), { cps: 70, caret: false });
+  vis($('#demoEb'), t, B(N.done) - 0.05, out, { dy: 0, blur: 0, inDur: 0.01 });
+}
+
+function price({ t }) {
+  const out = B(N.priceOut + 0.5);
+  drift($('#price'), t, B(N.price), out, 0.02);
+  stream(S.p1, t, B(N.price), { cps: 60, caretUntil: B(N.price + 1) });
+  stream(S.p2, t, B(N.price + 1), { cps: 60, caretUntil: B(N.price + 2.2) });
+  for (const id of ['p1', 'p2']) vis($(`#${id}`), t, B(N.price) - 0.05, out, { dy: 0, inDur: 0.01 });
+  pop($('#pc1'), t, B(N.price + 2), { from: 0.7, b: out });
+  pop($('#pc2'), t, B(N.price + 2.5), { from: 0.7, b: out });
+  const v = L(12, 120, easeInOut(P(t, B(N.price + 2.2), B(N.price + 3.6))));
+  const moving = t > B(N.price + 2.2) && t < B(N.price + 3.6);
+  const team = $('#team');
+  team.textContent = `${Math.round(v)}${v >= 119.5 ? '+' : ''}`;
+  team.style.filter = moving ? 'url(#vb1)' : 'none';
+  stream(S.p3, t, B(N.price + 3), { cps: 90, caret: false });
+  vis($('#p3'), t, B(N.price + 3) - 0.05, out, { dy: 0, inDur: 0.01 });
+}
+
+function end({ t }) {
+  const e = B(N.end);
+  const size = 150, total = size + size * 0.22 + G.word2.w;
+  const wx = 960 - total / 2 + size + size * 0.22;
+  css($('#word2'), { left: `${f1(wx)}px`, top: `${f1(430 - G.word2.h / 2)}px` });
+  stream(S.word2, t, e + 1.05, { cps: 24, caretUntil: B(N.button) });
+  pop($('#cta'), t, B(N.button), { from: 0.6 });
+  const click = B(N.click);
+  const cur = G.cursor2 ??= cursor($('#end'));
+  const cp = keys(t, [[B(N.button) + 0.2, [1580, 1040]], [click - 0.04, [G.cta.x + 90, G.cta.y + 8], brandEase]]);
+  css(cur, { transform: `translate(${f1(cp[0])}px, ${f1(cp[1])}px) scale(${t >= click && t < click + 0.12 ? 0.86 : 1})`, opacity: P(t, B(N.button) + 0.2, B(N.button) + 0.4) });
+  const pressed = t >= click && t < click + 0.12;
+  if (t >= B(N.button) + 0.6) $('#cta').style.transform = `scale(${pressed ? 0.96 : 1})`;
+  const rk = P(t, click, click + 0.5);
+  css($('#ripple'), { transform: `translate(${f1(G.cta.w / 2 + 90 - 30)}px, ${f1(G.cta.h / 2 - 30)}px) scale(${f1(rk * 12)})`, opacity: t >= click ? ((1 - rk) * 0.8).toFixed(3) : 0 });
+  stream(S.endNote, t, click + 0.3, { cps: 70, caret: false });
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: MUSIC.bpm, duration: DURATION,
+  scenes: [
+    { id: 'hook', start: 0, end: B(N.touch), render: hook },
+    { id: 'touch', start: B(N.touch), end: B(N.handoff), render: touch },
+    { id: 'handoff', start: B(N.handoff), end: B(N.dots) + 0.1, render: handoff },
+    { id: 'dots', start: B(N.dots) - 0.05, end: B(N.seats), render: dots },
+    { id: 'seats', start: B(N.seats), end: B(N.agents), render: seats },
+    { id: 'agents', start: B(N.agents), end: B(N.five), render: agents },
+    { id: 'five', start: B(N.five), end: B(N.drop) + 0.3, render: five },
+    { id: 'reveal', start: B(N.drop), end: B(N.hub), render: reveal },
+    { id: 'hub', start: B(N.revealOut), end: B(N.demo), render: hub },
+    { id: 'demo', start: B(N.demo), end: B(N.price), render: demo },
+    { id: 'price', start: B(N.price), end: B(N.end), render: price },
+    { id: 'end', start: B(N.end), end: DURATION, render: end },
+  ],
+  render: ({ t }) => iconLayer(t),
+});
+</script>
+</body>
+</html>

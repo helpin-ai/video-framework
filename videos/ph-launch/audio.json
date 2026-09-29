@@ -1,0 +1,329 @@
+{
+ "name": "ph-launch",
+ "duration": 35.5,
+ "video": "../../out/ph-launch/ph-launch.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 35.5,
+   "generate": 40,
+   "from": 0,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 1.5,
+   "prompt": "Energetic, bouncy, playful modern electronic at exactly 120 BPM for a product launch motion graphics video: a punchy kick on every beat, snappy claps, rubbery plucked bass, bright marimba-like plucks and playful percussion hits; crisp, clean and joyful. No vocals and no long silences. It starts immediately with a sparse pulse and quick hits for the first 8 seconds, then a big drop at 8 seconds into a full bouncing groove, an extra lift at 22 seconds, the fullest part from 30 seconds, and it winds down cleanly in the last 3 seconds without a big final hit."
+  }
+ ],
+ "sounds": {
+  "word": {
+   "text": "a punchy soft pop, a bold word landing on screen",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "bounce": {
+   "text": "a tiny soft rubber ball bounce, short and light",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "spread": {
+   "text": "a quick paper whoosh, cards spreading apart",
+   "duration": 0.6,
+   "gain": -17
+  },
+  "snap": {
+   "text": "three quick thin threads snapping, light plucky snaps",
+   "duration": 0.6,
+   "gain": -15
+  },
+  "windup": {
+   "text": "a short rising swoosh, a ball winding up to jump",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "drop": {
+   "text": "a deep punchy impact with a bright shimmer, a ball slamming down and a logo appearing",
+   "duration": 1.2,
+   "gain": -11
+  },
+  "letters": {
+   "text": "five quick soft letter taps",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "slam": {
+   "text": "a quick tight whoosh-thump as bold text snaps in",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "chips": {
+   "text": "five tiny bubbly pops in quick succession",
+   "duration": 0.6,
+   "gain": -19
+  },
+  "hop": {
+   "text": "a soft rubber ball bounce with a tiny wooden click",
+   "duration": 0.5,
+   "gain": -17
+  },
+  "check": {
+   "text": "soft bright check-mark ding, satisfying",
+   "duration": 0.5,
+   "gain": -17
+  },
+  "launch": {
+   "text": "a springy boing, a ball launched high into the air",
+   "duration": 0.6,
+   "gain": -15
+  },
+  "fall": {
+   "text": "a short falling whistle ending just before an impact",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "agent": {
+   "text": "a fast whoosh-snap, a bold colourful card cutting in",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "scribble": {
+   "text": "a quick marker pen scribble on paper",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "knob": {
+   "text": "a smooth toggle switch sliding with a soft click",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "click": {
+   "text": "crisp trackpad click",
+   "duration": 0.5,
+   "gain": -12
+  },
+  "success": {
+   "text": "short warm two-note success chime, soft",
+   "duration": 0.8,
+   "gain": -16
+  },
+  "whoosh3d": {
+   "text": "a deep airy swoosh, a camera flying around big 3D letters",
+   "duration": 1,
+   "gain": -15
+  },
+  "type": {
+   "text": "fast soft typing on a mechanical keyboard for one and a half seconds",
+   "duration": 1.5,
+   "gain": -18
+  },
+  "logo": {
+   "text": "a soft bouncy thud, a card landing with a little bounce",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "tag": {
+   "text": "a soft punchy pop, a word landing",
+   "duration": 0.5,
+   "gain": -17
+  },
+  "zip": {
+   "text": "a smooth pen stroke drawing a long line, soft swish",
+   "duration": 0.9,
+   "gain": -18
+  },
+  "plink": {
+   "text": "a bright playful plink, a ball landing perfectly on top of a letter, with a soft sparkle",
+   "duration": 1,
+   "gain": -12
+  },
+  "note": {
+   "text": "a quick marker pen scribble on paper",
+   "duration": 0.5,
+   "gain": -20
+  }
+ },
+ "cues": [
+  {
+   "sound": "word",
+   "at": [
+    0.06,
+    2.057,
+    4.053,
+    5.052,
+    5.551
+   ]
+  },
+  {
+   "sound": "bounce",
+   "at": [
+    1.058,
+    1.558,
+    3.055,
+    3.554,
+    6.549
+   ]
+  },
+  {
+   "sound": "spread",
+   "at": [
+    6.05
+   ]
+  },
+  {
+   "sound": "snap",
+   "at": [
+    7.068
+   ]
+  },
+  {
+   "sound": "windup",
+   "at": [
+    7.548
+   ]
+  },
+  {
+   "sound": "drop",
+   "at": [
+    8.047
+   ]
+  },
+  {
+   "sound": "letters",
+   "at": [
+    8.546
+   ]
+  },
+  {
+   "sound": "slam",
+   "at": [
+    9.045
+   ]
+  },
+  {
+   "sound": "chips",
+   "at": [
+    9.544
+   ]
+  },
+  {
+   "sound": "hop",
+   "at": [
+    10.043,
+    10.543,
+    11.042,
+    11.541,
+    12.04,
+    12.539,
+    13.038
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    13.538
+   ]
+  },
+  {
+   "sound": "launch",
+   "at": [
+    14.037
+   ]
+  },
+  {
+   "sound": "fall",
+   "at": [
+    15.534
+   ]
+  },
+  {
+   "sound": "agent",
+   "at": [
+    16.033,
+    17.032,
+    18.03,
+    19.028,
+    20.027,
+    21.025,
+    22.023,
+    23.022
+   ]
+  },
+  {
+   "sound": "scribble",
+   "at": [
+    16.533,
+    17.531,
+    18.529,
+    19.528
+   ]
+  },
+  {
+   "sound": "knob",
+   "at": [
+    24.519
+   ]
+  },
+  {
+   "sound": "click",
+   "at": [
+    25.518
+   ]
+  },
+  {
+   "sound": "success",
+   "at": [
+    25.558
+   ]
+  },
+  {
+   "sound": "whoosh3d",
+   "at": [
+    25.967
+   ]
+  },
+  {
+   "sound": "type",
+   "at": [
+    26.516
+   ]
+  },
+  {
+   "sound": "logo",
+   "at": [
+    28.013,
+    28.513,
+    29.012,
+    29.511
+   ]
+  },
+  {
+   "sound": "tag",
+   "at": [
+    30.01,
+    30.26,
+    30.509
+   ]
+  },
+  {
+   "sound": "zip",
+   "at": [
+    30.01
+   ]
+  },
+  {
+   "sound": "plink",
+   "at": [
+    32.007
+   ]
+  },
+  {
+   "sound": "note",
+   "at": [
+    33.005
+   ]
+  }
+ ]
+}

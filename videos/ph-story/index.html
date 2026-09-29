@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — The story block (Product Hunt, narrated)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  @import url('../../node_modules/@fontsource-variable/instrument-sans/wdth.css');
+  /* The narrated Product Hunt film, at the density of CircleCI's explainer: one glowing story block that never
+     stops transforming (a drifting ring → an outline → a fill → messages written in → a launch → hops → chips →
+     rewind → the Helpin mark → a pipeline ride → rings), with light trails, doodle confetti, speed lines and kinetic
+     type on the voice. Forest dark, mint and emerald glow, agent colours as neon. Voice (Bella) snapped to the
+     music's beats (music.json); effects on the same anchors (cues.mjs). */
+  :root { --em: #2FBF7A; --mint: #9CDBB3; --cyan: #5CE1E6; --red: #FF5A5F; --white: #EAF3EE; --dim: rgba(156, 219, 179, .6); }
+  #stage { background: radial-gradient(ellipse 80% 80% at 50% 45%, #10261E, #081813 55%, #040C09); color: var(--white); }
+  #bg, #world, #wel, #txt { position: absolute; inset: 0; }
+  #bg i { position: absolute; left: 0; top: 0; }
+  #world { transform-origin: 0 0; }
+  svg.layer { position: absolute; left: 0; top: 0; overflow: visible; }
+  .kt { position: absolute; left: 0; width: 1920px; text-align: center; font-family: 'Instrument Sans Variable', var(--sans); font-stretch: 75%; font-weight: 700; letter-spacing: -0.015em; line-height: 0.95; color: var(--white); white-space: nowrap; text-shadow: 0 0 40px rgba(92, 224, 150, .25); }
+  .kt span { display: inline-block; opacity: 0; }
+  .kt em { font-style: normal; color: var(--mint); }
+  .mono { font: 600 24px/1 var(--mono); letter-spacing: .22em; color: var(--dim); text-transform: uppercase; }
+  #block { position: absolute; left: 0; top: 0; width: 230px; height: 230px; margin: -115px 0 0 -115px; }
+  #block .face { position: absolute; inset: 0; border-radius: 58px; background: linear-gradient(140deg, #6BE3A1, #2FBF7A 55%, #1C9E63); box-shadow: 0 0 60px rgba(92, 224, 150, .65), 0 0 150px rgba(92, 224, 150, .3), inset 0 2px 0 rgba(255, 255, 255, .35); }
+  #block .g { position: absolute; left: 0; top: 0; }
+  #block svg.ol { position: absolute; left: -3px; top: -3px; overflow: visible; }
+  #block svg.ol rect { fill: none; stroke: #EAF3EE; stroke-width: 4; }
+  .pill { border-radius: 8px; } .circ { border-radius: 50%; }
+  #bloom { position: absolute; left: 0; top: 0; width: 900px; height: 900px; margin: -450px 0 0 -450px; border-radius: 50%; background: radial-gradient(circle, rgba(92, 224, 150, .42), rgba(92, 224, 150, 0) 62%); }
+  .req { position: absolute; left: 0; top: 0; padding: 14px 20px; border-radius: 18px 18px 18px 5px; font: 600 24px/1 var(--sans); color: #06231F; white-space: nowrap; box-shadow: 0 0 26px rgba(92, 225, 230, .55); }
+  .node { position: absolute; left: 0; top: 0; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; border: 4px solid rgba(156, 219, 179, .85); box-shadow: 0 0 36px rgba(92, 224, 150, .4), inset 0 0 26px rgba(92, 224, 150, .2); display: grid; place-items: center; background: rgba(6, 20, 15, .75); }
+  .node svg { width: 64px; height: 64px; overflow: visible; }
+  .node svg path { fill: none; stroke: var(--mint); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .orb { position: absolute; left: 0; top: 0; width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 50%; display: grid; place-items: center; }
+  .orb img { width: 76px; height: 76px; }
+  .alab { position: absolute; left: 0; top: 0; width: 460px; margin-left: -230px; text-align: center; }
+  .alab b { display: block; font-family: 'Instrument Sans Variable', var(--sans); font-stretch: 75%; font-weight: 700; font-size: 76px; line-height: 1; letter-spacing: -0.01em; color: var(--white); }
+  .alab span { display: block; margin-top: 10px; font: 600 24px/1 var(--mono); letter-spacing: .2em; color: var(--mint); text-transform: uppercase; }
+  .panel { position: absolute; left: 0; top: 0; border-radius: 22px; background: rgba(4, 16, 12, .9); box-shadow: 0 0 0 2px rgba(156, 219, 179, .35), 0 0 50px rgba(92, 224, 150, .2); padding: 22px 26px; font: 500 40px/1.6 var(--mono); color: #CFE3D6; white-space: nowrap; }
+  .panel .r { color: #FF8A8E; } .panel .g { color: #9CF0BE; }
+  #mark { position: absolute; left: 0; top: 0; }
+  #wm { position: absolute; left: 0; width: 1920px; text-align: center; font-family: 'Instrument Sans Variable', var(--sans); font-weight: 650; font-size: 150px; letter-spacing: -0.05em; line-height: 1; }
+  .sw { position: absolute; left: 0; top: 0; width: 170px; margin-left: -85px; text-align: center; }
+  .sw .tr { width: 150px; height: 70px; margin: 0 auto; border-radius: 35px; background: rgba(255, 255, 255, .1); position: relative; box-shadow: inset 0 0 0 2px rgba(156, 219, 179, .4); }
+  .sw .kn { position: absolute; left: 7px; top: 7px; width: 56px; height: 56px; border-radius: 50%; background: var(--em); box-shadow: 0 0 20px rgba(92, 224, 150, .9); }
+  .sw b { display: block; margin-top: 16px; font: 600 22px/1 var(--mono); letter-spacing: .12em; color: var(--dim); }
+  #term { position: absolute; left: 50%; top: 860px; transform: translateX(-50%); height: 90px; padding: 0 34px; border-radius: 22px; background: rgba(4, 14, 11, .9); box-shadow: 0 0 0 2px rgba(156, 219, 179, .35), 0 0 40px rgba(92, 224, 150, .25); display: flex; align-items: center; gap: 16px; font: 500 34px/1 var(--mono); color: #CFE3D6; white-space: nowrap; }
+  #term .p { color: var(--mint); }
+  #cta { position: absolute; left: 0; width: 1920px; top: 800px; display: flex; justify-content: center; gap: 16px; }
+  #cta span { height: 66px; padding: 0 30px; border-radius: 16px; display: grid; place-items: center; font: 600 30px/1 var(--sans); }
+  #cta .u { background: var(--white); color: #081813; } #cta .o { box-shadow: inset 0 0 0 2px rgba(156, 219, 179, .55); color: var(--white); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="world">
+    <svg class="layer" id="wfx" width="10" height="10"><defs><filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter></defs><g id="wfxg"></g></svg>
+    <div id="wel"></div>
+    <div id="bloom"></div>
+    <div id="block"><div class="face"></div><div id="gl"></div><svg class="ol" width="236" height="236"><rect id="olr" x="3" y="3" width="230" height="230" rx="58" pathLength="1"/></svg></div>
+  </div>
+  <svg class="layer" id="sfx" width="1920" height="1080"><g id="sfxg"></g></svg>
+  <div id="mark"></div><div id="wm">Helpin</div>
+  <div id="txt"></div>
+  <div id="term"><span class="p">$</span><span id="cmd"></span></div>
+  <div id="cta"><span class="u">helpin.ai</span><span class="o">Open source</span><span class="o">Self-host free</span></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, clamp, rand, keys, expoOut, expoIn, expoInOut, backOut, easeInOut, easeIn } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { E, voice } from '../../lib/film.js';
+import VO from './vo.json' with { type: 'json' };
+import MUSIC from './music.json' with { type: 'json' };
+import LOGOS from './logos.json' with { type: 'json' }; // tool logos for the ending (prep-logos.mjs)
+
+await Promise.all(['700 150px "Instrument Sans Variable"', '650 150px "Instrument Sans Variable"'].map((f) => document.fonts.load(f)));
+const $ = (s) => document.querySelector(s);
+const { W, S, END, total } = voice(VO);
+const ease = (t, a, d = 0.4, f = E) => f(P(t, a, a + d));
+const onBeat = (t) => { const b = (t - MUSIC.firstBeat) / MUSIC.period; return b - Math.floor(b); };
+const pulse = (t) => Math.exp(-onBeat(t) * MUSIC.period / 0.12);
+const AG = (n) => `../../assets/helpin/agents/${n}.svg`;
+const RED = '#FF5A5F', MINT = '#9CDBB3', CYAN = '#5CE1E6', EM = '#2FBF7A', WHITE = '#EAF3EE';
+
+// ════════ shared kit ════════
+let WF = '', SF = ''; // world / screen fx buffers
+const svgLine = (x1, y1, x2, y2, { w = 3, c = MINT, o = 1, dash = '', cap = 'round' } = {}) => `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${c}" stroke-width="${w}" stroke-linecap="${cap}" opacity="${Math.max(0, o).toFixed(3)}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`;
+const svgRing = (x, y, r, { w = 3, c = MINT, o = 1, dash = '', rot = 0, fill = 'none' } = {}) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.max(0, r).toFixed(1)}" fill="${fill}" stroke="${c}" stroke-width="${w}" opacity="${Math.max(0, o).toFixed(3)}"${dash ? ` stroke-dasharray="${dash}" transform="rotate(${rot.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})"` : ''}/>`;
+const svgDot = (x, y, r, c, o = 1, blur = false) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.max(0, r).toFixed(1)}" fill="${c}" opacity="${Math.max(0, o).toFixed(3)}"${blur ? ' filter="url(#soft)"' : ''}/>`;
+const svgPath = (d, { w = 4, c = MINT, o = 1, k = 1, blur = false } = {}) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="${(1 - clamp(k)).toFixed(4)}" opacity="${Math.max(0, o).toFixed(3)}"${blur ? ' filter="url(#soft)"' : ''}/>`;
+// a light trail behind anything whose position is a function of time
+function trail(pos, t, { len = 0.35, n = 22, w = 16, c = MINT, o = 0.8, t0 = -1e9 } = {}) {
+  let s = ''; let prev = pos(t);
+  for (let i = 1; i <= n; i++) { const tt = t - (len * i) / n; if (tt < t0) break; const p = pos(tt), k = 1 - i / n; s += svgLine(prev[0], prev[1], p[0], p[1], { w: w * (0.35 + 0.65 * k), c, o: o * k * k }); prev = p; }
+  return s;
+}
+// the camera: design point (cx, cy) at the screen centre, scale s
+let CAM = [960, 540, 1];
+const setCam = (cx, cy, s) => { CAM = [cx, cy, s]; $('#world').style.transform = `translate(${(960 - cx * s).toFixed(1)}px, ${(540 - cy * s).toFixed(1)}px) scale(${s.toFixed(4)})`; };
+// radial speed lines around a screen point
+function speed(t, x, y, k, { n = 26, r0 = 260, len = 380, seed = 1 } = {}) {
+  if (k <= 0.01) return '';
+  let s = '';
+  for (let i = 0; i < n; i++) { const a = rand(i + seed) * Math.PI * 2, ph = (t * (1.4 + rand(i + seed + 40)) + rand(i + seed + 80)) % 1, r = r0 + ph * 700; s += svgLine(x + Math.cos(a) * r, y + Math.sin(a) * r, x + Math.cos(a) * (r + len * (0.4 + rand(i + seed + 120) * 0.6)), y + Math.sin(a) * (r + len * 0.6), { w: 2, c: WHITE, o: k * 0.5 * Math.sin(ph * Math.PI) }); }
+  return s;
+}
+// doodle confetti: outline glyphs that burst out of a point and drift
+const DOODLE = ['M-9 -9L9 9M9 -9L-9 9', 'M0 -10A10 10 0 1 0 0.1 -10', 'M-8 -8H8V8H-8Z', 'M0 -11L11 0L0 11L-11 0Z', 'M-12 2C-8 -6 -4 10 0 2S8 -6 12 2', 'M0 -10V10M-10 0H10', 'M0 -9L3 -3L9 -3L4 1L6 8L0 4L-6 8L-4 1L-9 -3L-3 -3Z', 'M0 8C-12 0 -8 -10 0 -4C8 -10 12 0 0 8Z', 'M0 -10L10 8H-10Z'];
+function burst(t, t0, x, y, { n = 30, v = 900, life = 1.8, seed = 1, cols = [WHITE, MINT], hearts = false } = {}) {
+  const lt = t - t0; if (lt < 0 || lt > life) return '';
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const a = rand(i * 3 + seed) * Math.PI * 2, sp = v * (0.35 + rand(i * 7 + seed) * 0.8), k = 1 - Math.exp(-lt * 3.2);
+    const px = x + Math.cos(a) * sp * k / 3.2, py = y + Math.sin(a) * sp * k / 3.2 + 30 * lt * lt;
+    const d = hearts && i % 3 === 0 ? DOODLE[7] : DOODLE[Math.floor(rand(i * 11 + seed) * DOODLE.length)];
+    s += `<path d="${d}" transform="translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(rand(i + seed) * 360 + lt * 120).toFixed(1)}) scale(${(0.9 + rand(i * 5 + seed) * 0.9).toFixed(2)})" fill="none" stroke="${cols[i % cols.length]}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="${(Math.min(1, lt * 8) * (1 - P(lt, life * 0.55, life))).toFixed(3)}"/>`;
+  }
+  return s;
+}
+// kinetic text: a line of words, each with its own entrance time
+function kt(id, html, { top, size = 150, cls = '' } = {}) {
+  const el = document.createElement('div'); el.className = `kt ${cls}`; el.id = id; el.style.top = `${top}px`; el.style.fontSize = `${size}px`;
+  el.innerHTML = html.split(/(?<!<em)\s+(?![^<]*<\/em>)/).map((w) => `<span>${w}</span>`).join(' '); // phrases inside <em> stay whole
+  $('#txt').append(el); return el;
+}
+const words = (el) => [...el.querySelectorAll('span')];
+function rise(el, t, ats, { dy = 50, blur = 12, out = Infinity, outDur = 0.35, outDy = -40 } = {}) {
+  const on = t < out + 0.05; el.style.display = on && t >= Math.min(...ats) - 0.1 ? 'block' : 'none'; if (el.style.display === 'none') return;
+  const o = ease(t, out - outDur, outDur);
+  words(el).forEach((w, i) => { const at = ats[Math.min(i, ats.length - 1)], k = expoOut(P(t, at - 0.04, at + 0.3)); css(w, { opacity: String(P(t, at - 0.04, at + 0.04) * (1 - o)), transform: `translateY(${((1 - k) * dy + o * outDy).toFixed(1)}px) scale(${L(1.08, 1, k).toFixed(3)})`, filter: k < 1 || o > 0 ? `blur(${(Math.max(1 - k, o) * blur).toFixed(1)}px)` : 'none' }); });
+}
+
+// ════════ the cast ════════
+// background doodles, drifting
+$('#bg').innerHTML = Array.from({ length: 46 }, (_, i) => `<i><svg width="40" height="40" viewBox="-20 -20 40 40"><path d="${DOODLE[i % 7]}" fill="none" stroke="rgba(156,219,179,.22)" stroke-width="2" stroke-linecap="round"/></svg></i>`).join('');
+const bgEls = [...document.querySelectorAll('#bg i')];
+const BG = bgEls.map((_, i) => ({ x: rand(i + 1) * 1920, y: rand(i + 71) * 1080, vx: (rand(i + 141) - 0.5) * 20, vy: (rand(i + 211) - 0.5) * 14, s: 0.5 + rand(i + 281) * 1.0, r: rand(i + 351) * 360 }));
+// the story block: rows of glyphs (messages, tasks, fixes)
+const GL = []; {
+  const rows = [[['pill', 54], ['circ', 16], ['pill', 30], ['pill', 44]], [['circ', 16], ['pill', 70], ['tri', 18], ['pill', 30]], [['pill', 40], ['pill', 24], ['circ', 16], ['pill', 50]],
+    [['tri', 18], ['pill', 60], ['circ', 16], ['pill', 34]], [['pill', 36], ['circ', 16], ['pill', 64]], [['circ', 16], ['pill', 44], ['pill', 28], ['tri', 18]]];
+  rows.forEach((row, r) => { let x = 26; row.forEach(([k, w], j) => { const cyan = (r * 3 + j) % 5 === 0, light = (r + j) % 3 === 0; GL.push({ k, w, x, y: 30 + r * 30, r, col: cyan ? CYAN : light ? '#E7F8EE' : '#0B6340' }); x += w + 10; }); });
+}
+$('#gl').innerHTML = GL.map((g) => g.k === 'tri' ? `<svg class="g" width="${g.w}" height="16" style="left:${g.x}px;top:${g.y}px"><path d="M${g.w / 2} 1 L${g.w - 1} 15 L1 15 Z" fill="${g.col}"/></svg>` : `<i class="g ${g.k}" style="left:${g.x}px;top:${g.y}px;width:${g.w}px;height:16px;background:${g.col}"></i>`).join('');
+const glEls = [...document.querySelectorAll('#gl .g')];
+const tint = (i, c) => { const el = glEls[i]; if (el.tagName === 'svg') el.firstElementChild.setAttribute('fill', c); else el.style.background = c; el.style.boxShadow = c === RED ? '0 0 12px rgba(255, 90, 95, .8)' : 'none'; };
+const block = (x, y, s, { rot = 0, o = 1, glow = 1, fill = 1, outline = 0, rows = 6 } = {}) => {
+  css($('#block'), { transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${Math.max(0.001, s).toFixed(4)})`, opacity: String(o) });
+  $('#block .face').style.clipPath = fill >= 1 ? 'none' : `inset(0 ${((1 - fill) * 100).toFixed(1)}% 0 0 round 58px)`;
+  const ol = $('#olr'); ol.style.strokeDasharray = '1'; ol.style.strokeDashoffset = String(1 - outline); ol.style.opacity = String(outline > 0 && fill < 1 ? 1 : outline > 0 ? 1 - P(fill, 0.8, 1) : 0);
+  css($('#bloom'), { transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(Math.max(0.001, s) * glow).toFixed(3)})`, opacity: String(o * Math.min(1, glow) * fill) });
+};
+// chipping: when each glyph breaks off (the old way) and how it falls
+const CHIP = glEls.map((_, i) => ({ at: [W('path', 7) - 0.1, W('path', 11) - 0.1, W('lost', 3), W('lost', 3) + 0.25, W('lost', 10), W('cost', 1)][i % 6] + rand(i + 5) * 0.2, vx: (rand(i + 55) - 0.5) * 520, vy: -160 - rand(i + 77) * 260, rot: (rand(i + 99) - 0.5) * 720, keep: i % 6 === 5 }));
+const REW = [W('whatif', 0) - 0.1, W('whatif', 5) + 0.15]; // the rewind
+// requests that swirl in (they tell you what they need)
+const REQS = ['Export to CSV?', 'SSO for our team?', 'Bulk-edit tasks?', 'Invoices in EUR?', 'Slack alerts?', 'Dark mode?'];
+const REQC = [CYAN, MINT, '#FFFFFF', CYAN, MINT, '#FFFFFF'];
+$('#wel').innerHTML = REQS.map((r, i) => `<div class="req" style="background:${REQC[i]}">${r}</div>`).join('');
+const reqEls = [...document.querySelectorAll('.req')];
+// nodes (stations) and orbs (agents), created on demand in #wel
+const ICON = { support: 'M8 10h32v22H20l-10 9v-9H8z', product: 'M10 10h12v12H10z M26 10h12v12H26z M10 26h12v12H10z M26 26h12v12H26z', eng: 'M17 12l-10 12 10 12 M31 12l10 12-10 12',
+  chat: 'M8 10h32v22H20l-10 9v-9H8z', task: 'M11 9h26v30H11z M17 23l5 5 10-10', fix: 'M17 12l-10 12 10 12 M31 12l10 12-10 12', review: 'M22 8a14 14 0 1 0 .1 0 M32 32l8 8', approve: 'M9 24l10 10 20-20', docs: 'M14 6h14l8 8v28H14z M28 6v8h8',
+  crm: 'M24 22a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M9 42c1-9 7-13 15-13s14 4 15 13', meetings: 'M7 14h24v20H7z M31 20l10-6v20l-10-6', server: 'M9 8h30v12H9z M9 26h30v12H9z', cloud: 'M12 34h24a9 9 0 0 0 1-18 12 12 0 0 0-23 3 8 8 0 0 0-2 15z', flag: 'M12 6v36 M12 8h22l-5 7 5 7H12' };
+const NODES = {};
+const node = (id, icon) => { if (!NODES[id]) { const el = document.createElement('div'); el.className = 'node'; el.innerHTML = `<svg viewBox="0 0 48 48"><path d="${ICON[icon]}"/></svg>`; $('#wel').append(el); NODES[id] = el; } return NODES[id]; };
+const showNode = (id, icon, x, y, t, at, { o = 1, s = 1 } = {}) => { const el = node(id, icon), k = backOut(P(t, at, at + 0.4), 2); css(el, { display: 'grid', opacity: String(P(t, at, at + 0.1) * o), transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(L(0.2, 1, Math.min(1, k)) * s).toFixed(3)})` }); };
+const AGENTS = { echo: '#D4537E', forge: '#534AB7', lens: '#BA7517', quill: '#185FA5', beacon: '#0F766E', atlas: '#D85A30' };
+const ORBS = {};
+const orb = (id) => { if (!ORBS[id]) { const el = document.createElement('div'); el.className = 'orb'; el.style.background = AGENTS[id]; el.style.boxShadow = `0 0 34px ${AGENTS[id]}CC, 0 0 90px ${AGENTS[id]}66`; el.innerHTML = `<img src="${AG(id)}" alt="">`; $('#wel').append(el); ORBS[id] = el; } return ORBS[id]; };
+const showOrb = (id, x, y, t, at, { o = 1, s = 1 } = {}) => { const el = orb(id), k = backOut(P(t, at, at + 0.4), 2); css(el, { display: 'grid', opacity: String(P(t, at, at + 0.1) * o), transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(L(0.2, 1, Math.min(1, k)) * s).toFixed(3)})` }); };
+const ROLE = { echo: 'Support agent', forge: 'Coding agent', lens: 'Code reviewer', quill: 'Docs agent', beacon: 'CRM operator', atlas: 'Epic planner' };
+const LABS = {};
+const alab = (id) => { if (!LABS[id]) { const el = document.createElement('div'); el.className = 'alab'; el.innerHTML = `<b>${id[0].toUpperCase() + id.slice(1)}</b><span>${ROLE[id]}</span>`; $('#wel').append(el); LABS[id] = el; } return LABS[id]; };
+// an agent's card: its avatar, big, in its colour, with its name and role, from the moment the voice names it
+function agentCard(id, x, y, t, at, until) {
+  if (t < at - 0.05 || t > until + 0.3) return;
+  const o = 1 - P(t, until, until + 0.3), k = backOut(P(t, at - 0.05, at + 0.35), 2.2);
+  showOrb(id, x, y, t, at - 0.05, { s: 1.7, o });
+  const lk = expoOut(P(t, at + 0.05, at + 0.4)), el = alab(id);
+  css(el, { display: 'block', transform: `translate(${x.toFixed(1)}px, ${(y + 115 + (1 - lk) * 24).toFixed(1)}px)`, opacity: String(P(t, at + 0.05, at + 0.15) * o) });
+  WF += svgRing(x, y, 100 + ((t - at) * 70 % 40), { w: 3, c: AGENTS[id], o: 0.6 * Math.min(1, k) * o });
+}
+const PANELS = {};
+const panel = (id, html) => { if (!PANELS[id]) { const el = document.createElement('div'); el.className = 'panel'; el.innerHTML = html; $('#wel').append(el); PANELS[id] = el; } return PANELS[id]; };
+// kinetic lines
+const K = {
+  build1: kt('build1', 'You’re building something', { top: 120, size: 132 }),
+  build2: kt('build2', 'your customers <em>love.</em>', { top: 820, size: 132 }),
+  need: kt('need', 'what they <em>need.</em>', { top: 850, size: 110 }),
+  lost1: kt('lost1', 'At every handoff,', { top: 110, size: 140 }),
+  lost2: kt('lost2', 'a little of the story', { top: 800, size: 110 }),
+  lost3: kt('lost3', 'gets <em style="color:#FF8A8E">lost.</em>', { top: 920, size: 110 }),
+  context: kt('context', 'Context', { top: 380, size: 300 }),
+  rep1: kt('rep1', 'Customers repeat themselves.', { top: 330, size: 120 }), rep2: kt('rep2', 'Customers repeat themselves.', { top: 470, size: 120 }), rep3: kt('rep3', 'Customers repeat themselves.', { top: 610, size: 120 }),
+  whatif: kt('whatif', 'What if the story', { top: 110, size: 140 }), whole: kt('whole', '<em>stayed whole?</em>', { top: 250, size: 140 }),
+  one: kt('one', 'One open-source <em>workspace.</em>', { top: 860, size: 96 }),
+  agents: kt('agents', 'AI agents that share <em>the whole history.</em>', { top: 860, size: 96 }),
+  decide: kt('decide', 'You <em>decide.</em>', { top: 150, size: 170 }),
+  work: kt('work', 'On the work,', { top: 180, size: 170 }), nothand: kt('nothand', 'not the handoffs.', { top: 360, size: 170 }),
+  oss: kt('oss', 'Open <em>source.</em>', { top: 640, size: 150 }),
+  tag: kt('tag', 'Every handoff <em>keeps the story.</em>', { top: 800, size: 120 }),
+  cta1: kt('cta1', 'Don’t lose context between tools and handoffs.', { top: 130, size: 104 }),
+  cta2: kt('cta2', 'Keep everything in <em>one place.</em>', { top: 130, size: 136 }),
+};
+const MODS = [['Support', 'support'], ['Projects', 'product'], ['CRM', 'crm'], ['Meetings', 'meetings'], ['Docs', 'docs']];
+// the tools of the ending: scattered in the lower two thirds, each with its icon
+const FRAG = LOGOS.map((lg, i) => ({ lg, x: 170 + (i % 8) * 225 + (rand(i + 1200) - 0.5) * 90, y: 420 + Math.floor(i / 8) * 330 + (rand(i + 1300) - 0.5) * 120, r: (rand(i + 1400) - 0.5) * 24, d: rand(i + 1500) * 0.35 }));
+const modKt = MODS.map(([n], i) => kt(`mod${i}`, n, { top: 250 + i * 118, size: 110 }));
+modKt.forEach((el) => { el.style.textAlign = 'left'; el.style.left = '170px'; el.style.width = '800px'; });
+const stn = { support: kt('st-support', 'SUPPORT', { top: 0, size: 150 }), product: kt('st-product', 'PRODUCT', { top: 0, size: 150 }), eng: kt('st-eng', 'ENGINEERING', { top: 0, size: 150 }) };
+const bugKt = kt('bug', '<em style="color:#FF8A8E">BUG</em>', { top: 0, size: 150 });
+const apKt = kt('approved', '<em>APPROVED</em>', { top: 0, size: 150 });
+const liveKt = kt('live', 'The fix is live ✓', { top: 0, size: 80 });
+const sym = helpinSymbol({ size: 230, color: WHITE, spread: 160 }); $('#mark').append(sym.node);
+const CMD = 'curl -fsSL https://helpin.ai/install.sh | bash';
+
+// ════════ the pipeline world (scene G) ════════
+const PIPE = [['chat', 'Chat', 400, 'echo'], ['task', 'Task', 1400, null], ['fix', 'Fix', 2400, 'forge'], ['review', 'Review', 3300, 'lens'], ['approve', 'Approve', 4100, null], ['docs', 'Docs', 4900, 'quill']];
+const PY = 600, LOOPY = 1200;
+const pX = (id) => PIPE.find((p) => p[0] === id)[2];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: total,
+  scenes: [{ id: 'film', start: 0, end: total, render: ({ t }) => {
+    WF = ''; SF = '';
+    // reset per frame
+    Object.values(NODES).forEach((e) => { e.style.display = 'none'; }); Object.values(ORBS).forEach((e) => { e.style.display = 'none'; }); Object.values(PANELS).forEach((e) => { e.style.display = 'none'; }); Object.values(LABS).forEach((e) => { e.style.display = 'none'; });
+    reqEls.forEach((e) => { e.style.display = 'none'; });
+    ['#mark', '#wm', '#term', '#cta'].forEach((s) => { $(s).style.opacity = '0'; });
+    // every kinetic line is hidden unless its scene shows it this frame
+    document.querySelectorAll('#txt .kt').forEach((e) => { e.style.display = 'none'; });
+    block(960, 540, 0, { o: 0 });
+    glEls.forEach((g, i) => { g.style.transform = 'none'; g.style.opacity = '1'; tint(i, GL[i].col); });
+    setCam(960, 540, 1);
+    // background doodles drift (faster in the chaos)
+    const chaos = ease(t, W('lost', 3), 0.6) * (1 - ease(t, REW[0], 0.6));
+    bgEls.forEach((el, i) => { const b = BG[i], sp = 1 + chaos * 5; css(el, { transform: `translate(${(((b.x + b.vx * t * sp) % 1980 + 1980) % 1980 - 30).toFixed(1)}px, ${(((b.y + b.vy * t * sp) % 1120 + 1120) % 1120 - 20).toFixed(1)}px) rotate(${(b.r + t * 10 * sp).toFixed(1)}deg) scale(${b.s.toFixed(2)})` }); });
+
+    // ════ A (0 → 7.4): a ring drifts down, lands, becomes the block; messages swirl in ════
+    if (t < S('path') - 0.15) {
+      const LAND = 1.25, BUILD = W('build', 1), FILL = W('build', 2) + 0.15, LOVE = W('build', 5), NEED0 = W('tell', 3);
+      const cz = keys(t, [[0, [960, 540, 1.25]], [LAND, [960, 540, 1.12], (k) => k], [W('tell', 0), [960, 540, 1]], [END('tell') - 0.1, [960, 540, 1]], [S('path') - 0.15, [960, 400, 2.4], expoIn]]);
+      setCam(...cz);
+      const ringPos = (tt) => [960 + Math.sin(tt * 3.2) * 60 * (1 - P(tt, 0, LAND)), L(-80, 540, easeInOut(P(tt, 0, LAND)))];
+      if (t < BUILD) { const p = ringPos(Math.min(t, LAND)); WF += trail(ringPos, Math.min(t, LAND), { len: 0.4, w: 8, c: WHITE, o: 0.5 }); WF += svgRing(p[0], p[1], 13 + (t > LAND ? Math.exp(-(t - LAND) / 0.1) * 8 : 0), { w: 4, c: WHITE }); WF += svgDot(p[0], p[1], 26, MINT, 0.25, true); }
+      WF += burst(t, LAND, 960, 540, { n: 34, v: 1300, seed: 3 });
+      // the outline draws, then fills left to right; glyph rows are written in
+      const grow = expoOut(P(t, BUILD - 0.05, BUILD + 0.35)), outline = easeInOut(P(t, BUILD, BUILD + 0.45)), fill = expoInOut(P(t, FILL, FILL + 0.5));
+      const lovePulse = t >= LOVE ? Math.exp(-(t - LOVE) / 0.15) : 0;
+      block(960, 540, L(0.12, 1, grow) * (1 + lovePulse * 0.1 + pulse(t) * 0.015), { o: t >= BUILD - 0.05 ? 1 : 0, outline, fill, glow: 1 + lovePulse * 0.4, rot: (1 - grow) * -45 });
+      glEls.forEach((g, i) => { const at = FILL + 0.25 + GL[i].r * 0.08 + (GL[i].x / 230) * 0.06, k = expoOut(P(t, at, at + 0.25)); css(g, { opacity: String(P(t, at, at + 0.05)), transform: `translateX(${((1 - k) * -24).toFixed(1)}px)` }); });
+      WF += burst(t, LOVE, 960, 540, { n: 40, v: 1500, seed: 21, cols: [MINT, '#FF8FB0', WHITE], hearts: true });
+      if (lovePulse > 0.01) WF += svgRing(960, 540, 150 + (1 - lovePulse) * 420, { w: 5, c: MINT, o: lovePulse });
+      rise(K.build1, t, [W('build', 0), W('build', 1), W('build', 2)], { out: W('tell', 0) });
+      rise(K.build2, t, [W('build', 3), W('build', 4), W('build', 5)], { out: W('tell', 0), outDy: 40 });
+      // every day: seven day-dots light around the block, one per half beat, and a sweep
+      const DAY = W('tell', 1) - 0.1;
+      for (let d = 0; d < 7; d++) { const a = -Math.PI / 2 + d * (Math.PI * 2 / 7), at = DAY + d * 0.1, k = expoOut(P(t, at, at + 0.3)); if (t < at) continue; WF += svgDot(960 + Math.cos(a) * 250, 540 + Math.sin(a) * 250, 11 * k, d % 2 ? CYAN : MINT, 1 - ease(t, S('path') - 0.6, 0.3)); }
+      const sw = P(t, DAY, DAY + 0.8); if (sw > 0 && sw < 1) WF += `<path d="M ${960} ${540 - 250} A 250 250 0 ${sw > 0.5 ? 1 : 0} 1 ${(960 + Math.sin(sw * Math.PI * 2) * 250).toFixed(1)} ${(540 - Math.cos(sw * Math.PI * 2) * 250).toFixed(1)}" fill="none" stroke="${MINT}" stroke-width="4" opacity="0.8"/>`;
+      // what they need: requests swirl in on light trails and write themselves into the block
+      REQS.forEach((_, i) => {
+        const at = NEED0 + i * 0.16, dur = 1.05, a0 = i * 1.05 + 0.4;
+        const pos = (tt) => { const k = E(P(tt, at, at + dur)), a = a0 + k * 2.6, r = L(900, 60, k); return [960 + Math.cos(a) * r * 1.25, 540 + Math.sin(a) * r * 0.8]; };
+        if (t < at || t > at + dur) return;
+        const [x, y] = pos(t), k = P(t, at, at + dur);
+        WF += trail(pos, t, { len: 0.3, w: 12, c: REQC[i], o: 0.6, t0: at });
+        css(reqEls[i], { display: 'block', transform: `translate(${(x - 90).toFixed(1)}px, ${(y - 26).toFixed(1)}px) scale(${L(1, 0.3, easeIn(k)).toFixed(3)})`, opacity: String(Math.min(1, k * 6) * (1 - P(k, 0.85, 1))) });
+      });
+      rise(K.need, t, [W('tell', 6), W('tell', 6), W('tell', 8)], { out: S('path') - 0.35 });
+      // the push-in, with speed lines, into the next scene
+      SF += speed(t, 960, 540, ease(t, END('tell') - 0.3, 0.3) * (1 - ease(t, S('path') - 0.2, 0.1)), { seed: 5 });
+    }
+
+    // ════ B + C (7.4 → 21.6): the old way. Launch, hop station to station, chip, get lost ════
+    if (t >= S('path') - 0.15 && t < REW[0] - 0.05) {
+      const ST = [['support', 'support', 0, W('path', 4)], ['product', 'product', 1600, W('path', 7)], ['eng', 'eng', 3200, W('path', 11)]];
+      const SY = 640;
+      // the block's path: launch from below to support, then hop to product and engineering
+      const bpos = (tt) => {
+        if (tt < ST[0][3]) { const k = expoOut(P(tt, S('path') - 0.15, ST[0][3])); return [0, L(1300, SY - 170, k)]; }
+        for (let i = 1; i < ST.length; i++) { const a = ST[i - 1], b = ST[i]; if (tt < b[3]) { const k = expoInOut(P(tt, b[3] - 0.55, b[3])); return [L(a[2], b[2], k), SY - 170 - Math.sin(k * Math.PI) * 260]; } }
+        return [ST[2][2], SY - 170];
+      };
+      // camera: follows the block, then pulls back over all three for "at every handoff"
+      const [bx, by] = bpos(t);
+      const back = expoInOut(P(t, W('lost', 0) - 0.2, W('lost', 1) + 0.3));
+      const follow = [bx, 470, 1];
+      const wide = [1600, 540, 0.42];
+      setCam(L(follow[0], wide[0], back), L(follow[1], wide[1], back), L(follow[2], wide[2], back));
+      // stations with slamming names
+      ST.forEach(([id, icon, x, at]) => {
+        showNode(id, icon, x, SY, t, at - 0.45, { s: 1.2 });
+        const el = stn[id], k = expoOut(P(t, at - 0.05, at + 0.25));
+        const [sx, sy] = [(x - CAM[0]) * CAM[2] + 960, (SY + 170 - CAM[1]) * CAM[2] + 540];
+        css(el, { display: t >= at - 0.1 ? 'block' : 'none', top: `${(sy + 10).toFixed(1)}px`, left: `${(sx - 960).toFixed(1)}px`, fontSize: `${(150 * CAM[2]).toFixed(1)}px` });
+        words(el).forEach((w) => css(w, { opacity: String(P(t, at - 0.05, at + 0.02)), transform: `scale(${L(1.3, 1, k).toFixed(3)})`, filter: k < 1 ? `blur(${((1 - k) * 12).toFixed(1)}px)` : 'none' }));
+      });
+      // the links between stations: drawn, then they break
+      const brk = ease(t, W('lost', 10), 0.4);
+      [[0, 1], [1, 2]].forEach(([a, b], j) => { const A = ST[a], Bn = ST[b]; if (t < Bn[3] - 0.3) return; const mx = (A[2] + Bn[2]) / 2; WF += svgLine(A[2] + 90, SY, L(A[2] + 90, mx, 1 - brk * 0.35), SY, { w: 5, dash: '16 14', o: 0.8 }); WF += svgLine(Bn[2] - 90, SY, L(Bn[2] - 90, mx, 1 - brk * 0.35), SY, { w: 5, dash: '16 14', o: 0.8 }); if (brk > 0) WF += svgPath(`M ${mx - 30} ${SY - 30} L ${mx + 30} ${SY + 30} M ${mx + 30} ${SY - 30} L ${mx - 30} ${SY + 30}`, { w: 8, c: RED, k: brk }); });
+      // the launch beam and hop trails
+      WF += trail(bpos, t, { len: 0.45, w: 70, c: MINT, o: 0.35, t0: S('path') - 0.15 });
+      WF += trail(bpos, t, { len: 0.3, w: 26, c: WHITE, o: 0.5, t0: S('path') - 0.15 });
+      // at every handoff: the block hops back along the chain in the wide shot, chipping each time
+      let hx = bx, hy = by;
+      if (t >= W('lost', 1)) { const hops = [[W('lost', 1), 3200], [W('lost', 3), 1600], [W('lost', 5), 0], [W('lost', 8), 1600]]; let px = 3200; for (const [at, x] of hops) { if (t >= at) { const k = expoInOut(P(t, at, at + 0.4)); hx = L(px, x, k); hy = SY - 170 - Math.sin(k * Math.PI) * 300; px = x; } } }
+      const lostK = glEls.filter((_, i) => !CHIP[i].keep && t >= CHIP[i].at).length / glEls.filter((_, i) => !CHIP[i].keep).length;
+      const dim = ease(t, W('cost', 1), 0.8);
+      block(hx, hy, L(1, 0.6, lostK) * L(1, 0.75, dim), { o: 1 - dim * 0.5, glow: L(1, 0.3, lostK), rot: Math.sin(t * 3) * 5 * chaos });
+      glEls.forEach((g, i) => { const c = CHIP[i], lt = t - c.at; if (c.keep || lt < 0) return; tint(i, RED); const inv = 1 / L(1, 0.6, lostK); css(g, { transform: `translate(${(c.vx * lt * inv).toFixed(1)}px, ${((c.vy * lt + 1100 * lt * lt) * inv).toFixed(1)}px) rotate(${(c.rot * lt).toFixed(1)}deg) scale(${(1.7 * inv).toFixed(3)})`, opacity: String(Math.max(0, 1 - lt / 1.8)) }); });
+      // the red pile growing at the bottom (screen space)
+      const pile = ease(t, W('lost', 3), 3.5);
+      for (let i = 0; i < 70; i++) { if (rand(i + 700) > pile) continue; const x = 960 + (rand(i + 710) - 0.5) * 1200 * (0.3 + rand(i + 720) * 0.7), y = 1060 - rand(i + 730) * 60 * (1 - Math.abs(x - 960) / 700); SF += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(12 + rand(i + 740) * 26).toFixed(1)}" height="9" rx="4" fill="${RED}" opacity="${(0.75 * (1 - dim * 0.4)).toFixed(3)}" transform="rotate(${((rand(i + 750) - 0.5) * 80).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`; }
+      // kinetic lines
+      rise(K.lost1, t, [W('lost', 1), W('lost', 2), W('lost', 3)], { out: W('cost', 0) - 0.1 });
+      rise(K.lost2, t, [W('lost', 4), W('lost', 5), W('lost', 6), W('lost', 7), W('lost', 8)], { out: W('cost', 0) - 0.1 });
+      rise(K.lost3, t, [W('lost', 9), W('lost', 10)], { out: W('cost', 0) - 0.1 });
+      // "lost.": its letters fall away
+      if (t >= W('lost', 10) + 0.25) { const em = K.lost3.querySelector('em'); if (!em.dataset.split) { em.innerHTML = [...'lost.'].map((c) => `<b style="display:inline-block;font-weight:inherit">${c}</b>`).join(''); em.dataset.split = 1; } [...em.children].forEach((c, i) => { const lt = t - (W('lost', 10) + 0.3 + i * 0.07); c.style.transform = lt > 0 ? `translate(${(i - 2) * 30 * lt}px, ${(900 * lt * lt).toFixed(1)}px) rotate(${((i - 2) * 40 * lt).toFixed(1)}deg)` : 'none'; }); }
+      // Context disappears: the word turns to dust
+      const ctxOn = t >= W('cost', 0) - 0.1 && t < W('cost', 2) - 0.1;
+      K.context.style.display = ctxOn ? 'block' : 'none';
+      if (ctxOn) {
+        if (!K.context.dataset.split) { K.context.innerHTML = [...'Context'].map((c) => `<span>${c}</span>`).join(''); K.context.dataset.split = 1; }
+        words(K.context).forEach((c, i) => { const k = expoOut(P(t, W('cost', 0) - 0.05 + i * 0.03, W('cost', 0) + 0.25 + i * 0.03)), dust = P(t, W('cost', 1) + i * 0.06, W('cost', 1) + 0.7 + i * 0.06); css(c, { opacity: String(P(t, W('cost', 0) - 0.05, W('cost', 0)) * (1 - dust)), transform: `translate(${(dust * (rand(i + 5) - 0.5) * 300).toFixed(1)}px, ${((1 - k) * 60 - dust * 260).toFixed(1)}px) scale(${L(1, 1.4, dust).toFixed(3)})`, filter: dust > 0 || k < 1 ? `blur(${(Math.max(1 - k, dust) * 16).toFixed(1)}px)` : 'none' }); });
+        if (t >= W('cost', 1)) for (let i = 0; i < 60; i++) { const lt = t - W('cost', 1) - rand(i + 900) * 0.5; if (lt < 0) continue; SF += svgDot(560 + rand(i + 910) * 800 + (rand(i + 920) - 0.5) * 200 * lt, 560 - lt * (200 + rand(i + 930) * 300), 3 + rand(i + 940) * 4, WHITE, Math.max(0, 0.8 - lt)); }
+      }
+      // Customers repeat themselves: the line stutters three times
+      [K.rep1, K.rep2, K.rep3].forEach((el, j) => { const at = W('cost', 2) + j * 0.35; const on = t >= at - 0.05 && t < REW[0] - 0.05; el.style.display = on ? 'block' : 'none'; if (!on) return; const k = expoOut(P(t, at, at + 0.25)); words(el).forEach((w) => css(w, { opacity: String(P(t, at, at + 0.05) * [1, 0.55, 0.28][j] * (1 - ease(t, REW[0] - 0.35, 0.3))), transform: `translateX(${((1 - k) * 80).toFixed(1)}px)`, filter: k < 1 ? `blur(${((1 - k) * 10).toFixed(1)}px)` : 'none' })); });
+    } else { if (K.lost3.querySelector('em')?.dataset.split) { /* keep split */ } K.context.style.display = 'none'; [K.rep1, K.rep2, K.rep3].forEach((e) => { e.style.display = 'none'; }); }
+
+    // ════ D (21.6 → 26.6): what if the story stayed whole? The pieces rewind; the line to the fix ════
+    if (t >= REW[0] - 0.05 && t < S('that') - 0.1) {
+      const rw = expoInOut(P(t, REW[0], REW[1]));
+      const ride = expoInOut(P(t, W('whatif', 6), W('whatif', 12) + 0.3));
+      const [lx0, lx1, ly] = [300, 1620, 700];
+      const bx = L(960, L(lx0, lx1, ride), ease(t, W('whatif', 6) - 0.3, 0.4)), by = L(L(1000, 460, rw), ly - 150, ease(t, W('whatif', 6) - 0.3, 0.4));
+      block(bx, by, L(0.45, 1, rw) * L(1, 0.7, ease(t, W('whatif', 6), 0.4)), { glow: L(0.3, 1.3, rw), rot: (1 - rw) * 30 });
+      glEls.forEach((g, i) => { const c = CHIP[i]; const lt = (1 - rw) * 1.3; if (c.keep) return; tint(i, rw > 0.7 ? GL[i].col : RED); css(g, { transform: lt <= 0.001 ? 'none' : `translate(${(c.vx * lt).toFixed(1)}px, ${(c.vy * lt + 1100 * lt * lt).toFixed(1)}px) rotate(${(c.rot * lt).toFixed(1)}deg) scale(${L(1.7, 1, rw).toFixed(3)})`, opacity: String(Math.max(0.2, rw)) }); });
+      if (t >= REW[1] - 0.05) { const f = Math.exp(-(t - REW[1] + 0.05) / 0.2); WF += svgRing(bx, by, 140 + (1 - f) * 500, { w: 6, c: MINT, o: f }); }
+      rise(K.whatif, t, [W('whatif', 0), W('whatif', 1), W('whatif', 2), W('whatif', 3)], { out: S('that') - 0.3 });
+      rise(K.whole, t, [W('whatif', 4), W('whatif', 5)], { out: S('that') - 0.3 });
+      // from the first message to the fix
+      const lk = easeInOut(P(t, W('whatif', 6) - 0.1, W('whatif', 12)));
+      WF += svgPath(`M ${lx0} ${ly} C ${lx0 + 440} ${ly + 90}, ${lx1 - 440} ${ly - 90}, ${lx1} ${ly}`, { w: 7, c: MINT, k: lk });
+      WF += svgPath(`M ${lx0} ${ly} C ${lx0 + 440} ${ly + 90}, ${lx1 - 440} ${ly - 90}, ${lx1} ${ly}`, { w: 30, c: CYAN, k: lk, o: 0.3, blur: true });
+      showNode('d-first', 'chat', lx0, ly, t, W('whatif', 8) - 0.2); showNode('d-fix', 'flag', lx1, ly, t, W('whatif', 12) - 0.15);
+      WF += `<text x="${lx0}" y="${ly + 130}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="26" letter-spacing="5" fill="${MINT}" opacity="${ease(t, W('whatif', 8), 0.3).toFixed(3)}">FIRST MESSAGE</text><text x="${lx1}" y="${ly + 130}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="26" letter-spacing="5" fill="${MINT}" opacity="${ease(t, W('whatif', 12), 0.3).toFixed(3)}">THE FIX</text>`;
+      if (ride > 0) WF += trail((tt) => { const r = expoInOut(P(tt, W('whatif', 6), W('whatif', 12) + 0.3)); return [L(lx0, lx1, r), ly - 150]; }, t, { len: 0.4, w: 40, c: MINT, o: 0.4, t0: W('whatif', 6) });
+    }
+
+    // ════ E (26.6 → 28.6): That's Helpin. The block opens into the mark, a flash, a burst ════
+    const TH = W('that', 1);
+    if (t >= S('that') - 0.1 && t < W('what', 0) + 1.2) {
+      const gather = expoInOut(P(t, S('that') - 0.1, TH - 0.05));
+      block(L(1620, 960, gather), L(550, 420, gather), L(0.7, 1.15, gather) * (1 - ease(t, TH, 0.2)), { rot: gather * 180, glow: 1.4 });
+      SF += speed(t, 960, 420, ease(t, S('that'), 0.2) * (1 - ease(t, TH + 0.1, 0.2)), { seed: 9 });
+      sym.assemble(P(t, TH - 0.05, TH + 0.55));
+      const flash = t >= TH - 0.05 ? Math.exp(-(t - TH + 0.05) / 0.2) : 0;
+      if (flash > 0.01) SF += svgDot(960, 420, 350 + (1 - flash) * 600, MINT, flash * 0.5, true);
+      if (t >= TH) SF += svgRing(960, 420, 150 + (t - TH) * 1400, { w: 8, c: WHITE, o: Math.max(0, 1 - (t - TH) * 1.6) });
+      SF += burst(t, TH, 960, 420, { n: 46, v: 1900, seed: 33, cols: [MINT, WHITE, CYAN] });
+      const up = expoInOut(P(t, W('what', 0) - 0.35, W('what', 0) + 0.3));
+      css($('#mark'), { opacity: '1', transform: `translate(${L(845, 1360, up).toFixed(1)}px, ${L(305, 265, up).toFixed(1)}px) scale(${L(1, 0.75, up).toFixed(3)})`, transformOrigin: '115px 115px' });
+      const wk = expoOut(P(t, TH + 0.08, TH + 0.45));
+      css($('#wm'), { opacity: String(wk * (1 - up)), top: '640px', transform: `translateY(${((1 - wk) * 40).toFixed(1)}px)` });
+    }
+
+    // ════ F (28.6 → 36.9): the modules name themselves, close into one workspace; the agents swirl in ════
+    if (t >= W('what', 0) - 0.3 && t < S('echo') - 0.3) {
+      if (t >= W('what', 0) + 1.2) { sym.assemble(1); css($('#mark'), { opacity: '1', transform: `translate(1360px, 265px) scale(${L(0.75, 0.55, ease(t, W('what', 7) - 0.2, 0.5)).toFixed(3)})`, transformOrigin: '115px 115px' }); }
+      const CX = 1475, CY = 380;
+      const close = expoInOut(P(t, W('what', 7) - 0.15, W('what', 9) + 0.1));
+      MODS.forEach(([n, icon], i) => {
+        const at = W('what', [0, 1, 2, 3, 5][i]);
+        rise(modKt[i], t, [at], { out: W('what', 7), outDy: 0 });
+        // the module's node flies from its word to its place around the mark, then into the workspace row
+        const a = -Math.PI / 2 + (i - 2) * 0.72, ox = CX + Math.cos(a + Math.PI / 2) * 330 * 0 + Math.sin((i - 2) * 0.72) * 330, oy = CY + 230 + Math.cos((i - 2) * 0.72) * -40;
+        const fromX = 170 + 260, fromY = 250 + i * 118 + 55, fk = expoOut(P(t, at + 0.05, at + 0.5));
+        const tx = L(L(fromX, ox, fk), 960 + (i - 2) * 190, close), ty = L(L(fromY, oy, fk), 590, close);
+        if (t >= at) { showNode(`m-${i}`, icon, tx, ty, t, at, { s: L(0.6, 0.85, close) }); if (fk < 1) WF += trail((tt) => { const k2 = expoOut(P(tt, at + 0.05, at + 0.5)); return [L(fromX, ox, k2), L(fromY, oy, k2)]; }, t, { len: 0.25, w: 10, c: MINT, o: 0.5, t0: at }); }
+      });
+      // the workspace frame
+      const fr = expoOut(P(t, W('what', 9) - 0.15, W('what', 9) + 0.35));
+      if (fr > 0) WF += `<rect x="${(960 - 540 * fr).toFixed(1)}" y="480" width="${(1080 * fr).toFixed(1)}" height="220" rx="48" fill="rgba(6,20,15,.6)" stroke="${MINT}" stroke-width="4" opacity="${fr.toFixed(3)}"/>`;
+      css($('#mark'), { transform: `translate(${L(1360, 845, close).toFixed(1)}px, ${L(265, 150, close).toFixed(1)}px) scale(${L(0.75, 0.6, close).toFixed(3)})`, transformOrigin: '115px 115px', opacity: '1' });
+      rise(K.one, t, [W('what', 7), W('what', 8), W('what', 9)], { out: W('what', 11) - 0.1 });
+      // agents swirl in on light trails and lock into an orbit around the workspace
+      const IDS = Object.keys(AGENTS);
+      IDS.forEach((id, i) => {
+        const at = W('what', 11) + i * 0.08, dur = 0.9, a0 = i * (Math.PI * 2 / IDS.length);
+        const pos = (tt) => { const k = expoOut(P(tt, at, at + dur)), a = a0 + (1 - k) * 2.2 + (tt - at) * 0.35, r = L(1400, 1, k); return [960 + Math.cos(a) * L(1400, 640, k), 590 + Math.sin(a) * L(900, 300, k)]; };
+        if (t < at) return;
+        const [x, y] = pos(t);
+        WF += trail(pos, t, { len: 0.4, w: 14, c: AGENTS[id], o: 0.7, t0: at });
+        showOrb(id, x, y, t, at);
+        if (t >= W('what', 14)) { const hk = ease(t, W('what', 14) + i * 0.06, 0.35); WF += svgLine(x, y, L(x, 960, hk), L(y, 590, hk), { w: 3, c: CYAN, o: 0.8 }); }
+      });
+      if (t >= W('what', 16)) WF += svgRing(960, 590, 700, { w: 3, c: CYAN, o: 0.5 * ease(t, W('what', 16), 0.4), dash: '4 16', rot: t * 12 });
+      rise(K.agents, t, [W('what', 11), W('what', 12), W('what', 13), W('what', 14), W('what', 15), W('what', 16), W('what', 17)], { out: S('echo') - 0.35 });
+    } else modKt.forEach((e) => { e.style.display = 'none'; });
+
+    // ════ G (36.9 → 55.3): the pipeline ride ════
+    if (t >= S('echo') - 0.3 && t < S('control') - 0.3) {
+      const STOP = { chat: W('echo', 0), task: W('bug', 7), fix: W('fix', 0), review: W('fix', 4), approve: W('fix', 7), docs: W('back', 0) };
+      const ORDER = ['chat', 'task', 'fix', 'review', 'approve', 'docs'];
+      // block position along the track
+      const bpos = (tt) => {
+        if (tt < W('back', 5)) {
+          let x = pX('chat');
+          for (let i = 1; i < ORDER.length; i++) { const at = STOP[ORDER[i]]; if (tt >= at) x = pX(ORDER[i]); else if (tt >= at - 0.6) { x = L(pX(ORDER[i - 1]), pX(ORDER[i]), expoInOut(P(tt, at - 0.6, at))); break; } else break; }
+          return [x, PY - 190];
+        }
+        // the loop back: down, along the lower track, up to the first station
+        const u = easeInOut(P(tt, W('back', 5), W('back', 12)));
+        const pts = [[pX('docs'), PY - 190], [pX('docs') + 300, PY + 300], [pX('docs') - 200, LOOPY], [pX('chat') + 200, LOOPY], [pX('chat') - 300, PY + 300], [pX('chat'), PY - 190]];
+        const seg = Math.min(4.999, u * 5), si = Math.floor(seg), f = seg - si;
+        return [L(pts[si][0], pts[si + 1][0], f), L(pts[si][1], pts[si + 1][1], f)];
+      };
+      const [bx, by] = bpos(t);
+      // camera: rides with the block; zooms out for the loop to reveal the whole pipeline
+      const out = expoInOut(P(t, W('back', 4), W('back', 6)));
+      const inAgain = expoInOut(P(t, W('back', 12) - 0.2, W('back', 12) + 0.5));
+      const ride = [bx + 120, 560, 1], wide = [2650, 850, 0.34], home = [pX('chat') + 300, 560, 0.8];
+      const cam = out < 1 ? ride.map((v, i) => L(v, wide[i], out)) : wide.map((v, i) => L(v, home[i], inAgain));
+      setCam(...cam);
+      // the track, drawn ahead as we go; the loop track
+      const trk = easeInOut(P(t, S('echo') - 0.3, S('echo') + 0.8));
+      WF += svgLine(pX('chat') - 200, PY, L(pX('chat') - 200, pX('docs') + 200, trk), PY, { w: 6, c: MINT, o: 0.9 });
+      WF += svgLine(pX('chat') - 200, PY, L(pX('chat') - 200, pX('docs') + 200, trk), PY, { w: 30, c: CYAN, o: 0.18 });
+      const loopK = P(t, W('back', 4), W('back', 6));
+      WF += svgPath(`M ${pX('docs') + 200} ${PY} C ${pX('docs') + 600} ${PY}, ${pX('docs') + 600} ${LOOPY}, ${pX('docs') - 100} ${LOOPY} L ${pX('chat') + 100} ${LOOPY} C ${pX('chat') - 600} ${LOOPY}, ${pX('chat') - 600} ${PY}, ${pX('chat') - 200} ${PY}`, { w: 6, c: CYAN, k: loopK });
+      PIPE.forEach(([id, label, x, ag], i) => {
+        showNode(`p-${id}`, id, x, PY, t, Math.min(STOP[id] - 0.5, S('echo') + 0.1 + i * 0.12));
+        WF += `<text x="${x}" y="${PY + 150}" text-anchor="middle" font-family="Instrument Sans Variable" font-stretch="75%" font-weight="700" font-size="74" fill="${t >= STOP[id] - 0.1 ? WHITE : 'rgba(234,243,238,.35)'}">${label.toUpperCase()}</text>`;
+        if (ag) { const named = { echo: W('echo', 0), forge: W('fix', 0), lens: W('fix', 4), quill: W('back', 0) }[ag]; const until = { echo: STOP.task - 0.6, forge: STOP.review - 0.6, lens: STOP.approve - 0.6, quill: W('back', 5) }[ag]; agentCard(ag, x - 360, PY - 250, t, named, until); }
+      });
+      // speed lines while travelling
+      const moving = ORDER.slice(1).some((id) => t > STOP[id] - 0.6 && t < STOP[id]);
+      SF += speed(t, 960, 400, moving && out < 0.5 ? 1 : 0, { seed: 17, n: 18 });
+      WF += trail(bpos, t, { len: 0.4, w: 60, c: MINT, o: 0.3, t0: S('echo') - 0.3 });
+      block(bx, by, 0.72 + pulse(t) * 0.02, { glow: 1 + pulse(t) * 0.15 });
+      // Echo: rays to the docs and past conversations; pieces of context flow back into the block
+      [[pX('chat') - 700, PY - 480, 'DOCS', W('echo', 4)], [pX('chat') + 400, PY - 480, 'PAST CHATS', W('echo', 7)]].forEach(([sx, sy, lab, at]) => {
+        if (t < at - 0.3 || t > STOP.task) return;
+        const k = expoOut(P(t, at - 0.3, at + 0.1)), back = P(t, at + 0.1, at + 0.8);
+        WF += svgRing(sx, sy, 60 * k, { w: 4, c: AGENTS.echo }) + `<text x="${sx}" y="${sy + 110}" text-anchor="middle" font-family="JetBrains Mono" font-weight="600" font-size="26" letter-spacing="4" fill="${WHITE}" opacity="${k.toFixed(3)}">${lab}</text>`;
+        WF += svgLine(bx, by, L(bx, sx, k), L(by, sy, k), { w: 4, c: AGENTS.echo, o: 0.8 * (1 - back) });
+        if (back > 0 && back < 1) for (let j = 0; j < 4; j++) { const bj = clamp(back - j * 0.1); WF += svgDot(L(sx, bx, E(bj)), L(sy, by, E(bj)), 12, '#FFB3C8', 1 - bj); }
+      });
+      // a bug: the block flashes red, the word slams
+      const bugOn = t >= W('bug', 3) - 0.05 && t < W('bug', 5);
+      if (bugOn) { const k = expoOut(P(t, W('bug', 3) - 0.05, W('bug', 3) + 0.2)); css(bugKt, { display: 'block', top: `${(540 + (PY - 470 - CAM[1]) * CAM[2]).toFixed(1)}px`, left: `${((pX('chat') - CAM[0]) * CAM[2]).toFixed(1)}px` }); words(bugKt).forEach((w) => css(w, { opacity: String(P(t, W('bug', 3) - 0.05, W('bug', 3)) * (1 - ease(t, W('bug', 5) - 0.25, 0.25))), transform: `scale(${L(1.4, 1, k).toFixed(3)}) rotate(-4deg)` })); glEls.forEach((_, i) => { if (i % 3 === 0) tint(i, RED); }); }
+      // everything it found: three findings orbit the block
+      if (t >= W('bug', 8) && t < W('fix', 3) + 0.3) for (let j = 0; j < 3; j++) { const a = t * 4 + j * 2.1, k = backOut(P(t, W('bug', 8) + j * 0.1, W('bug', 8) + 0.3 + j * 0.1), 2); WF += svgDot(bx + Math.cos(a) * 170, by + Math.sin(a) * 110, 14 * k, CYAN) + svgDot(bx + Math.cos(a) * 170, by + Math.sin(a) * 110, 30 * k, CYAN, 0.3, true); }
+      // Forge: the fix types itself
+      if (t >= W('fix', 0) - 0.1 && t < W('fix', 4) + 0.3) { const pnl = panel('forge', '<div class="r" id="f1"></div><div class="g" id="f2"></div>'); const k = expoOut(P(t, W('fix', 0) - 0.1, W('fix', 0) + 0.3)); css(pnl, { display: 'block', transform: `translate(${pX('fix') - 60}px, ${PY - 470}px) scale(${L(0.7, 1, k).toFixed(3)})`, opacity: String(k * (1 - ease(t, W('fix', 4), 0.3))) }); const a = '− rows.limit(10000)', b = '+ paginate(query)'; $('#f1').textContent = a.slice(0, Math.floor(clamp((t - W('fix', 1)) / 0.35) * a.length)); $('#f2').textContent = b.slice(0, Math.floor(clamp((t - W('fix', 2) - 0.1) / 0.35) * b.length)); $('#f1').style.textDecoration = t > W('fix', 3) ? 'line-through' : 'none'; }
+      // Lens: a scan and three checks
+      const sc = P(t, W('fix', 5) - 0.1, W('fix', 6) + 0.2); if (sc > 0 && sc < 1) WF += svgRing(pX('review'), PY, 80 + sc * 170, { w: 5, c: AGENTS.lens, o: 1 - sc });
+      if (t >= W('fix', 5) && t < W('fix', 8) + 0.5) for (let j = 0; j < 3; j++) { const at = W('fix', 5) + 0.15 + j * 0.15, k = backOut(P(t, at, at + 0.3), 2); if (t < at) continue; WF += `<g transform="translate(${pX('review') - 90 + j * 90} ${PY - 330}) scale(${k.toFixed(3)})"><circle r="30" fill="${EM}"/><path d="M-13 1l8 8 16-17" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>`; }
+      // You approve: a stamp and a ring
+      if (t >= W('fix', 8) - 0.05 && t < W('back', 0)) { const k = expoOut(P(t, W('fix', 8) - 0.05, W('fix', 8) + 0.2)); css(apKt, { display: 'block', top: `${(540 + (PY - 470 - CAM[1]) * CAM[2]).toFixed(1)}px`, left: `${((pX('approve') - CAM[0]) * CAM[2]).toFixed(1)}px` }); words(apKt).forEach((w) => css(w, { opacity: String(P(t, W('fix', 8) - 0.05, W('fix', 8)) * (1 - ease(t, W('back', 0) - 0.3, 0.3))), transform: `scale(${L(1.5, 1, k).toFixed(3)}) rotate(-5deg)` })); const r = P(t, W('fix', 8), W('fix', 8) + 0.6); WF += svgRing(pX('approve'), PY, 80 + r * 260, { w: 7, c: EM, o: 1 - r }); }
+      // Quill: the docs rewrite
+      if (t >= W('back', 0) - 0.1 && t < W('back', 5)) { const pnl = panel('quill', '<div class="r" id="q1">Limited to 10,000 rows.</div><div class="g" id="q2"></div>'); const k = expoOut(P(t, W('back', 0) - 0.1, W('back', 0) + 0.3)); css(pnl, { display: 'block', transform: `translate(${pX('docs') - 60}px, ${PY - 470}px) scale(${L(0.7, 1, k).toFixed(3)})`, opacity: String(k * (1 - ease(t, W('back', 4), 0.4))) }); $('#q1').style.textDecoration = t > W('back', 1) ? 'line-through' : 'none'; const b = 'Exports include every row.'; $('#q2').textContent = b.slice(0, Math.floor(clamp((t - W('back', 2)) / 0.6) * b.length)); }
+      // the same conversation: a green ring closes at the first station, the reply
+      const done = ease(t, W('back', 12), 0.5);
+      if (done > 0) { WF += `<circle cx="${pX('chat')}" cy="${PY}" r="115" fill="none" stroke="${EM}" stroke-width="10" stroke-dasharray="${(done * 723).toFixed(1)} 723" transform="rotate(-90 ${pX('chat')} ${PY})"/>`; WF += burst(t, W('back', 12) + 0.3, pX('chat'), PY, { n: 30, v: 1100, seed: 61, cols: [MINT, WHITE] }); }
+      if (t >= W('back', 12)) { const k = expoOut(P(t, W('back', 12), W('back', 12) + 0.35)); css(liveKt, { display: 'block', top: `${(540 + (PY - 430 - CAM[1]) * CAM[2]).toFixed(1)}px`, left: `${((pX('chat') + 520 - CAM[0]) * CAM[2]).toFixed(1)}px`, fontSize: `${(90 * CAM[2] / 0.8).toFixed(1)}px` }); words(liveKt).forEach((w) => css(w, { opacity: String(P(t, W('back', 12), W('back', 12) + 0.08)), transform: `translateY(${((1 - k) * 30).toFixed(1)}px)` })); }
+    }
+
+    // ════ H (55.3 → 60.3): you decide, and when it asks first ════
+    if (t >= S('control') - 0.3 && t < S('work') - 0.3) {
+      rise(K.decide, t, [W('control', 0), W('control', 1)], { out: S('work') - 0.35 });
+      ['echo', 'forge', 'lens', 'quill'].forEach((id, i) => {
+        const x = 960 + (i - 1.5) * 360, at = W('control', 3) + i * 0.12;
+        showOrb(id, x, 560, t, at, { s: 1.25 });
+        SF += `<text x="${x}" y="440" text-anchor="middle" font-family="Instrument Sans Variable" font-stretch="75%" font-weight="700" font-size="52" fill="${WHITE}" opacity="${ease(t, at + 0.1, 0.3).toFixed(3)}">${id[0].toUpperCase() + id.slice(1)}</text>`;
+        let sw = PANELS[`sw${i}`]; if (!sw) { sw = document.createElement('div'); sw.className = 'sw'; sw.innerHTML = '<div class="tr"><i class="kn"></i></div><b>AUTO</b>'; $('#wel').append(sw); PANELS[`sw${i}`] = sw; }
+        const k = expoOut(P(t, at + 0.15, at + 0.5)), flip = i === 0 ? backOut(P(t, W('control', 10), W('control', 10) + 0.3), 1.6) : 0;
+        css(sw, { display: 'block', transform: `translate(${x}px, ${700 + (1 - k) * 30}px)`, opacity: String(k) });
+        css(sw.querySelector('.kn'), { transform: `translateX(${Math.round(flip * 80)}px)`, background: flip > 0.5 ? '#E0A73A' : '' });
+        sw.querySelector('b').textContent = flip > 0.5 ? 'ASK FIRST' : 'AUTO';
+        if (i === 0 && flip > 0.5) { const g = P(t, W('control', 10), W('control', 10) + 0.7); WF += svgRing(x, 560, 90 + g * 120, { w: 5, c: '#E0A73A', o: 1 - g }); WF += svgPath(`M ${x} ${420} l 70 30 v 60 c 0 60 -40 90 -70 105 c -30 -15 -70 -45 -70 -105 v -60 z`, { w: 5, c: '#E0A73A', k: ease(t, W('control', 11), 0.4), o: 0.9 }); }
+      });
+    } else Object.keys(PANELS).filter((k) => k.startsWith('sw')).forEach((k) => { PANELS[k].style.display = 'none'; });
+
+    // ════ I (60.3 → 64.6): the work, not the handoffs ════
+    if (t >= S('work') - 0.3 && t < S('oss') - 0.3) {
+      const inK = ease(t, S('work') - 0.3, 0.5), outK = ease(t, S('oss') - 0.7, 0.4);
+      for (let c = 0; c < 30; c++) { const x = 110 + c * 58, h = (140 + rand(c + 900) * 280) * (0.5 + 0.5 * pulse(t + rand(c + 950) * 0.4)) * inK * (1 - outK); SF += svgLine(x, 1000, x, 1000 - h, { w: 18, c: c % 4 === 0 ? CYAN : EM, o: 0.9 }) + svgDot(x, 1000 - h - 26, 9, WHITE, inK * (1 - outK)); }
+      rise(K.work, t, [W('work', 6), W('work', 7), W('work', 8)], { out: S('oss') - 0.35 });
+      rise(K.nothand, t, [W('work', 9), W('work', 10), W('work', 11)], { out: S('oss') - 0.35 });
+      const st = ease(t, W('work', 11) + 0.35, 0.3); if (st > 0) SF += svgLine(1130, 450, L(1130, 1480, st), 440, { w: 12, c: RED, o: 1 - outK });
+    }
+
+    // ════ J (64.6 → 70): open source ════
+    if (t >= S('oss') - 0.3 && t < S('tagline') - 0.3) {
+      sym.assemble(1);
+      const k = expoOut(P(t, S('oss') - 0.3, S('oss') + 0.2));
+      css($('#mark'), { opacity: String(k), transform: `translate(845px, 190px) scale(${L(0.4, 0.8, k).toFixed(3)})`, transformOrigin: '115px 115px' });
+      const bk = easeInOut(P(t, W('oss', 2) - 0.1, W('oss', 3) + 0.2));
+      SF += svgPath('M 800 180 L 690 305 L 800 430', { w: 12, c: MINT, k: bk }) + svgPath('M 1120 180 L 1230 305 L 1120 430', { w: 12, c: MINT, k: bk });
+      rise(K.oss, t, [W('oss', 2), W('oss', 3)], { out: S('tagline') - 0.35 });
+      const n = Math.floor(clamp((t - W('oss', 4)) / 1.2) * CMD.length); $('#cmd').textContent = CMD.slice(0, n);
+      css($('#term'), { opacity: String(ease(t, W('oss', 4) - 0.2, 0.3) * (1 - ease(t, S('tagline') - 0.5, 0.3))) });
+      [[330, 'server', 'Your server', W('oss', 4)], [1590, 'cloud', 'Helpin Cloud', W('oss', 12)]].forEach(([x, icon, lab, at]) => { showNode(`o-${icon}`, icon, x, 420, t, at - 0.1, { s: 1.3 }); SF += `<text x="${x}" y="${600}" text-anchor="middle" font-family="Instrument Sans" font-weight="600" font-size="38" fill="${WHITE}" opacity="${ease(t, at, 0.3).toFixed(3)}">${lab}</text>`; });
+      // the world is idle here: nodes sit in screen space because the camera is at rest
+    }
+
+    // ════ K (70 → 72.6): every handoff keeps the story ════
+    if (t >= S('tagline') - 0.3 && t < S('cta') + 0.3) {
+      const k = expoOut(P(t, S('tagline') - 0.3, S('tagline') + 0.3)), lock = expoInOut(P(t, S('cta') - 0.3, S('cta') + 0.25));
+      block(960, 430, L(0.4, 0.9, k) * (1 - lock), { glow: 1.2 + pulse(t) * 0.2, rot: lock * 180 });
+      for (let i = 0; i < 4; i++) WF += svgRing(960, 430, 170 + i * 70 + lock * 400, { w: 4, c: i % 2 ? CYAN : MINT, o: 0.75 * k * (1 - lock), dash: `${30 + i * 12} ${16 + i * 6}`, rot: t * (i % 2 ? -34 : 26) });
+      for (let j = 0; j < 8; j++) { const a = t * 1.1 + j * (Math.PI / 4); WF += svgDot(960 + Math.cos(a) * 380, 430 + Math.sin(a) * 380, 9, j % 2 ? CYAN : MINT, k * (1 - lock)); }
+      rise(K.tag, t, [W('tagline', 0), W('tagline', 1), W('tagline', 2), W('tagline', 3), W('tagline', 4)], { out: S('cta') - 0.05 });
+    }
+
+    // ════ L (72.6 → end): don't lose context between tools and handoffs; keep everything in one place ════
+    if (t >= S('cta') - 0.3) {
+      rise(K.cta1, t, [0, 1, 2, 3, 4, 5, 6].map((i) => W('cta', i)), { out: W('cta', 7) - 0.05 });
+      rise(K.cta2, t, [W('cta', 7), W('cta', 8), W('cta', 9), W('cta', 10)]);
+      const gather0 = W('cta', 7), land = W('cta', 11);
+      // the tools, scattered and jittering, with broken handoffs between them; then they converge into one place
+      const pos = (i, tt) => {
+        const f = FRAG[i], k = expoIn(P(tt, gather0 + f.d, land)), jit = (1 - k) * 10;
+        return [L(f.x + Math.sin(tt * 7 + i) * jit, 960, k), L(f.y + Math.cos(tt * 6 + i * 2) * jit, 520, k), k];
+      };
+      FRAG.forEach((f, i) => { const j = FRAG[(i + 5) % FRAG.length]; if (i % 2) return; const a = pos(i, t), b = pos((i + 5) % FRAG.length, t); if (a[2] > 0.05) return; const fl = 0.4 + 0.6 * Math.abs(Math.sin(t * 9 + i)); WF += svgLine(a[0], a[1], L(a[0], b[0], 0.42), L(a[1], b[1], 0.42), { w: 3, c: RED, dash: '10 10', o: fl * ease(t, S('cta') + 0.2, 0.4) }) + svgLine(b[0], b[1], L(b[0], a[0], 0.42), L(b[1], a[1], 0.42), { w: 3, c: RED, dash: '10 10', o: fl * ease(t, S('cta') + 0.2, 0.4) }); });
+      FRAG.forEach((f, i) => {
+        const [x, y, k] = pos(i, t), app = backOut(P(t, S('cta') - 0.2 + f.d * 0.5, S('cta') + 0.2 + f.d * 0.5), 2);
+        if (t < S('cta') - 0.2 + f.d * 0.5 || k >= 0.999) return;
+        if (k > 0.02) WF += trail((tt) => pos(i, tt), t, { len: 0.25, w: 12, c: MINT, o: 0.6, t0: gather0 + f.d });
+        WF += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(f.r * (1 - k)).toFixed(1)}) scale(${(Math.min(1, app) * L(1, 0.25, k)).toFixed(3)})" opacity="${(1 - P(k, 0.85, 1)).toFixed(3)}"><rect x="-58" y="-58" width="116" height="116" rx="28" fill="rgba(6,20,15,.92)" stroke="${f.lg.fill}" stroke-opacity=".55" stroke-width="3"/><path d="${f.lg.d}" transform="translate(-27 -27) scale(2.25)" fill="${f.lg.fill}"/></g>`;
+      });
+      // one place: the Helpin mark, a flash, a ring and a burst; then the name and where to go
+      sym.assemble(P(t, land - 0.1, land + 0.5));
+      css($('#mark'), { opacity: String(P(t, land - 0.1, land)), transform: 'translate(845px, 405px) scale(0.9)', transformOrigin: '115px 115px' });
+      const fl = t >= land ? Math.exp(-(t - land) / 0.2) : 0;
+      if (fl > 0.01) SF += svgDot(960, 520, 240 + (1 - fl) * 420, MINT, fl * 0.45, true);
+      if (t >= land) SF += svgRing(960, 520, 150 + (t - land) * 1300, { w: 6, c: WHITE, o: Math.max(0, 1 - (t - land) * 1.8) });
+      SF += burst(t, land, 960, 520, { n: 40, v: 1500, seed: 91, cols: [MINT, WHITE, CYAN] });
+      for (let i = 0; i < 3; i++) if (t >= land + 0.4) WF += svgRing(960, 520, 200 + i * 64, { w: 3, c: i % 2 ? CYAN : MINT, o: 0.5 * ease(t, land + 0.4 + i * 0.1, 0.5), dash: `${24 + i * 10} ${14 + i * 6}`, rot: t * (i % 2 ? -26 : 20) });
+      const wk = expoOut(P(t, END('cta') + 0.05, END('cta') + 0.5));
+      css($('#wm'), { opacity: String(wk), top: '690px', transform: `translateY(${((1 - wk) * 30).toFixed(1)}px)` });
+      css($('#cta'), { opacity: String(ease(t, END('cta') + 0.5, 0.5)), top: '885px' });
+    }
+
+    $('#wfxg').innerHTML = WF; $('#sfxg').innerHTML = SF;
+  } }],
+});
+</script>
+</body>
+</html>

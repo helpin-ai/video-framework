@@ -1,0 +1,101 @@
+{
+  "name": "ph-story",
+  "voiceId": "hpp4J3VqNfWAUOO0d1Us",
+  "voiceName": "Bella - Professional, Bright, Warm",
+  "model": "eleven_multilingual_v2",
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "tail": 3.3,
+  "lines": [
+    {
+      "id": "build",
+      "text": "You're building something your customers love.",
+      "at": 1.512
+    },
+    {
+      "id": "tell",
+      "text": "And every day, they tell you what they need.",
+      "at": 4.53
+    },
+    {
+      "id": "path",
+      "text": "Their questions start in support, move to product, and land with engineering.",
+      "at": 7.548
+    },
+    {
+      "id": "lost",
+      "text": "But at every handoff, a little of the story gets lost.",
+      "at": 12.981
+    },
+    {
+      "id": "cost",
+      "text": "Context disappears. Customers repeat themselves.",
+      "at": 17.206
+    },
+    {
+      "id": "whatif",
+      "text": "What if the story stayed whole, from the first message to the fix?",
+      "at": 22.035
+    },
+    {
+      "id": "that",
+      "text": "That's Helpin.",
+      "at": 26.864
+    },
+    {
+      "id": "what",
+      "text": "Support, projects, CRM, meetings and docs, in one open-source workspace, with AI agents that share the whole history.",
+      "at": 28.675
+    },
+    {
+      "id": "echo",
+      "text": "Echo answers from your docs and past conversations.",
+      "at": 37.126
+    },
+    {
+      "id": "bug",
+      "text": "When it's a bug, it hands your team everything it found.",
+      "at": 41.351
+    },
+    {
+      "id": "fix",
+      "text": "Forge prepares the fix. Lens reviews it. You approve.",
+      "at": 45.577
+    },
+    {
+      "id": "back",
+      "text": "Quill updates the docs, and your customer hears back in the same conversation.",
+      "at": 50.405
+    },
+    {
+      "id": "control",
+      "text": "You decide what each agent can do, and when it asks first.",
+      "at": 55.838
+    },
+    {
+      "id": "work",
+      "text": "So your team spends its time on the work, not the handoffs.",
+      "at": 60.667
+    },
+    {
+      "id": "oss",
+      "text": "Helpin is open source. Self-host it for free, or run it on Helpin Cloud.",
+      "at": 64.892
+    },
+    {
+      "id": "tagline",
+      "text": "Every handoff keeps the story.",
+      "at": 70.325
+    },
+    {
+      "id": "cta",
+      "at": 72.739,
+      "text": "Don't lose context between tools and handoffs. Keep everything in one place."
+    }
+  ]
+}

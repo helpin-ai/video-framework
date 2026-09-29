@@ -1,0 +1,12 @@
+{
+ "about": "The talking-head cuts: [cast id, clip in (s), clip out (s), punch-in scale]. Each cut starts about 0.1 s before its first word and ends about 0.1 s after its last. speed plays picture and voice faster together (the voice with a pitch-preserving tempo change), so the lip-sync holds.",
+ "speed": 1.15,
+ "cuts": [
+  ["support", 1.70, 4.88],
+  ["engineer", 0.06, 2.86],
+  ["engineer", 3.64, 4.84, 1.12],
+  ["pm", 0.24, 3.66],
+  ["founder", 0.10, 2.80],
+  ["founder", 3.55, 4.86, 1.12]
+ ]
+}

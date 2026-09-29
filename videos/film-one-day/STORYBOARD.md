@@ -32,7 +32,8 @@ Seven plates via Higgsfield (`plates.json` → `node --env-file=.env bin/genvide
 prompt describes her the same way (long wavy honey-blonde hair, cream cable-knit sweater).
 - **sunrise** (Seedance 2.5, 0–3.9 s): she lifts her laptop lid at sunrise under the "9:00 AM" clock; the app tiles
   burst out of the laptop and the shot dissolves into the peach sky. Only frames 46–139, at 0.8×: the closed lid shows
-  a laptop maker's badge before frame 44 and an HP logo after ~150.
+  a laptop maker's badge before frame 44, and a faint embossed HP logo from about frame 60, which a tracked soft blur
+  (`#lidfix`) covers.
 - **ten, eleven, one, three, five** (Seedance 2.0): each hour opens on its footage full frame (the clock turns white
   over it) and after about a second the shot docks into a portrait frame on the left while the product cards play on
   the right. 10: answering at her desk by the window. 11: on the planning call, taking notes. 1 p.m.: approving with the

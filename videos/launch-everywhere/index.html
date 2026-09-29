@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — Everywhere (launch)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Everywhere": a customer's story is scattered across every tool; one emerald thread stitches it back together,
+     becomes the Helpin mark, the Ask bar, the story line, the agents' work and finally a ball of thread.
+     Light editorial palette from helpin.ai (paper, ink, emerald; dark art cards for the hard cuts).
+     Voice (Lily), music beds and effects all sit on one 120 BPM grid: timeline.js. */
+  :root { --paper: #F6F8F7; --ink: #131514; --t2: #4F5A55; --t3: #66716C; --line: #E4E9E6; --em: #0F7A50; --em-t: #E7F4ED; --art: #0E1412; --on-art: #EDF3EF; --mint: #9CDBB3; }
+  #stage { background: var(--paper); color: var(--ink); }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  em { font-style: normal; }
+
+  /* Act 1: full-bleed hard cuts */
+  #full { position: absolute; inset: 0; overflow: hidden; }
+  #fullimg { position: absolute; inset: 0; width: 1920px; height: 1080px; object-fit: cover; }
+  #fullshade { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0, 0, 0, .12), rgba(0, 0, 0, .42)); }
+  .tag { position: absolute; left: 30px; top: 26px; height: 34px; padding: 0 14px; border-radius: 17px; background: rgba(20, 22, 21, .55); color: rgba(255, 255, 255, .92); font: 500 17px/34px var(--mono); letter-spacing: .02em; backdrop-filter: blur(6px); }
+  #fword { position: absolute; left: 0; width: 1920px; top: 250px; text-align: center; font-size: 150px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: #fff; text-shadow: 0 6px 40px rgba(0, 0, 0, .25); }
+  #fmsg { position: absolute; left: 50%; top: 600px; width: 760px; margin-left: -380px; border-radius: 22px; background: #fff; color: var(--ink); box-shadow: 0 30px 80px rgba(0, 0, 0, .35); padding: 24px 28px; opacity: 0; }
+  #fmsg .hd { display: flex; align-items: center; gap: 12px; font: 600 22px/1 var(--sans); }
+  #fmsg .hd img { width: 42px; height: 42px; border-radius: 50%; }
+  #fmsg .hd small { margin-left: auto; font: 500 15px/1 var(--mono); letter-spacing: .06em; color: var(--t3); }
+  #fmsg .src { font: 700 14px/1 var(--mono); letter-spacing: .12em; color: var(--t3); }
+  #fmsg .tx { margin-top: 14px; font-size: 32px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.3; }
+  #fmsg.big { top: 400px; width: 980px; margin-left: -490px; padding: 32px 36px; }
+  #fmsg.big .tx { font-size: 64px; font-weight: 600; letter-spacing: -0.035em; }
+
+  /* The wall / 3D space */
+  #space { position: absolute; inset: 0; perspective: 1400px; perspective-origin: 960px 540px; }
+  #plane { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-style: preserve-3d; transform-origin: 960px 540px; }
+  .tile { position: absolute; left: 0; top: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(19, 21, 20, .10), 0 0 0 1px rgba(19, 21, 20, .05); transform-origin: 50% 50%; backface-visibility: hidden; }
+  .tile > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .tile .shard { position: absolute; inset: 0; background-repeat: no-repeat; }
+  .tile .ring { position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 0 0 3px var(--em); opacity: 0; }
+  #thread { position: absolute; left: 0; top: 0; overflow: visible; }
+  #thread path { fill: none; stroke: var(--em); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  .needle { position: absolute; left: 0; top: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--em); box-shadow: 0 0 0 6px rgba(15, 122, 80, .18), 0 0 24px rgba(15, 122, 80, .55); opacity: 0; }
+
+  /* fragments inside tiles */
+  .fr { position: absolute; inset: 0; padding: 14px 16px; font-size: 17px; line-height: 1.35; color: var(--ink); }
+  .fr .who { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 600; }
+  .fr .who img { width: 28px; height: 28px; border-radius: 50%; }
+  .fr .who small { margin-left: auto; font: 500 12px/1 var(--mono); color: var(--t3); }
+  .fr .bub { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: #F0F2F1; font-size: 16px; }
+  .fr .k { font: 700 12px/1 var(--mono); letter-spacing: .08em; color: var(--t3); }
+  .fr .ttl { margin-top: 8px; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+  .fr .st { display: inline-block; margin-top: 10px; padding: 5px 9px; border-radius: 7px; font: 600 12px/1 var(--mono); }
+  .fr.dark { background: #0B1612; color: #CFE3D6; font: 500 14px/1.6 var(--mono); }
+  .fr.dark .r { color: #F2B8B0; } .fr.dark .g { color: #BFEACB; }
+  .fr.sticky { background: #FFF3B8; font-size: 22px; font-weight: 600; font-family: var(--sans); display: grid; place-items: center; text-align: center; letter-spacing: -0.01em; }
+  .fr .wave { display: flex; align-items: center; gap: 3px; height: 40px; margin-top: 12px; }
+  .fr .wave i { display: block; width: 4px; border-radius: 2px; background: var(--em); }
+  .fr .strike { text-decoration: line-through; text-decoration-color: #B42318; text-decoration-thickness: 2px; }
+  .fr .ln { height: 9px; border-radius: 5px; background: #ECEFED; margin-top: 9px; }
+  .fr .chip { display: inline-block; margin-top: 8px; margin-right: 4px; padding: 5px 8px; border-radius: 7px; background: var(--em-t); color: #0B6340; font: 600 11px/1 var(--mono); }
+  .fr .cal { display: flex; gap: 10px; margin-top: 10px; align-items: stretch; }
+  .fr .cal b { width: 5px; border-radius: 3px; background: #185FA5; }
+
+  #head { position: absolute; left: 0; width: 1920px; top: 58px; text-align: center; }
+  #head .s { font-size: 50px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; }
+  #head .b { font-size: 176px; font-weight: 600; letter-spacing: -0.055em; line-height: 0.98; }
+
+  /* Act 3: the mark */
+  #lock { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  #lsym { position: absolute; left: 850px; top: 430px; width: 220px; height: 220px; }
+  #lword { position: absolute; left: 0; top: 452px; font-size: 176px; font-weight: 600; letter-spacing: -0.055em; line-height: 1; white-space: nowrap; }
+  #lword span { display: inline-block; }
+  #mods { position: absolute; left: 0; width: 1920px; top: 742px; text-align: center; font: 500 24px/1 var(--mono); letter-spacing: .22em; color: var(--t3); text-transform: uppercase; }
+  #mods span { display: inline-block; opacity: 0; }
+  #dot { position: absolute; left: 948px; top: 528px; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); opacity: 0; }
+
+  /* Act 4: ask */
+  #bar { position: absolute; left: 0; top: 0; background: #fff; border-radius: 44px; box-shadow: 0 20px 60px rgba(19, 21, 20, .10), 0 0 0 1px var(--line); opacity: 0; overflow: hidden; }
+  #bar .in { position: absolute; left: 34px; top: 0; bottom: 0; right: 30px; display: flex; align-items: center; gap: 18px; font-size: 32px; letter-spacing: -0.015em; white-space: nowrap; }
+  #bar .ph { color: #A3ADA8; } #bar .caret { display: inline-block; width: 3px; height: 38px; background: var(--ink); margin-left: 2px; vertical-align: -6px; }
+  #bar .kbd { margin-left: auto; font: 600 18px/1 var(--mono); color: var(--t3); padding: 8px 12px; border-radius: 10px; background: #F0F2F1; }
+  #barline { position: absolute; left: 0; top: 0; overflow: visible; }
+  #barline rect { fill: none; stroke: var(--em); stroke-width: 4; }
+  #burst i { position: absolute; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; }
+  #flyspace { position: absolute; inset: 0; perspective: 900px; perspective-origin: 960px 520px; }
+  #flyplane { position: absolute; inset: 0; transform-style: preserve-3d; }
+  #askhead { position: absolute; left: 0; width: 1920px; top: 430px; text-align: center; font-size: 112px; font-weight: 600; letter-spacing: -0.05em; line-height: 1.06; }
+  #askhead .l2 { color: var(--em); }
+  .sc { position: absolute; left: 0; top: 0; width: 232px; height: 176px; border-radius: 18px; background: #fff; box-shadow: 0 16px 44px rgba(19, 21, 20, .12), 0 0 0 1px rgba(19, 21, 20, .06); padding: 30px 18px 16px; opacity: 0; }
+  .sc .who { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .sc .who img { width: 32px; height: 32px; border-radius: 50%; }
+  .sc .who .ic { width: 32px; height: 32px; border-radius: 9px; background: var(--em-t); color: #0B6340; display: grid; place-items: center; font: 700 16px/1 var(--mono); }
+  .sc p { margin: 12px 0 0; font-size: 17px; line-height: 1.32; color: #2A2F2C; }
+  .sc small { position: absolute; left: 18px; bottom: 14px; font: 500 12px/1 var(--mono); color: var(--t3); letter-spacing: .04em; }
+  .sc .eye { position: absolute; left: 50%; top: -9px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 4px var(--em); }
+  #rowline { position: absolute; left: 0; top: 0; overflow: visible; }
+  #rowline path { fill: none; stroke: var(--em); stroke-width: 4; stroke-linecap: round; }
+
+  /* Act 5: agents */
+  #wash { position: absolute; inset: 0; }
+  #agh { position: absolute; left: 0; width: 1920px; top: 210px; text-align: center; font-size: 104px; font-weight: 600; letter-spacing: -0.05em; line-height: 1.05; }
+  #agh em { color: var(--em); }
+  .ag { position: absolute; left: 0; top: 0; width: 260px; margin-left: -130px; text-align: center; opacity: 0; }
+  .ag img { width: 190px; height: 190px; }
+  .ag b { display: block; margin-top: 18px; font-size: 40px; font-weight: 600; letter-spacing: -0.03em; }
+  .ag span { display: block; margin-top: 8px; font: 500 17px/1 var(--mono); letter-spacing: .14em; color: var(--t3); text-transform: uppercase; }
+  .beat { position: absolute; inset: 0; opacity: 0; }
+  .beat .who { position: absolute; left: 150px; top: 330px; width: 640px; }
+  .beat .who img { width: 132px; height: 132px; }
+  .beat .who b { display: block; margin-top: 28px; font-size: 96px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
+  .beat .who span { display: block; margin-top: 18px; font-size: 38px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; color: #2A2F2C; }
+  .beat .ui { position: absolute; left: 900px; top: 300px; width: 860px; border-radius: 26px; background: #fff; box-shadow: 0 40px 100px rgba(19, 21, 20, .14), 0 0 0 1px rgba(19, 21, 20, .06); padding: 34px 38px; }
+  .beat .k { font: 700 17px/1 var(--mono); letter-spacing: .12em; color: var(--t3); }
+  .beat .rep { margin-top: 20px; padding: 22px 26px; border-radius: 18px; font-size: 30px; line-height: 1.36; letter-spacing: -0.01em; }
+  .beat .srcs { display: flex; gap: 12px; margin-top: 22px; }
+  .beat .srcs span { padding: 10px 16px; border-radius: 12px; font: 600 19px/1 var(--mono); background: var(--em-t); color: #0B6340; opacity: 0; }
+  .beat .code { margin-top: 18px; border-radius: 16px; background: #0B1612; padding: 18px 0; font: 500 25px/1 var(--mono); color: #CFE3D6; }
+  .beat .code div { height: 48px; display: flex; align-items: center; padding: 0 24px; white-space: pre; position: relative; overflow: hidden; }
+  .beat .code .del { background: rgba(242, 139, 130, .14); color: #F2B8B0; } .beat .code .add { background: rgba(156, 219, 179, .14); color: #BFEACB; }
+  .beat .code .del i { position: absolute; left: 24px; top: 50%; height: 3px; background: #F2B8B0; width: 0; }
+  .beat .chk { display: flex; align-items: center; gap: 18px; height: 78px; border-top: 1px solid #E4E9E6; font-size: 32px; letter-spacing: -0.01em; }
+  .beat .chk:first-of-type { border-top: 0; }
+  .beat .chk i { margin-left: auto; width: 44px; height: 44px; border-radius: 50%; border: 3px solid #CFD6D2; display: grid; place-items: center; font: 700 24px/1 var(--sans); font-style: normal; color: #fff; }
+  .beat .chk i.ok { background: #BA7517; border-color: #BA7517; }
+  .beat .scan { position: absolute; left: 0; right: 0; height: 90px; background: linear-gradient(rgba(186, 117, 23, 0), rgba(186, 117, 23, .16), rgba(186, 117, 23, 0)); }
+  .beat .doc h3 { margin: 16px 0 18px; font-size: 44px; letter-spacing: -0.03em; }
+  .beat .doc p { margin: 0 0 12px; font-size: 30px; line-height: 1.4; position: relative; }
+  .beat .doc .old i { position: absolute; left: 0; top: 54%; height: 3px; background: #B42318; width: 0; }
+  .beat .doc .nw { display: inline; background: linear-gradient(90deg, #E6F1FB 0 var(--hl, 0%), transparent var(--hl, 0%)); color: #0C3E6B; }
+  #relay { position: absolute; left: 0; top: 0; height: 104px; display: flex; align-items: center; gap: 16px; padding: 0 22px 0 18px; border-radius: 22px; background: #fff; box-shadow: 0 24px 60px rgba(19, 21, 20, .14), 0 0 0 1px rgba(19, 21, 20, .06); opacity: 0; white-space: nowrap; }
+  #relay .av { width: 56px; height: 56px; border-radius: 50%; }
+  #relay .t b { display: block; font-size: 22px; letter-spacing: -0.01em; } #relay .t span { font-size: 20px; color: var(--t2); }
+  #relay .stamps { display: flex; gap: 10px; margin-left: 12px; }
+  #relay .stamps span { display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 16px 0 8px; border-radius: 14px; font: 600 20px/1 var(--mono); opacity: 0; }
+  #relay .stamps img { width: 32px; height: 32px; }
+  #agline { position: absolute; left: 0; top: 0; overflow: visible; }
+  #agline path { fill: none; stroke: var(--em); stroke-width: 4; stroke-linecap: round; }
+
+  /* Act 6: approvals */
+  #gate { position: absolute; inset: 0; }
+  #gh { position: absolute; left: 150px; top: 330px; width: 760px; font-size: 96px; font-weight: 600; letter-spacing: -0.05em; line-height: 1.04; }
+  #gh em { color: var(--em); }
+  .gc { position: absolute; left: 1000px; width: 780px; border-radius: 24px; background: #fff; box-shadow: 0 40px 100px rgba(19, 21, 20, .12), 0 0 0 1px rgba(19, 21, 20, .06); opacity: 0; }
+  .gc .hd { height: 92px; display: flex; align-items: center; gap: 16px; padding: 0 30px; border-bottom: 1px solid #E4E9E6; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  .gc .hd img { width: 52px; height: 52px; } .gc .hd small { font: 500 16px/1 var(--mono); letter-spacing: .1em; color: var(--t3); margin-left: 4px; }
+  .gc .row { height: 130px; display: flex; align-items: center; padding: 0 30px; gap: 20px; }
+  .gc .nm { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; } .gc .nm small { display: block; font: 500 16px/1.8 var(--mono); letter-spacing: .1em; color: var(--t3); }
+  .seg { margin-left: auto; position: relative; width: 420px; height: 64px; border-radius: 32px; background: #EEF1EF; display: flex; }
+  .seg span { flex: 1; display: grid; place-items: center; font: 700 18px/1 var(--mono); letter-spacing: .05em; color: #9AA5A0; position: relative; z-index: 2; }
+  .seg span.on { color: #fff; }
+  .seg i { position: absolute; left: 5px; top: 5px; width: 136px; height: 54px; border-radius: 27px; }
+  .gc .req { padding: 28px 30px 30px; font-size: 30px; line-height: 1.35; letter-spacing: -0.01em; }
+  .gc .btns { display: flex; gap: 14px; margin-top: 24px; justify-content: flex-end; }
+  .gc .btns span { height: 60px; padding: 0 28px; border-radius: 14px; display: grid; place-items: center; font: 600 24px/1 var(--sans); }
+  .gc .btns .no { background: #F0F2F1; color: #2A2F2C; } .gc .btns .yes { background: #131514; color: #fff; position: relative; overflow: hidden; }
+  .gc .btns .yes b { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--em); }
+  .gc .btns .yes u { position: relative; text-decoration: none; }
+  #cursor { position: absolute; left: 0; top: 0; width: 44px; height: 44px; opacity: 0; z-index: 30; }
+  #gline { position: absolute; left: 0; top: 0; overflow: visible; }
+  #gline path { fill: none; stroke: var(--em); stroke-width: 4; stroke-linecap: round; }
+
+  /* Act 7: hard cuts on dark */
+  .dk { position: absolute; inset: 0; background: var(--art); color: var(--on-art); display: none; }
+  .dk .big { position: absolute; left: 150px; top: 50%; transform-origin: 0 50%; font-size: 210px; font-weight: 600; letter-spacing: -0.06em; line-height: 0.98; }
+  .dk .big em { color: var(--mint); }
+  .dk small { position: absolute; left: 156px; bottom: 120px; font: 500 24px/1 var(--mono); letter-spacing: .24em; color: rgba(237, 243, 239, .55); }
+
+  /* Act 8: the team */
+  #team { position: absolute; inset: 0; }
+  #four { position: absolute; left: 130px; top: 190px; font-size: 640px; font-weight: 700; letter-spacing: -0.08em; line-height: 1; }
+  #tcopy { position: absolute; left: 700px; top: 330px; font-size: 78px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; }
+  #tcopy .g { color: var(--t3); }
+  #tchips { position: absolute; left: 700px; top: 548px; display: grid; grid-template-columns: 500px 500px; gap: 18px; }
+  #tchips span { height: 128px; border-radius: 26px; background: #fff; box-shadow: 0 18px 46px rgba(19, 21, 20, .10), 0 0 0 1px rgba(19, 21, 20, .07); display: flex; align-items: center; justify-content: center; opacity: 0; }
+  /* optical sizes: the four logos carry different amounts of padding and wordmark */
+  #tchips img.cs { height: 64px; } #tchips img.um { height: 44px; } #tchips img.rp { height: 58px; } #tchips img.cp { height: 80px; }
+  #tchips span.h { background: var(--ink); color: #fff; }
+  #tchips span.h i { width: 12px; height: 12px; border-radius: 50%; background: var(--mint); margin-right: 14px; }
+
+  /* Act 9: the ball of thread */
+  #ball { position: absolute; inset: 0; }
+  #ball .tile { position: absolute; left: 0; top: 0; }
+  #yarn { position: absolute; left: 0; top: 0; overflow: visible; }
+  #yarn ellipse { fill: none; stroke: var(--em); stroke-width: 3.5; stroke-linecap: round; }
+  #tag { position: absolute; left: 0; width: 1920px; top: 858px; text-align: center; font-size: 72px; font-weight: 600; letter-spacing: -0.045em; }
+  #tag em { color: var(--em); }
+
+  /* Act 10: end */
+  #endl { position: absolute; inset: 0; }
+  #esym { position: absolute; left: 870px; top: 250px; width: 180px; height: 180px; }
+  #ecta { position: absolute; left: 0; width: 1920px; top: 496px; text-align: center; }
+  #ecta p { margin: 0; font-size: 42px; font-weight: 500; letter-spacing: -0.025em; color: #2A2F2C; }
+  #ecta .b { display: flex; justify-content: center; gap: 16px; margin-top: 34px; }
+  #ecta .b span { height: 70px; padding: 0 34px; border-radius: 35px; display: grid; place-items: center; font-size: 28px; font-weight: 600; letter-spacing: -0.015em; }
+  #ecta .b .p { background: var(--ink); color: #fff; } #ecta .b .s { background: #fff; box-shadow: 0 0 0 1.5px #CFD6D2 inset; }
+  #ecta .u { margin-top: 26px; font: 500 24px/1 var(--mono); letter-spacing: .08em; color: var(--t3); }
+  #giant { position: absolute; left: 0; width: 1920px; top: 760px; text-align: center; font-size: 600px; font-weight: 600; letter-spacing: -0.065em; line-height: 0.8; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="space"><div id="plane"><div id="tiles"></div><svg id="thread" width="1920" height="1080"><defs><clipPath id="thclip"><rect id="thcr" x="-400" y="-400" width="0" height="1900"/></clipPath></defs><path id="thp" d="" clip-path="url(#thclip)"/></svg><div class="needle" id="needle"></div></div></div>
+  <div id="head"><div class="s" id="hs"></div><div class="b" id="hb"></div></div>
+  <div id="full"><img id="fullimg" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><div id="fullshade"></div><span class="tag" id="ftag"></span><div id="fword"></div><div id="fmsg"></div></div>
+
+  <div id="lock"><div id="lsym"></div><div id="lword"></div></div>
+  <div id="mods"></div>
+  <div id="dot"></div>
+
+  <div id="flyspace"><div id="flyplane"></div></div>
+  <div id="burst"></div>
+  <svg id="rowline" width="1920" height="1080"><path id="rowp" d=""/></svg>
+  <div id="row"></div>
+  <div id="askhead"><div id="ah1"></div><div class="l2" id="ah2"></div></div>
+  <svg id="barline" width="1920" height="1080"><rect id="barr" pathLength="1" rx="44" ry="44"/></svg>
+  <div id="bar"><div class="in"><span id="bsym"></span><span id="btext"><span class="ph">Ask Helpin anything…</span></span><span class="kbd">⏎</span></div></div>
+
+
+  <div id="wash"></div>
+  <div id="agents"><div id="agh"></div><div id="agcols"></div></div>
+  <div id="beats"></div>
+  <svg id="agline" width="1920" height="1080"><path id="agp" pathLength="1" d=""/></svg>
+  <div id="relay"><img class="av" src="../../assets/helpin/avatars/maya.webp" alt=""><div class="t"><b>Maya Chen · Northstar Labs</b><span>Export stops at 10,000 rows</span></div><div class="stamps" id="stamps"></div></div>
+  <div id="gate"><div id="gh"></div>
+    <div class="gc" id="gc1" style="top:250px"><div class="hd"><img src="../../assets/helpin/agents/echo.svg" alt="">Echo<small>SUPPORT AGENT · TOOLS</small></div>
+      <div class="row"><div class="nm">Issue a refund<small>BILLING · WRITE</small></div><div class="seg"><i id="knob"></i><span>AUTO</span><span>ASK FIRST</span><span>OFF</span></div></div></div>
+    <div class="gc" id="gc2" style="top:560px"><div class="req">Echo wants to refund <b>$49</b> to Maya Chen for the failed export.<div class="btns"><span class="no">Decline</span><span class="yes" id="yes"><b id="rip"></b><u id="yestx">Approve</u></span></div></div></div>
+    <svg id="gline" width="1920" height="1080"><path id="glp" d=""/></svg>
+  </div>
+  <div class="dk" id="dk1"><div class="big" id="dk1b">Open source.</div><small>AGPL-3.0 · SELF-HOST FREE, OR LET US RUN IT</small></div>
+  <div class="dk" id="dk2"><div class="big" id="dk2b">Your data,<br><em>on your servers.</em></div></div>
+  <div id="team"><div id="four">4</div><div id="tcopy"><div id="tc1"></div><div class="g" id="tc2"></div></div>
+    <div id="tchips"><span><img class="cs" src="../../assets/logos/products/contentstudio.svg" alt="ContentStudio"></span><span><img class="um" src="../../assets/logos/products/usermaven.svg" alt="Usermaven"></span><span><img class="rp" src="../../assets/logos/products/replug.svg" alt="Replug"></span><span><img class="cp" src="../../assets/logos/products/contentpen.svg" alt="Contentpen"></span></div></div>
+  <div id="ball"><div id="btiles"></div><svg id="yarn" width="1920" height="1080"></svg><div id="tag"></div></div>
+  <div id="endl"><div id="esym"></div><div id="ecta"><p>Put your customer history to work.</p><div class="b"><span class="p">Self-host free</span><span class="s">Helpin Cloud</span></div><div class="u">helpin.ai</div></div><div id="giant">Helpin</div></div>
+  <div id="cursor"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+</div>
+
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, clamp, rand, keys, expoIn, expoOut, expoInOut, backOut, easeInOut } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { words, rise } from '../../lib/kit.js';
+import { E, plateFrame, showFrame } from '../../lib/film.js';
+import { T, DURATION, WALL, STAMP, needleX, stitchTimes } from './timeline.js';
+import VO from './vo.json' with { type: 'json' };
+import LF from '../../out/launch-film/plates/plates.json' with { type: 'json' };
+import PHOTOS from '../../out/launch-everywhere/photos/photos.json' with { type: 'json' };
+
+const $ = (s) => document.querySelector(s);
+const ease = (t, a, d = 0.6, f = E) => f(P(t, a, a + d));
+const AV = (n) => `../../assets/helpin/avatars/${n}.webp`, AG = (n) => `../../assets/helpin/agents/${n}.svg`;
+const PH = (f) => `../../out/launch-everywhere/photos/${f}`;
+const LN = Object.fromEntries(VO.lines.map((l) => [l.id, l]));
+const W = (id, i = 0) => LN[id].words[i].s;
+
+// ════════ Act 1: the cold open (plates from the launch film, badge-free ranges) ════════
+const MSG = 'Our CSV export stops at 10,000 rows.';
+const who = (tm) => `<div class="hd"><img src="${AV('maya')}" alt="">Maya Chen<small>${tm}</small></div>`;
+const SHOTS = [
+  { a: T.cut1, b: T.cut2, plate: 'maya-night', f0: 0, tag: 'chat_4821 · Tue 11:42 PM', word: 'Once.', w: W('once'), pop: 0.12, msg: `${who('CHAT · TUE 11:42 PM')}<div class="tx">${MSG}</div>` },
+  { a: T.cut2, b: T.cut3, plate: 'support', f0: 1.2, tag: 're_export_issue.eml', word: 'Twice.', w: W('twice'), pop: 0.12, msg: `<div class="src">EMAIL · RE: EXPORT ISSUE</div><div style="height:12px"></div>${who('WED 9:10 AM')}<div class="tx">${MSG}</div>` },
+  { a: T.cut3, b: T.cut4, plate: 'sam', f0: 3.4, tag: '#eng-support · forwarded', word: 'Three times.', w: W('three'), pop: 0.12, msg: `<div class="src"># ENG-SUPPORT · FORWARDED BY SUPPORT</div><div style="height:12px"></div>${who('WED 2:15 PM')}<div class="tx">${MSG}</div>` },
+  { a: T.cut4, b: T.shatter, plate: 'maya-night', f0: 5.0, tag: 'chat_4821 · Thu 10:03 AM', word: '', w: W('over'), pop: 0.25, big: true, msg: `${who('CHAT · THU 10:03 AM')}<div class="tx">I already told you this.</div>` },
+];
+const SHARD_SRC = plateFrame(LF, 'launch-film', 'maya-night', 5.0 + (T.shatter - T.cut4));
+const fwordEl = $('#fword');
+
+// ════════ Act 2: the wall ════════
+const chat = (a, n, txt, tm) => `<div class="fr"><div class="who"><img src="${AV(a)}" alt="">${n}<small>${tm}</small></div><div class="bub">${txt}</div></div>`;
+const FRAGS = [
+  chat('maya', 'Maya Chen', 'Our CSV export stops at 10,000 rows.', '11:42 PM'),
+  `<div class="fr"><div class="k">EXP-142 · ISSUE</div><div class="ttl">Export stops at 10k rows</div><span class="st" style="background:#EEF0FB;color:#4B55B8">Triage</span></div>`,
+  `<div class="fr"><div class="k"># ENG-SUPPORT</div><div class="who" style="margin-top:10px"><img src="${AV('sam')}" alt="">Sam</div><div style="margin-top:6px;font-size:16px">Can someone look at the export bug?</div><div class="k" style="margin-top:10px;color:#0F7A50">14 replies</div></div>`,
+  `<div class="fr"><div class="k">EMAIL</div><div class="ttl">Re: Northstar renewal</div><div style="margin-top:6px;font-size:15px;color:#4F5A55">40 more seats for the EU team?</div></div>`,
+  `<div class="fr"><div class="k">PLANNING CALL · NOTES</div><div class="ttl">Decision: admin-only pilot first</div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div></div>`,
+  `<div class="fr"><div class="k">HELP CENTER · EXPORTS</div><div class="ttl">Export your contacts</div><div style="margin-top:8px;font-size:15px" class="strike">Exports are limited to 10,000 rows.</div></div>`,
+  `<div class="fr"><div class="who"><span style="width:28px;height:28px;border-radius:8px;background:#1D3B8B;color:#fff;display:grid;place-items:center;font-size:14px">N</span>Northstar Labs</div><span class="st" style="background:#E7F4ED;color:#0B6340">Proposal · $48K</span><div class="ln" style="width:70%"></div></div>`,
+  `<div class="fr"><div class="k">TODAY</div><div class="cal"><b></b><div><div style="font-weight:700;font-size:18px">17:00</div><div style="font-size:15px">Northstar renewal call</div></div></div></div>`,
+  `<div class="fr"><div class="who"><img src="${AV('lin')}" alt="">Voice note<small>0:42</small></div><div class="wave">${Array.from({ length: 26 }, (_, i) => `<i style="height:${Math.round(8 + rand(i + 3) * 30)}px"></i>`).join('')}</div></div>`,
+  `<div class="fr dark">$ export --all<br><span class="r">Error 413: too many rows</span><br>limit=10000</div>`,
+  `<div class="fr"><div class="k">PULL REQUEST #284</div><div class="ttl">fix: export limit</div><div style="margin-top:8px;font:600 14px/1 var(--mono)"><span style="color:#0B6340">+12</span> <span style="color:#B42318">−3</span></div></div>`,
+  `<div class="fr sticky">Who owns this?</div>`,
+  chat('priya', 'Priya Shah', 'How do I add a teammate?', '9:12 AM'),
+  chat('lin', 'Lin Park', 'Any update on the export?', 'Wed 10:05'),
+  `<div class="fr"><div class="k">export.csv</div><div style="margin-top:10px;font:600 15px/1.8 var(--mono)">9,998 · 9,999 · <b>10,000</b><br><span style="color:#B42318">— cut off —</span></div></div>`,
+  `<div class="fr"><div class="k">SCREENSHOT 2026-09-18 AT 23.58</div><div style="margin-top:10px;height:60px;border-radius:8px;background:repeating-linear-gradient(0deg,#F0F2F1 0 10px,#fff 10px 20px)"></div></div>`,
+  chat('aisha', 'Aisha Noor', 'Is SSO on the roadmap?', 'Mon 4:20 PM'),
+  `<div class="fr"><div class="k">SSO-31 · TASK</div><div class="ttl">Map groups to roles</div><span class="st" style="background:#FFF4D6;color:#7A5A00">No owner</span></div>`,
+  `<div class="fr"><div class="k">CALL RECORDING</div><div class="ttl">Northstar · QBR</div><div class="wave">${Array.from({ length: 22 }, (_, i) => `<i style="height:${Math.round(6 + rand(i + 40) * 26)}px;background:#185FA5"></i>`).join('')}</div></div>`,
+  `<div class="fr"><div class="k">DM · DEV</div><div style="margin-top:10px;font-size:16px">Did anyone reply to Maya?</div></div>`,
+  `<div class="fr"><div class="k">CHANGELOG</div><div class="ttl">v2.6</div><div class="ln" style="width:85%"></div><div class="ln" style="width:55%"></div></div>`,
+  chat('dev', 'Alex Kim', 'Can I export to CSV?', 'Tue 2:03 PM'),
+  `<div class="fr sticky" style="background:#FBEAF0">Follow up with Maya?</div>`,
+  `<div class="fr"><div class="k">SPEC · EXPORTS</div><div class="ttl">Paginate large exports</div><div class="ln" style="width:75%"></div><div class="ln" style="width:65%"></div></div>`,
+  `<div class="fr"><div class="k">INVOICE · NORTHSTAR</div><div class="ttl">$4,000 · Paid</div><div class="ln" style="width:60%"></div></div>`,
+  `<div class="fr dark">git log --oneline<br><span class="g">a1f9c2e fix: export limit</span><br>7d20b1a docs: exports</div>`,
+  `<div class="fr"><div class="k">SURVEY</div><div class="ttl">“Support was slow this week.”</div></div>`,
+  chat('maya', 'Maya Chen', 'Still waiting on the export…', 'Wed 4:18 PM'),
+];
+// 8 columns × 6 tiles = 48 tiles (shards of the last cold-open frame: 8 × 6 of 240 × 180)
+const { COLS, CW, GAP } = WALL, ROWS = 6, X0 = (1920 - (COLS * CW + (COLS - 1) * GAP)) / 2;
+const ST_AT = stitchTimes();
+const HEIGHTS = [150, 230, 180, 280, 170, 210, 250, 160, 200, 190, 240, 170];
+const tiles = [];
+{
+  const photos = PHOTOS.slice(); let pi = 0, fi = 0;
+  for (let c = 0; c < COLS; c++) {
+    let y = 322 + [0, -46, 30, -20, 44, -34, 12, -52][c];
+    for (let r = 0; r < ROWS; r++) {
+      const i = c * ROWS + r, h = HEIGHTS[(c * 5 + r * 7) % HEIGHTS.length];
+      const isPhoto = (c + r * 3) % 5 < 2;
+      const html = isPhoto ? `<img src="${PH(photos[pi++ % photos.length])}" alt="" style="object-position:50% ${Math.round(20 + rand(i + 7) * 40)}%">` : FRAGS[fi++ % FRAGS.length];
+      const col = i % COLS, row = Math.floor(i / COLS); // shard cell for this tile
+      tiles.push({ i, c, r, x: X0 + c * (CW + GAP) + CW / 2, y: y + h / 2, w: CW, h, html, sx: (i % COLS) * 240, sy: Math.floor(i / COLS) * 180, drift: (rand(c + 91) - 0.5) * 26 });
+      y += h + GAP;
+    }
+  }
+}
+$('#tiles').innerHTML = tiles.map((tl) => `<div class="tile" style="width:${tl.w}px;height:${tl.h}px">${tl.html}<div class="shard"></div><div class="ring"></div></div>`).join('');
+const tileEls = [...document.querySelectorAll('#tiles .tile')];
+tileEls.forEach((el, k) => {
+  const tl = tiles[k], sxs = 240 / tl.w, sys = 180 / tl.h;
+  css(el.querySelector('.shard'), { backgroundImage: `url(${SHARD_SRC})`, backgroundSize: `${(1920 / sxs).toFixed(1)}px ${(1080 / sys).toFixed(1)}px`, backgroundPosition: `${(-tl.sx / sxs).toFixed(1)}px ${(-tl.sy / sys).toFixed(1)}px` });
+});
+const HS = words($('#hs'), 'Their story is'), HB = words($('#hb'), 'everywhere.');
+// the tiles the thread stitches, left to right
+const STITCH = [0, 1, 2, 3, 4, 5, 6, 7].map((c) => { const col = tiles.filter((tl) => tl.c === c); const wave = 640 + Math.sin(c * 1.1) * 150; return col.reduce((a, b) => (Math.abs(b.y - wave) < Math.abs(a.y - wave) ? b : a)).i; });
+const thp = $('#thp'), needle = $('#needle');
+// Catmull-Rom through points → cubic Bézier path
+const spline = (pts) => {
+  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)} ${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)} ${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  }
+  return d;
+};
+
+// ════════ Act 3: the mark ════════
+const sym = helpinSymbol({ size: 220, color: '#131514', spread: 90 });
+$('#lsym').append(sym.node);
+$('#lword').innerHTML = 'Helpin'.split('').map((ch) => `<span>${ch}</span>`).join('');
+const letters = [...document.querySelectorAll('#lword span')];
+const MODS = ['Support', 'Projects', 'CRM', 'Meetings', 'Docs'];
+$('#mods').innerHTML = MODS.map((m) => `<span>${m}</span>`).join('<span style="opacity:.5"> · </span>');
+const modEls = [...document.querySelectorAll('#mods span')].filter((s) => s.textContent.trim() !== '·');
+const sepEls = [...document.querySelectorAll('#mods span')].filter((s) => s.textContent.trim() === '·');
+
+// ════════ Act 4: ask ════════
+{ const m = helpinSymbol({ size: 34, color: '#0F7A50' }); m.assemble(1); $('#bsym').append(m.node); }
+const Q = 'What happened with Northstar’s export?';
+const BAR = { x: 960, y: 540, w: 880, h: 88 };
+const PCOL = ['#0F7A50', '#D4537E', '#534AB7', '#BA7517', '#185FA5', '#9CDBB3'];
+$('#burst').innerHTML = Array.from({ length: 90 }, (_, i) => `<i style="background:${PCOL[i % PCOL.length]}"></i>`).join('');
+const burstEls = [...document.querySelectorAll('#burst i')];
+const BURST = burstEls.map((_, i) => { const a = rand(i + 5) * Math.PI * 2, v = 380 + rand(i + 17) * 900; return { vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.62, s: 0.5 + rand(i + 29) * 1.1 }; });
+// the fly-through: copies of wall tiles streaming out of the bar toward the camera
+const FLY = Array.from({ length: 56 }, (_, i) => { const a = rand(i + 301) * Math.PI * 2, r = 260 + rand(i + 331) * 760; return { src: tiles[(i * 7) % tiles.length], x: Math.cos(a) * r, y: Math.sin(a) * r * 0.62, t0: T.enter + 0.02 + (i / 56) * 0.95, rot: (rand(i + 361) - 0.5) * 30 }; });
+$('#flyplane').innerHTML = FLY.map((f) => `<div class="tile" style="width:${f.src.w}px;height:${f.src.h}px">${f.src.html}</div>`).join('');
+const flyEls = [...document.querySelectorAll('#flyplane .tile')];
+const AH1 = words($('#ah1'), 'Ask anything.'), AH2 = words($('#ah2'), 'Get the whole story.');
+// the story, strung on one thread
+const STORY = [
+  ['av:maya', 'Maya Chen', 'Our CSV export stops at 10,000 rows.', 'TUE 11:42 PM'],
+  ['ag:echo', 'Echo', 'Answered from 3 sources. It’s a bug.', 'TUE 11:43 PM'],
+  ['ic:▦', 'EXP-142', 'Task linked to Maya’s conversation.', 'WED 9:05 AM'],
+  ['ag:forge', 'Forge', 'PR #284 · Export every row.', 'WED 10:20 AM'],
+  ['ag:lens', 'Lens', 'Reviewed. No regressions ✓', 'WED 10:31 AM'],
+  ['ag:quill', 'Quill', 'Docs updated, ready for review.', 'WED 11:02 AM'],
+  ['av:maya', 'Maya Chen', 'That was fast. Thank you!', 'WED 11:40 AM'],
+];
+const RW = 232, RG = 20, RX0 = (1920 - (STORY.length * RW + (STORY.length - 1) * RG)) / 2, RY = 470;
+$('#row').innerHTML = STORY.map(([ic, n, p, tm]) => {
+  const [k, v] = ic.split(':');
+  const icon = k === 'av' ? `<img src="${AV(v)}" alt="">` : k === 'ag' ? `<img src="${AG(v)}" alt="" style="border-radius:0">` : `<span class="ic">${v}</span>`;
+  return `<div class="sc"><span class="eye"></span><div class="who">${icon}${n}</div><p>${p}</p><small>${tm}</small></div>`;
+}).join('');
+const scEls = [...document.querySelectorAll('.sc')];
+const rowp = $('#rowp');
+
+
+// ════════ Act 5: agents ════════
+const AGENTS = [
+  { id: 'echo', name: 'Echo', role: 'Support agent', col: '#D4537E', wash: '#FBEAF0', at: T.echo, line: 'answers from your docs and history.' },
+  { id: 'forge', name: 'Forge', role: 'Coding agent', col: '#534AB7', wash: '#EEEDFE', at: T.forge, line: 'prepares the fix.' },
+  { id: 'lens', name: 'Lens', role: 'Code reviewer', col: '#BA7517', wash: '#FAEEDA', at: T.lens, line: 'reviews it.' },
+  { id: 'quill', name: 'Quill', role: 'Docs agent', col: '#185FA5', wash: '#E6F1FB', at: T.quill, line: 'updates the docs.' },
+];
+const AGX = (i) => 960 + (i - 1.5) * 360, AGY = 470;
+$('#agcols').innerHTML = AGENTS.map((a) => `<div class="ag"><img src="${AG(a.id)}" alt=""><b>${a.name}</b><span>${a.role}</span></div>`).join('');
+const agEls = [...document.querySelectorAll('.ag')];
+const AGH = words($('#agh'), 'AI agents that do <em>more than answer.</em>');
+const UI = {
+  echo: `<div class="ui"><div class="k">MAYA CHEN · REPLY DRAFT</div><div class="rep" style="background:#FBEAF0;color:#4B1528" id="erep"></div><div class="srcs"><span>▤ Export guide</span><span>◷ Earlier chat · Aug 12</span><span>≡ Export logs</span></div></div>`,
+  forge: `<div class="ui"><div class="k">EXPORT.TS · PR #284</div><div class="code"><div class="del">  const rows = await query(filters).limit(10000);<i></i></div><div class="add">  const rows = [];</div><div class="add">  for await (const page of paginate(q))</div><div class="add">    rows.push(...page);</div></div></div>`,
+  lens: `<div class="ui" style="overflow:hidden"><div class="k">REVIEW · PR #284</div><div style="margin-top:14px"><div class="chk">Tests pass<i></i></div><div class="chk">No regressions<i></i></div><div class="chk">Matches the task<i></i></div></div><div class="scan"></div></div>`,
+  quill: `<div class="ui doc"><div class="k">HELP CENTER · EXPORTS</div><h3>Export your contacts</h3><p class="old">Exports are limited to 10,000 rows.<i></i></p><p class="np" style="opacity:0"><span class="nw">Exports now include every row.</span></p></div>`,
+};
+$('#beats').innerHTML = AGENTS.map((a) => `<div class="beat" id="bt-${a.id}"><div class="who"><img src="${AG(a.id)}" alt=""><b>${a.name}</b><span>${a.line}</span></div>${UI[a.id]}</div>`).join('');
+const STAMPS = { echo: '3 sources', forge: 'PR #284', lens: 'Reviewed ✓', quill: 'Docs updated' };
+$('#stamps').innerHTML = AGENTS.map((a) => `<span style="background:${a.wash};color:${a.col}"><img src="${AG(a.id)}" alt="">${STAMPS[a.id]}</span>`).join('');
+const stampEls = [...document.querySelectorAll('#stamps span')];
+const ERW = words($('#erep'), 'Exports stop at 10,000 rows when filters are on. That’s a bug, so I’ve handed it to the team with what I found.');
+
+// ════════ Act 6: approvals ════════
+const GH = words($('#gh'), 'You choose when they <em>ask first.</em>');
+$('#cursor').innerHTML = '<svg viewBox="0 0 24 24" width="44" height="44"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#131514" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const segSpans = [...document.querySelectorAll('.seg span')];
+
+// ════════ Act 8: the team ════════
+const TC1 = words($('#tc1'), 'products bootstrapped'), TC2 = words($('#tc2'), 'before Helpin.');
+const chipEls = [...document.querySelectorAll('#tchips span')];
+const wordAt = (id, prefix) => (LN[id].words.find((w) => w.w.toLowerCase().startsWith(prefix)) || LN[id].words[0]).s;
+const CHIP_AT = [wordAt('team', 'contentstudio'), wordAt('team', 'usermaven'), wordAt('team', 'usermaven') + 0.35, wordAt('team', 'usermaven') + 0.55];
+
+// ════════ Act 9: the ball of thread ════════
+const NB = 84, R = 300, BC = [960, 450];
+const BALL = Array.from({ length: NB }, (_, i) => {
+  const y = 1 - (i + 0.5) / NB * 2, r = Math.sqrt(1 - y * y), th = i * Math.PI * (3 - Math.sqrt(5));
+  const a = rand(i + 501) * Math.PI * 2, far = 1300 + rand(i + 521) * 500;
+  return { p: [Math.cos(th) * r, y, Math.sin(th) * r], src: tiles[(i * 5 + 3) % tiles.length], from: [960 + Math.cos(a) * far, 540 + Math.sin(a) * far * 0.7], d: rand(i + 541) * 0.45 };
+});
+$('#btiles').innerHTML = BALL.map((b) => `<div class="tile" style="width:${b.src.w}px;height:${b.src.h}px">${b.src.html}</div>`).join('');
+const ballEls = [...document.querySelectorAll('#btiles .tile')];
+const LOOPS = Array.from({ length: 7 }, (_, i) => ({ rot: -70 + i * 26 + rand(i + 601) * 10, tilt: 0.2 + rand(i + 611) * 0.75, at: T.ball + 0.25 + i * 0.3 }));
+$('#yarn').innerHTML = LOOPS.map(() => `<ellipse pathLength="1"/>`).join('');
+const yarnEls = [...document.querySelectorAll('#yarn ellipse')];
+const TAG = words($('#tag'), 'Every handoff <em>keeps the story.</em>');
+
+// ════════ Act 10: end ════════
+const esym = helpinSymbol({ size: 180, color: '#131514', spread: 70 });
+$('#esym').append(esym.node);
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: DURATION,
+  scenes: [{ id: 'film', start: 0, end: DURATION, render: ({ t }) => {
+    const waits = [];
+
+    // ── Act 1: full-bleed hard cuts
+    const shot = SHOTS.find((s) => t >= s.a && t < s.b);
+    $('#full').style.display = shot ? 'block' : 'none';
+    if (shot) {
+      const lt = t - shot.a;
+      waits.push(showFrame($('#fullimg'), plateFrame(LF, 'launch-film', shot.plate, shot.f0 + lt)));
+      const gray = shot.big ? ease(t, shot.a + 1.0, 1.0) : 0;
+      css($('#fullimg'), { transform: `scale(${(1.04 + 0.05 * (lt / (shot.b - shot.a))).toFixed(4)})`, filter: gray > 0 ? `grayscale(${gray.toFixed(3)}) brightness(${(1 - gray * 0.12).toFixed(3)})` : 'none' });
+      $('#ftag').textContent = shot.tag;
+      if (fwordEl.dataset.w !== shot.word) { fwordEl.dataset.w = shot.word; fwordEl._ws = words(fwordEl, shot.word); }
+      rise(fwordEl._ws, t, shot.w - 0.08, 0.06, 0.45);
+      // the same message, in a different tool each time
+      const fm = $('#fmsg'), si = String(SHOTS.indexOf(shot));
+      if (fm.dataset.i !== si) { fm.dataset.i = si; fm.innerHTML = shot.msg; fm.className = shot.big ? 'big' : ''; }
+      const mk = expoOut(P(t, shot.a + shot.pop, shot.a + shot.pop + 0.4));
+      css(fm, { opacity: String(P(t, shot.a + shot.pop, shot.a + shot.pop + 0.08)), transform: `translateY(${Math.round((1 - mk) * 36)}px) scale(${L(0.93, 1, mk).toFixed(3)})` });
+    }
+
+    // ── Act 2: shards → the wall; the thread; tilt; collapse into a knot
+    const wallOn = t >= T.shatter && t < T.knot + 0.2;
+    $('#space').style.display = wallOn ? 'block' : 'none';
+    if (wallOn) {
+      const tilt = expoInOut(P(t, T.tilt, T.collapse + 0.1)), untilt = expoInOut(P(t, T.collapse + 0.1, T.knot - 0.25));
+      const tk = tilt * (1 - untilt);
+      $('#plane').style.transform = `translateY(${Math.round(70 * tk)}px) rotateX(${(50 * tk).toFixed(2)}deg) rotateZ(${(-16 * tk).toFixed(2)}deg) scale(${L(1, 0.84, tk).toFixed(4)})`;
+      const center = [960, 540];
+      tiles.forEach((tl, k) => {
+        const el = tileEls[k];
+        // shard → slot
+        const dist = Math.hypot(tl.sx + 120 - 960, tl.sy + 90 - 540);
+        const fs = T.shatter + (dist / 1100) * 0.35, fk = expoOut(P(t, fs, fs + 0.75));
+        const shardC = [tl.sx + 120, tl.sy + 90];
+        const drift = tl.drift * Math.max(0, t - T.shatter);
+        let x = L(shardC[0], tl.x, fk), y = L(shardC[1], tl.y + drift, fk);
+        const sx = L(240 / tl.w, 1, fk), sy = L(180 / tl.h, 1, fk);
+        const flip = Math.sin(fk * Math.PI) * (rand(k + 11) - 0.5) * 50;
+        // collapse into the knot (far tiles last), spinning cluster, then gone
+        const d0 = Math.hypot(tl.x - 960, tl.y - 540), cs = T.collapse - 0.1 + (d0 / 1200) * 0.35, ck = expoIn(P(t, cs, cs + 0.5));
+        const ang = rand(k + 51) * Math.PI * 2 + (t - T.collapse) * 6, rr = 8 + rand(k + 71) * 34;
+        const kx = center[0] + Math.cos(ang) * rr, ky = center[1] + Math.sin(ang) * rr * 0.8;
+        x = L(x, kx, ck); y = L(y, ky, ck);
+        const sc = L(1, 0.17, ck) * (1 - ease(t, T.knot - 0.18, 0.3, expoIn) * 0.9);
+        const lift = STITCH.includes(k) ? stitchLift(t, STITCH.indexOf(k)) : 0;
+        css(el, { transform: `translate3d(${(x - tl.w / 2).toFixed(1)}px, ${(y - tl.h / 2).toFixed(1)}px, ${(lift * 40).toFixed(1)}px) rotateY(${flip.toFixed(1)}deg) rotateZ(${(ck * (rand(k + 81) - 0.5) * 160).toFixed(1)}deg) scale(${(sx * sc * (1 + lift * 0.05)).toFixed(4)}, ${(sy * sc * (1 + lift * 0.05)).toFixed(4)})`,
+          opacity: String(1 - ease(t, T.knot - 0.15, 0.25)) });
+        el.querySelector('.shard').style.opacity = String(1 - ease(t, fs + 0.15, 0.4));
+        el.querySelector('.ring').style.opacity = String(lift);
+      });
+      // the thread: in from the left, through the stitched tiles, out to the right
+      const pts = [[-120, 720], ...STITCH.map((k) => { const tl = tiles[k]; return [tl.x, tl.y + tl.drift * Math.max(0, t - T.shatter)]; }), [2060, 560]];
+      const ck = easeInOut(P(t, T.collapse, T.knot - 0.3));
+      const knot = pts.map((p, i) => { const a = i * 2.4 + t * 6, r = 34 * (1 - P(t, T.knot - 0.4, T.knot)); return [960 + Math.cos(a) * r, 540 + Math.sin(a) * r * 0.8]; });
+      const live = pts.map((p, i) => [L(p[0], knot[i][0], ck), L(p[1], knot[i][1], ck)]);
+      thp.setAttribute('d', spline(live));
+      // the needle is driven by time (timeline.js), so the stitches and their plucks land together
+      const nx = needleX(t), drawn = t >= T.threadIn + 1.25 || ck > 0;
+      $('#thcr').setAttribute('width', drawn ? '3000' : String(Math.max(0, nx + 400).toFixed(1)));
+      let lo = 0, hi = thp.getTotalLength();
+      for (let i = 0; i < 22; i++) { const m = (lo + hi) / 2; if (thp.getPointAtLength(m).x < nx) lo = m; else hi = m; }
+      const hp = thp.getPointAtLength(ck > 0 ? thp.getTotalLength() : lo);
+      css(thp, { opacity: String(t >= T.threadIn ? 1 - ease(t, T.knot - 0.12, 0.2) : 0), strokeWidth: String(L(4, 7, ck)) });
+      css(needle, { opacity: String(t >= T.threadIn && t < T.threadIn + 1.25 ? 1 : 0), transform: `translate(${hp.x.toFixed(1)}px, ${hp.y.toFixed(1)}px)` });
+    }
+    // headline
+    const hOn = t >= T.head - 0.1 && t < T.tilt + 0.6;
+    $('#head').style.display = hOn ? 'block' : 'none';
+    if (hOn) {
+      rise(HS, t, W('wall') - 0.06, 0.07, 0.6);
+      rise(HB, t, W('wall', 3) - 0.1, 0.07, 0.7);
+      const ho = ease(t, T.tilt - 0.05, 0.45);
+      css($('#head'), { opacity: String(1 - ho), transform: ho ? `translateY(${Math.round(-40 * ho)}px)` : 'none', filter: ho ? `blur(${(ho * 12).toFixed(1)}px)` : 'none' });
+    }
+
+    // ── Act 3: the knot becomes the mark; the wordmark; the modules
+    const lockOn = t >= T.knot - 0.2 && t < T.bar + 0.1;
+    $('#lock').style.display = lockOn ? 'block' : 'none';
+    if (lockOn) {
+      sym.assemble(P(t, T.knot - 0.15, T.knot + 0.55));
+      const wordW = 560, gap = 44, total = 220 + gap + wordW, left = 960 - total / 2;
+      const slide = expoInOut(P(t, T.word - 0.1, T.word + 0.6));
+      const out = expoIn(P(t, T.markOut, T.markOut + 0.3));
+      const symX = L(850, left, slide), symScale = L(1, 0.11, out);
+      css($('#lsym'), { left: `${Math.round(L(symX, 850, out))}px`, transform: `scale(${symScale.toFixed(4)})`, opacity: String(1 - ease(t, T.markOut + 0.22, 0.08)) });
+      $('#lword').style.left = `${Math.round(left + 220 + gap)}px`;
+      letters.forEach((l, i) => {
+        const at = T.word + 0.08 + i * 0.07, k = ease(t, at, 0.5), o = ease(t, T.markOut - 0.1 + i * 0.02, 0.3);
+        css(l, { opacity: String(k * (1 - o)), transform: `translateY(${((1 - k) * 60 - o * -30).toFixed(1)}px)`, filter: k < 1 || o > 0 ? `blur(${(Math.max(1 - k, o) * 12).toFixed(1)}px)` : 'none' });
+      });
+    }
+    const modsOn = t >= T.mods - 0.1 && t < T.markOut + 0.4;
+    $('#mods').style.display = modsOn ? 'block' : 'none';
+    if (modsOn) {
+      modEls.forEach((m, i) => { const k = ease(t, T.mods + i * 0.25, 0.4), o = ease(t, T.markOut - 0.1, 0.3); css(m, { opacity: String(k * (1 - o)), filter: k < 1 ? `blur(${((1 - k) * 8).toFixed(1)}px)` : 'none' }); });
+      sepEls.forEach((s, i) => { s.style.opacity = String(0.5 * ease(t, T.mods + (i + 1) * 0.25, 0.4) * (1 - ease(t, T.markOut - 0.1, 0.3))); });
+    }
+    // the mark shrinks to a dot; the dot becomes the Ask bar
+    const dotK = ease(t, T.markOut + 0.2, 0.1);
+    css($('#dot'), { opacity: String(t >= T.markOut + 0.2 && t < T.bar + 0.05 ? dotK : 0) });
+
+    // ── Act 4: the Ask bar, typing, enter, the fly-through, the story on one thread
+    const barOn = t >= T.bar && t < T.agents + 0.3;
+    $('#bar').style.display = barOn ? 'block' : 'none';
+    $('#barline').style.display = barOn ? 'block' : 'none';
+    if (barOn) {
+      const grow = expoOut(P(t, T.bar, T.bar + 0.5));
+      const up = expoOut(P(t, T.enter + 0.02, T.enter + 0.55));
+      const press = t >= T.enter && t < T.enter + 0.3 ? Math.sin(P(t, T.enter, T.enter + 0.3) * Math.PI) : 0;
+      const w = L(24, BAR.w, grow) * L(1, 0.84, up), h = L(24, BAR.h, Math.min(1, grow * 1.6)) * L(1, 0.9, up);
+      const cy = L(BAR.y, 138, up);
+      const sc = 1 - press * 0.03;
+      css($('#bar'), { left: `${Math.round(960 - w / 2)}px`, top: `${Math.round(cy - h / 2)}px`, width: `${Math.round(w)}px`, height: `${Math.round(h)}px`, borderRadius: `${Math.round(h / 2)}px`, opacity: '1', transform: sc < 1 ? `scale(${sc.toFixed(4)})` : 'none', background: grow < 0.5 ? '#131514' : '#fff' });
+      $('#bar .in').style.opacity = String(ease(t, T.bar + 0.3, 0.3));
+      $('#bar .in').style.fontSize = `${Math.round(32 * L(1, 0.9, up))}px`;
+      // the thread draws the outline, then settles into the border
+      const br = $('#barr');
+      br.setAttribute('x', (960 - w / 2).toFixed(1)); br.setAttribute('y', (cy - h / 2).toFixed(1)); br.setAttribute('width', w.toFixed(1)); br.setAttribute('height', h.toFixed(1)); br.setAttribute('rx', (h / 2).toFixed(1)); br.setAttribute('ry', (h / 2).toFixed(1));
+      css(br, { strokeDasharray: '1', strokeDashoffset: String(1 - easeInOut(P(t, T.bar + 0.05, T.bar + 0.65))), opacity: String(1 - ease(t, T.bar + 0.8, 0.5)) });
+      // typing
+      const n = Math.floor(clamp((t - T.typeA) / (T.typeB - T.typeA)) * Q.length);
+      const blink = t < T.typeA || t > T.typeB ? (Math.floor(t * 2.2) % 2 === 0 ? 1 : 0) : 1;
+      $('#btext').innerHTML = t < T.typeA ? `<span class="ph">Ask Helpin anything…</span>` : `${Q.slice(0, n)}<span class="caret" style="opacity:${t < T.enter ? blink : 0}"></span>`;
+      // particles
+      const bt = t - T.enter;
+      burstEls.forEach((d, i) => {
+        const b = BURST[i], on = bt > 0 && bt < 1.4;
+        const k = 1 - Math.exp(-bt * 3.2);
+        css(d, { opacity: String(on ? (1 - P(bt, 0.5, 1.4)) : 0), transform: `translate(${(960 + b.vx * k / 3.2).toFixed(1)}px, ${(540 + b.vy * k / 3.2).toFixed(1)}px) scale(${b.s.toFixed(2)})` });
+      });
+    } else burstEls.forEach((d) => { d.style.opacity = '0'; });
+    // fly-through toward the camera, with depth blur
+    const flyOn = t >= T.enter && t < T.settle + 0.8;
+    $('#flyspace').style.display = flyOn ? 'block' : 'none';
+    if (flyOn) {
+      FLY.forEach((f, i) => {
+        const el = flyEls[i], lt = t - f.t0;
+        if (lt < 0 || lt > 1.2) { el.style.opacity = '0'; return; }
+        const z = L(-2600, 900, expoIn(P(lt, 0, 1.2)) * 0.55 + P(lt, 0, 1.2) * 0.45);
+        const s = 0.9;
+        const blur = z > 250 ? (z - 250) / 110 : z < -1600 ? (-1600 - z) / 260 : 0;
+        css(el, { opacity: String(Math.min(P(lt, 0, 0.25), 1 - P(z, 600, 900))), transform: `translate3d(${(960 + f.x - f.src.w * s / 2).toFixed(1)}px, ${(520 + f.y - f.src.h * s / 2).toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${(f.rot * lt).toFixed(1)}deg) scale(${s})`, filter: blur > 0.3 ? `blur(${Math.min(9, blur).toFixed(1)}px)` : 'none' });
+      });
+    }
+    const ahOn = t >= T.enter - 0.05 && t < T.settle + 0.6;
+    $('#askhead').style.display = ahOn ? 'block' : 'none';
+    if (ahOn) {
+      rise(AH1, t, W('ask') + 0.08, 0.08, 0.55); rise(AH2, t, W('story') - 0.05, 0.08, 0.55);
+      const o = ease(t, T.settle - 0.05, 0.45);
+      css($('#askhead'), { opacity: String(1 - o), transform: o ? `translateY(${Math.round(-60 * o)}px)` : 'none', filter: o ? `blur(${(o * 12).toFixed(1)}px)` : 'none' });
+    }
+    // the story lands on one thread
+    const rowOn = t >= T.settle && t < T.agents + 0.6;
+    $('#row').style.display = rowOn ? 'block' : 'none';
+    $('#rowline').style.display = rowOn ? 'block' : 'none';
+    if (rowOn) {
+      const x0 = RX0 - 120, x1 = RX0 + STORY.length * (RW + RG) - RG + 120;
+      const dk = easeInOut(P(t, T.settle + 0.05, T.settle + 1.05));
+      rowp.setAttribute('d', `M${x0} ${RY} L${x1} ${RY}`);
+      css(rowp, { strokeDasharray: `${x1 - x0} ${x1 - x0 + 10}`, strokeDashoffset: String(((x1 - x0) * (1 - dk)).toFixed(1)) });
+      scEls.forEach((el, i) => {
+        const at = T.settle + 0.1 + i * 0.12, k = expoOut(P(t, at, at + 0.55));
+        const z = L(-1400, 0, k), x = RX0 + i * (RW + RG), y = RY + 9;
+        css(el, { opacity: String(P(t, at, at + 0.2)), transform: `perspective(900px) translate3d(${x}px, ${y}px, ${z.toFixed(1)}px) rotateX(${((1 - k) * 25).toFixed(1)}deg)` });
+      });
+    }
+
+    // ── Act 5: agents, then one beat each, cut on the grid
+    const agOn = t >= T.agents - 0.1 && t < T.echo + 0.12;
+    $('#agents').style.display = agOn ? 'block' : 'none';
+    if (agOn) {
+      rise(AGH, t, W('agents') - 0.05, 0.07, 0.55);
+      AGENTS.forEach((a, i) => {
+        const at = T.agents + 0.3 + i * 0.15, k = expoOut(P(t, at, at + 0.55));
+        const from = [RX0 + [1, 3, 4, 5][i] * (RW + RG) + RW / 2, RY + 90];
+        const x = L(from[0], AGX(i), k), y = L(from[1], AGY, k);
+        css(agEls[i], { left: `${Math.round(x)}px`, top: `${Math.round(y)}px`, opacity: String(P(t, at, at + 0.15)), transform: `scale(${L(0.4, 1, k).toFixed(3)})` });
+      });
+      const o = ease(t, T.echo - 0.12, 0.2);
+      css($('#agents'), { opacity: String(1 - o), filter: o ? `blur(${(o * 10).toFixed(1)}px)` : 'none' });
+    }
+    // story cards leave as the agents lift out
+    if (rowOn) { const o = ease(t, T.agents - 0.1, 0.35); scEls.forEach((el) => { el.style.opacity = String(Math.min(+el.style.opacity || 0, 1 - o)); }); $('#rowline').style.opacity = String(1 - o); $('#bar').style.opacity = String(1 - o); }
+    // colour washes: each agent's colour grows from its avatar
+    const cur = [...AGENTS].reverse().find((a) => t >= a.at);
+    const washOn = t >= T.echo && t < T.gate;
+    $('#wash').style.display = washOn ? 'block' : 'none';
+    if (washOn && cur) {
+      const idx = AGENTS.indexOf(cur), prev = AGENTS[idx - 1];
+      const k = expoOut(P(t, cur.at, cur.at + 0.45));
+      $('#wash').style.background = `radial-gradient(circle at 300px 400px, ${cur.wash} ${Math.round(k * 2300)}px, ${prev ? prev.wash : '#F6F8F7'} ${Math.round(k * 2300) + 1}px)`;
+    }
+    AGENTS.forEach((a, i) => {
+      const el = $(`#bt-${a.id}`), nx = AGENTS[i + 1]?.at ?? T.gate;
+      const on = t >= a.at && t < nx;
+      el.style.opacity = on ? '1' : '0';
+      if (!on) return;
+      const k = expoOut(P(t, a.at, a.at + 0.4));
+      css(el.querySelector('.who'), { transform: `translateX(${Math.round((1 - k) * -50)}px)`, filter: k < 1 ? `blur(${((1 - k) * 10).toFixed(1)}px)` : 'none', opacity: '1' });
+      css(el.querySelector('.ui'), { transform: `translateX(${Math.round((1 - k) * 90)}px) scale(${L(0.96, 1, k).toFixed(4)})`, filter: k < 1 ? `blur(${((1 - k) * 12).toFixed(1)}px)` : 'none', opacity: '1' });
+      const lt = t - a.at;
+      if (a.id === 'echo') {
+        rise(ERW, t, a.at + 0.15, 0.04, 0.35);
+        el.querySelectorAll('.srcs span').forEach((c, j) => { const b = backOut(P(lt, 1.1 + j * 0.15, 1.4 + j * 0.15), 2); css(c, { opacity: String(P(lt, 1.1 + j * 0.15, 1.16 + j * 0.15)), transform: b < 1 ? `scale(${L(0.6, 1, b).toFixed(3)})` : 'none' }); });
+      }
+      if (a.id === 'forge') {
+        el.querySelector('.del i').style.width = `${Math.round(E(P(lt, 0.3, 0.6)) * 700)}px`;
+        el.querySelectorAll('.add').forEach((r, j) => { const kk = E(P(lt, 0.55 + j * 0.18, 0.85 + j * 0.18)); css(r, { opacity: String(kk), transform: `translateX(${Math.round((1 - kk) * -24)}px)` }); });
+      }
+      if (a.id === 'lens') {
+        const sp = P(lt, 0.1, 0.9);
+        css(el.querySelector('.scan'), { top: `${Math.round(L(40, 330, sp))}px`, opacity: String(sp > 0 && sp < 1 ? Math.sin(sp * Math.PI) : 0) });
+        el.querySelectorAll('.chk i').forEach((c, j) => { const on2 = lt >= 0.35 + j * 0.2; c.classList.toggle('ok', on2); c.textContent = on2 ? '✓' : ''; });
+      }
+      if (a.id === 'quill') {
+        el.querySelector('.old i').style.width = `${Math.round(E(P(lt, 0.35, 0.7)) * 520)}px`;
+        el.querySelector('.np').style.opacity = String(E(P(lt, 0.7, 0.85)));
+        el.querySelector('.nw').style.setProperty('--hl', `${Math.round(E(P(lt, 0.8, 1.4)) * 100)}%`);
+      }
+    });
+    // Maya's story rides the thread from the story row through every beat; each agent stamps it
+    const rOn = t >= T.relay - 0.05 && t < T.gate + 0.2;
+    $('#relay').style.display = rOn ? 'flex' : 'none';
+    if (rOn) {
+      const fly = expoInOut(P(t, T.relay, T.echo)), out = ease(t, T.gate - 0.35, 0.4);
+      const x = L(RX0, 150, fly), y = L(RY + 9, 878, fly);
+      const ring = cur && t >= T.echo ? Math.max(0, 1 - (t - cur.at) / 0.6) : 0;
+      css($('#relay'), { opacity: String(P(t, T.relay - 0.05, T.relay + 0.1) * (1 - out)), transform: `translate(${Math.round(x + out * 120)}px, ${Math.round(y)}px) scale(${L(0.8, 1, fly).toFixed(3)})`,
+        boxShadow: `0 24px 60px rgba(19, 21, 20, .14), 0 0 0 ${(1 + ring * 4).toFixed(1)}px ${ring > 0.01 && cur ? cur.col : 'rgba(19, 21, 20, .06)'}`, transformOrigin: '0 50%' });
+      AGENTS.forEach((a, j) => { const at = a.at + STAMP[a.id], b = backOut(P(t, at, at + 0.35), 2.4); css(stampEls[j], { opacity: String(P(t, at, at + 0.06)), transform: b < 1 ? `scale(${L(1.6, 1, b).toFixed(3)}) rotate(${((1 - b) * -8).toFixed(1)}deg)` : 'none' }); });
+    }
+    // the thread runs under all four beats
+    const agl = t >= T.echo && t < T.gate + 0.3;
+    $('#agline').style.display = agl ? 'block' : 'none';
+    if (agl) {
+      const dk = P(t, T.echo, T.gate - 0.1);
+      $('#agp').setAttribute('d', 'M-40 930 C 400 890, 700 970, 1000 930 S 1600 890, 1960 930');
+      css($('#agp'), { strokeDasharray: '1', strokeDashoffset: String(1 - dk), opacity: String(1 - ease(t, T.gate - 0.1, 0.3)) });
+      $('#agp').setAttribute('pathLength', '1');
+    }
+
+    // ── Act 6: the approval gate
+    const gOn = t >= T.gate && t < T.oss;
+    $('#gate').style.display = gOn ? 'block' : 'none';
+    if (gOn) {
+      rise(GH, t, W('approve') - 0.05, 0.07, 0.55);
+      const k1 = expoOut(P(t, T.gate + 0.1, T.gate + 0.6)), k2 = expoOut(P(t, T.approve - 0.55, T.approve - 0.1));
+      css($('#gc1'), { opacity: String(P(t, T.gate + 0.1, T.gate + 0.3)), transform: `translateY(${Math.round((1 - k1) * 40)}px)`, filter: k1 < 1 ? `blur(${((1 - k1) * 10).toFixed(1)}px)` : 'none' });
+      css($('#gc2'), { opacity: String(P(t, T.approve - 0.55, T.approve - 0.35)), transform: `translateY(${Math.round((1 - k2) * 40)}px)`, filter: k2 < 1 ? `blur(${((1 - k2) * 10).toFixed(1)}px)` : 'none' });
+      const kb = backOut(P(t, T.knob - 0.05, T.knob + 0.35), 1.4), pos = t < T.knob - 0.05 ? 0 : L(0, 1, kb);
+      css($('#knob'), { transform: `translateX(${Math.round(pos * 137)}px)`, background: pos > 0.5 ? '#C8962A' : '#0F7A50' });
+      segSpans.forEach((sp, j) => sp.classList.toggle('on', j === (pos > 0.5 ? 1 : 0)));
+      const ok = t >= T.approve + 0.03, rp = P(t, T.approve, T.approve + 0.4);
+      css($('#rip'), { transform: `scale(${L(0, 14, E(rp)).toFixed(2)})`, opacity: ok ? '1' : '0' });
+      $('#yestx').textContent = ok ? 'Approved ✓' : 'Approve';
+      const yes = $('#yes').getBoundingClientRect(), stg = $('#stage').getBoundingClientRect(), sc2 = stg.width / 1920;
+      const bx = (yes.left - stg.left) / sc2 + (yes.width / sc2) / 2, by = (yes.top - stg.top) / sc2 + (yes.height / sc2) / 2;
+      const cp = keys(t, [[T.approve - 0.55, [1900, 1100]], [T.approve - 0.06, [bx - 6, by - 4], E]]);
+      const cOn = t > T.approve - 0.55 && t < T.approve + 0.6;
+      css($('#cursor'), { opacity: String(cOn ? P(t, T.approve - 0.55, T.approve - 0.35) * (1 - P(t, T.approve + 0.35, T.approve + 0.6)) : 0), transform: `translate(${Math.round(cp[0])}px, ${Math.round(cp[1])}px) scale(${t > T.approve - 0.04 && t < T.approve + 0.08 ? 0.86 : 1})` });
+      // the thread waits at the gate, then runs on once approved
+      const d1 = easeInOut(P(t, T.gate + 0.1, T.knob)), d2 = easeInOut(P(t, T.approve + 0.05, T.oss - 0.1));
+      const gx = L(-40, 980, d1), gx2 = L(980, 1960, d2);
+      $('#glp').setAttribute('d', `M-40 930 L${gx.toFixed(1)} 930${d2 > 0 ? ` L${gx2.toFixed(1)} 930` : ''}`);
+    } else $('#cursor').style.opacity = '0';
+
+    // ── Act 7: hard cuts on dark
+    const dk1 = t >= T.oss && t < T.servers, dk2 = t >= T.servers && t < T.light;
+    $('#dk1').style.display = dk1 ? 'block' : 'none'; $('#dk2').style.display = dk2 ? 'block' : 'none';
+    const slam = (el, at) => { const k = expoOut(P(t, at, at + 0.22)); css(el, { transform: `translateY(-50%) scale(${L(1.08, 1, k).toFixed(4)})`, filter: k < 1 ? `blur(${((1 - k) * 14).toFixed(1)}px)` : 'none', opacity: String(P(t, at, at + 0.06)) }); };
+    if (dk1) slam($('#dk1b'), T.oss);
+    if (dk2) slam($('#dk2b'), T.servers);
+
+    // ── Act 8: the team
+    const tmOn = t >= T.light && t < T.ball + 0.4;
+    $('#team').style.display = tmOn ? 'block' : 'none';
+    if (tmOn) {
+      const k = expoOut(P(t, T.team, T.team + 0.3));
+      css($('#four'), { opacity: String(P(t, T.team, T.team + 0.05)), transform: `scale(${L(1.25, 1, k).toFixed(4)})`, filter: k < 1 ? `blur(${((1 - k) * 18).toFixed(1)}px)` : 'none', transformOrigin: '20% 60%' });
+      rise(TC1, t, T.team + 0.25, 0.08, 0.55); rise(TC2, t, T.team + 0.45, 0.08, 0.55);
+      chipEls.forEach((c, j) => { const b = backOut(P(t, CHIP_AT[j] - 0.05, CHIP_AT[j] + 0.3), 2); css(c, { opacity: String(P(t, CHIP_AT[j] - 0.05, CHIP_AT[j] + 0.05)), transform: b < 1 ? `scale(${L(0.6, 1, b).toFixed(3)})` : 'none' }); });
+      const o = ease(t, T.ball - 0.1, 0.4);
+      css($('#team'), { opacity: String(1 - o), transform: o ? `translateX(${Math.round(-120 * o)}px)` : 'none', filter: o ? `blur(${(o * 12).toFixed(1)}px)` : 'none' });
+    }
+
+    // ── Act 9: everything winds into a ball of thread
+    const bOn = t >= T.ball - 0.1 && t < T.end + 0.6;
+    $('#ball').style.display = bOn ? 'block' : 'none';
+    if (bOn) {
+      const spin = (t - T.ball) * 0.9, gather = expoIn(P(t, T.end, T.end + 0.45));
+      const cy = Math.cos(0.35), sy = Math.sin(0.35);
+      BALL.forEach((b, i) => {
+        const el = ballEls[i];
+        let [x, y, z] = b.p;
+        const c = Math.cos(spin), s2 = Math.sin(spin);
+        [x, z] = [x * c + z * s2, -x * s2 + z * c];
+        [y, z] = [y * cy - z * sy, y * sy + z * cy];
+        const rr = R * (1 - gather), pz = 1 / (1 - (z * rr) / 1600);
+        const k = expoOut(P(t, T.ball + b.d, T.ball + b.d + 0.9));
+        const X = L(b.from[0], BC[0] + x * rr * pz, k), Y = L(b.from[1], BC[1] + y * rr * pz, k);
+        const s3 = 0.34 * pz * L(1.6, 1, k) * (1 - gather * 0.8);
+        const depth = (z + 1) / 2;
+        css(el, { transform: `translate(${(X - b.src.w / 2).toFixed(1)}px, ${(Y - b.src.h / 2).toFixed(1)}px) scale(${s3.toFixed(4)})`, zIndex: String(Math.round(depth * 100)),
+          opacity: String(P(t, T.ball + b.d, T.ball + b.d + 0.2) * L(0.35, 1, depth) * (1 - P(gather, 0.7, 1))), filter: depth < 0.35 ? `blur(${((0.35 - depth) * 8).toFixed(1)}px)` : 'none' });
+      });
+      LOOPS.forEach((lp, i) => {
+        const el = yarnEls[i], k = easeInOut(P(t, lp.at, lp.at + 0.7)), rr = (R + 14) * (1 - gather);
+        el.setAttribute('cx', BC[0]); el.setAttribute('cy', BC[1]); el.setAttribute('rx', rr.toFixed(1)); el.setAttribute('ry', (rr * lp.tilt).toFixed(1));
+        el.setAttribute('transform', `rotate(${(lp.rot + (t - T.ball) * 14).toFixed(1)} ${BC[0]} ${BC[1]})`);
+        css(el, { strokeDasharray: '1', strokeDashoffset: String(1 - k), opacity: String(t >= lp.at ? 0.9 * (1 - P(gather, 0.6, 1)) : 0) });
+      });
+      rise(TAG, t, W('tagline') - 0.05, 0.08, 0.55);
+      const o = ease(t, T.end - 0.1, 0.35);
+      css($('#tag'), { opacity: String(1 - o), filter: o ? `blur(${(o * 10).toFixed(1)}px)` : 'none' });
+    }
+
+    // ── Act 10: the mark, the call to action, the giant wordmark
+    const eOn = t >= T.end + 0.2;
+    $('#endl').style.display = eOn ? 'block' : 'none';
+    if (eOn) {
+      esym.assemble(P(t, T.end + 0.3, T.end + 0.95));
+      const up = expoInOut(P(t, T.giant - 0.3, T.giant + 0.5));
+      css($('#esym'), { transform: `translateY(${Math.round(-150 * up)}px) scale(${L(1, 0.7, up).toFixed(4)})` });
+      const ck = E(P(t, T.cta, T.cta + 0.6));
+      css($('#ecta'), { opacity: String(ck), transform: `translateY(${Math.round((1 - ck) * 30 - 200 * up)}px)`, filter: ck < 1 ? `blur(${((1 - ck) * 10).toFixed(1)}px)` : 'none' });
+      const gk = expoOut(P(t, T.giant, T.giant + 0.9));
+      css($('#giant'), { transform: `translateY(${Math.round((1 - gk) * 420)}px)`, opacity: String(P(t, T.giant, T.giant + 0.2)) });
+    }
+    const all = waits.filter(Boolean);
+    return all.length ? Promise.all(all) : null;
+  } }],
+});
+function stitchLift(t, j) { const at = ST_AT[j]; return t < at ? 0 : Math.max(0, 1 - (t - at) / 0.5) * P(t, at, at + 0.06); }
+</script>
+</body>
+</html>

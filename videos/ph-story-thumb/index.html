@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ph-story thumbnail</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<link rel="stylesheet" href="../../node_modules/@fontsource-variable/instrument-sans/wdth.css">
+<style>
+  /* LinkedIn thumbnails for the Product Hunt story film (videos/ph-story). Two options, one per second:
+     render with --stills 0.5,1.5 --scale 2. Feeds draw a play button at the centre (≈960,540), so it stays clear.
+     The pictures are the film's own frames, so the post matches the video. plates/ is gitignored; recreate it with
+     npm run render -- ph-story --stills 38.6,74.4 --scale 2
+     then copy out/ph-story/stills/t038.60.png to plates/echo-4k.png and t074.40.png to plates/tools-4k.png. */
+  #stage { background: #0B1A15; }
+  .scene { position: absolute; inset: 0; overflow: hidden; }
+  .plate { position: absolute; }
+  .fadeL { -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 11.6%, #000 18.4%); } /* % of the 2496 px plate at x=560: clear left of x≈850, full from x≈1020 */
+  .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7, 18, 14, .92) 0%, rgba(7, 18, 14, .75) 36%, rgba(7, 18, 14, 0) 58%); }
+  .logo { position: absolute; left: 112px; top: 92px; display: flex; align-items: center; gap: 16px; }
+  .logo img { width: 52px; height: 52px; }
+  .logo b { font: 600 46px/1 var(--sans); letter-spacing: -0.04em; color: #EEF3EF; }
+  .hl { position: absolute; left: 106px; font-family: 'Instrument Sans Variable', var(--sans); font-stretch: 75%; font-weight: 700; letter-spacing: -0.02em; line-height: .96; color: #F2F6F3; white-space: nowrap; }
+  .hl em { font-style: normal; color: #9CDBB3; }
+  .sub { position: absolute; left: 112px; width: 740px; font: 500 34px/1.35 var(--sans); color: rgba(236, 244, 239, .8); }
+  .chips { position: absolute; left: 112px; display: flex; gap: 14px; }
+  .chips span { height: 60px; padding: 0 26px; display: inline-flex; align-items: center; gap: 12px; border-radius: 14px; font: 600 27px/1 var(--sans); }
+  .chips .url { background: #EEF3EF; color: #0B1A14; }
+  .chips .tag { background: rgba(8, 20, 16, .55); border: 1px solid rgba(220, 240, 228, .2); color: #E4ECE7; font-weight: 500; }
+  .chips .tag i { width: 10px; height: 10px; border-radius: 50%; background: #9CDBB3; }
+  .glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(62, 207, 142, .28) 0%, rgba(62, 207, 142, 0) 65%); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- A · the story block and Echo, from the film's pipeline -->
+  <section class="scene" id="a">
+    <img class="plate fadeL" src="plates/echo-4k.png" style="left:560px; top:-60px; width:2496px; height:1404px;" alt="">
+    <div class="shade"></div>
+    <div class="logo"><img src="../../assets/helpin/helpin-symbol-white.svg" alt=""><b>Helpin</b></div>
+    <div class="hl" style="top:250px; font-size:128px;">Stop losing<br>context at<br><em>every handoff.</em></div>
+    <div class="sub" style="top:668px;">One open-source workspace for support, projects, CRM, meetings and docs, with AI agents that share the whole history.</div>
+    <div class="chips" style="top:880px;"><span class="url">helpin.ai</span><span class="tag"><i></i>Open source</span><span class="tag"><i></i>Self-host free</span></div>
+  </section>
+
+  <!-- B · the film's closing line over the tools it replaces the handoffs between -->
+  <section class="scene" id="b">
+    <!-- only the logo band of the frame (its own caption sits above it) -->
+    <div class="abs" style="position:absolute; left:0; top:170px; width:1920px; height:470px; overflow:hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 6%, #000 78%, transparent 100%);">
+      <img src="plates/tools-4k.png" style="position:absolute; left:0; top:-345px; width:1920px; height:1080px;" alt="">
+    </div>
+    <div class="hl" style="top:655px; font-size:92px;">Don’t lose context between<br>tools and handoffs.<br><em>Keep everything in one place.</em></div>
+    <div class="logo" style="left:auto; right:112px; top:96px;"><img src="../../assets/helpin/helpin-symbol-white.svg" alt=""><b>Helpin</b></div>
+    <div class="chips" style="top:92px;"><span class="url">helpin.ai</span><span class="tag"><i></i>Open source</span></div>
+  </section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+defineVideo({ width: 1920, height: 1080, fps: 30, scenes: [
+  { id: 'a', start: 0, end: 1 },
+  { id: 'b', start: 1, end: 2 },
+] });
+</script>
+</body>
+</html>
