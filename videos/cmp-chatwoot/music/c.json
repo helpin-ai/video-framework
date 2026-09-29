@@ -1,0 +1,9 @@
+{
+ "name": "cmp-chatwoot-music-c",
+ "duration": 38,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 38, "gain": -4,
+    "prompt": "Upbeat electro house with a chiptune twist at exactly 126 BPM, for a clean, modern tech product video about open-source software. Instruments: a fast bouncy 8-bit arpeggio lead, a tight modern kick on every beat, a rubbery sidechained synth bass, snappy claps, open hi-hats and bitcrushed blips. Structure: 0 to 11 seconds is a filtered intro with only the 8-bit arpeggio, hi-hats and a soft kick, getting brighter; at 11.4 seconds the full track drops in hard with bass, claps and a catchy 8-bit hook, and it keeps that full energy without any breakdown until the end at 38 seconds, ending on a downbeat. Instrumental, no vocals, no fade-out, no final crash." }
+ ]
+}

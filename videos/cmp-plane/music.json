@@ -1,0 +1,31 @@
+{
+ "name": "cmp-plane-music",
+ "duration": 40,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 40, "gain": -4,
+    "styles": ["balearic disco", "120 BPM", "airy breathy flute riff", "lush synth strings", "bouncy funky bassline", "crisp handclaps", "shaker", "sunny, light, optimistic", "product comparison motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out", "dark", "aggressive"],
+    "sections": [
+      { "name": "Sky", "duration": 8.5, "styles": ["airy flute riff and a shaker from the very first second", "soft open hi-hats", "light kick on every beat", "no bass yet", "breezy, curious, floating"] },
+      { "name": "Lift", "duration": 3, "styles": ["rising synth strings", "a gentle filtered swell", "a one-beat stop at the very end"] },
+      { "name": "Landing", "duration": 12, "styles": ["full groove", "bouncy funky bassline enters", "handclaps on two and four", "lush strings", "flute riff answers the bass", "joyful and confident"] },
+      { "name": "Cruise", "duration": 10, "styles": ["fullest energy", "extra congas and tambourine", "strings soar"] },
+      { "name": "Carry to the end", "duration": 6.5, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] },
+  { "at": 0, "length": 40, "gain": -4,
+    "prompt": "Sunny balearic disco at exactly 120 BPM for a light, airy product comparison motion graphics film: a breathy flute riff, lush synth strings, a bouncy funky bassline, crisp handclaps and a shaker; optimistic and breezy, no vocals. It starts immediately with the flute riff, a shaker and a light kick (0 to 9 seconds, floating and curious, no bass), rises with strings and a soft swell from 9 seconds, stops for one beat at 11.2 seconds, then drops at 11.5 seconds into the full groove with the bouncy bass and handclaps, which carries all the way to the end with extra percussion from 23 seconds. It ends cleanly on a downbeat at 40 seconds with no big final hit and no fade." },
+  { "at": 0, "length": 40, "gain": -4,
+    "styles": ["nu-disco", "120 BPM", "light airy flute melody", "shimmering synth strings", "rubbery disco bassline", "handclaps", "tambourine", "warm, breezy, sunlit", "product comparison motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out", "dark"],
+    "sections": [
+      { "name": "Breeze", "duration": 8.5, "styles": ["flute melody and shaker from the first second", "soft kick on every beat", "no bass", "light and open"] },
+      { "name": "Rise", "duration": 3, "styles": ["strings rise", "filtered swell", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 12, "styles": ["full groove", "rubbery disco bass", "handclaps", "tambourine", "flute and strings together"] },
+      { "name": "Groove", "duration": 10, "styles": ["fullest energy", "extra percussion"] },
+      { "name": "Carry to the end", "duration": 6.5, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] }
+ ],
+ "sounds": {},
+ "cues": []
+}

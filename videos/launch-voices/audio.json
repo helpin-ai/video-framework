@@ -1,0 +1,195 @@
+{
+ "name": "launch-voices",
+ "duration": 62.407,
+ "video": "../../out/launch-voices/launch-voices.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.2
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 62.407,
+   "generate": 70,
+   "from": 3.018,
+   "gain": -7,
+   "fadeIn": 0.01,
+   "fadeOut": 1.5,
+   "prompt": "Bright, warm, optimistic indie pop instrumental for a startup launch video, like a Y Combinator launch: strummed acoustic guitar, hand claps, light snappy drums, warm electric piano and a plucky bass, around 100 BPM, human and upbeat. No vocals. It starts soft and intimate for the first 16 seconds (just guitar and light percussion, leaving room for people talking), lifts at 20 seconds into the full band with claps and a bright groove, stays warm and steady under a narrator until 64 seconds, then resolves gently on the tonic by 70 seconds, with no big final hit."
+  }
+ ],
+ "voice": {
+  "from": "vo.json",
+  "gain": 0,
+  "clips": [
+   {
+    "file": "out/launch-voices/cast/support-voice-x115.wav",
+    "at": 0,
+    "from": 1.478,
+    "trim": 2.765,
+    "gain": 0.5
+   },
+   {
+    "file": "out/launch-voices/cast/engineer-voice-x115.wav",
+    "at": 2.765,
+    "from": 0.052,
+    "trim": 2.435,
+    "gain": -1.5
+   },
+   {
+    "file": "out/launch-voices/cast/engineer-voice-x115.wav",
+    "at": 5.2,
+    "from": 3.165,
+    "trim": 1.043,
+    "gain": -1.5
+   },
+   {
+    "file": "out/launch-voices/cast/pm-voice-x115.wav",
+    "at": 6.243,
+    "from": 0.209,
+    "trim": 2.974,
+    "gain": 0.3
+   },
+   {
+    "file": "out/launch-voices/cast/founder-voice-x115.wav",
+    "at": 9.217,
+    "from": 0.087,
+    "trim": 2.348,
+    "gain": -0.5
+   },
+   {
+    "file": "out/launch-voices/cast/founder-voice-x115.wav",
+    "at": 11.565,
+    "from": 3.087,
+    "trim": 1.139,
+    "gain": -0.5
+   }
+  ],
+  "duck": {
+   "threshold": 0.03,
+   "ratio": 6,
+   "attack": 15,
+   "release": 350
+  }
+ },
+ "sounds": {
+  "cut": {
+   "text": "a very soft short camera shutter click",
+   "duration": 0.5,
+   "gain": -26
+  },
+  "grid": {
+   "text": "a soft airy whoosh as a video call grid opens",
+   "duration": 0.7,
+   "gain": -19
+  },
+  "pop": {
+   "text": "a soft bubbly pop, a small card appearing",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "reveal": {
+   "text": "a warm soft shimmer, a logo appearing, gentle and bright",
+   "duration": 1,
+   "gain": -18
+  },
+  "chip": {
+   "text": "a tiny soft wooden tick, a label snapping into place",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "window": {
+   "text": "a soft airy whoosh as an app window slides up",
+   "duration": 0.6,
+   "gain": -22
+  },
+  "type": {
+   "text": "fast soft typing on a laptop keyboard for one and a half seconds",
+   "duration": 1.6,
+   "gain": -22
+  },
+  "check": {
+   "text": "a tiny soft bright tick, a check mark appearing",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "cta": {
+   "text": "a soft warm two-note chime, friendly",
+   "duration": 0.8,
+   "gain": -19
+  }
+ },
+ "cues": [
+  {
+   "sound": "cut",
+   "at": [
+    2.765,
+    5.2,
+    6.243,
+    9.217,
+    11.565
+   ]
+  },
+  {
+   "sound": "grid",
+   "at": [
+    12.654
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    13.031,
+    14.641,
+    15.091
+   ]
+  },
+  {
+   "sound": "reveal",
+   "at": [
+    16.903
+   ]
+  },
+  {
+   "sound": "chip",
+   "at": [
+    17.253,
+    17.95,
+    18.762,
+    19.273,
+    19.784
+   ]
+  },
+  {
+   "sound": "window",
+   "at": [
+    22.893,
+    29.533,
+    35.569,
+    41.605,
+    46.434
+   ]
+  },
+  {
+   "sound": "type",
+   "at": [
+    52.667
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    57.707,
+    57.807,
+    57.907,
+    58.007
+   ]
+  },
+  {
+   "sound": "cta",
+   "at": [
+    58.741
+   ]
+  }
+ ]
+}

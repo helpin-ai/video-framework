@@ -3,3 +3,6 @@ out/
 reference/
 .env
 .impeccable/
+
+# Frames rendered from other videos to use as pictures (recreate with the command in the page)
+videos/*/plates/

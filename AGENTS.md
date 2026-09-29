@@ -25,7 +25,7 @@ Load the matching skill before starting. Skills live in `.agents/skills/`, and `
 - Node lives under nvm and isn't on the default PATH: `export PATH=$HOME/.nvm/versions/node/v24.21.0/bin:$PATH`.
 - `npm install`. Playwright is pinned to 1.59.1 to match the Chromium in `~/.cache/ms-playwright`; don't bump it without `npx playwright install chromium`.
 - ffmpeg comes from `ffmpeg-static` (`node_modules/ffmpeg-static/ffmpeg`, with libx264). There is no system ffmpeg.
-- `.env` holds `ELEVENLABS_API_KEY` (see `.env.example`). Never print or copy its values; check key names with `cut -d= -f1 .env`.
+- `.env` holds `ELEVENLABS_API_KEY` and, for generated footage, `HIGGSFIELD_API_KEY` (`id:secret`; see `.env.example`). Never print or copy its values; check key names with `cut -d= -f1 .env`.
 
 ## Commands
 
@@ -38,6 +38,12 @@ npm run render -- <name>                 # out/<name>/<name>.mp4
 npm run audio -- videos/<name>/audio.json [--video x.mp4] [--out y.mp4]
 npm run inspect -- <file.mp4> [--times …|--frames a-b|--every s] [--crop x,y,w,h --boost]
 npm run splice -- --base a.mp4 --at FRAME --insert b.mp4 [--resume FRAME] --out c.mp4
+npm run audio -- videos/<name>/audio.json --prefetch   # generate music + effects without a video
+node bin/beats.mjs <bed.mp3> --bpm 120 [--marks 3.5,8.5]   # tempo, first beat and energy of a music bed
+npm run render -- <name> --scale 2 --crf 14 --out out/<name>/<name>-4k.mp4   # 4K (3840×2160) master
+npm run audio -- videos/<name>/audio.json --video out/<name>/<name>-4k.mp4 --out out/<name>/helpin-<name>-4k-master.mp4
+node bin/deliver.mjs out/<name>/helpin-<name>-4k-master.mp4 [--card 48.5]   # 4K, 1080p MP4, 1440p WebM, posters
+node --env-file=.env bin/cast.mjs videos/<name>/cast.json [--dry] [--only id]   # lip-synced talking heads (portrait, line, clip, voice)
 ```
 
 ## Layout
@@ -48,9 +54,12 @@ lib/motion.js       pure timing: P, L, map, keys, envelope, stagger, typed, rand
 lib/components.js   helpinSymbol, kineticLines, vortex, lineBundles, terminal, type, rise, leave, stagePoint,
                     counter, rollWord, zoomThrough, cursor, css
 lib/kit.js          use-case video helpers: masked word rises, pop, push, bigScreen, flashes, shared end card
+lib/film.js         narrated films: voice-timed anchors (vo.json), cameras, paths, plate frames for generated footage
 lib/site.js         siteView / siteWindow: live helpin.ai previews in a video, frame-exact (with lib/site-clock.js)
 lib/brand.css       Helpin tokens, fonts, .scene/.pill/.shot/.term/.callout/.scrim styles
-bin/                render, preview, audio, inspect, splice, new-video, server
+bin/                render, preview, audio, inspect, splice, new-video, server; vo (voiceover + word timings),
+                    genvideo (Seedance footage plates, cost estimate and ledger),
+                    cast (talking-head cast: Soul portrait, ElevenLabs line, Seedance clip, speech-to-speech)
 assets/helpin/      symbol, palette, product screenshots (from helpin/website/public)
 videos/_template/   starter page + STORYBOARD.md
 videos/example/     20 s demo of every component
@@ -65,7 +74,7 @@ out/                renders, stills, audio cache (gitignored)
 1. **Frames are pure functions of `t`.** Embedded website previews count too: they run on the virtual clock from
    `lib/site-clock.js` (hide their `canvas` backgrounds, which run on real time). Don't use CSS transitions or animations, `Date.now()`, `Math.random()` (use `rand(seed)`), or timers in scene code. Renders are byte-identical run to run; keep it that way.
 2. **Look before you claim.** You can't watch or hear the output. Check picture with `npm run sheet`, `--stills` and `inspect`, and read the PNGs. Check sound with the energy report `bin/audio.mjs` prints. Say what you checked and what you couldn't check (for example, how it sounds).
-3. **Claims.** On-screen product copy must come from the Helpin README, the live website (`helpin/website/src/app/new`), or the committed roadmap. Record the sources in the video's `STORYBOARD.md`. Don't show the GitHub repo URL until the repo is public.
+3. **Claims.** On-screen product copy must come from the Helpin README, the live website (`helpin/website/src/app/new`), or the committed roadmap. Record the sources in the video's `STORYBOARD.md`. Don't show the GitHub repo URL until the repo is public. Competitors: facts only from the website's `compare-data.ts` (with its checked date), named in text with the monogram chip, never their logo, colours or UI; real logos only in tool-sprawl moments (`.agents/skills/helpin-video/references/competitors.md`).
 4. **Credits cost money.** ElevenLabs calls are cached by request in `out/audio-cache/`. Change timing and gain freely, but change prompts or lengths deliberately.
 5. **Every video is its own concept with its own music.** Don't reuse another video's look or music beds
    (see the helpin-video and video-sound skills). Consistency comes from the brand (logo, type, palette,

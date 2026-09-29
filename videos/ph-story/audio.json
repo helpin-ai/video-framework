@@ -1,0 +1,588 @@
+{
+ "name": "ph-story",
+ "duration": 80.637,
+ "video": "../../out/ph-story/ph-story.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.5
+ },
+ "voice": {
+  "from": "vo.json",
+  "gain": 0,
+  "duck": {
+   "threshold": 0.03,
+   "ratio": 6,
+   "attack": 20,
+   "release": 400,
+   "sfx": false
+  }
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 80.637,
+   "generate": 82,
+   "from": 0,
+   "gain": -6,
+   "fadeIn": 0.05,
+   "fadeOut": 2,
+   "prompt": "Light, upbeat and optimistic tech explainer music at exactly 100 BPM: plucky synths, soft claps, a warm bouncing bass, gentle marimba and bright bell accents; friendly, modern and steady, made to sit under a narrator. No vocals, no breaks, no long silences, no big final hit. A steady, feel-good groove from the first second with small lifts every eight bars, slightly brighter from about 28 seconds, and a soft, clean ending in the last 4 seconds."
+  }
+ ],
+ "sounds": {
+  "scatter": {
+   "text": "a jittery flurry of small glitchy digital blips, scattered and disorganised, soft",
+   "duration": 1.5,
+   "gain": -23
+  },
+  "converge": {
+   "text": "many soft whooshes pulling inward to one point, rising",
+   "duration": 1.1,
+   "gain": -18
+  },
+  "onePlace": {
+   "text": "a bright soft shimmer impact with a warm bloom, pieces locking together into one",
+   "duration": 1.5,
+   "gain": -15
+  },
+  "land": {
+   "text": "a small soft thud with a sparkly scatter, a tiny ring landing and bursting into confetti",
+   "duration": 1,
+   "gain": -18
+  },
+  "fill": {
+   "text": "a quick bright liquid fill swoosh, left to right",
+   "duration": 0.6,
+   "gain": -21
+  },
+  "love": {
+   "text": "a bright happy sparkle burst with a soft pop",
+   "duration": 1,
+   "gain": -18
+  },
+  "days": {
+   "text": "seven tiny ascending blips, quick",
+   "duration": 1,
+   "gain": -22
+  },
+  "push": {
+   "text": "a fast rising whoosh, a camera zooming in",
+   "duration": 0.8,
+   "gain": -19
+  },
+  "launch": {
+   "text": "a rocket-like soft whoosh launching upward with a glowing trail",
+   "duration": 1,
+   "gain": -17
+  },
+  "slam": {
+   "text": "a punchy soft thump as a bold word slams in",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "snap": {
+   "text": "a light crack of lines snapping",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "fall": {
+   "text": "letters tumbling and falling, light plastic clatter",
+   "duration": 0.8,
+   "gain": -21
+  },
+  "whole": {
+   "text": "a bright satisfying click as pieces lock back together, with a shimmer",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "gather": {
+   "text": "a quick inward suck whoosh",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "swirl": {
+   "text": "several soft whooshes swirling around in a circle",
+   "duration": 1.2,
+   "gain": -20
+  },
+  "thread": {
+   "text": "a soft electric shimmer, lines connecting",
+   "duration": 1,
+   "gain": -22
+  },
+  "bug": {
+   "text": "a quick glitchy error blip",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "check": {
+   "text": "soft bright check-mark ding",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "stamp": {
+   "text": "a satisfying rubber stamp thump",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "decide": {
+   "text": "a punchy soft thump as a bold word slams in",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "strike": {
+   "text": "a quick marker strike-through swish",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "typing": {
+   "text": "soft fast typing on a keyboard for a second",
+   "duration": 1.2,
+   "gain": -22
+  },
+  "spark": {
+   "text": "a tiny bright sparkle, a point of light appearing",
+   "duration": 0.6,
+   "gain": -20
+  },
+  "bloom": {
+   "text": "a soft warm bloom swell, light growing",
+   "duration": 1,
+   "gain": -19
+  },
+  "msgs": {
+   "text": "several soft chat message pops swirling in",
+   "duration": 1.2,
+   "gain": -21
+  },
+  "hop": {
+   "text": "a light airy whoosh, a glowing block hopping across",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "chip": {
+   "text": "small glassy pieces chipping off and falling, light crackle",
+   "duration": 0.8,
+   "gain": -20
+  },
+  "dust": {
+   "text": "a soft sandy dissolve, pieces turning to dust",
+   "duration": 1.2,
+   "gain": -21
+  },
+  "repeat": {
+   "text": "a soft chat message pop",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "rewind": {
+   "text": "a smooth reverse swoosh, pieces flying back together",
+   "duration": 1,
+   "gain": -18
+  },
+  "draw": {
+   "text": "a smooth soft line drawing swish",
+   "duration": 1,
+   "gain": -22
+  },
+  "reveal": {
+   "text": "a bright soft shimmer impact with a warm bloom, a logo revealed, gentle",
+   "duration": 1.5,
+   "gain": -16
+  },
+  "pop": {
+   "text": "a soft bubbly UI pop",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "frame": {
+   "text": "a smooth soft snap, a frame closing around things",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "orbit": {
+   "text": "a soft rising orbit whoosh",
+   "duration": 1,
+   "gain": -21
+  },
+  "track": {
+   "text": "a soft digital line drawing across, gentle",
+   "duration": 0.8,
+   "gain": -22
+  },
+  "ping": {
+   "text": "a soft digital ping",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "move": {
+   "text": "a light airy whoosh, a glowing block gliding along a track",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "found": {
+   "text": "three tiny soft blips",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "scan": {
+   "text": "a soft electronic scan sweep",
+   "duration": 0.8,
+   "gain": -21
+  },
+  "approve": {
+   "text": "a soft click and a warm confirmation tone",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "loop": {
+   "text": "a smooth flowing whoosh travelling around a loop",
+   "duration": 1.5,
+   "gain": -21
+  },
+  "done": {
+   "text": "short warm two-note success chime, soft",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "toggle": {
+   "text": "a smooth toggle switch sliding with a soft click",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "bars": {
+   "text": "a soft rising shimmer of many small tones",
+   "duration": 1,
+   "gain": -22
+  },
+  "brackets": {
+   "text": "a smooth pen stroke drawing two brackets, soft",
+   "duration": 0.6,
+   "gain": -21
+  },
+  "type": {
+   "text": "soft fast typing on a keyboard for a second",
+   "duration": 1.2,
+   "gain": -22
+  },
+  "rings": {
+   "text": "a soft airy shimmer, rings of light expanding",
+   "duration": 1.2,
+   "gain": -20
+  },
+  "lockup": {
+   "text": "a single warm soft bell tone with a gentle tail",
+   "duration": 1.8,
+   "gain": -17
+  }
+ },
+ "cues": [
+  {
+   "sound": "spark",
+   "at": [
+    0.3
+   ]
+  },
+  {
+   "sound": "land",
+   "at": [
+    1.25
+   ]
+  },
+  {
+   "sound": "bloom",
+   "at": [
+    1.779
+   ]
+  },
+  {
+   "sound": "fill",
+   "at": [
+    2.324
+   ]
+  },
+  {
+   "sound": "love",
+   "at": [
+    3.265
+   ]
+  },
+  {
+   "sound": "days",
+   "at": [
+    4.662
+   ]
+  },
+  {
+   "sound": "msgs",
+   "at": [
+    5.203,
+    5.703
+   ]
+  },
+  {
+   "sound": "push",
+   "at": [
+    6.738
+   ]
+  },
+  {
+   "sound": "launch",
+   "at": [
+    7.398
+   ]
+  },
+  {
+   "sound": "slam",
+   "at": [
+    8.763,
+    10.087,
+    11.329
+   ]
+  },
+  {
+   "sound": "hop",
+   "at": [
+    9.587,
+    10.829,
+    13.213,
+    13.701,
+    14.653,
+    15.152
+   ]
+  },
+  {
+   "sound": "chip",
+   "at": [
+    10.137,
+    11.379,
+    13.701,
+    15.802
+   ]
+  },
+  {
+   "sound": "snap",
+   "at": [
+    15.802
+   ]
+  },
+  {
+   "sound": "fall",
+   "at": [
+    16.102
+   ]
+  },
+  {
+   "sound": "dust",
+   "at": [
+    18.042
+   ]
+  },
+  {
+   "sound": "repeat",
+   "at": [
+    19.191,
+    19.541,
+    19.891
+   ]
+  },
+  {
+   "sound": "rewind",
+   "at": [
+    21.935
+   ]
+  },
+  {
+   "sound": "whole",
+   "at": [
+    23.416
+   ]
+  },
+  {
+   "sound": "draw",
+   "at": [
+    23.549
+   ]
+  },
+  {
+   "sound": "gather",
+   "at": [
+    26.764
+   ]
+  },
+  {
+   "sound": "reveal",
+   "at": [
+    27.22
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    28.675,
+    29.314,
+    29.94,
+    30.591,
+    31.136
+   ]
+  },
+  {
+   "sound": "frame",
+   "at": [
+    32.588
+   ]
+  },
+  {
+   "sound": "swirl",
+   "at": [
+    33.586
+   ]
+  },
+  {
+   "sound": "thread",
+   "at": [
+    34.619
+   ]
+  },
+  {
+   "sound": "track",
+   "at": [
+    36.826
+   ]
+  },
+  {
+   "sound": "ping",
+   "at": [
+    37.975,
+    38.927
+   ]
+  },
+  {
+   "sound": "move",
+   "at": [
+    42.492,
+    44.977,
+    46.951,
+    48.263,
+    49.805
+   ]
+  },
+  {
+   "sound": "bug",
+   "at": [
+    41.765
+   ]
+  },
+  {
+   "sound": "found",
+   "at": [
+    43.441
+   ]
+  },
+  {
+   "sound": "type",
+   "at": [
+    46.088,
+    51.264
+   ]
+  },
+  {
+   "sound": "scan",
+   "at": [
+    47.845
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    48.095,
+    48.245,
+    48.395
+   ]
+  },
+  {
+   "sound": "stamp",
+   "at": [
+    49.01
+   ]
+  },
+  {
+   "sound": "loop",
+   "at": [
+    51.926
+   ]
+  },
+  {
+   "sound": "done",
+   "at": [
+    53.54
+   ]
+  },
+  {
+   "sound": "decide",
+   "at": [
+    56.047
+   ]
+  },
+  {
+   "sound": "toggle",
+   "at": [
+    58.439
+   ]
+  },
+  {
+   "sound": "bars",
+   "at": [
+    60.367
+   ]
+  },
+  {
+   "sound": "strike",
+   "at": [
+    63.513
+   ]
+  },
+  {
+   "sound": "brackets",
+   "at": [
+    65.372
+   ]
+  },
+  {
+   "sound": "typing",
+   "at": [
+    66.61
+   ]
+  },
+  {
+   "sound": "rings",
+   "at": [
+    70.025
+   ]
+  },
+  {
+   "sound": "scatter",
+   "at": [
+    72.739
+   ]
+  },
+  {
+   "sound": "converge",
+   "at": [
+    75.607
+   ]
+  },
+  {
+   "sound": "onePlace",
+   "at": [
+    76.594
+   ]
+  },
+  {
+   "sound": "lockup",
+   "at": [
+    77.437
+   ]
+  }
+ ]
+}

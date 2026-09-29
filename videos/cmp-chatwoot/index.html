@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin vs Chatwoot: Open all the way</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  #stage { background: radial-gradient(ellipse 85% 75% at 50% 32%, #0D2820, #07160F 58%, #040C09); color: #E8EEEA; }
+  em { font-style: normal; color: var(--sage); }
+  .amb { color: #F0C35A; }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  .eyebrow { font: 500 24px/1 var(--mono); letter-spacing: .26em; color: rgba(184, 221, 187, .78); text-transform: uppercase; display: flex; align-items: center; gap: 16px; }
+  .chipm { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(232, 238, 234, .32); font: 600 20px/1 var(--sans); letter-spacing: 0; color: #E8EEEA; background: rgba(255, 255, 255, .04); }
+  .vs { font: 500 20px/1 var(--mono); color: rgba(232, 238, 234, .45); letter-spacing: .1em; }
+  .h { font-weight: 600; letter-spacing: -0.045em; line-height: 1.04; color: #E8EEEA; }
+  .fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 50; }
+
+  /* Hook */
+  #hook .copy { position: absolute; left: 140px; top: 400px; width: 760px; }
+  #hook .copy .h { font-size: 100px; margin-top: 40px; }
+  #hook .term { left: 930px; top: 352px; width: 860px; }
+  #hook .term .body, #install .term .body { min-height: 0; }
+  .term .bar b { margin-left: 14px; font: 500 20px/1 var(--mono); color: #6F8A7E; }
+
+  /* The corridor */
+  .hallscene { overflow: hidden; }
+  .floorwrap { position: absolute; inset: 0; perspective: 900px; perspective-origin: 50% 12%; overflow: hidden; }
+  .floor { position: absolute; left: -2600px; width: 7120px; height: 760px; transform-origin: 50% 0; transform: rotateX(80deg);
+    background-image: repeating-linear-gradient(90deg, rgba(156, 219, 179, .16) 0 2px, transparent 2px 160px), repeating-linear-gradient(0deg, rgba(156, 219, 179, .10) 0 2px, transparent 2px 160px);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.6) 45%, transparent 100%); }
+  .wall { position: absolute; left: 0; top: 0; width: 1920px; }
+  .world { position: absolute; left: 0; top: 0; width: 4000px; height: 1080px; transform-origin: 0 0; }
+  .base { position: absolute; left: -1000px; width: 6000px; height: 2px; background: rgba(184, 221, 187, .18); }
+  .door { position: absolute; }
+  .door .plate { position: absolute; left: -60px; right: -60px; top: -50px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .16em; color: rgba(232, 238, 234, .82); white-space: nowrap; }
+  .door .frame { position: absolute; inset: 0; border-radius: 12px 12px 0 0; background: #030A07; box-shadow: 0 0 0 10px #102A20, 0 0 0 11px rgba(184, 221, 187, .2); perspective: 1100px; }
+  .door .room { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; opacity: 0; display: grid; place-items: center; }
+  .door.c .room { background: radial-gradient(ellipse 85% 70% at 50% 42%, #EEF2EF 0%, #A9B8B0 38%, #2B3A34 78%, #16211D 100%); }
+  .door.h .room { background: radial-gradient(ellipse 85% 70% at 50% 42%, #F2FAF5 0%, #9CDBB3 40%, #0F7A50 76%, #073322 100%); }
+  .door.out .room { background: linear-gradient(180deg, #020605, #06120E); }
+  .room .ok { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: rgba(8, 27, 22, .88); color: #E8EEEA; font: 600 40px/1 var(--sans); }
+  .door.h .room svg.ic { width: 84px; height: 84px; }
+  .room .agents { display: grid; grid-template-columns: 64px 64px; gap: 10px; }
+  .room .agents img { width: 64px; height: 64px; }
+  .door .leaf { position: absolute; inset: 0; border-radius: inherit; transform-origin: 0 50%; background: linear-gradient(180deg, #17402F, #0E2A21); box-shadow: inset 0 0 0 1px rgba(184, 221, 187, .16); }
+  .leaf .pn { position: absolute; left: 14%; right: 14%; border: 1px solid rgba(184, 221, 187, .15); border-radius: 6px; }
+  .leaf .p1 { top: 8%; height: 36%; } .leaf .p2 { top: 50%; height: 42%; }
+  .leaf .knob { position: absolute; right: 9%; top: 53%; width: 16px; height: 16px; border-radius: 50%; background: #7E998D; }
+  .leaf .lock { position: absolute; left: 50%; top: 40%; width: 84px; height: 96px; margin-left: -42px; opacity: 0; }
+  .door .spill { position: absolute; left: -45%; width: 190%; top: 100%; height: 200px; opacity: 0; }
+  .door.c .spill { background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(232, 238, 234, .26), transparent 72%); }
+  .door.h .spill { background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(156, 219, 179, .42), transparent 72%); }
+  .door .tag { position: absolute; left: -40px; right: -40px; top: calc(100% + 26px); text-align: center; opacity: 0; }
+  .door .tag span { display: inline-block; padding: 12px 18px; border-radius: 12px; border: 1.5px solid rgba(240, 195, 90, .7); background: rgba(240, 195, 90, .08); color: #F4D58A; font: 500 24px/1.3 var(--sans); }
+  .hcopy { position: absolute; left: 140px; top: 104px; width: 1640px; opacity: 0; }
+  .hcopy .h { font-size: 84px; margin-top: 26px; white-space: nowrap; }
+  #villainline b { font-weight: inherit; color: #F0C35A; }
+  #villainline { position: absolute; left: 0; width: 1920px; top: 118px; text-align: center; font-size: 118px; opacity: 0; }
+  .outline { position: absolute; height: 0; border-top: 4px dashed rgba(232, 238, 234, .75); }
+  .outchip { position: absolute; padding: 18px 26px; border-radius: 16px; background: rgba(232, 238, 234, .08); border: 1.5px solid rgba(232, 238, 234, .45); font: 500 34px/1 var(--sans); color: #E8EEEA; white-space: nowrap; opacity: 0; }
+
+  /* Install */
+  #install .top { position: absolute; left: 0; width: 1920px; top: 316px; justify-content: center; }
+  #install .term { left: 310px; top: 380px; width: 1300px; }
+
+  /* Helpin corridor */
+  #open .top { position: absolute; left: 0; width: 1920px; top: 88px; justify-content: center; }
+  #open .h { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 92px; }
+
+  /* Stations */
+  .side { position: absolute; left: 140px; top: 300px; width: 690px; opacity: 0; }
+  .side .h { font-size: 72px; margin-top: 30px; }
+  .side .lede { margin-top: 28px; font-size: 30px; line-height: 1.4; color: #A9B8B0; }
+  .provs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .provs span { padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(184, 221, 187, .32); background: rgba(184, 221, 187, .06); font: 500 24px/1 var(--sans); color: #D7E6DC; opacity: 0; }
+  .fine { position: absolute; left: 140px; top: 980px; font-size: 22px; color: rgba(232, 238, 234, .5); opacity: 0; }
+
+  /* Receipt */
+  #receipt .top { position: absolute; left: 0; width: 1920px; top: 112px; justify-content: center; }
+  .rc { position: absolute; top: 200px; width: 620px; height: 470px; border-radius: 24px; padding: 38px 42px; opacity: 0; }
+  .rc.rival { left: 320px; background: rgba(255, 255, 255, .025); border: 2px dashed rgba(232, 238, 234, .22); color: #D7E0DB; }
+  .rc.helpin { left: 980px; background: #fff; color: var(--ink); box-shadow: 0 40px 110px rgba(0, 0, 0, .5), inset 6px 0 0 #0F7A50; }
+  .rc .hd { display: flex; align-items: center; gap: 16px; font-size: 36px; font-weight: 600; letter-spacing: -0.02em; }
+  .rc .hd small { display: block; font: 500 22px/1.2 var(--mono); letter-spacing: .04em; margin-top: 8px; opacity: .6; }
+  .rc .row { display: flex; justify-content: space-between; align-items: baseline; font-size: 28px; margin-top: 22px; opacity: 0; }
+  .rc .row b { font-weight: 600; }
+  .rc .row i { font-style: normal; font-size: 24px; opacity: .72; }
+  .rc hr { border: 0; border-top: 1.5px solid currentColor; opacity: .16; margin: 28px 0 6px; }
+  .rc .tot { font-size: 34px; }
+  .rc .tot b { font-size: 40px; letter-spacing: -0.02em; }
+  .rc.helpin .tot b { color: #0F7A50; }
+  #verdict { position: absolute; left: 0; width: 1920px; top: 736px; text-align: center; font-size: 96px; }
+  #receipt .fine { left: 0; width: 1920px; text-align: center; top: 902px; line-height: 1.45; }
+
+  /* Tagline and end */
+  #tag .h { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 104px; }
+  .minirow { position: absolute; left: 0; width: 1920px; top: 700px; height: 300px; }
+  .mini { position: absolute; bottom: 0; width: 150px; height: 250px; border-radius: 10px 10px 0 0; background: radial-gradient(ellipse 85% 70% at 50% 42%, #F2FAF5 0%, #9CDBB3 40%, #0F7A50 76%, #073322 100%); box-shadow: 0 0 0 7px #102A20, 0 0 0 8px rgba(184, 221, 187, .25); }
+  #endmark { position: absolute; left: 0; width: 1920px; top: 350px; display: flex; justify-content: center; align-items: center; gap: 28px; }
+  #endmark b { font-size: 120px; font-weight: 600; letter-spacing: -0.045em; color: #E8EEEA; }
+  #cta { position: absolute; left: 0; width: 1920px; top: 590px; display: flex; justify-content: center; align-items: center; gap: 26px; opacity: 0; }
+  #cta .pri { height: 76px; padding: 0 34px; display: inline-flex; align-items: center; border-radius: 16px; background: #E8EEEA; color: var(--forest); font: 600 34px/1 var(--sans); letter-spacing: -0.01em; }
+  #cta .sec { font: 500 32px/1 var(--sans); color: #C9D6CF; }
+  #endline { position: absolute; left: 0; width: 1920px; top: 716px; text-align: center; font: 500 24px/1 var(--mono); letter-spacing: .22em; color: rgba(184, 221, 187, .7); opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1. Hook: your support stack starts on your server -->
+  <section class="scene" id="hook">
+    <div class="copy">
+      <div class="eyebrow" id="match"><img src="../../assets/helpin/helpin-symbol-white.svg" width="30" height="30" alt="">Helpin <span class="vs">VS</span> <span class="chipm">C</span>Chatwoot</div>
+      <div class="h" id="hook1"></div>
+      <div class="h" id="hook2"></div>
+    </div>
+    <div class="term" id="hookterm"><div class="bar"><i></i><i></i><i></i><b>~/support</b></div><div class="body"></div></div>
+  </section>
+
+  <!-- 2. The corridor: the open core, the locked rooms, the door that leads elsewhere -->
+  <section class="scene hallscene" id="hall">
+    <div class="floorwrap"><div class="floor" id="hfloor"></div></div>
+    <div class="world" id="hworld"></div>
+    <div class="hcopy" id="hc1"><div class="eyebrow"><span class="chipm">C</span>Chatwoot · self-hosted</div><div class="h"></div></div>
+    <div class="hcopy" id="hc2"><div class="eyebrow"><span class="chipm">C</span>Chatwoot · self-hosted</div><div class="h"></div><div class="h"></div></div>
+    <div class="hcopy" id="hc3"><div class="eyebrow"><span class="chipm">C</span>Chatwoot · self-hosted</div><div class="h"></div><div class="h"></div></div>
+    <div class="h" id="villainline"></div>
+  </section>
+
+  <!-- 3. The install, into the drop -->
+  <section class="scene" id="install">
+    <div class="eyebrow top"><img src="../../assets/helpin/helpin-symbol-white.svg" width="30" height="30" alt="">Helpin · self-hosted</div>
+    <div class="term" id="insterm"><div class="bar"><i></i><i></i><i></i><b>~</b></div><div class="body"></div></div>
+  </section>
+
+  <!-- 4. Every Helpin door opens at once -->
+  <section class="scene hallscene" id="open">
+    <div class="floorwrap"><div class="floor" id="ofloor"></div></div>
+    <div class="world" id="oworld"></div>
+    <div class="eyebrow top" id="otop"><img src="../../assets/helpin/helpin-symbol-white.svg" width="30" height="30" alt="">Helpin · running at localhost:8085</div>
+    <div class="h" id="open1" style="top:150px"></div>
+    <div class="h" id="open2" style="top:252px"></div>
+  </section>
+
+  <!-- 5. Stations: agents, projects → PR, CRM + meetings -->
+  <section class="scene" id="stations">
+    <div class="side" id="s-agents"><div class="eyebrow">AI agents</div><div class="h"></div><div class="lede">Bring your own AI provider.</div>
+      <div class="provs"><span>OpenAI</span><span>Anthropic</span><span>OpenRouter</span><span>OpenAI-compatible</span></div></div>
+    <div class="side" id="s-task"><div class="eyebrow">Projects</div><div class="h"></div><div class="lede">Your customer’s conversation stays attached.</div></div>
+    <div class="side" id="s-pr"><div class="eyebrow">Coding agents</div><div class="h"></div><div class="lede">A coding agent opens the pull request. Your team reviews it.</div></div>
+    <div class="side" id="s-crm"><div class="eyebrow">CRM + Meetings</div><div class="h"></div><div class="lede">Meeting notes from Meet, Zoom, Teams and Webex.</div></div>
+    <div class="fine" id="prfine">Coding agents need a connected GitHub or GitLab repository.</div>
+    <div id="wins"></div>
+  </section>
+
+  <!-- 6. The self-hosted receipt -->
+  <section class="scene" id="receipt">
+    <div class="eyebrow top">Self-hosted · 8 agents · list prices</div>
+    <div class="rc rival" id="rcr">
+      <div class="hd"><span class="chipm">C</span><div>Chatwoot<small>Premium · self-hosted</small></div></div>
+      <div class="row"><span>8 agents × $19</span><b>$152</b></div>
+      <div class="row"><span>Captain AI agent</span><i>Premium or higher</i></div>
+      <hr>
+      <div class="row tot"><span>Per month</span><b id="rm">$0</b></div>
+      <div class="row tot"><span>Per year</span><b id="ry">$0</b></div>
+    </div>
+    <div class="rc helpin" id="rch">
+      <div class="hd"><img src="../../assets/helpin/helpin-symbol-ink.svg" width="40" height="40" alt=""><div>Helpin<small>Community edition</small></div></div>
+      <div class="row"><span>License</span><b>$0</b></div>
+      <div class="row"><span>AI agents, 8 teammates</span><i>Included</i></div>
+      <hr>
+      <div class="row tot"><span>Per month</span><b>$0</b></div>
+      <div class="row tot"><span>Per year</span><b>$0</b></div>
+    </div>
+    <div class="h" id="verdict"></div>
+    <div class="fine" id="rfine">Self-hosted list prices, checked September 2026. Both use your own AI provider; hosting costs not included.<br>Helpin Community is a 0.2 beta.</div>
+  </section>
+
+  <!-- 7. Tagline -->
+  <section class="scene" id="tag">
+    <div class="minirow" id="minirow"></div>
+    <div class="h" id="tag1" style="top:300px"></div>
+    <div class="h" id="tag2" style="top:420px"></div>
+  </section>
+
+  <!-- 8. End card -->
+  <section class="scene" id="end">
+    <div id="endmark"><span id="endsym"></span><b>Helpin</b></div>
+    <div id="cta"><span class="pri">Self-host free</span><span class="sec">or start a 14-day trial at helpin.ai</span></div>
+    <div id="endline">OPEN SOURCE · AGPL-3.0</div>
+  </section>
+
+  <div class="fade" id="fade"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, brandEase, expoOut, easeInOut } from '../../lib/motion.js';
+import { helpinSymbol, terminal, counter, css } from '../../lib/components.js';
+import { words, rise, reveal, pop, push } from '../../lib/kit.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+import { B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const ease = (t, a, d = 0.7, f = brandEase) => f(P(t, a, a + d));
+const SEC = (n) => B(n);
+// A scene's own dissolve: in over 0.5 s from `a`, out over the last 0.4 s before `b`.
+const sceneFade = (el, t, a, b, { inDur = 0.5, outDur = 0.4, blur = 10 } = {}) => {
+  const k = Math.min(ease(t, a, inDur), 1 - brandEase(P(t, b - outDur, b)));
+  css(el, { opacity: String(k), filter: k < 0.999 ? `blur(${((1 - k) * blur).toFixed(2)}px)` : 'none' });
+};
+// A block of copy on [a, b): eyebrow, then headline lines rising word by word.
+const block = (el, lines, t, a, b, at) => {
+  const on = t >= a && t < b, o = brandEase(P(t, b - 0.4, b));
+  css(el, { opacity: String(on ? 1 - o : 0), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+  if (!on) return;
+  const eb = el.querySelector('.eyebrow');
+  if (eb) reveal(eb, t, a, { dy: 10 });
+  lines.forEach((ws, i) => rise(ws, t, at[i], 0.07));
+};
+
+// ---------- Icons ----------
+const ICON = {
+  support: '<path d="M4 5h16v11H9.5L4 20.5z"/>',
+  projects: '<path d="M4 4h4.5v16H4zM10 4h4.5v10H10zM16 4h4v13h-4z"/>',
+  crm: '<path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.6a3.3 3.3 0 0 1 0 6.2M18 14.8c1.9.7 3.1 2.5 3.5 5.2"/>',
+  meetings: '<path d="M3 7h12v10H3zM15 11l6-3.5v9L15 13"/>',
+  docs: '<path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/>',
+};
+const icon = (k) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#081B16" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${ICON[k]}</svg>`;
+const LOCK = '<svg class="lock" viewBox="0 0 84 96"><path d="M20 42V30a22 22 0 0 1 44 0v12" fill="none" stroke="#F0C35A" stroke-width="8" stroke-linecap="round"/><rect x="8" y="40" width="68" height="52" rx="10" fill="#F0C35A"/><circle cx="42" cy="62" r="7" fill="#3A2A08"/><rect x="39" y="64" width="6" height="14" rx="3" fill="#3A2A08"/></svg>';
+
+// ---------- Doors ----------
+function makeDoor(world, { x, y, w, h, label, kind, room = '', tag }) {
+  const d = document.createElement('div');
+  d.className = `door ${kind}`;
+  css(d, { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` });
+  d.innerHTML = `<div class="spill"></div><div class="plate">${label}</div><div class="frame"><div class="room">${room}</div>
+    <div class="leaf"><div class="pn p1"></div><div class="pn p2"></div><div class="knob"></div>${kind.includes('lock') ? LOCK : ''}</div></div>
+    ${tag ? `<div class="tag"><span>${tag}</span></div>` : ''}`;
+  world.appendChild(d);
+  const q = (s) => d.querySelector(s);
+  return {
+    el: d, x, y, w, h,
+    // k 0..1: the leaf swings open, the room lights and spills onto the floor.
+    open(k) {
+      q('.leaf').style.transform = k > 0 ? `rotateY(${(-104 * k).toFixed(2)}deg)` : 'none';
+      q('.leaf').style.filter = k > 0 ? `brightness(${(1 - 0.5 * k).toFixed(3)})` : 'none';
+      q('.room').style.opacity = String(Math.min(1, k * 1.6));
+      q('.spill').style.opacity = String(k);
+    },
+    // Padlock drops onto the leaf, the rim and plate turn amber, the tag hangs below.
+    lock(k, tagK) {
+      const l = q('.lock');
+      if (l) css(l, { opacity: String(k), transform: k < 1 ? `translateY(${Math.round((1 - k) * -26)}px)` : 'none' });
+      q('.leaf').style.boxShadow = `inset 0 0 0 ${k > 0 ? 3 : 1}px rgba(${k > 0 ? '240,195,90' : '184,221,187'},${k > 0 ? (0.75 * k).toFixed(3) : 0.16})`;
+      q('.plate').style.color = k > 0 ? `rgba(244,213,138,${L(0.82, 1, k).toFixed(3)})` : '';
+      const tg = q('.tag');
+      if (tg) css(tg, { opacity: String(tagK), transform: tagK < 1 ? `translateY(${Math.round((1 - tagK) * 14)}px)` : 'none' });
+    },
+    dim(k) { d.style.opacity = String(1 - k); },
+  };
+}
+
+// Camera over a world: world point (cx, cy) lands at the stage centre, at scale s. Whole-pixel translation.
+const camera = (el, [cx, cy, s]) => { el.style.transform = `translate(${Math.round(960 - cx * s)}px, ${Math.round(540 - cy * s)}px) scale(${s.toFixed(4)})`; };
+// The floor sits under the wall base and scrolls with the camera, so the grid carries the perspective.
+const floorCam = (el, [cx, cy, s], baseY) => {
+  css(el, { top: `${Math.round(540 + (baseY - cy) * s)}px`, backgroundSize: `${(160 * s).toFixed(2)}px ${(160 * s).toFixed(2)}px`, backgroundPosition: `${(2600 + 960 - cx * s).toFixed(1)}px 0` });
+};
+// Poses: [beat, cx, cy, s]; eases between poses over `d` seconds, holds still in between.
+const poseAt = (t, poses, d = 0.75, f = easeInOut) => {
+  let i = 0;
+  while (i + 1 < poses.length && t >= SEC(poses[i + 1][0])) i++;
+  const cur = poses[i], prev = poses[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : f(P(t, SEC(cur[0]), SEC(cur[0]) + d));
+  return [1, 2, 3].map((j) => L(prev[j], cur[j], k));
+};
+
+// ---------- 1. Hook ----------
+const H1 = words($('#hook1'), 'Open source.'), H2 = words($('#hook2'), '<em>On your server.</em>');
+const hookScript = [
+  [SEC(N.cmd), '<span class="dim">$</span> ', 'docker compose up -d'],
+  [SEC(N.lines), ' <span class="ok">✔</span> Container postgres  <span class="dim">Started</span>'],
+  [SEC(N.lines + 0.5), ' <span class="ok">✔</span> Container redis     <span class="dim">Started</span>'],
+  [SEC(N.lines + 1), ' <span class="ok">✔</span> Container rails     <span class="dim">Started</span>'],
+  [SEC(N.lines + 1.5), ' <span class="ok">✔</span> Container sidekiq   <span class="dim">Started</span>'],
+  [SEC(N.running), '<span class="ok">→ Your support stack is running.</span>'],
+];
+
+// ---------- 2. The corridor ----------
+const HW = $('#hworld');
+const base = document.createElement('div'); base.className = 'base'; base.style.top = '900px'; HW.appendChild(base);
+const DW = 300, DH = 470, DY = 430;
+const cDoor = (i, label, kind, extra = {}) => makeDoor(HW, { x: 200 + i * 400, y: DY, w: DW, h: DH, label, kind, ...extra });
+const OK = '<div class="ok">✓</div>';
+const cdoors = [
+  cDoor(0, 'INBOX', 'c', { room: OK }),
+  cDoor(1, 'CONTACTS', 'c', { room: OK }),
+  cDoor(2, 'CHANNELS', 'c', { room: OK }),
+  cDoor(3, 'CAPTAIN AI AGENT', 'c lock', { tag: 'Paid plan<br>from $19 per agent' }),
+  cDoor(4, 'SSO · SLAs', 'c lock', { tag: 'Enterprise<br>edition' }),
+  cDoor(5, 'PROJECTS', 'c out'),
+];
+const outLine = document.createElement('div'); outLine.className = 'outline'; HW.appendChild(outLine);
+const outChip = document.createElement('div'); outChip.className = 'outchip'; outChip.textContent = 'Linear integration ↗'; HW.appendChild(outChip);
+css(outLine, { left: '2350px', top: `${DY + DH / 2}px` });
+css(outChip, { left: '2600px', top: `${DY + DH / 2 - 36}px` });
+const HC1 = words($('#hc1 .h'), 'The core is <em>open source.</em>');
+const HC2a = words($('#hc2 .h:nth-of-type(2)'), 'The AI agent?'), HC2b = words($('#hc2 .h:nth-of-type(3)'), '<em>A paid plan, even on your server.</em>');
+const HC3a = words($('#hc3 .h:nth-of-type(2)'), 'And the fix'), HC3b = words($('#hc3 .h:nth-of-type(3)'), '<em>happens in another tool.</em>');
+const VL = words($('#villainline'), 'The <b>locked</b> room.');
+const hallPoses = [
+  [N.hall, 360, 540, 1],
+  [N.hall, 750, 540, 1],
+  [N.lockPan, 1750, 540, 1],
+  [N.projPan, 2600, 540, 1],
+  [N.villain, 1600, 415, 0.6],
+];
+
+// ---------- 3. Install ----------
+const instScript = [
+  [SEC(N.cmd1), '<span class="dim">$</span> ', 'curl -fsSL https://helpin.ai/install.sh | bash'],
+  [SEC(N.cmd2), '<span class="dim">$</span> ', '"$HOME/.local/bin/helpin" install'],
+  [SEC(N.verified), ' <span class="ok">✓</span> Bundle downloaded and verified'],
+  [SEC(N.open), '<span class="ok">→ Open http://localhost:8085</span>'],
+];
+
+// ---------- 4. Helpin corridor ----------
+const OW = $('#oworld');
+const obase = document.createElement('div'); obase.className = 'base'; obase.style.top = '900px'; OW.appendChild(obase);
+const AG = ['echo', 'atlas', 'forge', 'lens'].map((a) => `<img src="../../assets/helpin/agents/${a}.svg" alt="">`).join('');
+const hdoors = [['SUPPORT', 'support'], ['PROJECTS', 'projects'], ['CRM', 'crm'], ['MEETINGS', 'meetings'], ['DOCS', 'docs'], ['AI AGENTS', null]]
+  .map(([label, k], i) => makeDoor(OW, { x: 145 + i * 280, y: 520, w: 230, h: 380, label, kind: 'h', room: k ? icon(k) : `<div class="agents">${AG}</div>` }));
+const O1 = words($('#open1'), 'Every product feature.'), O2 = words($('#open2'), '<em>Open source. AGPL-3.0.</em>');
+
+// ---------- 5. Stations ----------
+const SA = words($('#s-agents .h'), 'AI agents, <em>in the free edition.</em>');
+const ST = words($('#s-task .h'), 'The request <em>becomes the task.</em>');
+const SP = words($('#s-pr .h'), 'The task <em>becomes the PR.</em>');
+const SC = words($('#s-crm .h'), 'Deals and meetings, <em>on the same account.</em>');
+const wins = $('#wins');
+const wAgents = siteWindow(wins, { path: '/products/ai-agents', focus: '.agents-directory-grid', hide: ['canvas'] });
+const wCode = siteWindow(wins, { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], dark: true });
+const wCrm = siteWindow(wins, { path: '/products/crm', focus: '#crm-record .cw-account', hide: ['canvas'], height: 1040 });
+[wAgents, wCode, wCrm].forEach((w) => waitFor(w.view.ready));
+wAgents.place({ x: 850, y: 268, w: 980, h: 532 });
+wCode.place({ x: 880, y: 210, w: 950, h: 660 });
+wCrm.place({ x: 850, y: 190, w: 980, h: 727 });
+const pad = (r, p) => r && { x: r.x - p, y: r.y - p, w: r.w + 2 * p, h: r.h + 2 * p };
+const union = (...rs) => { rs = rs.filter(Boolean); if (!rs.length) return null; const x = Math.min(...rs.map((r) => r.x)), y = Math.min(...rs.map((r) => r.y)); return { x, y, w: Math.max(...rs.map((r) => r.x + r.w)) - x, h: Math.max(...rs.map((r) => r.y + r.h)) - y }; };
+const textRect = (view, sel, text, up = 0) => {
+  let el = [...(view.iframe.contentDocument?.querySelectorAll(sel) || [])].find((e) => e.textContent.trim().startsWith(text));
+  for (let i = 0; el && i < up; i++) el = el.parentElement;
+  const r = el?.getBoundingClientRect();
+  return r ? { x: r.left, y: r.top, w: r.width, h: r.height } : null;
+};
+// Shots inside a window: [beat, rectFn, spotFn?]; glides between shots, holds still on each.
+function shoot(win, t, shots, d = 0.8) {
+  let i = 0;
+  while (i + 1 < shots.length && t >= SEC(shots[i + 1][0])) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : brandEase(P(t, SEC(cur[0]), SEC(cur[0]) + d));
+  const r = lerpRect(prev[1](), cur[1](), k);
+  if (r) win.camera(1, [0.5, 0.5], r);
+  const s = cur[2]?.();
+  if (s) win.spotlight(s, brandEase(P(t, SEC(cur[0]) + d * 0.6, SEC(cur[0]) + d + 0.3)) * (1 - brandEase(P(t, SEC(cur[3] ?? 999) - 0.3, SEC(cur[3] ?? 999)))));
+  else win.spotlight(null, 0);
+}
+const aView = wAgents.view, cView = wCode.view, mView = wCrm.view;
+const agentShots = [
+  [N.agents, () => pad(aView.rect(), 14)],
+  [N.shot1, () => pad(union(aView.rect('#agent-echo'), aView.rect('#agent-atlas')), 24), () => aView.rect('#agent-echo')],
+  [N.shot2, () => pad(union(aView.rect('#agent-scribe'), aView.rect('#agent-forge')), 24), () => aView.rect('#agent-forge')],
+];
+const codeShots = [
+  [N.pr, () => pad(union(cView.rect('.awa-code-task'), cView.rect('.awa-coding .awa-step', 0)), 18), () => pad(cView.rect('.awa-code-task'), 4)],
+  [N.prDiff, () => pad(union(cView.rect('.awa-code-task'), cView.rect('.awa-coding .awa-step', 0)), 18), () => pad(cView.rect('.awa-coding .awa-step', 0), 4)],
+  // Frame the review and the PR, matched to the window's aspect and ending just below the PR row, so no page copy
+  // outside the card shows at the bottom.
+  [N.prShot, () => { const r = pad(union(cView.rect('.awa-coding .awa-step', 1), cView.rect('.awa-coding .awa-step', 3)), 18); if (!r) return r;
+    const h = r.w * 660 / 950; return { x: r.x, y: r.y + r.h - h, w: r.w, h }; }, () => cView.rect('.awa-coding .awa-step', 3)],
+];
+const crmShots = [
+  [N.crm, () => pad(mView.rect(), 10)],
+  [N.crmDeal, () => pad(union(mView.rect('.cw-association', 1), mView.rect('.cw-association', 2), textRect(mView, 'h4', 'Deals')), 110), () => pad(mView.rect('.cw-association', 1), 4)],
+  [N.crmMeeting, () => pad(textRect(mView, 'strong', 'Rollout review', 2), 110), () => pad(textRect(mView, 'strong', 'Rollout review', 2), 4)],
+];
+
+// ---------- 6. Receipt ----------
+const VD = words($('#verdict'), '<em>$0</em> for the AI agents.');
+
+// ---------- 7. Tagline ----------
+const T1 = words($('#tag1'), 'Open all the way.'), T2 = words($('#tag2'), '<em>From the conversation to the release.</em>');
+const minis = [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => { const m = document.createElement('div'); m.className = 'mini'; $('#minirow').appendChild(m); return m; });
+
+// ---------- 8. End ----------
+const sym = helpinSymbol({ size: 116, color: '#E8EEEA' });
+$('#endsym').append(sym.node);
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 126.03, duration: DURATION,
+  scenes: [
+    { id: 'hook', start: 0, end: SEC(N.hookOut), render: ({ t }) => {
+      sceneFade($('#hook'), t, -1, SEC(N.hookOut), { outDur: 0.3 });
+      reveal($('#match'), t, -1, { dy: 10 });
+      rise(H1, t, SEC(0.5), 0.08); rise(H2, t, SEC(2), 0.08);
+      const term = $('#hookterm');
+      const k = ease(t, -1, 0.8, expoOut);
+      css(term, { opacity: String(k), transform: k < 1 ? `perspective(1400px) translateX(${Math.round((1 - k) * 90)}px) rotateY(${((1 - k) * -14).toFixed(2)}deg)` : 'none' });
+      terminal(term.querySelector('.body'), hookScript, t, { cps: 60, caretSolidUntil: SEC(N.running) });
+    } },
+
+    { id: 'hall', start: SEC(N.hall), end: SEC(N.install), hold: [0.15, 0], render: ({ t }) => {
+      sceneFade($('#hall'), t, SEC(N.hall) - 0.15, SEC(N.install), { inDur: 0.45, outDur: 0.3 });
+      const cam = poseAt(t, hallPoses, 0.8);
+      camera(HW, cam);
+      floorCam($('#hfloor'), cam, 900);
+      // the open core: one door per beat
+      [N.door1, N.door2, N.door3].forEach((b, i) => cdoors[i].open(ease(t, SEC(b), 0.8, expoOut)));
+      // the locked doors
+      cdoors[3].lock(ease(t, SEC(N.aiLock), 0.35), ease(t, SEC(N.aiLock + 0.5), 0.5));
+      cdoors[4].lock(ease(t, SEC(N.ssoLock), 0.35), ease(t, SEC(N.ssoLock + 0.5), 0.5));
+      // the projects door opens onto another tool
+      cdoors[5].open(ease(t, SEC(N.projOpen), 0.8, expoOut));
+      const lk = ease(t, SEC(N.projOpen + 0.5), 0.6);
+      outLine.style.width = `${Math.round(lk * 230)}px`;
+      css(outChip, { opacity: String(ease(t, SEC(N.projOpen + 1.1), 0.5)), transform: `translateX(${Math.round((1 - ease(t, SEC(N.projOpen + 1.1), 0.5)) * 24)}px)` });
+      // villain: the open rooms dim a little, the locks stay lit
+      const vk = ease(t, SEC(N.villain), 0.8);
+      [0, 1, 2, 5].forEach((i) => cdoors[i].dim(0.35 * vk));
+      block($('#hc1'), [HC1], t, SEC(N.hall + 0.3), SEC(N.lockPan), [SEC(N.core)]);
+      block($('#hc2'), [HC2a, HC2b], t, SEC(N.lockPan), SEC(N.projPan), [SEC(N.ai), SEC(N.aiLock)]);
+      block($('#hc3'), [HC3a, HC3b], t, SEC(N.projPan), SEC(N.villain), [SEC(N.fix), SEC(N.other)]);
+      const von = t >= SEC(N.villainLine);
+      $('#villainline').style.opacity = von ? '1' : '0';
+      if (von) rise(VL, t, SEC(N.villainLine), 0.1);
+    } },
+
+    { id: 'install', start: SEC(N.install), end: SEC(N.drop), hold: [0.15, 0], render: ({ t }) => {
+      const k = ease(t, SEC(N.install) - 0.15, 0.45);
+      css($('#install'), { opacity: String(k), filter: k < 0.999 ? `blur(${((1 - k) * 10).toFixed(2)}px)` : 'none' });
+      const term = $('#insterm');
+      css(term, { transform: k < 1 ? `translateY(${Math.round((1 - k) * 30)}px)` : 'none' });
+      terminal(term.querySelector('.body'), instScript, t, { cps: 90, caretSolidUntil: SEC(N.drop) });
+    } },
+
+    { id: 'open', start: SEC(N.drop), end: SEC(N.agents), render: ({ t }) => {
+      sceneFade($('#open'), t, SEC(N.drop) - 1, SEC(N.agents), { outDur: 0.3 });
+      const s = L(0.9, 1, ease(t, SEC(N.drop), 1.4, expoOut));
+      const cam = [960, 560, s];
+      camera(OW, cam);
+      floorCam($('#ofloor'), cam, 900);
+      hdoors.forEach((d, i) => d.open(ease(t, SEC(N.drop) + i * 0.06, 0.9, expoOut)));
+      reveal($('#otop'), t, SEC(N.drop) + 0.1, { dy: 10 });
+      rise(O1, t, SEC(N.every), 0.08); rise(O2, t, SEC(N.agpl), 0.08);
+    } },
+
+    { id: 'stations', start: SEC(N.agents), end: SEC(N.receipt), hold: [0.15, 0], render: ({ t }) => {
+      // copy
+      block($('#s-agents'), [SA], t, SEC(N.agents), SEC(N.agentsOut), [SEC(N.agents) + 0.1]);
+      reveal($('#s-agents .lede'), t, SEC(N.agents) + 0.5, { dy: 12 });
+      [...document.querySelectorAll('#s-agents .provs span')].forEach((c, i) => pop(c, t, SEC(N.providers + i * 0.5)));
+      block($('#s-task'), [ST], t, SEC(N.pr), SEC(N.prHead2), [SEC(N.pr) + 0.1]);
+      reveal($('#s-task .lede'), t, SEC(N.pr) + 0.5, { dy: 12 });
+      block($('#s-pr'), [SP], t, SEC(N.prHead2), SEC(N.prOut), [SEC(N.prHead2) + 0.1]);
+      reveal($('#s-pr .lede'), t, SEC(N.prHead2) + 0.5, { dy: 12 });
+      reveal($('#prfine'), t, SEC(N.pr) + 0.6, { dy: 8, out: SEC(N.prOut) });
+      block($('#s-crm'), [SC], t, SEC(N.crm), SEC(N.crmOut), [SEC(N.crm) + 0.1]);
+      reveal($('#s-crm .lede'), t, SEC(N.crm) + 0.5, { dy: 12 });
+      // windows: each enters with the station and dissolves out with it
+      push(wAgents.el, t, SEC(N.agents) - 0.15, SEC(N.agentsOut), { dy: 40 });
+      push(wCode.el, t, SEC(N.pr), SEC(N.prOut), { dy: 40 });
+      push(wCrm.el, t, SEC(N.crm), SEC(N.crmOut), { dy: 40 });
+      shoot(wAgents, t, agentShots);
+      shoot(wCode, t, codeShots);
+      shoot(wCrm, t, crmShots);
+      // preview clocks: clamped, never skipped
+      return Promise.all([
+        aView.update(Math.max(0, t - SEC(N.agents))),
+        cView.update(Math.min(3.6, Math.max(0, (t - SEC(N.prPreview)) * 1.1))),
+        mView.update(Math.min(2.2, Math.max(0, t - SEC(N.crm)))),
+      ]);
+    } },
+
+    { id: 'receipt', start: SEC(N.receipt), end: SEC(N.tag), hold: [0.15, 0], render: ({ t }) => {
+      sceneFade($('#receipt'), t, SEC(N.receipt) - 0.15, SEC(N.tag), { outDur: 0.3 });
+      reveal($('#receipt .top'), t, SEC(N.receipt) - 0.15, { dy: 10 });
+      pop($('#rcr'), t, SEC(N.receipt) - 0.12, { dist: 30 });
+      pop($('#rch'), t, SEC(N.receipt + 0.5) - 0.12, { dist: 30 });
+      const rrows = [...document.querySelectorAll('#rcr .row')], hrows = [...document.querySelectorAll('#rch .row')];
+      rrows.forEach((r, i) => pop(r, t, SEC(N.receipt + 0.8) + i * 0.18, { dist: 10 }));
+      hrows.forEach((r, i) => pop(r, t, SEC(N.receipt + 1.3) + i * 0.18, { dist: 10 }));
+      const rm = counter($('#rm'), t, SEC(N.rivalCount), SEC(N.rivalCount + 1), 0, 152, { ease: expoOut });
+      $('#rm').textContent = `$${rm}`;
+      const ry = counter($('#ry'), t, SEC(N.yearCount), SEC(N.yearCount + 1), 0, 1824, { ease: expoOut });
+      $('#ry').textContent = `$${ry.toLocaleString('en-US')}`;
+      const zk = ease(t, SEC(N.helpinZero), 0.6);
+      [...document.querySelectorAll('#rch .tot b')].forEach((b) => { b.style.transform = zk < 1 ? `scale(${L(1.25, 1, zk).toFixed(3)})` : 'none'; b.style.display = 'inline-block'; });
+      rise(VD, t, SEC(N.verdict), 0.09);
+      reveal($('#rfine'), t, SEC(N.verdict) + 0.4, { dy: 8 });
+    } },
+
+    { id: 'tag', start: SEC(N.tag), end: SEC(N.end), hold: [0.15, 0], render: ({ t, lt }) => {
+      sceneFade($('#tag'), t, SEC(N.tag) - 0.15, SEC(N.end), { inDur: 0.4, outDur: 0.4 });
+      rise(T1, t, SEC(N.tag) - 0.1, 0.09); rise(T2, t, SEC(N.tag2), 0.08);
+      // a row of lit doorways drifting slowly under the line
+      minis.forEach((m, i) => {
+        const x = 60 + i * 215 - lt * 22;
+        const k = ease(t, SEC(N.tag) - 0.1 + i * 0.06, 0.8);
+        css(m, { left: `${Math.round(x)}px`, opacity: String(0.42 * k), transform: `translateY(${Math.round((1 - k) * 40)}px)` });
+      });
+    } },
+
+    { id: 'end', start: SEC(N.end), end: DURATION, hold: [0.35, 0], render: ({ t }) => {
+      const a = SEC(N.end);
+      css($('#end'), { opacity: String(ease(t, a - 0.35, 0.55)) });
+      sym.assemble(P(t, a - 0.3, a + 0.9));
+      const wk = ease(t, a + 0.1, 0.8);
+      const wm = $('#endmark b');
+      css(wm, { opacity: String(wk), transform: wk < 1 ? `translateX(${Math.round((1 - wk) * -20)}px)` : 'none', filter: wk < 1 ? `blur(${((1 - wk) * 8).toFixed(2)}px)` : 'none' });
+      reveal($('#cta'), t, SEC(N.endCta), { dy: 16 });
+      reveal($('#endline'), t, SEC(N.endCta) + 0.35, { dy: 10 });
+    } },
+  ],
+  render: ({ t }) => {
+    $('#fade').style.opacity = String(P(t, DURATION - 0.9, DURATION));
+  },
+});
+</script>
+</body>
+</html>

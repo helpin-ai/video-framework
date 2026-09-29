@@ -1,0 +1,313 @@
+{
+ "name": "cmp-zendesk",
+ "duration": 39,
+ "video": "../../out/cmp-zendesk/cmp-zendesk.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.6,
+  "lra": 30
+ },
+ "music": [
+  {
+   "at": 0,
+   "from": 0,
+   "length": 3.735,
+   "generate": 36,
+   "gain": -11,
+   "fadeIn": 0.01,
+   "fadeOut": 0.01,
+   "prompt": "Big beat breakbeat at exactly 128 BPM for a punchy product comparison motion graphics video: chopped funky drum breaks, a squelchy acid 303 bassline, short brassy synth stabs and a little vinyl scratch; gritty, confident and fun. No vocals. It starts immediately with the drum break playing under a heavy low-pass filter, muffled and tense (0 to 7.5 seconds), with a short rising swell at the end, then at 7.5 seconds the filter snaps open into the full, loud big beat groove with the acid bassline and stabs, gets even bigger at 18.75 seconds, and carries at full energy all the way to the end. It ends cleanly on a downbeat at 36 seconds with no big final hit, no breakdown and no fade."
+  },
+  {
+   "at": 3.735,
+   "from": 1.878,
+   "length": 5.574,
+   "generate": 36,
+   "gain": -11,
+   "fadeIn": 0.01,
+   "fadeOut": 0.01,
+   "prompt": "Big beat breakbeat at exactly 128 BPM for a punchy product comparison motion graphics video: chopped funky drum breaks, a squelchy acid 303 bassline, short brassy synth stabs and a little vinyl scratch; gritty, confident and fun. No vocals. It starts immediately with the drum break playing under a heavy low-pass filter, muffled and tense (0 to 7.5 seconds), with a short rising swell at the end, then at 7.5 seconds the filter snaps open into the full, loud big beat groove with the acid bassline and stabs, gets even bigger at 18.75 seconds, and carries at full energy all the way to the end. It ends cleanly on a downbeat at 36 seconds with no big final hit, no breakdown and no fade."
+  },
+  {
+   "at": 9.309,
+   "from": 7.451,
+   "length": 11.146,
+   "generate": 36,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 0.01,
+   "prompt": "Big beat breakbeat at exactly 128 BPM for a punchy product comparison motion graphics video: chopped funky drum breaks, a squelchy acid 303 bassline, short brassy synth stabs and a little vinyl scratch; gritty, confident and fun. No vocals. It starts immediately with the drum break playing under a heavy low-pass filter, muffled and tense (0 to 7.5 seconds), with a short rising swell at the end, then at 7.5 seconds the filter snaps open into the full, loud big beat groove with the acid bassline and stabs, gets even bigger at 18.75 seconds, and carries at full energy all the way to the end. It ends cleanly on a downbeat at 36 seconds with no big final hit, no breakdown and no fade."
+  },
+  {
+   "at": 20.455,
+   "from": 14.882,
+   "length": 18.545,
+   "generate": 36,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 0.3,
+   "prompt": "Big beat breakbeat at exactly 128 BPM for a punchy product comparison motion graphics video: chopped funky drum breaks, a squelchy acid 303 bassline, short brassy synth stabs and a little vinyl scratch; gritty, confident and fun. No vocals. It starts immediately with the drum break playing under a heavy low-pass filter, muffled and tense (0 to 7.5 seconds), with a short rising swell at the end, then at 7.5 seconds the filter snaps open into the full, loud big beat groove with the acid bassline and stabs, gets even bigger at 18.75 seconds, and carries at full energy all the way to the end. It ends cleanly on a downbeat at 36 seconds with no big final hit, no breakdown and no fade."
+  }
+ ],
+ "sounds": {
+  "seam": {
+   "text": "a soft quick pencil line drawn down a sheet of paper, a light swish",
+   "duration": 0.6,
+   "gain": -18
+  },
+  "open": {
+   "text": "a soft airy paper whoosh, a page sliding open",
+   "duration": 0.6,
+   "gain": -19
+  },
+  "card": {
+   "text": "a soft paper card sliding onto a desk, gentle",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "pop": {
+   "text": "a tiny soft bubbly UI pop",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "flip": {
+   "text": "a crisp soft click of a small switch flipping, clean UI sound",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "stall": {
+   "text": "a short soft low muted thunk, like a machine stalling, subtle",
+   "duration": 0.5,
+   "gain": -7
+  },
+  "slide": {
+   "text": "a smooth airy whoosh, a panel sliding sideways",
+   "duration": 0.7,
+   "gain": -19
+  },
+  "snap": {
+   "text": "three tiny soft paper tears in quick succession, delicate",
+   "duration": 0.6,
+   "gain": -17
+  },
+  "word": {
+   "text": "a soft low whoosh-in, a word landing, cushioned, no impact",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "strike": {
+   "text": "a quick felt-tip marker stroke across paper",
+   "duration": 0.5,
+   "gain": -13
+  },
+  "swell": {
+   "text": "a gentle rising airy noise swell building tension, no impact at the end",
+   "duration": 1.7,
+   "gain": -17
+  },
+  "slam": {
+   "text": "two sliding doors meeting softly, a cushioned deep whoosh with a soft thud, not cinematic",
+   "duration": 0.8,
+   "gain": -16
+  },
+  "travel": {
+   "text": "a quick smooth vertical camera swoosh, airy and clean",
+   "duration": 0.6,
+   "gain": -20
+  },
+  "node": {
+   "text": "a soft clean glassy chime, single short note",
+   "duration": 0.8,
+   "gain": -9
+  },
+  "tick": {
+   "text": "a tiny soft digital tick, a UI row appearing",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "done": {
+   "text": "a small soft success ding",
+   "duration": 0.6,
+   "gain": -17
+  },
+  "sent": {
+   "text": "a soft bright two-note message sent chime",
+   "duration": 0.8,
+   "gain": -15
+  },
+  "fill": {
+   "text": "a short smooth rising digital sweep, a progress bar filling",
+   "duration": 1,
+   "gain": -19
+  },
+  "draw": {
+   "text": "a smooth soft digital line-drawing sweep, rising",
+   "duration": 1.2,
+   "gain": -20
+  },
+  "loop": {
+   "text": "a quick felt-tip marker drawing a circle on paper",
+   "duration": 1.1,
+   "gain": -16
+  },
+  "logo": {
+   "text": "a soft warm two-note chime, confident and clean, short",
+   "duration": 1.2,
+   "gain": -15
+  }
+ },
+ "cues": [
+  {
+   "sound": "seam",
+   "at": [
+    0.02
+   ]
+  },
+  {
+   "sound": "open",
+   "at": [
+    0.252
+   ]
+  },
+  {
+   "sound": "card",
+   "at": [
+    0.484,
+    0.584
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    0.717,
+    3.968,
+    4.2,
+    4.432,
+    25.37,
+    36.71
+   ]
+  },
+  {
+   "sound": "flip",
+   "at": [
+    0.949
+   ]
+  },
+  {
+   "sound": "stall",
+   "at": [
+    1.413
+   ]
+  },
+  {
+   "sound": "slide",
+   "at": [
+    3.503
+   ]
+  },
+  {
+   "sound": "snap",
+   "at": [
+    4.897
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    6.258,
+    6.522,
+    9.773,
+    27.771,
+    32.216,
+    32.995
+   ]
+  },
+  {
+   "sound": "strike",
+   "at": [
+    6.986
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    7.659
+   ]
+  },
+  {
+   "sound": "slam",
+   "at": [
+    9.309
+   ]
+  },
+  {
+   "sound": "travel",
+   "at": [
+    12.474,
+    16.189,
+    19.905,
+    23.62,
+    27.471
+   ]
+  },
+  {
+   "sound": "node",
+   "at": [
+    13.024,
+    16.739,
+    20.455,
+    24.17
+   ]
+  },
+  {
+   "sound": "tick",
+   "at": [
+    14.324,
+    17.039,
+    18.439,
+    18.939,
+    20.58,
+    26.37,
+    29.279
+   ]
+  },
+  {
+   "sound": "done",
+   "at": [
+    19.439,
+    23.405
+   ]
+  },
+  {
+   "sound": "sent",
+   "at": [
+    22.017
+   ]
+  },
+  {
+   "sound": "fill",
+   "at": [
+    22.605
+   ]
+  },
+  {
+   "sound": "draw",
+   "at": [
+    27.886,
+    28.35
+   ]
+  },
+  {
+   "sound": "loop",
+   "at": [
+    33.345
+   ]
+  },
+  {
+   "sound": "logo",
+   "at": [
+    35.517
+   ]
+  }
+ ]
+}

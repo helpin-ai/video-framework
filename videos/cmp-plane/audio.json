@@ -1,0 +1,358 @@
+{
+ "name": "cmp-plane",
+ "duration": 38,
+ "video": "../../out/cmp-plane/cmp-plane.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 0.8
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 27.954,
+   "gain": -4,
+   "styles": [
+    "balearic disco",
+    "120 BPM",
+    "airy breathy flute riff",
+    "lush synth strings",
+    "bouncy funky bassline",
+    "crisp handclaps",
+    "shaker",
+    "sunny, light, optimistic",
+    "product comparison motion graphics"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi",
+    "long silence",
+    "fade out",
+    "dark",
+    "aggressive"
+   ],
+   "sections": [
+    {
+     "name": "Sky",
+     "duration": 8.5,
+     "styles": [
+      "airy flute riff and a shaker from the very first second",
+      "soft open hi-hats",
+      "light kick on every beat",
+      "no bass yet",
+      "breezy, curious, floating"
+     ]
+    },
+    {
+     "name": "Lift",
+     "duration": 3,
+     "styles": [
+      "rising synth strings",
+      "a gentle filtered swell",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Landing",
+     "duration": 12,
+     "styles": [
+      "full groove",
+      "bouncy funky bassline enters",
+      "handclaps on two and four",
+      "lush strings",
+      "flute riff answers the bass",
+      "joyful and confident"
+     ]
+    },
+    {
+     "name": "Cruise",
+     "duration": 10,
+     "styles": [
+      "fullest energy",
+      "extra congas and tambourine",
+      "strings soar"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 6.5,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ],
+   "from": 6.05,
+   "fadeIn": 0.01,
+   "fadeOut": 0.06
+  },
+  {
+   "at": 27.954,
+   "length": 10.046,
+   "gain": -4,
+   "styles": [
+    "balearic disco",
+    "120 BPM",
+    "airy breathy flute riff",
+    "lush synth strings",
+    "bouncy funky bassline",
+    "crisp handclaps",
+    "shaker",
+    "sunny, light, optimistic",
+    "product comparison motion graphics"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi",
+    "long silence",
+    "fade out",
+    "dark",
+    "aggressive"
+   ],
+   "sections": [
+    {
+     "name": "Sky",
+     "duration": 8.5,
+     "styles": [
+      "airy flute riff and a shaker from the very first second",
+      "soft open hi-hats",
+      "light kick on every beat",
+      "no bass yet",
+      "breezy, curious, floating"
+     ]
+    },
+    {
+     "name": "Lift",
+     "duration": 3,
+     "styles": [
+      "rising synth strings",
+      "a gentle filtered swell",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Landing",
+     "duration": 12,
+     "styles": [
+      "full groove",
+      "bouncy funky bassline enters",
+      "handclaps on two and four",
+      "lush strings",
+      "flute riff answers the bass",
+      "joyful and confident"
+     ]
+    },
+    {
+     "name": "Cruise",
+     "duration": 10,
+     "styles": [
+      "fullest energy",
+      "extra congas and tambourine",
+      "strings soar"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 6.5,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ],
+   "from": 18.03,
+   "fadeIn": 0.04,
+   "fadeOut": 0.6
+  }
+ ],
+ "sounds": {
+  "glide": {
+   "text": "a soft airy whoosh of a paper plane gliding past, light and breezy",
+   "duration": 0.8,
+   "gain": -21
+  },
+  "land": {
+   "text": "a soft light paper tap, a folded paper plane landing on a desk",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "unfold": {
+   "text": "a quick soft paper unfolding crinkle, a sheet opening flat",
+   "duration": 0.7,
+   "gain": -18
+  },
+  "crash": {
+   "text": "a soft muffled paper crumple as a paper plane bumps into a wall",
+   "duration": 0.6,
+   "gain": -19
+  },
+  "tick": {
+   "text": "a tiny crisp soft tick, a status changing",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "word": {
+   "text": "a soft muted pop, a word landing on screen",
+   "duration": 0.5,
+   "gain": -24
+  },
+  "chime": {
+   "text": "a short warm soft two-note success chime",
+   "duration": 0.8,
+   "gain": -19
+  },
+  "heard": {
+   "text": "a gentle bright bell-like ping, a message received, soft and warm",
+   "duration": 0.8,
+   "gain": -17
+  },
+  "swell": {
+   "text": "a gentle airy rising swell building anticipation, soft and smooth, no hit at the end",
+   "duration": 2.2,
+   "gain": -18
+  },
+  "check": {
+   "text": "a tiny bright soft check tick",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "logo": {
+   "text": "a soft airy shimmer bloom, a logo appearing, gentle, no impact",
+   "duration": 1.2,
+   "gain": -19
+  },
+  "pop": {
+   "text": "a tiny soft bubbly pop",
+   "duration": 0.5,
+   "gain": -22
+  }
+ },
+ "cues": [
+  {
+   "sound": "glide",
+   "at": [
+    0.849,
+    1.598,
+    2.346,
+    6.389,
+    11.28,
+    11.529,
+    11.779,
+    12.029,
+    12.278,
+    14.775,
+    18.269,
+    21.763,
+    24.759,
+    26.107
+   ]
+  },
+  {
+   "sound": "land",
+   "at": [
+    3.993,
+    5.241,
+    12.18,
+    12.429,
+    12.679,
+    12.929,
+    13.178,
+    27.355
+   ]
+  },
+  {
+   "sound": "unfold",
+   "at": [
+    4.293
+   ]
+  },
+  {
+   "sound": "crash",
+   "at": [
+    4.742
+   ]
+  },
+  {
+   "sound": "tick",
+   "at": [
+    5.74,
+    6.988,
+    7.488,
+    9.884,
+    10.183,
+    22.863,
+    23.963
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    3.993,
+    6.889,
+    12.479,
+    28.553,
+    32.446
+   ]
+  },
+  {
+   "sound": "chime",
+   "at": [
+    10.483,
+    16.325,
+    20.709,
+    25.982
+   ]
+  },
+  {
+   "sound": "heard",
+   "at": [
+    27.405
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    10.782
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    28.353,
+    28.553,
+    28.752,
+    28.952,
+    29.152,
+    29.351
+   ]
+  },
+  {
+   "sound": "logo",
+   "at": [
+    34.143
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    34.942,
+    35.191
+   ]
+  }
+ ]
+}

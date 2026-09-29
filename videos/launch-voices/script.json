@@ -1,0 +1,67 @@
+{
+  "name": "launch-voices",
+  "voiceId": "SAz9YHcvj6GT2YYXdXww",
+  "voiceName": "River - Relaxed, Neutral, Informative",
+  "model": "eleven_multilingual_v2",
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.25,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "tail": 1.6,
+  "lines": [
+    {
+      "id": "same",
+      "text": "Same customer. Same story. Split across five tools.",
+      "at": 12.981
+    },
+    {
+      "id": "helpin",
+      "text": "Helpin brings support, projects, CRM, meetings and docs into one open-source workspace.",
+      "at": 16.603
+    },
+    {
+      "id": "echo",
+      "text": "Echo answers the repeat questions from your docs and past conversations, and hands your team the rest.",
+      "at": 23.243
+    },
+    {
+      "id": "bugs",
+      "text": "Bugs arrive with the customer's conversation attached, and a coding agent can prepare the fix for review.",
+      "at": 29.883
+    },
+    {
+      "id": "link",
+      "text": "Turn a conversation into a task, or link it to one already underway. No copying.",
+      "at": 35.919
+    },
+    {
+      "id": "record",
+      "text": "Email, meeting notes and the linked task live on one customer record.",
+      "at": 41.955
+    },
+    {
+      "id": "ships",
+      "text": "When the fix ships, Helpin prepares the customer update. A teammate approves it.",
+      "at": 46.784
+    },
+    {
+      "id": "oss",
+      "text": "Helpin is open source. Self-host it free, or let us run it.",
+      "at": 52.217
+    },
+    {
+      "id": "end",
+      "text": "One workspace. The whole story. Try it free at helpin dot A I.",
+      "at": 56.442
+    }
+  ],
+  "music": {
+    "bpm": 99.4,
+    "firstBeat": 0.305,
+    "bed": "music-0-251a5830c147d4d6",
+    "from": 3.018
+  }
+}

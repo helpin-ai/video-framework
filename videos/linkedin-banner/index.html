@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LinkedIn banner — Azhar (building Helpin)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* LinkedIn profile background, 1584×396 (render with --stills 0.5 --scale 2 for a 3168×792 master).
+     The profile photo covers the bottom-left (about x 40–360, y 220–396 on desktop), so the copy starts at x 430 and
+     nothing important sits in that corner. Updated from videos/x-header for the open-source launch. */
+  #stage { background: radial-gradient(ellipse 60% 130% at 78% 45%, #12382D, var(--forest) 72%); color: #F2F5F3; }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(184, 221, 187, .10) 1.4px, transparent 1.6px); background-size: 28px 28px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0,0,0,.4) 40%, transparent 62%); }
+  #lines { position: absolute; left: 0; top: 0; width: 1584px; height: 396px; }
+  .copy { position: absolute; left: 430px; top: 54px; width: 700px; }
+  .eyebrow { font: 600 16px/1 var(--mono); letter-spacing: .2em; color: var(--mint); white-space: nowrap; }
+  h1 { margin: 16px 0 0; font-size: 82px; line-height: .98; font-weight: 700; letter-spacing: -0.05em; white-space: nowrap; }
+  h1 em { font-style: normal; color: var(--mint); }
+  .lede { margin-top: 12px; font-size: 25px; line-height: 1.3; font-weight: 500; color: #CFE3D6; letter-spacing: -0.01em; white-space: nowrap; }
+  .row { margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+  .pill { height: 42px; padding: 0 18px; border-radius: 11px; display: inline-flex; align-items: center; gap: 10px; font: 600 19px/1 var(--sans); letter-spacing: 0; white-space: nowrap; }
+  .pill.url { background: #F2F5F3; color: var(--forest); border: 0; }
+  .pill.tag { border: 1px solid #2F5A45; background: rgba(8, 27, 22, .5); color: #D5E0DA; font-weight: 500; }
+  .pill.tag i { width: 9px; height: 9px; border-radius: 50%; background: var(--mint); }
+  .also { margin-top: 18px; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  .also span { margin-right: 8px; }
+  .also span { font: 500 14px/1 var(--mono); letter-spacing: .16em; color: #8FB39A; }
+  .also b { height: 38px; padding: 0 14px; border-radius: 10px; background: #F2F5F3; display: inline-flex; align-items: center; }
+  .also img { height: 20px; }
+  /* optical sizes: the wordmarks differ in weight and proportion */
+  .also b.cs img { height: 25px; } .also b.um img { height: 17px; } .also b.rp img { height: 21px; } .also b.cp img { height: 26px; }
+
+  /* Real product UI: the support inbox, tilted, running off the right edge. */
+  .glow { position: absolute; left: 1100px; top: -80px; width: 700px; height: 560px; border-radius: 50%; background: radial-gradient(circle, rgba(156, 219, 179, .22) 0%, rgba(156, 219, 179, 0) 62%); }
+  .shot { position: absolute; left: 1170px; top: 46px; width: 760px; height: 428px; border-radius: 16px; overflow: hidden; background: #fff;
+    transform: perspective(1600px) rotateY(-18deg) rotateX(6deg) rotateZ(1deg); transform-origin: 0% 50%;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, .55), 0 0 0 1px rgba(184, 221, 187, .22); }
+  .shot img { position: absolute; left: -500px; top: -300px; width: 1400px; }
+  .shot::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(8,27,22,0) 45%, rgba(8,27,22,.28) 100%); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <svg id="lines" viewBox="0 0 1584 396"></svg>
+  <div class="glow"></div>
+  <div class="shot"><img src="../../assets/helpin/product/workspace-inbox-1920-v4.webp" alt=""></div>
+  <div class="copy">
+    <div class="eyebrow">SUPPORT · PROJECTS · CRM · MEETINGS · DOCS</div>
+    <h1>Building <em>Helpin.</em></h1>
+    <div class="lede">The open-source workspace for your team and AI agents.</div>
+    <div class="row"><span class="pill url">helpin.ai</span><span class="pill tag"><i></i>Open source · Self-host free</span></div>
+    <div class="also"><span>ALSO BUILDING</span>
+      <b class="cs"><img src="../../assets/logos/products/contentstudio.svg" alt="ContentStudio"></b>
+      <b class="um"><img src="../../assets/logos/products/usermaven.svg" alt="Usermaven"></b>
+      <b class="rp"><img src="../../assets/logos/products/replug.svg" alt="Replug"></b>
+      <b class="cp"><img src="../../assets/logos/products/contentpen.svg" alt="Contentpen"></b>
+    </div>
+  </div>
+  <section class="scene" id="banner" style="visibility:visible"></section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { lineBundles } from '../../lib/components.js';
+const lb = lineBundles(document.querySelector('#lines'), { count: 22, gap: 9, slope: 0.36, cx: 300, cy: 150, spread: 60, alpha: [0.08, 0.26] });
+defineVideo({ width: 1584, height: 396, fps: 30, duration: 1, scenes: [{ id: 'banner', start: 0, end: 1, render: () => { lb.update(5); } }] });
+</script>
+</body>
+</html>

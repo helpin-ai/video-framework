@@ -122,10 +122,29 @@ Rules:
 - **Measure element sizes** before choosing window boxes, and match the window aspect to the element.
   Known sizes at a 1440 px viewport: `.awa-coding` is 606×745, and the follow-up art is 356×305.
 - **Scrubbing backwards in preview reloads the iframe** and fast-forwards; renders only move forward.
+- **Never `display: none` a window between its scenes.** A collapsed iframe re-lays out the page at zero size, and
+  when it shows again the camera frames empty page (the projects and follow-up windows in `launch-voices` came up
+  blank white). Hide windows with `visibility: hidden` or opacity. Stills don't show this; only a full render does.
+- **Give each window its demo's shape, and keep camera shots inside the demo.** Size the window box from the focus
+  element's aspect (`boxFor` in `launch-voices`), and grow each shot to the window's aspect clamped to the element's
+  bounds (`fitAspect(r, aspect, w.view.rect())`). Otherwise the page background shows as white bands beside or above
+  the demo. A shot that spans the element's full width can't zoom; narrow it horizontally too.
+- **No light spotlight on dark UI.** The spotlight dims with pale grey, which washes a dark demo (projects, coding
+  agent) to grey. Frame with the camera instead.
 - **Useful focus selectors:**
   - `/products/customer-support`:
     - `.support-connected-preview .support-workspace`: Ask Agent in the inbox. The panel is `.swi-agent`; the cycle is 21 s, and "Sent to Sam" arrives at about 14 s.
     - `#support-workflow article:nth-child(1|2|3) .support-workflow-art`: answer, hand off, follow through. Each runs about 4 s.
+      Article 1 is the answer from the docs: Maya asks how to export only the contacts she selected, and Helpin AI
+      answers with the "Export your contacts" guide (site: "Use product knowledge… Choose direct AI replies or
+      assistance your team reviews"). Article 3 ends on "Helpin AI → Maya · The export fix is live… Approved by Sam".
+  - `/products/projects`:
+    - `#project-context .project-scene`: a dark card. Maya's request ("We'd like to test SSO with our admins first")
+      becomes the proposed task "Add an admin-only SSO pilot", then "Created after Sam's approval". Frame the top
+      half, then the task; no spotlight (see below).
+  - `/products/crm`:
+    - `.crm-workspace.cw-account`: Maya Chen's account record, with the summary, next step, CRM signals and activity
+      ("Email, meeting notes, and the linked task, summarized on one record").
   - `/products/ai-agents`:
     - `#agent-coding .awa-coding`: the coding agent. Diff at 0.6 s, test at 2 s, reviewer at 2.5 s, PR at 3 s.
     - `#agent-controls .awa-approval`: the approval card. Approve pressed at 2.7 s.
@@ -136,6 +155,9 @@ Rules:
 - **Clamp, don't skip, preview updates.** Keep calling `update()` with a time clamped at the station's end rather
   than stopping updates after the station. Otherwise a range render (`--from`) that starts later shows the
   preview's initial, empty state (for example, in a pull-back map).
+- **Hold previews until their window is on screen.** Site previews start playing only once they're in view. If a
+  window enters from off screen, keep its preview time at the start until the window is fully visible, or renders
+  split across workers disagree (`drive()` in `videos/cmp-zendesk`).
 - **Live UI must be pixel-still while the camera holds.** Don't pulse, float, slowly push in on, or scale a window
   showing product UI, even by 1 %. Sub-pixel scale or position changes redraw the text at a new offset every frame,
   and it reads as jitter (the user noticed it on "Ticket limbo"). Move UI only in deliberate camera moves

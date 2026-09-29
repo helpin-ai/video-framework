@@ -1,0 +1,308 @@
+{
+ "name": "cmp-intercom",
+ "duration": 39.002,
+ "video": "../../out/cmp-intercom/cmp-intercom.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.2
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 28.307,
+   "generate": 38,
+   "from": 1.818,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 0.03,
+   "prompt": "Latin-tinged tech house at exactly 124 BPM for a confident product comparison motion graphics video: live congas and bongos, shakers, a crisp ticking closed hi-hat, a rolling round bassline and short bright brass stabs as the hook. No vocals. It starts immediately with percussion only: congas, shaker and a tight ticking hi-hat like a taxi meter running (0 to 6 seconds, curious and a little tense), adds claps and a muted filtered bass from 6 seconds, rises with a filter sweep from 10 seconds, stops for one beat at 12 seconds, then drops at 12.6 seconds into the full warm groove with a punchy kick, the rolling bass and bright brass stabs, and keeps that full groove all the way to the end. It ends cleanly on a downbeat at 38 seconds with no big final hit, no breakdown and no fade."
+  },
+  {
+   "at": 28.277,
+   "length": 10.725,
+   "generate": 38,
+   "from": 18.394,
+   "gain": -4,
+   "fadeIn": 0.03,
+   "fadeOut": 0.3,
+   "prompt": "Latin-tinged tech house at exactly 124 BPM for a confident product comparison motion graphics video: live congas and bongos, shakers, a crisp ticking closed hi-hat, a rolling round bassline and short bright brass stabs as the hook. No vocals. It starts immediately with percussion only: congas, shaker and a tight ticking hi-hat like a taxi meter running (0 to 6 seconds, curious and a little tense), adds claps and a muted filtered bass from 6 seconds, rises with a filter sweep from 10 seconds, stops for one beat at 12 seconds, then drops at 12.6 seconds into the full warm groove with a punchy kick, the rolling bass and bright brass stabs, and keeps that full groove all the way to the end. It ends cleanly on a downbeat at 38 seconds with no big final hit, no breakdown and no fade."
+  }
+ ],
+ "sounds": {
+  "typing": {
+   "text": "quick soft typing on a quiet laptop keyboard",
+   "duration": 1.4,
+   "gain": -24
+  },
+  "pop": {
+   "text": "a soft bubbly pop, a chat message appearing",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "clink": {
+   "text": "a single small bright coin clink with a crisp mechanical taxi meter click",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "spin": {
+   "text": "a mechanical taxi meter counter spinning faster and faster, rapid light clicking for two seconds",
+   "duration": 2,
+   "gain": -19
+  },
+  "seat": {
+   "text": "a short crisp cash register key press, mechanical and light",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "whoosh": {
+   "text": "a soft airy whoosh, a screen sliding past",
+   "duration": 0.6,
+   "gain": -22
+  },
+  "slide": {
+   "text": "a quick paper card sliding away across a desk",
+   "duration": 0.6,
+   "gain": -19
+  },
+  "year": {
+   "text": "an old mechanical counter rolling steadily for four seconds, a long even rattle of small clicks",
+   "duration": 4,
+   "gain": -21
+  },
+  "swell": {
+   "text": "a gentle airy rising swell building anticipation, soft and smooth, no hit at the end",
+   "duration": 2.5,
+   "gain": -21
+  },
+  "rollback": {
+   "text": "a mechanical counter spinning quickly backwards, whirring down, then a soft solid click",
+   "duration": 1.2,
+   "gain": -15
+  },
+  "bloom": {
+   "text": "a bright soft shimmer bloom, a logo appearing",
+   "duration": 1.2,
+   "gain": -19
+  },
+  "lock": {
+   "text": "a small soft lock click",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "faces": {
+   "text": "a quick soft cluster of tiny bubbly pops, many small avatars appearing",
+   "duration": 0.8,
+   "gain": -20
+  },
+  "blip": {
+   "text": "a tiny bright digital blip, a quick computer confirmation",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "chime": {
+   "text": "a short warm soft two-note success chime",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "paper": {
+   "text": "a soft paper receipt sliding out of a printer",
+   "duration": 0.8,
+   "gain": -20
+  },
+  "row": {
+   "text": "a tiny soft tick",
+   "duration": 0.5,
+   "gain": -24
+  },
+  "counter": {
+   "text": "a fast soft mechanical counter spinning for one second, light rapid clicks",
+   "duration": 1.1,
+   "gain": -20
+  },
+  "settle": {
+   "text": "a warm soft chime with a gentle shimmer",
+   "duration": 1,
+   "gain": -18
+  },
+  "word": {
+   "text": "a very soft short airy whoosh",
+   "duration": 0.5,
+   "gain": -24
+  },
+  "shimmer": {
+   "text": "a soft airy shimmer, pieces clicking together into a logo",
+   "duration": 1,
+   "gain": -19
+  },
+  "cta": {
+   "text": "a soft rounded pop, a button appearing",
+   "duration": 0.5,
+   "gain": -20
+  }
+ },
+ "cues": [
+  {
+   "sound": "typing",
+   "at": [
+    0.25,
+    6.194
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    0.975,
+    7.313,
+    7.613
+   ]
+  },
+  {
+   "sound": "clink",
+   "at": [
+    1.343,
+    7.8
+   ]
+  },
+  {
+   "sound": "spin",
+   "at": [
+    2.05
+   ]
+  },
+  {
+   "sound": "seat",
+   "at": [
+    3.9,
+    4.144,
+    4.388,
+    4.632,
+    4.876,
+    5.12,
+    5.364,
+    5.608
+   ]
+  },
+  {
+   "sound": "whoosh",
+   "at": [
+    5.85,
+    9.751,
+    15.601,
+    18.282,
+    20.964,
+    25.108,
+    28.277
+   ]
+  },
+  {
+   "sound": "slide",
+   "at": [
+    8.338
+   ]
+  },
+  {
+   "sound": "year",
+   "at": [
+    10.726
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    11.251
+   ]
+  },
+  {
+   "sound": "rollback",
+   "at": [
+    13.651
+   ]
+  },
+  {
+   "sound": "bloom",
+   "at": [
+    13.901
+   ]
+  },
+  {
+   "sound": "lock",
+   "at": [
+    14.382
+   ]
+  },
+  {
+   "sound": "faces",
+   "at": [
+    15.951,
+    16.332,
+    17.063
+   ]
+  },
+  {
+   "sound": "blip",
+   "at": [
+    22.576,
+    23.645
+   ]
+  },
+  {
+   "sound": "chime",
+   "at": [
+    20.447,
+    24.095,
+    26.339
+   ]
+  },
+  {
+   "sound": "paper",
+   "at": [
+    28.327
+   ]
+  },
+  {
+   "sound": "row",
+   "at": [
+    28.727,
+    28.877,
+    28.971,
+    29.121,
+    29.215,
+    29.365,
+    29.459,
+    29.609,
+    29.853
+   ]
+  },
+  {
+   "sound": "counter",
+   "at": [
+    29.639
+   ]
+  },
+  {
+   "sound": "settle",
+   "at": [
+    30.739
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    32.277,
+    33.152
+   ]
+  },
+  {
+   "sound": "shimmer",
+   "at": [
+    35.102
+   ]
+  },
+  {
+   "sound": "cta",
+   "at": [
+    35.834
+   ]
+  }
+ ]
+}

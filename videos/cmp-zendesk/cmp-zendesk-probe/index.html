@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>probe</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>.cam { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; } #stage { background: #fff; }</style>
+</head><body>
+<div id="stage">
+  <section class="scene" id="task"><div class="cam" id="c1"></div></section>
+  <section class="scene" id="pr"><div class="cam" id="c2"></div></section>
+  <section class="scene" id="told"><div class="cam" id="c3"></div></section>
+  <section class="scene" id="crm"><div class="cam" id="c4"></div></section>
+  <section class="scene" id="deliv"><div class="cam" id="c5"></div></section>
+</div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js';
+import { siteView, frameRect } from '../../../lib/site.js';
+const $ = (s) => document.querySelector(s);
+const views = {
+  task: siteView($('#c1'), { path: '/products/customer-support', focus: '.support-connected-preview .swi-agent', hide: ['canvas'] }),
+  pr: siteView($('#c2'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'] }),
+};
+Object.values(views).forEach((v) => waitFor(v.ready));
+const box = { x: 20, y: 20, w: 1880, h: 1040 };
+const scene = (id, cam, start, end) => ({ id, start, end, render: ({ lt }) => {
+  const r = views[id].rect(); if (r) frameRect($(cam), r, box);
+  return views[id].update(lt);
+} });
+defineVideo({ width: 1920, height: 1080, fps: 30, scenes: [scene('task', '#c1', 0, 8), scene('pr', '#c2', 8, 12)] });
+</script></body></html>

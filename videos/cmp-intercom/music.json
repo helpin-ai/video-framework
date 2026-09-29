@@ -1,0 +1,22 @@
+{
+ "name": "cmp-intercom-music",
+ "duration": 38,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 38, "gain": -4,
+    "prompt": "Latin-tinged tech house at exactly 124 BPM for a confident product comparison motion graphics video: live congas and bongos, shakers, a crisp ticking closed hi-hat, a rolling round bassline and short bright brass stabs as the hook. No vocals. It starts immediately with percussion only: congas, shaker and a tight ticking hi-hat like a taxi meter running (0 to 6 seconds, curious and a little tense), adds claps and a muted filtered bass from 6 seconds, rises with a filter sweep from 10 seconds, stops for one beat at 12 seconds, then drops at 12.6 seconds into the full warm groove with a punchy kick, the rolling bass and bright brass stabs, and keeps that full groove all the way to the end. It ends cleanly on a downbeat at 38 seconds with no big final hit, no breakdown and no fade." },
+  { "at": 0, "length": 38, "gain": -4,
+    "styles": ["Latin-tinged tech house", "124 BPM", "live congas and bongos", "shakers", "crisp ticking closed hi-hats", "rolling round bassline", "bright brass stabs hook", "warm, confident, sunny", "product motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out"],
+    "sections": [
+      { "name": "Meter running", "duration": 6, "styles": ["percussion only from the first second", "congas, shaker and a tight ticking hi-hat", "kick on every beat", "curious, slightly tense"] },
+      { "name": "Build", "duration": 6.6, "styles": ["adds claps and a filtered rolling bass", "rising filter sweep", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 13, "styles": ["full warm groove", "punchy kick", "rolling bass", "bright brass stabs", "congas", "uplifting"] },
+      { "name": "Carry to the end", "duration": 12.4, "styles": ["keeps the full groove to the very end", "extra percussion", "brass hook", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] },
+  { "at": 0, "length": 38, "gain": -4,
+    "prompt": "Groovy Afro-Latin house at exactly 124 BPM: timbales, congas and cowbell, a ticking clockwork hi-hat, a deep rubbery bass, a catchy short brass riff and warm Rhodes chords; playful, polished and confident, made for a slick motion graphics ad. No vocals. Starts right away with a percussion groove and ticking hats (0 to 6 seconds), adds claps and a filtered bassline from 6 seconds, a short riser and a one-beat silence at 12 seconds, then a big full drop at 12.6 seconds with the brass riff, bass and Rhodes chords, staying full and driving all the way to the end at 38 seconds. No big final hit, no breakdown, no fade out." }
+ ],
+ "sounds": {},
+ "cues": []
+}

@@ -1,0 +1,282 @@
+{
+ "name": "cmp-jira",
+ "duration": 36.57,
+ "video": "../../out/cmp-jira/cmp-jira.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 0.8
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 36.57,
+   "gain": -4,
+   "prompt": "Nu-jazz broken beat at exactly 124 BPM for a product comparison motion graphics film: warm Rhodes electric piano, a walking upright bass, brushed jazz hi-hats and a broken-beat kick; soulful and modern. No vocals. It starts immediately (0 to 9.5 seconds) with Rhodes chords, walking bass and brushes, murky and dim like something sinking; a low swell rises from 9.5 seconds and stops for one beat at 11.4 seconds; at 11.6 seconds the full band drops in with a bright horn stab and a four-on-the-floor kick, bright and uplifting, Rhodes and horns trading riffs, getting fuller at 23 seconds and carrying at full energy all the way to the end. It ends cleanly on a downbeat at 40 seconds with no big final hit, no breakdown and no fade.",
+   "generate": 40,
+   "from": 11.872,
+   "fadeIn": 0.01,
+   "fadeOut": 0.6
+  }
+ ],
+ "sounds": {
+  "type": {
+   "text": "a short burst of quick soft typing on a laptop keyboard",
+   "duration": 1,
+   "gain": -21
+  },
+  "drop": {
+   "text": "a soft muffled thump, a card dropping into a list",
+   "duration": 0.5,
+   "gain": -17
+  },
+  "row": {
+   "text": "a quick soft paper-like swipe, a list row sliding into place",
+   "duration": 0.5,
+   "gain": -24
+  },
+  "sink": {
+   "text": "a slow low muffled descending whoosh, something sinking deep underwater, soft, no impact",
+   "duration": 3.2,
+   "gain": -19
+  },
+  "word": {
+   "text": "a soft muted pop, a word landing on screen",
+   "duration": 0.5,
+   "gain": -23
+  },
+  "tile": {
+   "text": "a soft wooden tap, a small card set down on a table",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "snip": {
+   "text": "a soft quick thread snipping sound, dotted lines breaking apart",
+   "duration": 0.6,
+   "gain": -21
+  },
+  "plate": {
+   "text": "a soft metal plate sliding into place with a gentle click",
+   "duration": 0.7,
+   "gain": -20
+  },
+  "relay": {
+   "text": "a tiny soft relay click, a small indicator light switching off",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "swell": {
+   "text": "a gentle airy rising swell building anticipation, soft and smooth, no hit at the end",
+   "duration": 2,
+   "gain": -17
+  },
+  "up": {
+   "text": "a fast airy upward whoosh, something rising quickly from deep below, bright and soft",
+   "duration": 1.1,
+   "gain": -15
+  },
+  "bloom": {
+   "text": "a soft warm shimmer bloom, light returning, gentle, no impact",
+   "duration": 1.4,
+   "gain": -19
+  },
+  "whoosh": {
+   "text": "a soft airy whoosh as a card slides across the screen",
+   "duration": 0.6,
+   "gain": -22
+  },
+  "check": {
+   "text": "a tiny bright soft check tick",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "ride": {
+   "text": "a quick soft zip, a small tag sliding across",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "chime": {
+   "text": "a short warm soft two-note success chime",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "tap": {
+   "text": "a soft satisfying click, a tile snapping into a grid",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "pop": {
+   "text": "a tiny soft bubbly pop",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "enter": {
+   "text": "a single soft mechanical keyboard enter key press",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "logo": {
+   "text": "a soft airy shimmer bloom, a logo appearing, gentle, no impact",
+   "duration": 1.2,
+   "gain": -19
+  }
+ },
+ "cues": [
+  {
+   "sound": "type",
+   "at": [
+    0.588,
+    25.218,
+    26.233
+   ]
+  },
+  {
+   "sound": "drop",
+   "at": [
+    1.95
+   ]
+  },
+  {
+   "sound": "row",
+   "at": [
+    2.926,
+    3.413,
+    3.657,
+    3.901,
+    4.145,
+    4.266,
+    4.388
+   ]
+  },
+  {
+   "sound": "sink",
+   "at": [
+    3.126
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    3.169,
+    3.657,
+    5.851,
+    29.5,
+    28.518
+   ]
+  },
+  {
+   "sound": "tile",
+   "at": [
+    6.339,
+    6.826,
+    7.314,
+    7.802
+   ]
+  },
+  {
+   "sound": "snip",
+   "at": [
+    8.289
+   ]
+  },
+  {
+   "sound": "plate",
+   "at": [
+    9.264
+   ]
+  },
+  {
+   "sound": "relay",
+   "at": [
+    9.752,
+    9.932,
+    10.112,
+    10.292,
+    10.472,
+    10.652,
+    10.832
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    10.337
+   ]
+  },
+  {
+   "sound": "up",
+   "at": [
+    11.165
+   ]
+  },
+  {
+   "sound": "bloom",
+   "at": [
+    11.315
+   ]
+  },
+  {
+   "sound": "whoosh",
+   "at": [
+    12.434,
+    13.94,
+    17.841,
+    21.254,
+    24.668,
+    28.618
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    13.165,
+    13.409,
+    13.653
+   ]
+  },
+  {
+   "sound": "ride",
+   "at": [
+    13.79,
+    17.941
+   ]
+  },
+  {
+   "sound": "chime",
+   "at": [
+    16.34,
+    19.471,
+    22.917
+   ]
+  },
+  {
+   "sound": "tap",
+   "at": [
+    21.818,
+    22.062,
+    22.306,
+    22.55,
+    22.793
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    23.405,
+    32.669,
+    32.913
+   ]
+  },
+  {
+   "sound": "enter",
+   "at": [
+    27.306
+   ]
+  },
+  {
+   "sound": "logo",
+   "at": [
+    31.882
+   ]
+  }
+ ]
+}

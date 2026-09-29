@@ -1,0 +1,17 @@
+{
+ "name": "cmp-chatwoot-music-b",
+ "duration": 38,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 38, "gain": -4,
+    "styles": ["chiptune-tinged electro house", "126 BPM", "bright 8-bit square-wave arpeggios", "modern punchy four-on-the-floor kick", "sidechained pumping synth bass", "crisp ticking hi-hats", "retro game blips", "confident, playful, modern", "open-source software product video"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out", "cheesy"],
+    "sections": [
+      { "name": "Arpeggio intro", "duration": 7.6, "styles": ["8-bit arpeggio and ticking hi-hats from the very first second", "muted kick on every beat", "curious, slightly mysterious", "sparse but driving"] },
+      { "name": "Build", "duration": 3.8, "styles": ["adds claps and a rising filter sweep", "rising energy", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 11.4, "styles": ["full bright driving groove", "punchy four-on-the-floor kick", "pumping sidechained bass", "soaring 8-bit lead melody", "uplifting"] },
+      { "name": "Lift", "duration": 11.4, "styles": ["fullest energy", "extra percussion", "sparkling arpeggios layered on the lead"] },
+      { "name": "Carry to the end", "duration": 3.8, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] }
+ ]
+}

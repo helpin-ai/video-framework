@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin — The crew (meet the agents)</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style id="kit"></style>
+<style>
+  /* "The crew": a team-introduction film for Helpin's eight agents, narrated. Each agent owns the screen in its own
+     colour: a circle of colour bursts out of its avatar, its name lands big, the site's outcome line sits under it,
+     and a small animation shows its job. Then the crew lines up on one history with your team, asks before acting,
+     and leaves a slot for the agent you build. Voice-timed from vo.json. Heist-jazz score of its own. */
+  #stage { background: #111315; color: #fff; }
+  .sec { position: absolute; inset: 0; clip-path: circle(0px at 330px 330px); }
+  .sec .badge { position: absolute; left: 140px; top: 104px; font: 500 22px/1 var(--mono); letter-spacing: .3em; color: rgba(255, 255, 255, .75); }
+  .sec .big { position: absolute; left: 225px; top: 225px; width: 210px; height: 210px; border-radius: 50%; box-shadow: 0 30px 70px rgba(0, 0, 0, .28), 0 0 0 8px rgba(255, 255, 255, .22); }
+  .sec .nm { position: absolute; left: 132px; top: 470px; font-size: 168px; font-weight: 700; letter-spacing: -0.055em; line-height: 1; color: #fff; }
+  .sec .role { position: absolute; left: 140px; top: 668px; height: 50px; padding: 0 18px; border-radius: 25px; border: 2px solid rgba(255, 255, 255, .55); display: inline-flex; align-items: center; font: 600 21px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: #fff; }
+  .sec .out { position: absolute; left: 140px; top: 752px; width: 640px; font-size: 38px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; color: rgba(255, 255, 255, .92); }
+  .card { position: absolute; background: #fff; color: var(--ink); border-radius: 22px; box-shadow: 0 40px 90px rgba(0, 0, 0, .28); }
+  .card .hd { height: 70px; display: flex; align-items: center; gap: 12px; padding: 0 26px; border-bottom: 1px solid #EAEDEB; font: 600 22px/1 var(--sans); color: #2A2F2C; }
+  .card .hd small { font: 500 17px/1 var(--mono); color: #7A827E; margin-left: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 10px; font: 600 18px/1 var(--mono); white-space: nowrap; }
+  .b { position: absolute; max-width: 600px; padding: 16px 22px; border-radius: 20px; font: 500 25px/1.35 var(--sans); }
+  .b.c { left: 26px; background: #F0F2F1; border-top-left-radius: 6px; }
+  .b.a { right: 26px; border-top-right-radius: 6px; }
+  .row { position: absolute; left: 26px; right: 26px; height: 64px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #EEF1EF; font-size: 24px; }
+  .row i { width: 28px; height: 28px; border-radius: 50%; flex: none; border: 2px solid #D5DBD8; display: grid; place-items: center; font: 700 16px/1 var(--sans); font-style: normal; color: #fff; }
+  .sticky { position: absolute; width: 300px; padding: 20px 22px; border-radius: 10px; font: 600 25px/1.3 var(--sans); color: #3A2A00; box-shadow: 0 20px 50px rgba(0, 0, 0, .22); }
+  .ln { position: absolute; left: 0; right: 0; height: 38px; display: flex; align-items: center; padding: 0 22px; font: 500 20px/1 var(--mono); color: #CFE3D6; white-space: pre; overflow: hidden; }
+  .ln.add { background: rgba(156, 219, 179, .15); color: #C4F0D2; } .ln.del { background: rgba(242, 139, 130, .15); color: #F6C0B8; }
+  .dot { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: #D5DBD8; margin-right: 8px; }
+  .lines { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+  .lines path { fill: none; stroke: rgba(255, 255, 255, .8); stroke-width: 3; stroke-dasharray: 1; }
+  #hook, #meet { position: absolute; left: 0; width: 1920px; top: 250px; text-align: center; font-size: 92px; font-weight: 600; letter-spacing: -0.045em; }
+  #meet em { font-style: normal; }
+  .ldot { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; }
+  .lav { position: absolute; width: 150px; margin-left: -75px; text-align: center; opacity: 0; }
+  .lav img { width: 118px; height: 118px; border-radius: 50%; box-shadow: 0 0 0 5px rgba(255, 255, 255, .12); }
+  .lav span { display: block; margin-top: 14px; font: 500 20px/1 var(--mono); letter-spacing: .16em; color: rgba(255, 255, 255, .72); text-transform: uppercase; }
+  #share { position: absolute; inset: 0; opacity: 0; }
+  #hl { position: absolute; left: 0; top: 0; overflow: visible; }
+  #hl line { stroke: rgba(255, 255, 255, .85); stroke-width: 3; }
+  .sav { position: absolute; width: 90px; height: 90px; margin: -45px 0 0 -45px; border-radius: 50%; opacity: 0; }
+  .sav.h { box-shadow: 0 0 0 4px rgba(255, 255, 255, .25); }
+  .stem { position: absolute; width: 2px; background: rgba(255, 255, 255, .4); }
+  #shl { position: absolute; left: 0; width: 1920px; top: 130px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .3em; color: rgba(255, 255, 255, .7); }
+  #comet { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 7px rgba(255, 255, 255, .2); opacity: 0; }
+  #apr { position: absolute; left: 620px; top: 820px; width: 680px; height: 110px; border-radius: 20px; background: #fff; color: var(--ink); display: flex; align-items: center; gap: 18px; padding: 0 24px; opacity: 0; box-shadow: 0 30px 70px rgba(0, 0, 0, .4); }
+  #apr img { width: 58px; height: 58px; }
+  #apr b { font-size: 26px; letter-spacing: -0.01em; display: block; } #apr span { font: 500 18px/1.5 var(--mono); color: #7A827E; }
+  #aprb { margin-left: auto; height: 58px; padding: 0 26px; border-radius: 14px; background: var(--ink); color: #fff; display: grid; place-items: center; font: 600 23px/1 var(--sans); }
+  #aprb.ok { background: #0F7A50; }
+  #slot { position: absolute; width: 130px; margin-left: -65px; text-align: center; opacity: 0; }
+  #slot svg { width: 96px; height: 96px; overflow: visible; }
+  #slot circle { fill: none; stroke: rgba(255, 255, 255, .8); stroke-width: 3; stroke-dasharray: 8 8; }
+  #slot .fill { position: absolute; left: 17px; top: 0; width: 96px; height: 96px; border-radius: 50%; background: conic-gradient(#D4537E, #D85A30, #EF9F27, #1D9E75, #185FA5, #534AB7, #D4537E); display: grid; place-items: center; opacity: 0; }
+  #slot span { display: block; margin-top: 12px; font: 600 18px/1 var(--mono); letter-spacing: .14em; color: #fff; }
+  #end { position: absolute; inset: 0; opacity: 0; }
+  #esym { position: absolute; left: 700px; top: 360px; }
+  #eword { position: absolute; left: 872px; top: 372px; font-size: 128px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
+  #etag { position: absolute; left: 0; width: 1920px; top: 600px; text-align: center; font-size: 64px; font-weight: 600; letter-spacing: -0.035em; }
+  #ecta { position: absolute; left: 0; width: 1920px; top: 740px; display: flex; justify-content: center; gap: 14px; opacity: 0; }
+  #ecta span { height: 56px; padding: 0 24px; display: inline-flex; align-items: center; gap: 12px; border-radius: 12px; font: 500 24px/1 var(--sans); }
+  #ecta .url { background: #fff; color: #111315; font-weight: 600; } #ecta .t { border: 1px solid rgba(255, 255, 255, .35); color: rgba(255, 255, 255, .85); }
+  .orb { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; }
+  .cursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 9; }
+  .cursor svg { width: 40px; height: 40px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .45)); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="intro"><div id="hook"></div><div id="meet"></div><div id="ldots"></div><div id="lineup"></div></div>
+  <div id="secs"></div>
+  <div id="share"><div id="shl">ONE HISTORY</div><svg id="hl" width="1920" height="1080"><line id="hline" x1="260" y1="580" x2="260" y2="580"/></svg><div id="stems"></div><div id="savs"></div><div id="comet"></div>
+    <div id="apr"><img src="../../assets/helpin/agents/forge.svg" alt=""><div><b>Forge wants to open PR #291</b><span>Admin-only SSO pilot · needs your approval</span></div><div id="aprb">Approve</div></div>
+    <div id="slot"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/></svg><div class="fill"></div><span>YOUR AGENT</span></div></div>
+  <div id="end"><div id="orbs"></div><span id="esym"></span><div id="eword">Helpin</div><div id="etag"></div><div id="ecta"><span class="url">helpin.ai</span><span class="t">Open source</span></div></div>
+  <div class="cursor" id="cursor"></div>
+  <section class="scene" id="film" style="visibility:visible"></section>
+</div>
+<script type="module">
+import { defineVideo } from '../../lib/runtime.js';
+import { P, L, keys, expoInOut, expoOut, rand } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { KIT_CSS, CURSOR_SVG, words, rise } from '../../lib/kit.js';
+import { E, ease, voice, initPaths, drawP, inOut, stamp } from '../../lib/film.js';
+import VO from './vo.json' with { type: 'json' };
+
+const $ = (s) => document.querySelector(s);
+$('#kit').textContent = KIT_CSS + '#stage{background:#111315;color:#fff} em{color:inherit}';
+$('#cursor').innerHTML = CURSOR_SVG;
+const { W, WP, S, END, total } = voice(VO);
+
+// ── The crew: colour, avatar, role, the site's outcome line
+const CREW = [
+  { id: 'echo', name: 'Echo', role: 'Support agent', out: 'A grounded answer. A clean handoff.', bg: '#D4537E', deep: '#4B1528' },
+  { id: 'atlas', name: 'Atlas', role: 'Planning agent', out: 'A plan with the reason behind it.', bg: '#D85A30', deep: '#4A1A0A' },
+  { id: 'scribe', name: 'Scribe', role: 'Coding task planner', out: 'A task ready to build.', bg: '#1D9E75', deep: '#04342C' },
+  { id: 'forge', name: 'Forge', role: 'Coding agent', out: 'A pull request. Original request attached.', bg: '#534AB7', deep: '#26215C' },
+  { id: 'lens', name: 'Lens', role: 'Code reviewer', out: 'Findings before the final decision.', bg: '#BA7517', deep: '#412402' },
+  { id: 'quill', name: 'Quill', role: 'Docs agent', out: 'Useful guidance, ready for review.', bg: '#185FA5', deep: '#0B2E55' },
+  { id: 'beacon', name: 'Beacon', role: 'CRM agent', out: 'The relationship behind the next step.', bg: '#0E8A7B', deep: '#053D36' },
+  { id: 'mira', name: 'Mira', role: 'Marketing agent', out: 'Messaging informed by customer needs.', bg: '#E07B1A', deep: '#4A2400' },
+];
+const A = CREW.map((c) => S(c.id) - 0.5);           // each section starts half a second before its line
+A.push(S('share') - 0.5);                            // the dark "share" section
+const img = (id) => `../../assets/helpin/agents/${id}.svg`;
+
+// ── Vignettes (right half), written per agent
+const V = {
+  echo: `<div class="card" id="ve" style="left:880px; top:230px; width:880px; height:600px"><div class="hd">Chat<small>Northstar Labs</small></div>
+    <div class="b c" id="ve1" style="top:96px">Can I export contacts with filters on?</div>
+    <div class="b a" id="ve2" style="top:196px; background:#FBEAF0; color:#4B1528">Yes. Open the filtered view, then choose Export CSV.<div style="display:flex; gap:10px; margin-top:12px"><span class="chip" id="vec1" style="background:#fff">Help center ↗</span><span class="chip" id="vec2" style="background:#fff">Earlier chat ↗</span></div></div>
+    <div class="b c" id="ve3" style="top:370px">It stops at 10,000 rows though.</div>
+    <div id="ve4" style="position:absolute; left:26px; right:26px; top:480px; height:76px; border-radius:16px; background:#F6F8F7; display:flex; align-items:center; gap:14px; padding:0 18px; font-size:23px"><img src="../../assets/helpin/avatars/sam.webp" style="width:46px; height:46px; border-radius:50%" alt=""><span>Bringing in <b>Sam</b>, with the whole conversation</span></div></div>`,
+  atlas: `<svg class="lines" width="1920" height="1080"><path pathLength="1" id="va-l1" d="M1180 330 C 1230 330, 1230 360, 1280 360"/><path pathLength="1" id="va-l2" d="M1180 480 C 1230 480, 1230 430, 1280 430"/><path pathLength="1" id="va-l3" d="M1180 630 C 1230 630, 1230 500, 1280 500"/></svg>
+    <div class="sticky" id="vas1" style="left:860px; top:270px; background:#FFE8A3; transform:rotate(-3deg)">“Admins need SSO”</div>
+    <div class="sticky" id="vas2" style="left:880px; top:420px; background:#FFD6C2">“Map our groups”</div>
+    <div class="sticky" id="vas3" style="left:860px; top:570px; background:#D9F2E6; transform:rotate(2deg)">“Who signed in, when?”</div>
+    <div class="card" id="vap" style="left:1280px; top:250px; width:500px; height:560px"><div class="hd">Plan<small>SSO rollout</small></div>
+      <div class="row" id="var1" style="top:90px"><i></i>Admin-only SSO pilot</div><div class="row" id="var2" style="top:154px"><i></i>Map groups to roles</div>
+      <div class="row" id="var3" style="top:218px"><i></i>Sign-in audit log</div><div class="row" id="var4" style="top:282px"><i></i>Pilot guide</div>
+      <div id="varb" style="position:absolute; left:26px; bottom:26px"><span class="chip" style="background:#FAECE7; color:#9A3412">Ready for your review</span></div></div>`,
+  scribe: `<div class="card" id="vs" style="left:880px; top:230px; width:880px; height:600px"><div class="hd">Task<small>EXP-201</small></div>
+    <div style="position:absolute; left:26px; top:92px; font-size:36px; font-weight:700; letter-spacing:-0.02em">Add an admin-only SSO pilot</div>
+    <div style="position:absolute; left:26px; top:160px; font: 600 17px/1 var(--mono); letter-spacing:.14em; color:#7A827E">IMPLEMENTATION NOTES</div>
+    <div class="row" id="vsr1" style="top:190px"><i></i>Touches auth/sso.ts and roles.ts</div><div class="row" id="vsr2" style="top:254px"><i></i>Existing sessions stay valid</div>
+    <div class="row" id="vsr3" style="top:318px"><i></i>Tests for group-to-role mapping</div><div class="row" id="vsr4" style="top:382px"><i></i>No schema change needed</div>
+    <div id="vsb" style="position:absolute; left:26px; bottom:26px"><span class="chip" style="background:#E1F5EE; color:#0B6340">Ready to build</span></div></div>`,
+  forge: `<div class="card" id="vf" style="left:880px; top:220px; width:700px; height:430px; background:#15122E; color:#fff"><div class="hd" style="border-color:#2A2550; color:#B9B4F0">auth/sso.ts<small style="color:#8C86C9">Forge</small></div><div id="vfl"></div></div>
+    <div class="card" id="vft" style="left:880px; top:676px; width:700px; height:86px; display:flex; align-items:center; gap:10px; padding:0 24px; font-size:24px"><b style="margin-right:12px">Tests</b><span id="vfdots"></span><span id="vftx" style="margin-left:auto; font: 600 20px/1 var(--mono); color:#0B6340"></span></div>
+    <div class="card" id="vfp" style="left:1250px; top:560px; width:540px; height:250px; padding:24px 26px"><div style="font: 700 17px/1 var(--mono); color:#7A827E; letter-spacing:.06em">PR #291 · OPENED</div><div style="margin:12px 0 16px; font-size:30px; font-weight:700; letter-spacing:-0.02em">Admin-only SSO pilot</div><span class="chip" style="background:#EEEDFE; color:#3F3894">Original request attached</span></div>`,
+  lens: `<div class="card" id="vl" style="left:880px; top:230px; width:760px; height:520px; background:#1E1509; color:#fff"><div class="hd" style="border-color:#3A2A12; color:#E8C98A">Review<small style="color:#B39560">PR #291</small></div><div id="vll"></div></div>
+    <svg id="vlg" class="lines" width="1920" height="1080" style="position:absolute"><g id="vlgg"><circle cx="0" cy="0" r="74" fill="rgba(255,255,255,.08)" stroke="#fff" stroke-width="7"/><line x1="52" y1="52" x2="118" y2="118" stroke="#fff" stroke-width="14" stroke-linecap="round"/></g></svg>
+    <div id="vlf1" style="position:absolute; left:1240px; top:690px"><span class="chip" style="background:#fff; color:#8A4B00; height:52px; font-size:20px">⚠ Risk · reused sessions</span></div>
+    <div id="vlf2" style="position:absolute; left:1240px; top:760px"><span class="chip" style="background:#fff; color:#8A4B00; height:52px; font-size:20px">＋ Missing test · expired token</span></div>`,
+  quill: `<div class="card" id="vq" style="left:900px; top:230px; width:820px; height:600px; padding:40px 46px"><div style="font: 500 16px/1 var(--mono); letter-spacing:.14em; color:#7A827E">HELP CENTER · SSO</div>
+    <div style="margin:14px 0 22px; font-size:42px; font-weight:700; letter-spacing:-0.025em">Set up SSO for your workspace</div>
+    <p style="margin:0 0 14px; font-size:25px; line-height:1.45">Go to <b>Settings → Security</b> and choose your identity provider.</p>
+    <p style="margin:0 0 14px; font-size:25px; line-height:1.45; position:relative"><span id="vqold">SSO is available to every member at once.</span><i id="vqs" style="position:absolute; left:0; top:52%; height:3px; background:#B42318; width:0"></i></p>
+    <p id="vqnew" style="margin:0; font-size:25px; line-height:1.45; color:#0B2E55; background:#E6F1FB; border-radius:6px; padding:2px 8px; display:inline-block; opacity:0">Start with an admin-only pilot, then invite your team.</p>
+    <div id="vqb" style="position:absolute; right:36px; top:36px"><span class="chip" style="background:#FFF4D6; color:#7A5A00">Ready for review</span></div></div>`,
+  beacon: `<div class="card" id="vb" style="left:880px; top:200px; width:600px; height:400px"><div class="hd"><span style="width:40px; height:40px; border-radius:10px; background:#1D3B8B; color:#fff; display:grid; place-items:center; font-weight:700">N</span>Northstar Labs</div>
+    <div style="position:absolute; left:26px; top:92px"><span class="chip" style="background:#D9FBF5; color:#0B5F55">Renewal in 30 days</span></div>
+    <div class="row" id="vbr1" style="top:152px"><i style="background:#0E8A7B; border-color:#0E8A7B"></i>SSO pilot agreed on the last call</div><div class="row" id="vbr2" style="top:216px"><i style="background:#0E8A7B; border-color:#0E8A7B"></i>Export fix shipped last week</div>
+    <div class="row" id="vbr3" style="top:280px"><i style="background:#0E8A7B; border-color:#0E8A7B"></i>Asked about 40 more seats</div></div>
+    <div class="card" id="vbe" style="left:1180px; top:560px; width:600px; height:300px; padding:24px 28px"><div style="font: 700 16px/1 var(--mono); color:#0B5F55; letter-spacing:.14em">NEXT FOLLOW-UP · DRAFT</div>
+      <div style="margin:14px 0; font: 500 19px/1.6 var(--mono); color:#7A827E">To <b style="color:#131514">Maya Chen</b><br>Subject <b style="color:#131514">Your SSO pilot: next steps</b></div>
+      <div style="height:14px; border-radius:7px; background:#EEF1EF; margin:10px 0; width:92%"></div><div style="height:14px; border-radius:7px; background:#EEF1EF; width:70%"></div>
+      <div id="vbk" style="position:absolute; right:24px; bottom:22px"><span class="chip" style="background:#D9FBF5; color:#0B5F55">✓ Ready for you</span></div></div>`,
+  mira: `<div id="vm1" style="position:absolute; left:860px; top:300px"><span class="chip" style="background:#fff; color:#6A3A00; height:56px; font-size:22px">“We need SSO”</span></div>
+    <div id="vm2" style="position:absolute; left:880px; top:420px"><span class="chip" style="background:#fff; color:#6A3A00; height:56px; font-size:22px">“Can we audit sign-ins?”</span></div>
+    <div id="vm3" style="position:absolute; left:860px; top:540px"><span class="chip" style="background:#fff; color:#6A3A00; height:56px; font-size:22px">12 trial teams asked</span></div>
+    <div class="card" id="vmc" style="left:1200px; top:230px; width:580px; height:600px; padding:28px 30px"><div style="font: 700 16px/1 var(--mono); color:#B35C00; letter-spacing:.14em">LAUNCH MESSAGING</div>
+      <div style="margin:14px 0 20px; font-size:34px; font-weight:700; letter-spacing:-0.02em">SSO for teams</div>
+      <div class="row" id="vmr1" style="top:130px"><i></i>“Sign in once. Stay in control.”</div><div class="row" id="vmr2" style="top:194px"><i></i>“Start with an admin-only pilot.”</div><div class="row" id="vmr3" style="top:258px"><i></i>“See who signed in, and when.”</div>
+      <div id="vmch" style="position:absolute; left:30px; bottom:30px; display:flex; gap:10px"><span class="chip" style="background:#FFF4EA; color:#8A4500">Email</span><span class="chip" style="background:#FFF4EA; color:#8A4500">Blog</span><span class="chip" style="background:#FFF4EA; color:#8A4500">Social</span></div></div>`,
+};
+$('#secs').innerHTML = CREW.map((c, i) => `<div class="sec" id="sec-${c.id}" style="background:${c.bg}">
+  <div class="badge">${String(i + 1).padStart(2, '0')} / 08</div><img class="big" src="${img(c.id)}" alt=""><div class="nm">${c.name}</div><div class="role">${c.role}</div><div class="out">${c.out}</div>
+  <div class="vig">${V[c.id]}</div></div>`).join('');
+initPaths();
+const secEls = CREW.map((c) => $(`#sec-${c.id}`));
+// Forge code + tests, Lens diff
+const FL = [['', 'export function signIn(user) {'], ['add', '  if (org.ssoPilot && !user.isAdmin)'], ['add', '    return passwordSignIn(user);'], ['add', '  return ssoSignIn(user, org.idp);'], ['', '}']];
+$('#vfl').innerHTML = FL.map(([c, h], i) => `<div class="ln ${c}" style="top:${86 + i * 40}px">${h}</div>`).join('');
+$('#vfdots').innerHTML = Array.from({ length: 8 }, () => '<i class="dot"></i>').join('');
+const LL = [['', 'session.reuse(token)'], ['del', '- if (expired(token)) refresh()'], ['add', '+ if (expired(token)) return reauth()'], ['', 'audit.log(user, "sso")'], ['add', '+ roles.map(groups)'], ['', 'return session']];
+$('#vll').innerHTML = LL.map(([c, h], i) => `<div class="ln ${c}" style="top:${90 + i * 46}px; color:${c ? '' : '#E8D5AE'}">${h}</div>`).join('');
+
+// ── Intro: coloured dots gather into the line-up
+const LX = (i) => 960 + (i - 3.5) * 176, LY = 640;
+$('#ldots').innerHTML = CREW.map((c) => `<i class="ldot" style="background:${c.bg}"></i>`).join('');
+$('#lineup').innerHTML = CREW.map((c, i) => `<div class="lav" style="left:${LX(i)}px; top:${LY - 59}px"><img src="${img(c.id)}" alt=""><span>${c.name}</span></div>`).join('');
+const ldots = [...document.querySelectorAll('.ldot')], lavs = [...document.querySelectorAll('.lav')];
+const DOT0 = CREW.map((_, i) => [960 + Math.cos(i * 0.9 + 0.4) * (420 + rand(i + 3) * 380), 560 + Math.sin(i * 1.3 + 1) * (180 + rand(i + 9) * 160)]);
+const HOOK = words($('#hook'), 'Every great team has <em>specialists.</em>');
+const MEET = words($('#meet'), 'Meet yours.');
+
+// ── Share: the crew and your team on one history
+const SH_Y = 580;
+const TEAM = ['sam', 'aisha', 'dev', 'lin'];
+const agX = (i) => 300 + i * 175, huX = (i) => 560 + i * 270;
+$('#savs').innerHTML = CREW.map((c, i) => `<img class="sav" src="${img(c.id)}" style="left:${agX(i)}px; top:${SH_Y - 130}px" alt="">`).join('') +
+  TEAM.map((h, i) => `<img class="sav h" src="../../assets/helpin/avatars/${h}.webp" style="left:${huX(i)}px; top:${SH_Y + 130}px" alt="">`).join('');
+$('#stems').innerHTML = CREW.map((_, i) => `<i class="stem" style="left:${agX(i) - 1}px; top:${SH_Y - 85}px; height:0"></i>`).join('') + TEAM.map((_, i) => `<i class="stem" style="left:${huX(i) - 1}px; top:${SH_Y}px; height:0"></i>`).join('');
+const savs = [...document.querySelectorAll('.sav')], stems = [...document.querySelectorAll('.stem')];
+css($('#slot'), { left: `${agX(8)}px`, top: `${SH_Y - 178}px` });
+
+// ── End
+const esym = helpinSymbol({ size: 150, color: '#FFFFFF' });
+$('#esym').append(esym.node);
+const ETAG = words($('#etag'), 'Meet your crew.');
+$('#orbs').innerHTML = CREW.map((c) => `<i class="orb" style="background:${c.bg}"></i>`).join('');
+const orbs = [...document.querySelectorAll('.orb')];
+
+const T = { hook: W('hook'), spec: W('hook', 4), meet: W('meet'), share: W('share'), history: WP('share', 'history'), ask: WP('share', 'ask'), act: WP('share', 'act'),
+  own: W('own'), build: WP('own', 'build'), end: W('end'), crew: WP('end', 'meet') };
+
+// ── per-agent vignette animation (t, section start a)
+function VIG_rows(prefix, n, t, at, gap, color) {
+  for (let i = 1; i <= n; i++) {
+    const el = document.getElementById(`${prefix}${i}`), s = at + (i - 1) * gap;
+    inOut(el, t, s, { dy: 12, dur: 0.4 });
+    const ic = el.querySelector('i');
+    if (ic && color) { const on = t >= s + 0.25; ic.style.background = on ? color : 'transparent'; ic.style.borderColor = on ? color : '#D5DBD8'; ic.textContent = on ? '✓' : ''; }
+  }
+}
+const VIG = {
+  echo(t, a) {
+    inOut($('#ve'), t, a + 0.35, { dy: 30 });
+    inOut($('#ve1'), t, W('echo', 3) - 0.1, { dy: 14 });
+    inOut($('#ve2'), t, WP('echo', 'help') - 0.15, { dy: 14 });
+    stamp($('#vec1'), t, W('echo', 7)); stamp($('#vec2'), t, W('echo', 10) + 0.1);
+    inOut($('#ve3'), t, W('echo', 11) - 0.1, { dy: 14 });
+    inOut($('#ve4'), t, WP('echo', 'bring') - 0.1, { dy: 14 });
+  },
+  atlas(t, a) {
+    [1, 2, 3].forEach((i) => { const at = WP('atlas', 'customer') - 0.2 + (i - 1) * 0.15, k = E(P(t, at, at + 0.5)); css($(`#vas${i}`), { opacity: String(k), marginTop: `${Math.round((1 - k) * 30)}px` }); });
+    [1, 2, 3].forEach((i) => drawP($(`#va-l${i}`), E(P(t, WP('atlas', 'into') + (i - 1) * 0.1, WP('atlas', 'into') + 0.5 + (i - 1) * 0.1))));
+    inOut($('#vap'), t, WP('atlas', 'plan') - 0.35, { dy: 24 });
+    VIG_rows('var', 4, t, WP('atlas', 'plan'), 0.15, '#D85A30');
+    stamp($('#varb'), t, WP('atlas', 'review'));
+  },
+  scribe(t, a) {
+    inOut($('#vs'), t, a + 0.35, { dy: 30 });
+    VIG_rows('vsr', 4, t, WP('scribe', 'details') - 0.1, 0.22, '#1D9E75');
+    stamp($('#vsb'), t, WP('scribe', 'begins'));
+  },
+  forge(t, a) {
+    inOut($('#vf'), t, a + 0.35, { dy: 30 });
+    [...document.querySelectorAll('#vfl .ln')].forEach((l, i) => { const at = WP('forge', 'writes') + i * 0.1; const k = E(P(t, at, at + 0.35)); css(l, { opacity: String(k), transform: k < 1 ? `translateX(${Math.round((1 - k) * -24)}px)` : 'none' }); });
+    inOut($('#vft'), t, WP('forge', 'runs') - 0.25, { dy: 16 });
+    [...document.querySelectorAll('#vfdots .dot')].forEach((d, i) => { d.style.background = t >= WP('forge', 'runs') + 0.1 + i * 0.1 ? '#1D9E75' : '#D5DBD8'; });
+    $('#vftx').textContent = t >= WP('forge', 'runs') + 0.95 ? '24 passed' : '';
+    inOut($('#vfp'), t, WP('forge', 'opens') - 0.1, { dy: 30 });
+  },
+  lens(t, a) {
+    inOut($('#vl'), t, a + 0.35, { dy: 30 });
+    [...document.querySelectorAll('#vll .ln')].forEach((l, i) => inOut(l, t, a + 0.5 + i * 0.06, { dy: 8, dur: 0.3 }));
+    const g = P(t, WP('lens', 'looks') - 0.1, WP('lens', 'tests') + 0.5);
+    const gp = [L(980, 1500, E(g)), 400 + Math.sin(g * Math.PI * 2) * 90 + g * 120];
+    $('#vlgg').setAttribute('transform', `translate(${Math.round(gp[0])} ${Math.round(gp[1])})`);
+    $('#vlg').style.opacity = String(E(P(t, WP('lens', 'looks') - 0.2, WP('lens', 'looks') + 0.1)));
+    stamp($('#vlf1'), t, WP('lens', 'risks')); stamp($('#vlf2'), t, WP('lens', 'missing'));
+  },
+  quill(t, a) {
+    inOut($('#vq'), t, a + 0.35, { dy: 30 });
+    $('#vqs').style.width = `${Math.round(E(P(t, WP('quill', 'prepares'), WP('quill', 'prepares') + 0.4)) * 470)}px`;
+    inOut($('#vqnew'), t, WP('quill', 'your'), { dy: 10 });
+    stamp($('#vqb'), t, WP('quill', 'updates'));
+  },
+  beacon(t, a) {
+    inOut($('#vb'), t, a + 0.35, { dy: 30 });
+    VIG_rows('vbr', 3, t, a + 0.7, 0.2, null);
+    inOut($('#vbe'), t, WP('beacon', 'followup') - 0.3, { dy: 30 });
+    stamp($('#vbk'), t, WP('beacon', 'ready'));
+  },
+  mira(t, a) {
+    [1, 2, 3].forEach((i) => {
+      const at = WP('mira', 'signals') - 0.35 + (i - 1) * 0.12, k = E(P(t, at, at + 0.5)), fly = expoInOut(P(t, WP('mira', 'launch') - 0.1 + (i - 1) * 0.08, WP('mira', 'launch') + 0.55 + (i - 1) * 0.08));
+      css($(`#vm${i}`), { opacity: String(k * (1 - fly)), transform: `translate(${Math.round((1 - k) * -40 + fly * 380)}px, ${Math.round(fly * (i - 2) * -60)}px) scale(${L(1, 0.5, fly).toFixed(3)})` });
+    });
+    inOut($('#vmc'), t, WP('mira', 'into') - 0.2, { dy: 30 });
+    VIG_rows('vmr', 3, t, WP('mira', 'launch') + 0.2, 0.18, '#E07B1A');
+    inOut($('#vmch'), t, WP('mira', 'messaging') + 0.2, { dy: 10 });
+  },
+};
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: total,
+  scenes: [{ id: 'film', start: 0, end: total, render: ({ t }) => {
+    // ── intro
+    const iOn = t < A[0] + 0.8;
+    $('#intro').style.opacity = iOn ? '1' : '0';
+    if (iOn) {
+      const hk = t < T.meet - 0.1;
+      $('#hook').style.opacity = String(1 - E(P(t, T.meet - 0.35, T.meet - 0.05)));
+      rise(HOOK, t, T.hook - 0.1, 0.1);
+      $('#meet').style.opacity = String(t >= T.meet - 0.05 ? 1 - E(P(t, A[0] - 0.1, A[0] + 0.2)) : 0);
+      if (t >= T.meet - 0.05) rise(MEET, t, T.meet - 0.05, 0.12);
+      CREW.forEach((c, i) => {
+        const gather = expoInOut(P(t, T.meet - 0.2 + i * 0.04, T.meet + 0.55 + i * 0.04));
+        const drift = [Math.sin(t * 0.9 + i) * 24, Math.cos(t * 0.7 + i * 2) * 18];
+        const x = L(DOT0[i][0] + drift[0], LX(i), gather), y = L(DOT0[i][1] + drift[1], LY, gather);
+        css(ldots[i], { left: `${Math.round(x)}px`, top: `${Math.round(y)}px`, opacity: String(E(P(t, 0.1 + i * 0.08, 0.6 + i * 0.08)) * (1 - E(P(t, T.meet + 0.35 + i * 0.04, T.meet + 0.6 + i * 0.04)))), transform: `scale(${L(1, 3, gather).toFixed(3)})` });
+        const ak = E(P(t, T.meet + 0.3 + i * 0.04, T.meet + 0.8 + i * 0.04));
+        // Echo steps forward into its own section; the rest of the crew waits in the dark
+        const lead = i === 0 ? expoInOut(P(t, A[0] - 0.35, A[0] + 0.25)) : 0;
+        const fadeRest = i === 0 ? 0 : E(P(t, A[0] - 0.4, A[0]));
+        css(lavs[i], { opacity: String(ak * (1 - fadeRest)), transform: lead > 0 ? `translate(${Math.round((330 - LX(0)) * lead)}px, ${Math.round((330 - LY) * lead)}px) scale(${L(1, 1.78, lead).toFixed(3)})` : (ak < 1 ? `translateY(${Math.round((1 - ak) * 24)}px)` : 'none') });
+        lavs[i].querySelector('span').style.opacity = String(1 - lead);
+      });
+    }
+
+    // ── agent sections: a circle of colour bursts out of the avatar
+    CREW.forEach((c, i) => {
+      const el = secEls[i], a = A[i], b = A[i + 1];
+      const on = t >= a && t < b + 0.8;
+      el.style.display = on ? 'block' : 'none';
+      if (!on) return;
+      const r = expoInOut(P(t, a, a + 0.7));
+      el.style.clipPath = r >= 1 ? 'none' : `circle(${Math.round(L(0, 2300, r))}px at 330px 330px)`;
+      const big = el.querySelector('.big');
+      const bk = expoOut(P(t, a + 0.05, a + 0.6));
+      css(big, { transform: `translateY(${Math.round(Math.sin((t - a) * 2.2) * 5)}px) scale(${L(0.7, 1, bk).toFixed(3)}) rotate(${((1 - bk) * -14).toFixed(1)}deg)` });
+      inOut(el.querySelector('.badge'), t, a + 0.25);
+      const nk = E(P(t, a + 0.2, a + 0.75));
+      css(el.querySelector('.nm'), { opacity: String(nk), transform: nk < 1 ? `translateX(${Math.round((1 - nk) * -50)}px)` : 'none', clipPath: `inset(0 ${((1 - nk) * 100).toFixed(1)}% 0 0)` });
+      inOut(el.querySelector('.role'), t, a + 0.45);
+      inOut(el.querySelector('.out'), t, a + 0.7);
+      VIG[c.id](t, a);
+    });
+
+    // ── share: the crew and your team on one history; they ask first; room for your own
+    const sOn = t >= A[8];
+    const sr = expoInOut(P(t, A[8], A[8] + 0.7));
+    css($('#share'), { opacity: sOn ? '1' : '0', clipPath: sOn && sr < 1 ? `circle(${Math.round(L(0, 2300, sr))}px at 960px 540px)` : 'none', background: '#111315' });
+    if (sOn) {
+      const shOut = E(P(t, T.end - 0.4, T.end + 0.1));
+      $('#share').style.filter = shOut > 0.001 ? `blur(${(shOut * 8).toFixed(1)}px)` : 'none';
+      $('#share').style.opacity = String(1 - shOut);
+      inOut($('#shl'), t, A[8] + 0.4);
+      const lw = E(P(t, T.share - 0.1, T.share + 0.8));
+      $('#hline').setAttribute('x2', L(260, 1660, lw).toFixed(1));
+      savs.forEach((s, i) => {
+        const at = i < 8 ? T.share + 0.1 + i * 0.07 : WP('share', 'team') - 0.1 + (i - 8) * 0.1;
+        const k = E(P(t, at, at + 0.5));
+        css(s, { opacity: String(k), transform: k < 1 ? `translateY(${Math.round((1 - k) * (i < 8 ? -30 : 30))}px) scale(${L(0.7, 1, k).toFixed(3)})` : 'none' });
+        const st = stems[i], sk = E(P(t, at + 0.25, at + 0.6));
+        st.style.height = `${Math.round(sk * 40)}px`;
+        if (i >= 8) st.style.top = `${SH_Y + 5}px`; else st.style.top = `${SH_Y - 45 + Math.round((1 - sk) * 40)}px`;
+      });
+      const cp = P(t, T.history - 0.1, T.history + 0.9);
+      css($('#comet'), { opacity: String(cp > 0 && cp < 1 ? 1 : 0), left: `${Math.round(L(260, 1660, E(cp)))}px`, top: `${SH_Y}px` });
+      const ap = t >= T.ask - 0.2 && t < T.build - 0.2;
+      inOut($('#apr'), t, T.ask - 0.2, { out: T.build - 0.1 });
+      const approved = t >= T.act + 0.05;
+      $('#aprb').textContent = approved ? 'Approved ✓' : 'Approve';
+      $('#aprb').classList.toggle('ok', approved);
+      const bx = 620 + 680 - 24 - 70, by = 820 + 55;
+      const cur = keys(t, [[T.ask + 0.2, [1700, 1100]], [T.act - 0.08, [bx, by - 8], E]]);
+      css($('#cursor'), { opacity: String(ap ? E(P(t, T.ask + 0.2, T.ask + 0.45)) * (1 - P(t, T.act + 0.4, T.act + 0.7)) : 0), transform: `translate(${Math.round(cur[0])}px, ${Math.round(cur[1])}px) scale(${t > T.act - 0.04 && t < T.act + 0.08 ? 0.86 : 1})` });
+      // the empty slot at the end of the line becomes your agent
+      inOut($('#slot'), t, T.own + 0.1);
+      const fk = E(P(t, T.build, T.build + 0.5));
+      css($('#slot .fill'), { opacity: String(fk), transform: fk < 1 ? `scale(${L(0.4, 1, fk).toFixed(3)})` : 'none' });
+      $('#slot circle').style.strokeDashoffset = String(-t * 20);
+    } else $('#cursor').style.opacity = '0';
+
+    // ── end
+    const eOn = t >= T.end - 0.4;
+    $('#end').style.opacity = String(eOn ? E(P(t, T.end - 0.4, T.end + 0.2)) : 0);
+    if (eOn) {
+      esym.assemble(P(t, T.end - 0.2, T.end + 0.7));
+      const wk = E(P(t, T.end, T.end + 0.7));
+      css($('#eword'), { clipPath: `inset(0 ${((1 - wk) * 100).toFixed(1)}% 0 0)` });
+      rise(ETAG, t, T.crew, 0.12);
+      inOut($('#ecta'), t, T.crew + 0.8);
+      orbs.forEach((o, i) => {
+        const ang = t * 0.35 + (i / 8) * Math.PI * 2, k = E(P(t, T.end + i * 0.06, T.end + 0.6 + i * 0.06));
+        css(o, { left: `${Math.round(960 + Math.cos(ang) * 640)}px`, top: `${Math.round(470 + Math.sin(ang) * 330)}px`, opacity: String(k * 0.9) });
+      });
+    }
+  } }],
+});
+
+</script>
+</body>
+</html>

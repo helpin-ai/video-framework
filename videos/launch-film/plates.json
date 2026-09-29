@@ -1,0 +1,48 @@
+{
+  "name": "launch-film",
+  "fps": 30,
+  "size": "1920x1080",
+  "model": "bytedance/seedance-2.0/text-to-video",
+  "refModel": "bytedance/seedance-2.0/reference-to-video",
+  "plates": [
+    {
+      "id": "maya-night",
+      "duration": 8,
+      "refs": [
+        "assets/helpin/avatars/maya.webp"
+      ],
+      "prompt": "Cinematic 35mm film shot at night. The woman from the reference image, late thirties, shoulder-length dark brown wavy hair, navy sweater, sits at a desk in a small apartment lit by a warm desk lamp and the cool glow of a laptop that sits just out of frame at the bottom. She types a message, pauses, reads it back with a slightly worried look, then leans back and waits. Medium close-up, slow push-in, she is framed on the left third of the frame and looks toward the right, where the room falls into soft darkness. Shallow depth of field, deep green and warm amber palette, soft film grain, quiet mood. No text, no logos, no screens visible."
+    },
+    {
+      "id": "support",
+      "duration": 4,
+      "prompt": "Cinematic 35mm film shot in a calm customer support office in the morning. A support specialist in his late twenties, dark skin, short hair, wearing a headset and a green overshirt, reads a customer's message on a monitor at the edge of frame, frowns thoughtfully and starts typing a reply. Medium close-up, he is framed on the right third of the frame and faces left; the rest of the frame is a softly out-of-focus office. Gentle handheld drift, shallow depth of field, deep green and warm neutral palette, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "product",
+      "duration": 4,
+      "prompt": "Cinematic 35mm film shot in a glass-walled meeting room in soft daylight. A product manager in her early thirties, East Asian, with a short black bob and a rust-coloured sweater, stands beside a wall of blank coloured sticky notes, listens to colleagues who are out of focus, then turns and decides with a small confident nod. Medium shot, she is framed on the left third of the frame and faces right. Slow push-in, shallow depth of field, deep green and warm amber palette, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "sam",
+      "duration": 8,
+      "refs": [
+        "assets/helpin/avatars/sam.webp"
+      ],
+      "prompt": "Cinematic 35mm film shot. The man from the reference image, early thirties, short curly brown hair, light stubble, navy t-shirt, works at a desk in a calm engineering office with plants and warm lamps in the late afternoon. He types code with focus; then he glances up as something new arrives on his monitor, reads it, gives a small nod and gets to work. Medium close-up, he is framed slightly right of centre and faces left toward a monitor seen edge-on at the side of the frame, so its screen is not visible. Slow push-in, shallow depth of field, deep green and warm amber palette, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "maya-smile",
+      "duration": 4,
+      "refs": [
+        "assets/helpin/avatars/maya.webp"
+      ],
+      "prompt": "Cinematic 35mm film shot at night. The woman from the reference image, late thirties, shoulder-length dark brown wavy hair, navy sweater, sits at her desk in a small apartment lit by a warm desk lamp and the cool glow of a laptop just out of frame at the bottom. She reads a reply, her worried look softens into a relieved smile, and she relaxes back in her chair. Medium close-up, she is framed on the left third of the frame and faces right. Very slow push-in, shallow depth of field, deep green and warm amber palette, soft film grain. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    },
+    {
+      "id": "team",
+      "duration": 5,
+      "prompt": "Cinematic 35mm film shot of a small team of three in a warm, plant-filled office at golden hour: a support specialist with dark skin and a headset around his neck, a product manager with a short black bob and a rust-coloured sweater, and an engineer with short curly brown hair and a navy t-shirt. They gather at a wooden table; one slides a laptop across to another, and they share an easy smile. Wide medium shot, slow dolly-in, the group in the centre of the frame. Shallow depth of field, warm amber and deep green palette, soft film grain, relaxed and hopeful. No text, no logos, no brand marks, no readable screens or writing anywhere."
+    }
+  ]
+}

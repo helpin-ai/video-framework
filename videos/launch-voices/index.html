@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>launch-voices</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  :root { --fg: #E8EEEA; --muted: #9DB3A8; }
+  #stage { background: radial-gradient(120% 90% at 50% 40%, #0E2A22 0%, #081B16 60%, #06130F 100%); color: var(--fg); }
+  .scene { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+
+  /* 1 · talking heads */
+  #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; transform-origin: 50% 40%; }
+  #vig { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 62%, rgba(0,0,0,.55) 100%); }
+  .role { position: absolute; left: 64px; top: 56px; display: flex; align-items: center; gap: 14px; padding: 14px 24px 14px 18px; border-radius: 40px; background: rgba(8, 27, 22, .62); backdrop-filter: blur(10px); font: 600 30px var(--sans); color: #fff; letter-spacing: -0.01em; }
+  .role i { width: 12px; height: 12px; border-radius: 50%; background: var(--mint); }
+  #cap { position: absolute; left: 160px; right: 160px; top: 880px; text-align: center; font: 700 58px/1.15 var(--sans); letter-spacing: -0.02em; color: #fff; text-shadow: 0 3px 18px rgba(0,0,0,.55); }
+  #cap span { transition: none; }
+
+  /* 2 · the call grid */
+  .tile { position: absolute; overflow: hidden; border-radius: 22px; background: #0B1411; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .tile .tl { position: absolute; left: 16px; bottom: 14px; padding: 8px 14px; border-radius: 10px; background: rgba(8, 27, 22, .7); font: 600 22px var(--sans); color: #fff; }
+  .tile .tool { position: absolute; right: 16px; top: 14px; padding: 8px 14px; border-radius: 10px; background: #fff; color: #131514; font: 500 20px var(--mono); display: flex; gap: 10px; align-items: center; }
+  .tile .tool i { width: 10px; height: 10px; border-radius: 3px; }
+  .tile .check { position: absolute; right: 16px; top: 14px; width: 44px; height: 44px; border-radius: 50%; background: var(--green); display: grid; place-items: center; color: #fff; font: 700 24px var(--sans); }
+  #cust { position: absolute; display: flex; align-items: center; gap: 16px; padding: 16px 26px 16px 16px; border-radius: 22px; background: #fff; color: #131514; box-shadow: 0 30px 80px rgba(0,0,0,.45); white-space: nowrap; }
+  #cust img { width: 64px; height: 64px; border-radius: 50%; }
+  #cust b { display: block; font: 600 28px var(--sans); }
+  #cust span { font: 500 20px var(--mono); color: #66716C; }
+  #docsChip { position: absolute; padding: 10px 16px; border-radius: 12px; background: #fff; color: #131514; font: 500 22px var(--mono); display: flex; gap: 10px; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+
+  /* 3 · reveal */
+  #mark { position: absolute; width: 150px; height: 150px; border-radius: 38px; background: var(--green); display: grid; place-items: center; box-shadow: 0 30px 80px rgba(15,122,80,.35); }
+  #mark img { width: 70%; }
+  #word { position: absolute; font: 700 170px/1 var(--sans); letter-spacing: -0.045em; color: #fff; white-space: nowrap; }
+  .mod { position: absolute; display: inline-flex; align-items: center; gap: 12px; padding: 14px 26px; border-radius: 40px; background: rgba(184,221,187,.12); border: 1px solid rgba(184,221,187,.28); font: 600 30px var(--sans); color: var(--fg); white-space: nowrap; }
+  .mod i { width: 12px; height: 12px; border-radius: 50%; background: var(--mint); }
+  #ossPill { position: absolute; font: 500 24px var(--mono); color: var(--mint); letter-spacing: .06em; white-space: nowrap; }
+
+  /* 4 · demos */
+  .copy { position: absolute; left: 110px; top: 0; width: 600px; }
+  .copy .eyebrow { font: 500 22px var(--mono); letter-spacing: .14em; color: var(--mint); text-transform: uppercase; }
+  .copy h2 { margin: 22px 0 0; font: 600 76px/1.04 var(--sans); letter-spacing: -0.035em; color: var(--fg); }
+  .copy h2 em { font-style: normal; color: var(--sage); }
+  .copy p { margin: 22px 0 0; font: 500 30px/1.35 var(--sans); color: var(--muted); }
+  .quote { position: absolute; left: 110px; width: 600px; display: flex; gap: 20px; align-items: flex-start; padding: 22px 26px 22px 22px; border-radius: 24px; background: rgba(184,221,187,.08); border: 1px solid rgba(184,221,187,.18); }
+  .quote img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; flex: none; }
+  .quote q { display: block; font: 500 28px/1.3 var(--sans); color: #fff; quotes: '“' '”'; }
+  .quote span { display: block; margin-top: 10px; font: 500 19px var(--mono); color: var(--muted); letter-spacing: .04em; }
+
+  /* 5 · open source */
+  #ossH { position: absolute; font: 600 120px/1 var(--sans); letter-spacing: -0.045em; white-space: nowrap; }
+  #ossS { position: absolute; font: 500 40px var(--sans); color: var(--sage); white-space: nowrap; }
+  #install { position: absolute; padding: 26px 34px; border-radius: 20px; background: #050C0A; border: 1px solid rgba(184,221,187,.2); font: 500 32px var(--mono); color: #D7E6DC; white-space: nowrap; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  #install .p { color: var(--mint); }
+  #install .caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -0.15em; background: var(--mint); margin-left: 4px; }
+
+  /* 6 · end */
+  #endTag { position: absolute; font: 600 66px/1 var(--sans); letter-spacing: -0.03em; white-space: nowrap; }
+  #endTag em { font-style: normal; color: var(--sage); }
+  #cta { position: absolute; padding: 22px 42px; border-radius: 60px; background: var(--green); color: #fff; font: 600 36px var(--sans); white-space: nowrap; box-shadow: 0 20px 50px rgba(15,122,80,.35); }
+  #endNote { position: absolute; font: 500 22px var(--mono); color: var(--muted); letter-spacing: .06em; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <section class="scene" id="talk">
+    <img id="cam" alt="">
+    <div id="vig"></div>
+    <div class="role" id="role"><i></i><span></span></div>
+    <div id="cap"></div>
+  </section>
+
+  <section class="scene" id="grid">
+    <div id="tiles"></div>
+    <svg class="abs" id="threads" width="1920" height="1080" style="left:0;top:0;overflow:visible"></svg>
+    <div id="cust"><img src="../../assets/helpin/avatars/maya.webp" alt=""><div><b>Maya Chen</b><span>Northstar · customer</span></div></div>
+    <div id="docsChip"><i style="width:10px;height:10px;border-radius:3px;background:#8C6BD8"></i>Docs</div>
+  </section>
+
+  <section class="scene" id="reveal">
+    <div id="mark"><img src="../../assets/helpin/helpin-symbol-white.svg" alt=""></div>
+    <div id="word">Helpin</div>
+    <div id="mods"></div>
+    <div id="ossPill">OPEN SOURCE · ONE WORKSPACE</div>
+  </section>
+
+  <section class="scene" id="demos">
+    <div id="windows"></div>
+    <div id="copies"></div>
+  </section>
+
+  <section class="scene" id="oss">
+    <div id="ossH">Open source.</div>
+    <div id="ossS">Self-host it free, or let us run it.</div>
+    <div id="install"><span class="p">$</span> <span id="cmd"></span><span class="caret" id="icaret"></span></div>
+  </section>
+
+  <section class="scene" id="end">
+    <div id="endFaces"></div>
+    <div id="endMark" class="abs" style="width:110px;height:110px;border-radius:28px;background:var(--green);display:grid;place-items:center"><img src="../../assets/helpin/helpin-symbol-white.svg" style="width:70%" alt=""></div>
+    <div id="endWord" class="abs" style="font:700 120px/1 var(--sans); letter-spacing:-0.045em; white-space:nowrap">Helpin</div>
+    <div id="endTag">One workspace. <em>The whole story.</em></div>
+    <div id="cta">Start free at helpin.ai</div>
+    <div id="endNote">OPEN SOURCE · SELF-HOST FREE · HELPIN CLOUD</div>
+  </section>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { css } from '../../lib/components.js';
+import { P, L, keys, clamp, easeIn, easeOut, easeInOut, expoOut, brandEase, backOut, spring } from '../../lib/motion.js';
+import { voice, plateFrame, showFrame } from '../../lib/film.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+import VO from './vo.json' with { type: 'json' };
+import META from './cast-meta.json' with { type: 'json' };
+import PLATES from '../../out/launch-voices/plates/plates.json' with { type: 'json' };
+import CUTSJ from './cuts.json' with { type: 'json' };
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const f1 = (v) => v.toFixed(1);
+const { W, WP, S, END } = voice(VO);
+const DURATION = +(VO.total).toFixed(2);
+const PF = (id, lt) => plateFrame(PLATES, 'launch-voices', id, lt);
+
+// ── The cast: who, their role, and the cuts (cuts.json: clip in/out points from the word timings in
+// cast-meta.json, played at SPEED; cues.mjs places the voice from the same file).
+const ROLE = { support: 'Support lead', engineer: 'Engineer', pm: 'Product manager', founder: 'Founder' };
+const SPEED = CUTSJ.speed;
+const CUTS = [];
+{ let t = 0;
+  for (const [id, a, b, punch] of CUTSJ.cuts) {
+    const len = (b - a) / SPEED;
+    CUTS.push({ id, a, b, t0: +t.toFixed(3), t1: +(t + len).toFixed(3), punch: punch || 1 });
+    t += len;
+  } }
+const T_GRID = CUTS.at(-1).t1; // the call grid takes over
+// Scene times from the narration.
+const T = {
+  same: S('same'), split: WP('same', 'split'), helpin: S('helpin'),
+  mods: ['support', 'projects', 'crm', 'meetings', 'docs'].map((w) => WP('helpin', w)), oss: WP('helpin', 'open'),
+  d: ['echo', 'bugs', 'link', 'record', 'ships'].map((id) => S(id) - 0.35),
+  ossS: S('oss') - 0.35, end: S('end') - 0.35, whole: WP('end', 'whole'), try: WP('end', 'try'),
+};
+T.d.push(T.ossS);
+
+// ── 1 · Talking heads
+const cap = $('#cap');
+const capWords = CUTS.map((c) => (META[c.id].words || []).filter((w) => w.s >= c.a - 0.05 && w.e <= c.b + 0.15).map((w) => ({ ...w, ts: c.t0 + (w.s - c.a) / SPEED, te: c.t0 + (w.e - c.a) / SPEED })));
+function talk({ t }) {
+  const i = CUTS.findIndex((c) => t >= c.t0 && t < c.t1);
+  const c = CUTS[i < 0 ? CUTS.length - 1 : i];
+  const lt = Math.min(c.b, c.a + (t - c.t0) * SPEED);
+  css($('#cam'), { transform: c.punch !== 1 ? `scale(${c.punch})` : 'none' });
+  // role chip: rises with each new person
+  const first = CUTS.findIndex((x) => x.id === c.id);
+  const k = brandEase(P(t, CUTS[first].t0 + 0.1, CUTS[first].t0 + 0.5));
+  $('#role span').textContent = ROLE[c.id];
+  css($('#role'), { opacity: k, transform: `translateY(${f1((1 - k) * -16)}px)` });
+  // captions: the cut's words, spoken ones bright, the current one in mint
+  const words = capWords[i < 0 ? CUTS.length - 1 : i];
+  const key = `${i}`;
+  if (cap.dataset.key !== key) { cap.dataset.key = key; cap.innerHTML = words.map((w) => `<span>${w.w}</span>`).join(' '); }
+  [...cap.children].forEach((s, j) => {
+    const w = words[j];
+    const on = t >= w.ts - 0.03;
+    const cur = on && (j === words.length - 1 ? t < w.te + 0.25 : t < words[j + 1].ts - 0.03);
+    s.style.opacity = on ? 1 : 0.38;
+    s.style.color = cur ? '#9CDBB3' : '#fff';
+  });
+  return showFrame($('#cam'), PF(c.id, lt));
+}
+
+// ── 2 · The call grid
+const GRID = [[68, 33], [972, 33], [68, 552], [972, 552]].map(([x, y]) => ({ x, y, w: 880, h: 495 }));
+const ORDER = ['support', 'engineer', 'pm', 'founder'];
+const TOOLS = [['Support inbox', '#E0704A'], ['Issue tracker', '#5E6AD2'], ['Spreadsheet', '#1E8A55'], ['CRM', '#D9A13B']];
+// Low-motion stretches of each clip, played back and forth at half speed so the tiles stay alive.
+const IDLE = { support: [0.3, 1.2], engineer: [2.82, 3.62], pm: [3.56, 4.02], founder: [2.72, 3.46] };
+const pingpong = (x, len) => { const m = x % (2 * len); return m < len ? m : 2 * len - m; };
+const idle = (id, t, t0) => { const [a, b] = IDLE[id]; return a + pingpong(Math.max(0, t - t0) * 0.5, b - a); };
+$('#tiles').innerHTML = ORDER.map((id, i) => `<div class="tile" id="t${i}"><img alt=""><span class="tl"${i < 2 ? ' style="top:14px;bottom:auto"' : ''}>${ROLE[id]}</span><span class="tool"><i style="background:${TOOLS[i][1]}"></i>${TOOLS[i][0]}</span></div>`).join('');
+const SVGNS = 'http://www.w3.org/2000/svg';
+const THREADS = GRID.map(() => { const l = document.createElementNS(SVGNS, 'line'); l.setAttribute('stroke-width', '4'); l.setAttribute('stroke-linecap', 'round'); $('#threads').appendChild(l); return l; });
+const setBox = (el, b) => css(el, { left: `${f1(b.x)}px`, top: `${f1(b.y)}px`, width: `${f1(b.w)}px`, height: `${f1(b.h)}px` });
+function grid({ t }) {
+  const waits = [];
+  const split = brandEase(P(t, T.split, T.split + 0.6));
+  const toMark = easeInOut(P(t, T.helpin - 0.15, T.helpin + 0.5));
+  ORDER.forEach((id, i) => {
+    const el = $(`#t${i}`), g = GRID[i];
+    // the founder's full frame shrinks into its tile; the others pop in around it
+    const k = brandEase(P(t, T_GRID, T_GRID + 0.55));
+    let box = g;
+    if (id === 'founder') box = { x: L(0, g.x, k), y: L(0, g.y, k), w: L(1920, g.w, k), h: L(1080, g.h, k) };
+    // split apart, then fly into the centre as the mark forms
+    const dir = [[-1, -1], [1, -1], [-1, 1], [1, 1]][i];
+    box = { ...box, x: box.x + dir[0] * 34 * split, y: box.y + dir[1] * 26 * split };
+    const cx = 960 - 60, cy = 470 - 60;
+    box = { x: L(box.x, cx + (i % 2) * 64, toMark), y: L(box.y, cy + Math.floor(i / 2) * 64, toMark), w: L(box.w, 56, toMark), h: L(box.h, 56, toMark) };
+    setBox(el, box);
+    const pop = id === 'founder' ? 1 : backOut(P(t, T_GRID + 0.15 + i * 0.08, T_GRID + 0.55 + i * 0.08), 1.3);
+    css(el, { opacity: id === 'founder' ? 1 : clamp(pop * 1.5), transform: `rotate(${f1(dir[0] * dir[1] * 1.2 * split * (1 - toMark))}deg) scale(${id === 'founder' ? 1 : pop.toFixed(3)})`, borderRadius: `${f1(L(id === 'founder' ? L(0, 22, k) : 22, 14, toMark))}px` });
+    const lt = id === 'founder' && t < T_GRID + 0.55 ? CUTS.at(-1).b : idle(id, t, T_GRID);
+    waits.push(showFrame(el.querySelector('img'), PF(id, lt)));
+    const lab = brandEase(P(t, T_GRID + 0.5, T_GRID + 0.8)) * (1 - P(t, T.helpin - 0.3, T.helpin));
+    el.querySelector('.tl').style.opacity = lab;
+    const tk = backOut(P(t, T.split + i * 0.1, T.split + 0.35 + i * 0.1), 1.6) * (1 - P(t, T.helpin - 0.3, T.helpin));
+    css(el.querySelector('.tool'), { opacity: clamp(tk * 1.5), transform: `scale(${tk.toFixed(3)})` });
+  });
+  // the customer in the middle, with a thread to everyone that breaks on "split"
+  const cust = $('#cust');
+  const ck = backOut(P(t, T.same + 0.05, T.same + 0.45), 1.4) * (1 - easeIn(P(t, T.helpin - 0.35, T.helpin)));
+  const cw = cust.offsetWidth, ch = cust.offsetHeight;
+  css(cust, { left: `${f1(960 - cw / 2)}px`, top: `${f1(540 - ch / 2)}px`, opacity: clamp(ck * 1.5), transform: `scale(${ck.toFixed(3)})` });
+  const th = easeOut(P(t, WP('same', 'story') - 0.1, WP('same', 'story') + 0.5));
+  THREADS.forEach((l, i) => {
+    const g = GRID[i], tx = g.x + g.w / 2, ty = g.y + g.h / 2;
+    const x2 = L(960, tx, th * 0.62), y2 = L(540, ty, th * 0.62);
+    l.setAttribute('x1', 960); l.setAttribute('y1', 540); l.setAttribute('x2', f1(x2)); l.setAttribute('y2', f1(y2));
+    l.setAttribute('stroke', split > 0.05 ? '#E0704A' : '#9CDBB3');
+    l.setAttribute('stroke-dasharray', split > 0.05 ? `${f1(10 + 30 * (1 - split))} ${f1(14 + 22 * split)}` : 'none');
+    l.setAttribute('opacity', (th * (1 - P(t, T.helpin - 0.4, T.helpin - 0.1))).toFixed(3));
+  });
+  const dk = backOut(P(t, T.split + 0.45, T.split + 0.8), 1.6) * (1 - P(t, T.helpin - 0.3, T.helpin));
+  const dc = $('#docsChip');
+  css(dc, { left: `${f1(960 - dc.offsetWidth / 2)}px`, top: '660px', opacity: clamp(dk * 1.5), transform: `scale(${dk.toFixed(3)})` });
+  return Promise.all(waits.filter(Boolean));
+}
+
+// ── 3 · Reveal: Helpin, and the modules on their words
+const MODS = ['Support', 'Projects', 'CRM', 'Meetings', 'Docs'];
+$('#mods').innerHTML = MODS.map((m) => `<span class="mod"><i></i>${m}</span>`).join('');
+function reveal({ t }) {
+  const a = T.helpin;
+  const mk = spring(t - (a + 0.35), 0.7, 0.25);
+  const word = $('#word'), ww = word.offsetWidth;
+  const total = 150 + 40 + ww;
+  const slide = brandEase(P(t, a + 0.75, a + 1.2));
+  const mx = L(960, 960 - total / 2 + 75, slide);
+  css($('#mark'), { left: `${f1(mx - 75)}px`, top: `${f1(400 - 75)}px`, opacity: t < a + 0.35 ? 0 : 1, transform: `scale(${Math.max(0, mk).toFixed(3)})` });
+  const wk = brandEase(P(t, a + 0.85, a + 1.3));
+  css(word, { left: `${f1(960 - total / 2 + 190)}px`, top: `${f1(400 - 85)}px`, opacity: wk, transform: `translateX(${f1((1 - wk) * -30)}px)`, filter: wk < 1 ? `blur(${f1((1 - wk) * 10)}px)` : 'none' });
+  // module chips pop on their spoken words, in a row
+  const chips = $$('#mods .mod');
+  const widths = chips.map((c) => c.offsetWidth), gap = 18, rowW = widths.reduce((s, w) => s + w, 0) + gap * (chips.length - 1);
+  let x = 960 - rowW / 2;
+  chips.forEach((c, i) => {
+    const k = backOut(P(t, T.mods[i] - 0.05, T.mods[i] + 0.3), 1.5);
+    css(c, { left: `${f1(x)}px`, top: '600px', opacity: clamp(k * 1.6), transform: `translateY(${f1((1 - clamp(k)) * 30)}px) scale(${L(0.7, 1, clamp(k)).toFixed(3)})` });
+    x += widths[i] + gap;
+  });
+  const ok = brandEase(P(t, T.oss - 0.05, T.oss + 0.35));
+  const op = $('#ossPill');
+  css(op, { left: `${f1(960 - op.offsetWidth / 2)}px`, top: '730px', opacity: ok });
+  const out = 1 - easeIn(P(t, T.d[0] - 0.3, T.d[0]));
+  $('#reveal').style.opacity = out;
+  $('#reveal').style.filter = out < 1 ? `blur(${f1((1 - out) * 10)}px)` : 'none';
+}
+
+// ── 4 · Live product demos, each answering one person
+// Each window takes its demo's own shape (no page background at the sides), centred in the right column.
+const boxFor = (d) => { const r = d.w.view.rect(); const a = r ? r.w / r.h : 1.29; const h = 800, w = Math.max(560, Math.min(1030, h * a)); return { x: 1305 - w / 2, y: 140, w, h }; };
+const DEMOS = [
+  { who: 'support', eyebrow: 'Support · Echo', h: 'Answered from <em>your docs.</em>', p: 'Echo takes the repeat questions and hands your team the rest.',
+    win: { path: '/products/customer-support', focus: '#support-workflow article:nth-child(1) .support-workflow-art', radius: 20 }, rate: 1.2, from: 0 },
+  { who: 'engineer', eyebrow: 'Engineering · Coding agent', h: 'Bugs arrive with <em>the conversation.</em>', p: 'A coding agent prepares the fix for your review.',
+    win: { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', radius: 16, dark: true }, rate: 1.05, from: 0 },
+  { who: 'pm', eyebrow: 'Projects', h: 'Linked, <em>not copied.</em>', p: 'Turn a conversation into a task, or link it to one already underway.',
+    win: { path: '/products/projects', focus: '#project-context .project-scene', radius: 20 }, rate: 1.4, from: 0.5 },
+  { who: 'founder', eyebrow: 'CRM', h: 'One <em>customer record.</em>', p: 'Email, meeting notes and the linked task, in one place.',
+    win: { path: '/products/crm', focus: '.crm-workspace.cw-account', radius: 20 }, rate: 1.4, from: 0.5 },
+  { who: null, eyebrow: 'Follow-up', h: 'The customer <em>hears back.</em>', p: 'Helpin prepares the update. A teammate approves it.',
+    win: { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', radius: 20 }, rate: 1.2, from: 0 },
+];
+const QUOTES = { support: 'I answer the same question five times a week.', engineer: 'Bug reports show up with zero context.', pm: 'Half my week is copying things from one tool to another.', founder: 'Our customer lives in five tools.' };
+const FACE_AT = { support: 2.6, engineer: 1.0, pm: 1.2, founder: 0.6 };
+DEMOS.forEach((d, i) => {
+  d.w = siteWindow($('#windows'), { ...d.win, hide: ['canvas'] });
+  d.w.el.style.boxShadow = '0 40px 120px rgba(0,0,0,.5), 0 0 0 1px rgba(184,221,187,.16)';
+  waitFor(d.w.view.ready);
+  const c = document.createElement('div');
+  c.innerHTML = `${d.who ? `<div class="quote" id="q${i}"><img src="${PF(d.who, FACE_AT[d.who])}" alt=""><div><q>${QUOTES[d.who]}</q><span>${ROLE[d.who].toUpperCase()}</span></div></div>` : ''}<div class="copy" id="c${i}"><div class="eyebrow">${d.eyebrow}</div><h2>${d.h}</h2><p>${d.p}</p></div>`;
+  $('#copies').appendChild(c);
+});
+// Grow a rect to the window's aspect, kept inside the demo's own bounds (no page background around it).
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+// Camera shots on a window: each shot frames a rect (and optionally spotlights one), eased between shots.
+function shoot(w, lt, shots, box, dur = 0.5) {
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const fit = (r) => fitAspect(r, box.w / box.h, w.view.rect());
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.();
+  if (a && b) w.spotlight(lerpRect(a, b, k), 1); else if (b) w.spotlight(b, k); else if (a) w.spotlight(a, 1 - k); else w.spotlight(null, 0);
+}
+const region = (w, y0, y1, x0 = 0.03, x1 = 0.97) => () => { const r = w.view.rect(); return r && { x: r.x + r.w * x0, y: r.y + r.h * y0, w: r.w * (x1 - x0), h: r.h * (y1 - y0) }; };
+const SHOTS = [
+  (w) => [{ at: 0, rect: () => w.view.rect() }, { at: 2.6, rect: region(w, 0.05, 0.75, 0.02, 0.98) }],
+  (w) => [{ at: 0, rect: () => w.view.rect() }, { at: 1.6, rect: region(w, 0.0, 0.62), spot: () => w.view.rect('.awa-code-task small') }, { at: 3.4, rect: region(w, 0.35, 1.0), spot: () => w.view.rect('.awa-code-review') }],
+  (w) => [{ at: 0, rect: () => w.view.rect() }, { at: 1.3, rect: region(w, 0.0, 0.5, 0.0, 0.8) }, { at: 3.1, rect: region(w, 0.3, 0.85, 0.0, 0.8) }],
+  (w) => [{ at: 0, rect: () => w.view.rect() }, { at: 1.6, rect: region(w, 0.0, 0.62, 0.0, 0.7) }, { at: 3.2, rect: region(w, 0.35, 1.0, 0.0, 0.7) }],
+  (w) => [{ at: 0, rect: () => w.view.rect() }, { at: 0.8, rect: region(w, 0.2, 0.7), spot: region(w, 0.3, 0.6) }, { at: 2.6, rect: region(w, 0.5, 1.0), spot: region(w, 0.66, 0.96) }],
+];
+function demos({ t }) {
+  const waits = [];
+  DEMOS.forEach((d, i) => {
+    const a = T.d[i], b = T.d[i + 1];
+    const on = t >= a - 0.4 && t < b + 0.1;
+    // Hide with visibility, never display:none: a collapsed iframe re-lays out the page and loses the framing.
+    d.w.el.style.visibility = on ? 'visible' : 'hidden';
+    const cEl = $(`#c${i}`), qEl = $(`#q${i}`);
+    if (!on) { cEl.style.opacity = 0; if (qEl) qEl.style.opacity = 0; return; }
+    const ki = expoOut(P(t, a, a + 0.7)), ko = easeIn(P(t, b - 0.3, b));
+    const box = d.box ??= boxFor(d);
+    d.w.place(box);
+    const settled = ki >= 1 && ko <= 0;
+    css(d.w.el, { opacity: ki * (1 - ko), transform: settled ? 'none' : `translateY(${f1((1 - ki) * 90 - ko * 30)}px)` });
+    const lt = t - a;
+    shoot(d.w, lt, SHOTS[i](d.w), box);
+    waits.push(d.w.view.update(d.from + Math.max(0, lt) * d.rate));
+    // the quote from the person first, then the answer
+    const qk = brandEase(P(t, a + 0.05, a + 0.45));
+    const qTop = 180;
+    if (qEl) css(qEl, { top: `${qTop}px`, opacity: qk * (1 - ko), transform: `translateY(${f1((1 - qk) * 20)}px)` });
+    const ck = brandEase(P(t, a + 0.5, a + 1.0));
+    css(cEl, { top: `${qEl ? qTop + qEl.offsetHeight + 60 : 300}px`, opacity: ck * (1 - ko), transform: `translateY(${f1((1 - ck) * 24)}px)`, filter: ck < 1 ? `blur(${f1((1 - ck) * 8)}px)` : 'none' });
+  });
+  return waits.length ? Promise.all(waits) : null;
+}
+
+// ── 5 · Open source
+const CMD = 'curl -fsSL https://helpin.ai/install.sh | bash';
+function oss({ t }) {
+  const a = T.ossS, b = T.end;
+  const k = brandEase(P(t, a, a + 0.55)), ko = easeIn(P(t, b - 0.3, b));
+  const h = $('#ossH');
+  css(h, { left: `${f1(960 - h.offsetWidth / 2)}px`, top: '300px', opacity: k * (1 - ko), transform: `translateY(${f1((1 - k) * 30)}px)`, filter: k < 1 ? `blur(${f1((1 - k) * 10)}px)` : 'none' });
+  const sk = brandEase(P(t, WP('oss', 'self') - 0.1, WP('oss', 'self') + 0.4));
+  const s = $('#ossS');
+  css(s, { left: `${f1(960 - s.offsetWidth / 2)}px`, top: '450px', opacity: sk * (1 - ko) });
+  const n = Math.floor(clamp((t - (a + 0.8)) / 1.6) * CMD.length);
+  $('#cmd').textContent = CMD.slice(0, n) + '\u00a0'.repeat(CMD.length - n); // pad so the box keeps its width
+  const ik = brandEase(P(t, a + 0.5, a + 1.0));
+  const inst = $('#install');
+  css(inst, { left: `${f1(960 - inst.offsetWidth / 2)}px`, top: '600px', opacity: ik * (1 - ko), transform: `translateY(${f1((1 - ik) * 30)}px)` });
+  $('#icaret').style.opacity = (Math.floor(t * 2.2) % 2 === 0 || n < CMD.length) ? 1 : 0;
+}
+
+// ── 6 · The end: the four, the lock-up, the call to action
+const END_AT = { support: 0.25, engineer: 3.3, pm: 1.0, founder: 0.4 };
+$('#endFaces').innerHTML = ORDER.map((id, i) => `<div class="tile" id="e${i}"><img src="${PF(id, END_AT[id])}" alt=""><span class="tl">${ROLE[id]}</span><span class="check">✓</span></div>`).join('');
+function end({ t }) {
+  const a = T.end;
+  const fw = 400, fh = 225, gap = 24, x0 = 960 - (fw * 4 + gap * 3) / 2;
+  ORDER.forEach((id, i) => {
+    const el = $(`#e${i}`);
+    const k = backOut(P(t, a + i * 0.08, a + 0.45 + i * 0.08), 1.3);
+    setBox(el, { x: x0 + i * (fw + gap), y: 90, w: fw, h: fh });
+    css(el, { opacity: clamp(k * 1.5), transform: `translateY(${f1((1 - clamp(k)) * 40)}px) scale(${L(0.85, 1, clamp(k)).toFixed(3)})` });
+    const ck = backOut(P(t, T.whole + i * 0.1, T.whole + 0.35 + i * 0.1), 1.8);
+    css(el.querySelector('.check'), { opacity: clamp(ck * 1.5), transform: `scale(${ck.toFixed(3)})` });
+  });
+  const word = $('#endWord'), ww = word.offsetWidth, total = 110 + 30 + ww, lx = 960 - total / 2;
+  const lk = brandEase(P(t, a + 0.3, a + 0.8));
+  css($('#endMark'), { left: `${f1(lx)}px`, top: '430px', opacity: lk, transform: `scale(${L(0.6, 1, lk).toFixed(3)})` });
+  css(word, { left: `${f1(lx + 140)}px`, top: '430px', opacity: lk });
+  const tk = brandEase(P(t, WP('end', 'one') - 0.05, WP('end', 'one') + 0.4));
+  const tag = $('#endTag');
+  css(tag, { left: `${f1(960 - tag.offsetWidth / 2)}px`, top: '610px', opacity: tk, transform: `translateY(${f1((1 - tk) * 20)}px)` });
+  const bk = backOut(P(t, T.try - 0.05, T.try + 0.35), 1.4);
+  const cta = $('#cta');
+  css(cta, { left: `${f1(960 - cta.offsetWidth / 2)}px`, top: '740px', opacity: clamp(bk * 1.5), transform: `scale(${L(0.7, 1, clamp(bk)).toFixed(3)})` });
+  const nk = brandEase(P(t, T.try + 0.4, T.try + 0.8));
+  const note = $('#endNote');
+  css(note, { left: `${f1(960 - note.offsetWidth / 2)}px`, top: '880px', opacity: nk });
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, duration: DURATION,
+  scenes: [
+    { id: 'talk', start: 0, end: T_GRID, render: talk },
+    { id: 'grid', start: T_GRID, end: T.helpin + 0.55, render: grid },
+    { id: 'reveal', start: T.helpin, end: T.d[0], render: reveal },
+    { id: 'demos', start: T.d[0] - 0.4, end: T.ossS + 0.1, render: demos },
+    { id: 'oss', start: T.ossS, end: T.end, render: oss },
+    { id: 'end', start: T.end, end: DURATION, render: end },
+  ],
+});
+</script>
+</body>
+</html>
