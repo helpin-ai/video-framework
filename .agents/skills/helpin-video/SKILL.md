@@ -43,6 +43,13 @@ copy, and audio cue. If the plan has open questions, show it to the user before 
 - **Copy.** Short declaratives, with the second clause in sage. Every product claim needs a source
   (README, `helpin/website/src/app/new`, roadmap); list the sources under "Claims check". For
   voice and positioning, follow `helpin/.agents/skills/helpin-website-copy`.
+- **Competitors and other companies' logos: read [references/competitors.md](references/competitors.md) first.**
+  A comparison video (Helpin vs X) names the competitor in text with the compare page's monogram chip, draws its world
+  in our own neutral design, and takes every fact from `compare-data.ts` with its checked date: no logo, colours or
+  UI. Real logos belong only in tool-sprawl moments (many tools at once, no claims about any of them).
+- **Personal and brand copy (banners, headers, bios): agree the words first.** Offer 2–4 options with a
+  recommendation and render the user's pick. Don't give the user a title they didn't give ("Technical founder"
+  was rejected).
 - **Narrate in the second person.** Speak to the viewer: "Your customer's export stops at 10,000. They need all
   18,400." / "And your customer hears back." Keep demo names (Maya, Sam) inside the product UI, where
   they read as real data. The user asked for this.
@@ -111,6 +118,30 @@ Then add sound with the video-sound skill. Tell the user:
 - Don't pass a CSS `transition` or `animation` to anything; motion must come from `render(t)`.
 - `render.mjs --scale 0.5` gives fast drafts. Final renders must use scale 1.
 - Don't clean up with broad globs like `m*.png`: an earlier session lost a file that way. `render.mjs` only clears its own `out/<name>/stills` or `sheet` folder.
+- `lib/brand.css` styles `.pill`, `.term` and `.caret` for the dark look (sage text, a sage border, a margin). On a light
+  page, reset colour, border and margin in your own rule, or use other class names. Watch class specificity too: a
+  later `position: relative` rule on a shared class silently beat `.abs` and shifted every centred line in
+  `one-prompt`.
+- Measure text for layout only after `document.fonts.load(...)` and `document.fonts.ready` (register the promise with
+  `waitFor` before `defineVideo`), and while the element is laid out (`visibility: hidden` is fine;
+  `display: none` measures 0).
+
+## Stills: thumbnails, banners and sharing
+
+Single images are pages too: one scene per option, rendered with `--stills 0.5,1.5 --scale 2` for a sharp master,
+then downscaled for the upload. Offer two options with a recommendation.
+- **Video thumbnails (LinkedIn, X):** 1920×1080 JPG (about 200 KB). Feeds draw a play button of about 165 px in the
+  centre, so keep words and faces out of it (mark the zone on your check image). Use the film's own frames as the
+  picture, rendered at 4K from its page (`npm run render -- <film> --stills 38.6 --scale 2`), so the post matches the
+  video; crop the frame's own captions out. Headline on the left, big and short, with the second clause in mint
+  (`videos/ph-story-thumb`, `videos/launch-thumbnail`).
+- **Profile banners:** LinkedIn 1584×396 (render 3168×792), where the profile photo covers the bottom-left, about
+  x 40–360, y 220–396; X 1500×500, where it covers about x 20–360, y 330–500 and mobile crops the top and bottom. Keep
+  copy right of the photo and vertically central, real product UI on the right (`videos/linkedin-banner`,
+  `videos/x-header`).
+- **When the user asks for a link:** renders normally go by `scp`. If they want a link, publish a private Artifact
+  page with the files and the `downloads` capability (artifact pages block plain download links), with "right-click,
+  Save image" as the fallback.
 
 ## Generated footage (optional)
 
@@ -132,8 +163,20 @@ appended to `out/video-cache/ledger.json`.
   hour full frame and then docks into a portrait frame while the cards play (One day); a live portrait card in place
   of an avatar (Sam); a dimmed plate under the tagline. Frame faces clear of the UI with a zoom/offset per shot.
   Never for product UI, and never text on a screen.
+- **People talking to camera (lip-sync).** `bin/cast.mjs videos/<name>/cast.json` builds a talking-head cast:
+  a Soul portrait, the line in an ElevenLabs voice (eleven_v3, `[sighs]`-style tags work), a Seedance 2.0 clip that
+  animates the portrait speaking with the line as its audio reference, then ElevenLabs speech-to-speech into the chosen
+  voice (the clip's own speech keeps the lip timing; word starts move by under 0.02 s) and a transcript for captions.
+  About $1.25 per person for a 5 s line. Keep lines under about 4.4 s so a 5 s clip covers them. Dead ends (Sep 26):
+  Higgsfield `speak` fails on every input; ElevenLabs avatars (`/v1/flows/video`, Creatify Aurora, Veo 3.1) need a
+  Pro plan. The characters are fictional: label them by role (no names), never present them as the team or customers,
+  and let them state problems, never product claims or testimonials. No on-screen AI tag (the user removed it);
+  disclosure goes in the platform's AI-content label when posting (`videos/launch-voices`).
 - **Check every plate for brand marks.** Prompts say "no text, no logos", and the model still adds them: an Apple logo
   on a laptop lid, an ASUS badge on a monitor, a laptop maker's badge. Crop the device areas of a few frames per plate
   at full size, then either play only the clean range, crop it out with the framing zoom, or regenerate without the
   device ("a paper notebook, no laptop").
+  Faint embossed logos only show at full size with the contrast boosted (`eq=contrast=2.2`): the sunrise plate's HP
+  logo was missed at first. When the surface around a logo is plain, a tracked soft blur (`backdrop-filter` in a
+  feathered circle, keyed to the plate frame) removes it without regenerating (`videos/film-one-day`, `#lidfix`).
 

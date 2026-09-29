@@ -37,6 +37,8 @@ your only way to "hear" the mix.
     { "sound": "typing", "at": 34.75, "trim": 0.65, "gain": -12 }
   ],
   "voice": { "voiceId": "…", "lines": [{ "at": 2.0, "text": "…" }], "gain": 0 }   // optional
+  // or: "voice": { "from": "vo.json", "clips": [{ "file": "out/…/support-voice-x115.wav", "at": 0, "from": 1.478, "trim": 2.765, "gain": 0.5 }],
+  //                "duck": { "threshold": 0.03, "ratio": 6 } }   // clips: finished voice audio with an in point and length
 }
 ```
 
@@ -62,7 +64,10 @@ not a single stock set across the series.
 
 ## Music: what works
 
-- **One long track won't follow a structure.** Asked for a drop at 9 s, the model put it at 16 s.
+- **One long track won't follow a structure.** Asked for a drop at 9 s, the model put it at 16 s. Composition plans
+  (`sections` with durations) don't hold their timings either: in `one-prompt` one plan came back full from the first
+  second and another dropped at 16 s instead of 26 s, while a plain prompt had the most usable shape. Generate two or
+  three candidates of both kinds and measure them with `bin/beats.mjs`.
   Generate one short bed per section (intro/build, main, outro) with a single mood per prompt,
   and place each with `at`/`length`.
 - Say "no intro, no build-up, no fade-in, full band from the very first beat" for a bed that must
@@ -75,7 +80,15 @@ not a single stock set across the series.
   hook with a concept sound effect on the grid (e.g. clock ticks every half bar in "Doc rot").
 - To extend a bed you already approved **for this video**, reuse it (same prompt means a cache hit, no credits): place a second copy of it
   with `from` at the drop, starting a whole number of bars after the first copy's `at`, so it stays on the grid.
-  Hide the seam under a hit or a scene change.
+  Hide the seam under a hit or a scene change. Cached music is named `music-<bed index>-<hash>`; `audio.mjs` finds a
+  copy at another index by its hash (before Sept 26 it didn't, and a second copy paid for a different take). Only
+  `prompt`, `sections`, `generate`/`length` and `model` go into the hash, so `at`, `from`, `gain` and fades stay free.
+  Give both copies the same `generate` (a copy with only a different `length` is a new request).
+- **When the edit changes length, move the music, not the story.** Shift the bed's `from` by a whole number of beats
+  and move every pinned line (`at`) by the same beats, so each line keeps its place on the music (`launch-voices`
+  shortened its opening by five beats: `from` 3.018 s, every narration pin 3.018 s earlier).
+- A near-silent stretch in a bed (a breakdown under a dramatic beat) needs a bed of its own: a sustained drone effect
+  and a tick on each beat (`one-prompt` 24–30 s).
 - Keep the drop contrast. The intro bed should sit 4–8 dB under the main bed (`gain`). `loudnorm`
   flattens the rest, so judge contrast in the energy strip, not by the gain numbers.
 - The user decides the ending. Offer options: ride out (the beat continues under the end card and fades) or hard out
@@ -91,6 +104,8 @@ not a single stock set across the series.
 - Keep UI sounds quiet (-9 to -16 dB) and leave hits and risers louder. Repeated cues (pops,
   whooshes on cuts) should sit 2–4 dB lower than one-offs.
 - `trim` shortens a long clip (such as typing) to fit a shorter beat.
+- **Measure every new effect's level** (`ffmpeg -af volumedetect`). Soft wording can come back silent: "a low soft
+  tense ambient hum" averaged −65 dB, while "a sustained low synth drone pad, … clearly audible" averaged −14 dB.
 
 ## Voiceover
 
@@ -108,6 +123,45 @@ most social views are muted. For a narrated cut (like `videos/launch-film`), let
 4. Generate sound-effect cues from the same word anchors (see `videos/launch-film/cues.mjs`).
 5. You can't listen, so transcribe the final mix with ElevenLabs speech-to-text (`scribe_v1`) and compare it with the
    script. It catches buried or ambiguous lines ("self-host it free" came back as "self-hosted, free").
+
+## Sound that follows the animation (beat grid)
+
+The user wants the voice, music and effects cut to the animation. `videos/launch-everywhere` is the reference:
+
+1. Put every beat in one module (`timeline.js`, 120 BPM = a beat every 0.5 s). The page, the voice script and
+   `cues.mjs` all import it, so nothing drifts.
+2. Pin voice lines to beats with `"at"` in `script.json` (`bin/vo.mjs` lands the first word exactly there).
+3. Cut the music with the picture: several short beds, each starting on a hard cut (the drop on the logo, a dark
+   card, the finale), instead of one long track whose sections drift. Generate them first with
+   `npm run audio -- <audio.json> --prefetch` (no video needed).
+4. Measure each bed with `node bin/beats.mjs <bed.mp3> --bpm 120`: tempo, the first beat and an energy strip. Set
+   `from` to skip the lead-in so the first beat lands on the cut. ElevenLabs beds came back at 120.2 BPM with quiet
+   first seconds (skip them) and sometimes a fade instead of the requested build (bridge it with an effect, such as a
+   reverse whoosh into the drop).
+5. Compute effect times from the same numbers the animation uses (e.g. `stitchTimes()` for when the needle crosses
+   each tile), never by eye.
+
+## Music-first (no voice)
+
+When the music leads (`videos/ph-launch`), cut the picture to the track instead of the other way round:
+generate two or three candidates with the same arc (one `audio.json` with several beds and `--prefetch`), measure
+each with `node bin/beats.mjs <bed> --bpm 120 --json out.json` (per-beat energy and the strong drum hits), keep the
+one with the most usable shape (hits in the intro, a clear drop, a gap, a clean end), then name its beats in
+`timeline.js` (`B(n) = first + n × period`) and put every impact and effect on them. Generated tracks rarely follow the
+requested structure, so design around what came back. Keep the chosen bed's exact prompt and `generate` length in the
+final `audio.json`, so the cached take is reused (the cache finds it by hash at any bed index).
+
+## Talking heads (lip-synced cast)
+
+People talking to camera come from `bin/cast.mjs` (see the helpin-video skill). Each clip's voice is its own file,
+`out/<name>/cast/<id>-voice.mp3`. Place the cuts with `voice.clips` (`from` = the clip's in point, `trim` = its length),
+so they sit on the voice bus and the music ducks under them too. Keep the cut list in one JSON (`cuts.json`) that both
+the page and `cues.mjs` read.
+
+To play talking heads faster (the user found 1× slow), speed picture and voice together. The page samples the clip at
+`in + (t − t0) × speed`, and `cues.mjs` writes a pitch-preserving copy (`ffmpeg -af atempo=1.15`) and divides `from`
+and `trim` by the speed. Captions from the word timings divide by the same speed. Check with speech-to-text: in
+`launch-voices` all 42 words landed within 0.04 s of the captions.
 
 ## Cost and safety
 

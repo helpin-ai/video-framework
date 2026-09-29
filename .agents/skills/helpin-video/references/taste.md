@@ -66,6 +66,47 @@ where we can use". Give the people real screen time: the customer, the support p
 relay; each hour of the day opening on its footage; a live card in place of an avatar; the team under the tagline.
 Match the footage faces to the UI avatars (reference images). A clip stuck in one corner isn't enough.
 
+## The motion bar: Cosmos (Sep 25)
+
+They pointed at a Cosmos launch video made with HyperFrames (`reference/cosmos`): "I want this level", "Motion work
+is crazy", and then "the voice and things, sound music should be according to the animations" and "you can come up
+with your own creativity too". What sets the level:
+- Dense, real content (photos, fragments) rather than empty cards.
+- 3D moves with depth blur: a wall that tilts, a fly-through, a sphere.
+- One object morphs into the next: cluster → logo → dot → search bar.
+- Hard cuts to dark type cards between the light scenes.
+- A giant wordmark bleeding off the frame at the end.
+- Every sound on an animation event.
+
+Borrow the craft, not the concept: `videos/launch-everywhere` (one emerald thread) is the Helpin take.
+
+**Music that moves with the animation (Sep 26).** For the Product Hunt video they asked for "no voiceover and more of
+music that moves with the animations", pointing at a motion showreel (`reference/showreel`): one hero object whose
+landings are the drum hits, single words on colour cards cut on downbeats, hand-drawn notes. Built music-first
+(`videos/ph-launch`).
+
+**Density (Sep 26).** On the first narrated Product Hunt cut: "the animations are not the level that CircleCI used… it
+feels empty at the start with the centered green thing… make it more motion graphic, we can use text too." CircleCI's
+bar: one element keeps transforming (ring → outline → fill → contents → push-in → orbit → launch) roughly every beat or
+two, with light trails, doodle confetti bursts, speed lines, orbiting dots and camera moves. Never hold one object in the
+centre for seconds. Kinetic type on the voice is welcome: words that slam, fall apart ("lost."), dissolve to dust
+("Context") or stutter ("Customers repeat themselves." ×3). `videos/ph-story` has the kit (trail, burst, speed, kt/rise).
+
+**Agent-native pitch (Sep 26).** They pointed at Melvyn's Lumail launch video (`reference/lumail`: light editorial
+motion graphics, music and effects only, "your team ships with AI agents now… your tool can't talk to them") as a fit
+for Helpin. `videos/one-prompt` is our take. It keeps the structure and uses Helpin's lines, real MCP tool names and our
+own device (headlines stream in behind an emerald caret). Its first cut is awaiting feedback.
+
+**People open the video (Sep 26).** They asked for "the opening of a video with humans, and they speak and we do the
+lipsyncing and the script, voice and rest of the stuff, like YC launch videos". `videos/launch-voices` is the first cut:
+four fictional people state the problem to camera, and a narrator answers each of them with a live helpin.ai demo.
+On the first cut: "the starting video feels a bit slow when the person is talking". Cut each line tight (0.1 s before the
+first word and after the last, no sighs or lead-ins) and play talking heads at about 1.15× (`cuts.json` `speed`).
+
+**Other companies on screen (Sep 26–28).** Real tool logos are wanted where the story is tool sprawl ("we should use
+the tools logos at the end"); comparison videos name the one competitor in text with a monogram chip and draw its
+world in our own neutral design. Rules and sources: [competitors.md](competitors.md).
+
 ## What they reject
 
 - Title-card openers: a lone slammed word or a "Meet <agent>" card as the first screens.
