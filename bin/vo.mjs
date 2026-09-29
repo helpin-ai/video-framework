@@ -5,8 +5,8 @@
 //
 //   node --env-file=.env bin/vo.mjs videos/launch-film/script.json [--regen]
 //
-// script.json: { voiceId, model, settings, start, tail, lines: [{ id, text, gap }] }
-//   gap = silence before the line (after the previous line's last word).
+// script.json: { voiceId, model, settings, start, tail, lines: [{ id, text, gap | at }] }
+//   gap = silence before the line (after the previous line's last word); at = pin the first word to an absolute time.
 // Clips are cached in out/audio-cache/ by a hash of the request, like audio.mjs.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -72,7 +72,11 @@ const out = lines.map((l, i) => {
   const { mp3, align } = clips[i];
   const ws = wordsOf(align);
   const first = ws[0]?.s ?? 0, last = ws.at(-1)?.e ?? 0;
-  if (i > 0) cursor += l.gap ?? 0.4;
+  if (l.at != null) {
+    // Pinned line: its first word lands exactly at `at` (e.g. on a beat of the music grid).
+    if (i > 0 && l.at < cursor + 0.05) console.warn(`  ! ${l.id} is pinned at ${l.at} s but the previous line ends at ${cursor.toFixed(2)} s`);
+    cursor = l.at;
+  } else if (i > 0) cursor += l.gap ?? 0.4;
   // Place the clip so its first word lands on the cursor.
   const at = +(cursor - first).toFixed(3);
   const line = { id: l.id, text: l.text, at, start: +(at + first).toFixed(3), end: +(at + last).toFixed(3), file: path.relative(ROOT, mp3),

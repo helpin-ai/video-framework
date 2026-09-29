@@ -4,6 +4,7 @@
 //   node --env-file=.env bin/audio.mjs videos/launch/audio.json
 //   node --env-file=.env bin/audio.mjs videos/launch/audio.json --video out/launch/launch.mp4
 //   options: --out file.mp4  --regen (ignore the clip cache)  --no-music  --no-voice
+//            --prefetch (generate or reuse every clip, then stop: no video needed)
 //
 // Every generated clip is cached in out/audio-cache/ by a hash of its request,
 // so re-mixing after timing tweaks costs no credits.
@@ -42,6 +43,11 @@ async function generate(kind, endpoint, body) {
   const hash = crypto.createHash('sha1').update(endpoint + JSON.stringify(body)).digest('hex').slice(0, 16);
   const file = path.join(cacheDir, `${kind}-${hash}.mp3`);
   if (fs.existsSync(file) && !has('regen')) return file;
+  // Music files carry their bed index (music-<bed>-<hash>), so the same request at another index, such as a
+  // second copy of a bed, is found by its hash instead of paying for a different take.
+  const family = kind.split('-')[0];
+  const twin = !has('regen') && fs.readdirSync(cacheDir).find((f) => f.startsWith(`${family}-`) && f.endsWith(`-${hash}.mp3`));
+  if (twin) return path.join(cacheDir, twin);
   for (let attempt = 1; ; attempt++) {
     const res = await fetch(`${API}${endpoint}`, {
       method: 'POST',
@@ -106,6 +112,7 @@ if (cues.voice && !voFrom && !has('no-voice')) {
 const results = [];
 for (let i = 0; i < jobs.length; i += 4) results.push(...(await Promise.all(jobs.slice(i, i + 4).map((j) => j()))));
 const clip = (kind, key) => results.find((r) => r.kind === kind && (r.id === key || r.i === key))?.file;
+if (has('prefetch')) { console.log(`Prefetched ${results.length} clips (no mix).`); process.exit(0); }
 
 // 2. Place every clip on the timeline and mix.
 // Input 0 is silence of exactly the video's length; amix ends with it (duration=first).
@@ -142,6 +149,8 @@ curBus = 'voice';
 if (cues.voice && !has('no-voice')) {
   if (voFrom) voFrom.lines.forEach((line) => add(path.join(ROOT, line.file), { at: line.at, gain: cues.voice.gain ?? 0 }));
   else cues.voice.lines.forEach((line, i) => add(clip('voice', i), { at: line.at, gain: cues.voice.gain ?? 0 }));
+  // voice.clips: finished voice audio placed with an in point and length, e.g. talking-head cuts (bin/cast.mjs).
+  for (const c of cues.voice.clips || []) add(path.join(ROOT, c.file), { at: c.at, gain: c.gain ?? cues.voice.gain ?? 0, from: c.from || 0, trim: c.trim, fadeIn: c.fadeIn ?? 0.02, fadeOut: c.fadeOut ?? 0.04 });
 }
 const sum = (list, out) => { if (list.length === 1) filters.push(`${list[0]}anull[${out}]`); else filters.push(`${list.join('')}amix=inputs=${list.length}:duration=longest:normalize=0:dropout_transition=0[${out}]`); };
 const duck = cues.voice?.duck;
