@@ -1,0 +1,352 @@
+{
+ "name": "cmp-linear",
+ "duration": 34.6,
+ "video": "../../out/cmp-linear/cmp-linear.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 0.8
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 34.6,
+   "gain": -4,
+   "styles": [
+    "dark minimal bass house",
+    "124 BPM",
+    "mechanical keyboard clicks and typewriter ticks as the hi-hats",
+    "deep round rubbery bass",
+    "short glassy synth stabs",
+    "tight punchy kick",
+    "sleek, focused, confident",
+    "product comparison motion graphics"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi",
+    "long silence",
+    "fade out",
+    "bright uplifting chords"
+   ],
+   "sections": [
+    {
+     "name": "Keys",
+     "duration": 8,
+     "styles": [
+      "mechanical keyboard clicks as hi-hats from the very first second",
+      "muted kick on every beat",
+      "no bass yet",
+      "curious, slightly tense",
+      "sparse but driving"
+     ]
+    },
+    {
+     "name": "Pre-drop",
+     "duration": 3.9,
+     "styles": [
+      "rising filter sweep",
+      "a low sub swell",
+      "tension builds",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Drop",
+     "duration": 12,
+     "styles": [
+      "full groove",
+      "deep round rubbery bass enters",
+      "glassy synth stabs",
+      "crisp claps",
+      "keyboard clicks keep the hats",
+      "confident"
+     ]
+    },
+    {
+     "name": "Groove",
+     "duration": 10,
+     "styles": [
+      "fullest energy",
+      "extra percussion",
+      "stabs answer the bass"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 6.1,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ],
+   "from": 4.13,
+   "fadeIn": 0.01,
+   "fadeOut": 0.6
+  }
+ ],
+ "sounds": {
+  "key": {
+   "text": "a single crisp mechanical keyboard key press, clicky and tactile, close up",
+   "duration": 0.5,
+   "gain": -15
+  },
+  "row": {
+   "text": "a quick soft paper-like swipe, a list row sliding into place",
+   "duration": 0.5,
+   "gain": -23
+  },
+  "whoosh": {
+   "text": "a soft airy whoosh as a card slides across the screen",
+   "duration": 0.6,
+   "gain": -21
+  },
+  "type": {
+   "text": "a short burst of quick soft typing on a laptop keyboard",
+   "duration": 1.3,
+   "gain": -21
+  },
+  "word": {
+   "text": "a soft muted pop, a word landing on screen",
+   "duration": 0.5,
+   "gain": -23
+  },
+  "tick": {
+   "text": "a tiny crisp soft tick, a status changing",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "blip": {
+   "text": "a hollow soft low digital blip, something missing",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "arrow": {
+   "text": "a soft quick dotted ticking, a dashed line drawing across",
+   "duration": 0.7,
+   "gain": -23
+  },
+  "question": {
+   "text": "a small soft questioning two-note blip, rising",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "swell": {
+   "text": "a gentle airy rising swell building anticipation, soft and smooth, no hit at the end",
+   "duration": 2.3,
+   "gain": -17
+  },
+  "lift": {
+   "text": "a quick soft lifting whoosh, a card peeling off a surface",
+   "duration": 0.6,
+   "gain": -18
+  },
+  "snap": {
+   "text": "a satisfying magnetic snap, a card clicking firmly into place, soft metallic",
+   "duration": 0.6,
+   "gain": -12
+  },
+  "check": {
+   "text": "a tiny bright soft check tick",
+   "duration": 0.5,
+   "gain": -19
+  },
+  "chime": {
+   "text": "a short warm soft two-note success chime",
+   "duration": 0.8,
+   "gain": -18
+  },
+  "ride": {
+   "text": "a quick soft zip, a small tag sliding across",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "sweep": {
+   "text": "a smooth soft rising digital sweep, a line drawing across a chart",
+   "duration": 1.3,
+   "gain": -21
+  },
+  "plug": {
+   "text": "a small soft plug clicking into a socket",
+   "duration": 0.5,
+   "gain": -14
+  },
+  "flow": {
+   "text": "tiny soft digital blips flowing quickly along a cable",
+   "duration": 1.5,
+   "gain": -24
+  },
+  "logo": {
+   "text": "a soft airy shimmer bloom, a logo appearing, gentle, no impact",
+   "duration": 1.2,
+   "gain": -19
+  },
+  "pop": {
+   "text": "a tiny soft bubbly pop",
+   "duration": 0.5,
+   "gain": -21
+  }
+ },
+ "cues": [
+  {
+   "sound": "key",
+   "at": [
+    0,
+    0.488,
+    0.975,
+    1.463,
+    1.706,
+    1.95,
+    2.438,
+    15.113,
+    18.039,
+    21.451,
+    28.277
+   ]
+  },
+  {
+   "sound": "row",
+   "at": [
+    0.03,
+    0.518,
+    1.005
+   ]
+  },
+  {
+   "sound": "whoosh",
+   "at": [
+    2.825,
+    5.85,
+    14.913,
+    17.939,
+    21.351,
+    24.277,
+    28.227,
+    30.614
+   ]
+  },
+  {
+   "sound": "type",
+   "at": [
+    3.513
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    3.9,
+    7.313,
+    9.751,
+    31.202
+   ]
+  },
+  {
+   "sound": "tick",
+   "at": [
+    4.632,
+    9.507,
+    25.839,
+    21.801
+   ]
+  },
+  {
+   "sound": "blip",
+   "at": [
+    7.8
+   ]
+  },
+  {
+   "sound": "arrow",
+   "at": [
+    9.751
+   ]
+  },
+  {
+   "sound": "question",
+   "at": [
+    10.384
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    9.163
+   ]
+  },
+  {
+   "sound": "lift",
+   "at": [
+    10.823
+   ]
+  },
+  {
+   "sound": "snap",
+   "at": [
+    11.213
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    12.188,
+    12.676,
+    13.163
+   ]
+  },
+  {
+   "sound": "chime",
+   "at": [
+    16.463,
+    20.279,
+    22.851
+   ]
+  },
+  {
+   "sound": "ride",
+   "at": [
+    14.763,
+    17.939,
+    21.351
+   ]
+  },
+  {
+   "sound": "sweep",
+   "at": [
+    24.864
+   ]
+  },
+  {
+   "sound": "plug",
+   "at": [
+    29.008
+   ]
+  },
+  {
+   "sound": "flow",
+   "at": [
+    29.258
+   ]
+  },
+  {
+   "sound": "logo",
+   "at": [
+    31.877
+   ]
+  },
+  {
+   "sound": "pop",
+   "at": [
+    32.665,
+    32.908
+   ]
+  }
+ ]
+}

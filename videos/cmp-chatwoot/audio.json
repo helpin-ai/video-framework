@@ -1,0 +1,385 @@
+{
+ "name": "cmp-chatwoot",
+ "duration": 36.658,
+ "video": "../../out/cmp-chatwoot/cmp-chatwoot.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 0.9
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 30.499,
+   "from": 1.929,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 0.04,
+   "styles": [
+    "chiptune-tinged electro house",
+    "126 BPM",
+    "bright 8-bit square-wave arpeggios",
+    "modern punchy four-on-the-floor kick",
+    "sidechained pumping synth bass",
+    "crisp ticking hi-hats",
+    "retro game blips",
+    "confident, playful, modern",
+    "open-source software product video"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi",
+    "long silence",
+    "fade out",
+    "cheesy"
+   ],
+   "sections": [
+    {
+     "name": "Arpeggio intro",
+     "duration": 7.6,
+     "styles": [
+      "8-bit arpeggio and ticking hi-hats from the very first second",
+      "muted kick on every beat",
+      "curious, slightly mysterious",
+      "sparse but driving"
+     ]
+    },
+    {
+     "name": "Build",
+     "duration": 3.8,
+     "styles": [
+      "adds claps and a rising filter sweep",
+      "rising energy",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Drop",
+     "duration": 11.4,
+     "styles": [
+      "full bright driving groove",
+      "punchy four-on-the-floor kick",
+      "pumping sidechained bass",
+      "soaring 8-bit lead melody",
+      "uplifting"
+     ]
+    },
+    {
+     "name": "Lift",
+     "duration": 11.4,
+     "styles": [
+      "fullest energy",
+      "extra percussion",
+      "sparkling arpeggios layered on the lead"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 3.8,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ]
+  },
+  {
+   "at": 30.469,
+   "length": 6.289,
+   "from": 17.164,
+   "gain": -4,
+   "fadeIn": 0.02,
+   "fadeOut": 1,
+   "styles": [
+    "chiptune-tinged electro house",
+    "126 BPM",
+    "bright 8-bit square-wave arpeggios",
+    "modern punchy four-on-the-floor kick",
+    "sidechained pumping synth bass",
+    "crisp ticking hi-hats",
+    "retro game blips",
+    "confident, playful, modern",
+    "open-source software product video"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi",
+    "long silence",
+    "fade out",
+    "cheesy"
+   ],
+   "sections": [
+    {
+     "name": "Arpeggio intro",
+     "duration": 7.6,
+     "styles": [
+      "8-bit arpeggio and ticking hi-hats from the very first second",
+      "muted kick on every beat",
+      "curious, slightly mysterious",
+      "sparse but driving"
+     ]
+    },
+    {
+     "name": "Build",
+     "duration": 3.8,
+     "styles": [
+      "adds claps and a rising filter sweep",
+      "rising energy",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Drop",
+     "duration": 11.4,
+     "styles": [
+      "full bright driving groove",
+      "punchy four-on-the-floor kick",
+      "pumping sidechained bass",
+      "soaring 8-bit lead melody",
+      "uplifting"
+     ]
+    },
+    {
+     "name": "Lift",
+     "duration": 11.4,
+     "styles": [
+      "fullest energy",
+      "extra percussion",
+      "sparkling arpeggios layered on the lead"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 3.8,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ]
+  }
+ ],
+ "sounds": {
+  "stream": {
+   "text": "a quick soft burst of typing on a quiet laptop keyboard",
+   "duration": 0.6,
+   "gain": -21
+  },
+  "blip": {
+   "text": "a tiny soft 8-bit square-wave blip, a retro terminal line printing",
+   "duration": 0.5,
+   "gain": -24
+  },
+  "pan": {
+   "text": "a soft airy whoosh, a camera gliding sideways down a hallway",
+   "duration": 0.8,
+   "gain": -21
+  },
+  "door": {
+   "text": "a soft clean whoosh of a door swinging open, airy, with a faint latch click",
+   "duration": 0.7,
+   "gain": -19
+  },
+  "padlock": {
+   "text": "a small metal padlock snapping shut, a dry short clack",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "chip": {
+   "text": "a tiny soft bubbly pop",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "pull": {
+   "text": "a soft low whoosh, a camera pulling back to reveal a long corridor",
+   "duration": 1,
+   "gain": -20
+  },
+  "word": {
+   "text": "a soft punchy pop, a bold word landing on screen",
+   "duration": 0.5,
+   "gain": -18
+  },
+  "swell": {
+   "text": "a gentle airy rising swell building anticipation, soft and smooth, no hit at the end",
+   "duration": 3.5,
+   "gain": -21
+  },
+  "cascade": {
+   "text": "a bright sweeping cascade of soft airy whooshes, many doors swinging open at once, with a light shimmer",
+   "duration": 1.4,
+   "gain": -15
+  },
+  "window": {
+   "text": "a soft airy whoosh as a card slides up into place",
+   "duration": 0.6,
+   "gain": -20
+  },
+  "check": {
+   "text": "a tiny soft tick, a checkbox being checked",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "success": {
+   "text": "a short warm two-note success chime, soft",
+   "duration": 0.8,
+   "gain": -17
+  },
+  "counter": {
+   "text": "a fast mechanical counter spinning up, rapid light ticking for one and a half seconds",
+   "duration": 1.5,
+   "gain": -21
+  },
+  "ring": {
+   "text": "a soft airy shimmer, a ring expanding",
+   "duration": 1,
+   "gain": -18
+  }
+ },
+ "cues": [
+  {
+   "sound": "stream",
+   "at": [
+    0.19,
+    11.759,
+    12.33
+   ],
+   "trim": 0.45
+  },
+  {
+   "sound": "blip",
+   "at": [
+    0.952,
+    1.19,
+    1.428,
+    1.666,
+    1.904,
+    12.759,
+    12.902
+   ]
+  },
+  {
+   "sound": "pan",
+   "at": [
+    2.756,
+    5.237,
+    7.617
+   ]
+  },
+  {
+   "sound": "door",
+   "at": [
+    3.333,
+    3.809,
+    4.285,
+    8.093
+   ]
+  },
+  {
+   "sound": "padlock",
+   "at": [
+    5.951,
+    6.903
+   ]
+  },
+  {
+   "sound": "chip",
+   "at": [
+    6.189,
+    7.141,
+    8.617,
+    16.663,
+    16.901,
+    17.139,
+    17.377,
+    34.04
+   ]
+  },
+  {
+   "sound": "pull",
+   "at": [
+    9.998
+   ]
+  },
+  {
+   "sound": "word",
+   "at": [
+    10.236,
+    14.282,
+    29.041,
+    31.183,
+    30.369
+   ]
+  },
+  {
+   "sound": "swell",
+   "at": [
+    9.83
+   ]
+  },
+  {
+   "sound": "cascade",
+   "at": [
+    13.33
+   ]
+  },
+  {
+   "sound": "window",
+   "at": [
+    16.187,
+    19.519,
+    23.804,
+    27.016,
+    27.254
+   ]
+  },
+  {
+   "sound": "check",
+   "at": [
+    17.689,
+    18.879,
+    20.069,
+    21.259,
+    22.688,
+    25.306,
+    26.258
+   ]
+  },
+  {
+   "sound": "success",
+   "at": [
+    22.484,
+    28.565
+   ]
+  },
+  {
+   "sound": "counter",
+   "at": [
+    27.612,
+    28.089
+   ],
+   "trim": 0.5
+  },
+  {
+   "sound": "ring",
+   "at": [
+    33.025
+   ]
+  }
+ ]
+}

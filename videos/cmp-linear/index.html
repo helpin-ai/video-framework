@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin vs Linear: the customer attached</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  #stage { background: #06120E; color: #E8EEEA; }
+  #bg { position: absolute; inset: 0; overflow: hidden; }
+  #glow { position: absolute; inset: -200px; }
+  #grid { position: absolute; left: -128px; top: -128px; width: 2176px; height: 1336px;
+    background-image: linear-gradient(rgba(156, 219, 179, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(156, 219, 179, .07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 25%, transparent 88%); mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 25%, transparent 88%); }
+  em { font-style: normal; color: var(--sage); }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  .abs { position: absolute; }
+  .h { font-weight: 600; letter-spacing: -0.045em; line-height: 1.04; color: #E8EEEA; }
+  .eyebrow { font: 500 24px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: rgba(184, 221, 187, .8); }
+  .lede { font-size: 32px; line-height: 1.38; color: #A9B8B0; letter-spacing: -0.01em; }
+  .small { font-size: 22px; line-height: 1.45; color: #86998F; }
+  .top { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 80px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; color: #E8EEEA; }
+  .card { position: absolute; left: 0; top: 0; background: #fff; color: var(--ink); border-radius: 22px; transform-origin: 0 0;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, .45), 0 0 0 1px rgba(184, 221, 187, .10); overflow: hidden; }
+  .av { border-radius: 50%; object-fit: cover; flex: none; }
+
+  /* versus chips (as on the compare page) */
+  .vs { display: flex; align-items: center; gap: 14px; font: 500 24px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(184, 221, 187, .85); }
+  .mono-chip { width: 38px; height: 38px; border-radius: 9px; border: 1.5px solid rgba(232, 238, 234, .35); display: inline-flex; align-items: center; justify-content: center;
+    font: 600 22px/1 var(--mono); letter-spacing: 0; color: #E8EEEA; }
+  .vs em { color: rgba(232, 238, 234, .5); font-style: normal; letter-spacing: .1em; }
+
+  /* keycaps */
+  .cap { position: absolute; width: 124px; height: 132px; }
+  .cap .top { position: absolute; left: 0; top: 0; width: 124px; height: 118px; border-radius: 22px;
+    background: linear-gradient(180deg, #FFFFFF, #E6EDE9); display: flex; align-items: center; justify-content: center;
+    font: 600 52px/1 var(--mono); color: #0B2A20; box-shadow: 0 12px 0 #9FB4A9, 0 22px 36px rgba(0, 0, 0, .5); }
+  .cap .sub { position: absolute; left: 0; width: 124px; top: 150px; text-align: center; font: 500 22px/1 var(--mono); color: #86998F; letter-spacing: .08em; }
+  .cap.sm { width: 104px; height: 112px; } .cap.sm .top { width: 104px; height: 98px; border-radius: 19px; font-size: 44px; }
+
+  /* hook: the issue list (our own generic tracker) */
+  #list { width: 880px; height: 760px; }
+  #list .lh { height: 96px; padding: 30px 36px 0; display: flex; align-items: baseline; gap: 22px; border-bottom: 1px solid #E4E9E6; }
+  #list .lh b { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; }
+  #list .lh span { font-size: 22px; color: #66716C; }
+  #list .cols { height: 54px; display: flex; align-items: center; padding: 0 36px; font: 500 22px/1 var(--sans); color: #8A948F; border-bottom: 1px solid #EEF1EF; }
+  #rows { position: absolute; left: 0; top: 150px; width: 880px; height: 610px; overflow: hidden; }
+  .row { position: absolute; left: 0; width: 880px; height: 78px; display: flex; align-items: center; padding: 0 36px; border-bottom: 1px solid #F0F3F1; }
+  .row .st { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid #B7C2BC; margin-right: 22px; flex: none; }
+  .row .id { width: 130px; font: 500 22px/1 var(--mono); color: #7C8781; flex: none; }
+  .row .ti { flex: 1; font-size: 26px; font-weight: 500; color: #1C2320; letter-spacing: -0.01em; white-space: nowrap; }
+  .row .cu { width: 120px; font-size: 24px; color: #B2BCB7; flex: none; }
+  .row .pa { width: 34px; height: 34px; border-radius: 50%; flex: none; }
+  #sel { position: absolute; left: 0; width: 880px; height: 78px; background: #EEF7F1; box-shadow: inset 5px 0 0 #0F7A50; }
+
+  /* the issue, which becomes a Helpin task */
+  #issue { width: 900px; height: 770px; }
+  .ic-bar { position: absolute; left: 0; top: 0; width: 900px; height: 66px; border-bottom: 1px solid #E4E9E6; }
+  .ic-bar .gen, .ic-bar .hel { position: absolute; left: 36px; top: 0; height: 66px; display: flex; align-items: center; gap: 14px; font-size: 22px; color: #66716C; }
+  .ic-bar .gen i { width: 26px; height: 26px; border-radius: 7px; border: 2px solid #B7C2BC; }
+  .ic-bar .hel b { color: #131514; font-weight: 600; }
+  .ic-bar .id { position: absolute; right: 36px; top: 21px; font: 500 22px/1 var(--mono); color: #7C8781; }
+  #helbar-line { position: absolute; left: 0; top: 0; width: 900px; height: 5px; background: #0F7A50; opacity: 0; }
+  .ic-title { position: absolute; left: 36px; top: 92px; font-size: 42px; font-weight: 600; letter-spacing: -0.03em; color: #131514; }
+  .ic-props { position: absolute; left: 36px; top: 172px; width: 828px; }
+  .pr { height: 62px; display: flex; align-items: center; font-size: 24px; }
+  .pr .k { width: 170px; color: #7C8781; font-size: 22px; }
+  .pr .v { display: flex; align-items: center; gap: 12px; color: #1C2320; position: relative; }
+  .pill { height: 42px; padding: 0 18px; border-radius: 21px; display: inline-flex; align-items: center; gap: 10px; font: 500 22px/1 var(--sans); letter-spacing: 0; text-transform: none; }
+  .p-prog { background: #FFF4DC; color: #8A5A00; } .p-prog i { width: 12px; height: 12px; border-radius: 50%; background: #E0A526; }
+  .p-rel { background: #E3F4EA; color: #0B6340; }
+  #st-prog, #st-rel { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  #custv { position: relative; height: 42px; width: 520px; }
+  #cust-dash { position: absolute; left: 0; top: 0; white-space: nowrap; border: 2px dashed #C3CCC7; color: #7C8781; background: #FAFBFA; }
+  #cust-chip { position: absolute; left: 0; top: 0; white-space: nowrap; border: 2px solid #9CDBB3; background: #F1FAF4; color: #0B6340; opacity: 0; padding-left: 6px; }
+  #cust-ring { position: absolute; left: -12px; top: -8px; width: 390px; height: 58px; border-radius: 29px; box-shadow: 0 0 0 3px rgba(240, 195, 90, .9); opacity: 0; }
+  .ic-sec { position: absolute; left: 36px; top: 398px; font: 500 22px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: #8A948F; }
+  #sec-cust { opacity: 0; color: #0F7A50; }
+  .act { position: absolute; left: 36px; width: 828px; display: flex; gap: 16px; align-items: flex-start; }
+  .act .body { font-size: 24px; color: #1C2320; line-height: 1.35; }
+  .act .body b { font-weight: 600; }
+  .act .meta { font-size: 22px; color: #7C8781; }
+  #cm { top: 450px; } #ag { top: 580px; opacity: 0; }
+  #cm .bubble { margin-top: 8px; display: inline-block; padding: 12px 20px; border-radius: 16px; background: #F3F5F4; font-size: 28px; }
+  #caret { display: inline-block; width: 3px; height: 30px; background: #0F7A50; margin-left: 2px; vertical-align: -5px; }
+  #ag .ctx { margin-top: 6px; display: inline-flex; gap: 10px; align-items: center; font-size: 22px; color: #8A5A00; background: #FFF4DC; padding: 6px 14px; border-radius: 10px; }
+  #issue-glow { position: absolute; left: 0; top: 0; width: 900px; height: 770px; border-radius: 22px; box-shadow: inset 0 0 0 4px #9CDBB3; opacity: 0; pointer-events: none; }
+
+  /* the other tool */
+  #tool { width: 900px; height: 770px; background: #EEF1EF; }
+  .tw-bar { height: 66px; display: flex; align-items: center; gap: 12px; padding: 0 30px; border-bottom: 1px solid #DDE3E0; background: #E6EAE8; }
+  .tw-bar i { width: 16px; height: 16px; border-radius: 50%; background: #C3CCC7; }
+  .tw-bar span { margin-left: 16px; font: 500 24px/1 var(--mono); color: #66716C; letter-spacing: .06em; }
+  #slot { position: absolute; left: 40px; top: 150px; width: 820px; height: 300px; border-radius: 18px; border: 3px dashed #C3CCC7; opacity: 0; }
+  .ghost { position: absolute; left: 40px; width: 820px; height: 96px; border-radius: 16px; background: #E6EAE8; }
+  .ghost::before { content: ''; position: absolute; left: 28px; top: 26px; width: 44px; height: 44px; border-radius: 50%; background: #D5DCD8; }
+  .ghost::after { content: ''; position: absolute; left: 96px; top: 34px; width: 420px; height: 26px; border-radius: 13px; background: #D5DCD8; }
+  .tw-label { position: absolute; left: 40px; top: 100px; font: 500 22px/1 var(--mono); color: #7C8781; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* the customer block: flies from the other tool onto the task */
+  #cust { position: absolute; left: 0; top: 0; width: 820px; height: 300px; border-radius: 18px; background: #fff; color: var(--ink); transform-origin: 0 0;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .04), 0 0 0 1.5px #E4E9E6; }
+  #cust .hd { position: absolute; left: 28px; top: 26px; display: flex; gap: 16px; align-items: center; }
+  #cust .hd b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  #cust .hd span { display: block; font-size: 22px; color: #7C8781; margin-top: 4px; }
+  #cust .tag { position: absolute; right: 26px; top: 34px; opacity: 0; background: #E3F4EA; color: #0B6340; }
+  #cust .q { position: absolute; left: 28px; top: 110px; width: 760px; font-size: 26px; line-height: 1.38; color: #1C2320; }
+  #cust .chips { position: absolute; left: 28px; top: 214px; display: flex; gap: 12px; }
+  .cc { height: 48px; padding: 0 18px; border-radius: 12px; display: inline-flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 500; background: #F1F4F2; color: #4F5A55; position: relative; }
+  .cc .ok { width: 26px; height: 26px; border-radius: 50%; background: #0F7A50; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; margin-left: -4px; }
+  .cc .okw { display: inline-block; overflow: hidden; }
+  #cust-ring2 { position: absolute; left: 0; top: 0; width: 820px; height: 300px; border-radius: 18px; box-shadow: 0 0 0 3px #0F7A50, 0 0 40px rgba(156, 219, 179, .6); opacity: 0; }
+
+  #links { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+  #qmark { position: absolute; left: 1052px; top: 432px; width: 64px; height: 64px; border-radius: 50%; background: #1A2E27; border: 2px solid #F0C35A; color: #F0C35A;
+    display: flex; align-items: center; justify-content: center; font: 600 34px/1 var(--sans); opacity: 0; }
+  #broken { position: absolute; left: 936px; top: 561px; width: 48px; height: 48px; border-radius: 50%; background: #1A2E27; border: 2px solid #5F7369; opacity: 0;
+    display: flex; align-items: center; justify-content: center; }
+
+  /* stations */
+  .stn { position: absolute; left: 140px; top: 0; width: 760px; height: 1080px; opacity: 0; }
+  .stn .cap { left: 0; top: 232px; }
+  .stn .lab { position: absolute; left: 136px; top: 266px; font: 500 28px/1 var(--mono); letter-spacing: .22em; color: #9CDBB3; white-space: nowrap; }
+  .stn .h { position: absolute; left: 0; top: 410px; font-size: 76px; }
+  .stn .pre { position: absolute; left: 0; top: 400px; font: 500 26px/1 var(--mono); letter-spacing: .2em; color: rgba(184, 221, 187, .8); }
+  .stn .small { position: absolute; left: 0; top: 930px; width: 760px; }
+  #chip { position: absolute; left: 0; top: 0; height: 60px; padding: 0 22px 0 8px; border-radius: 30px; background: #fff; color: #131514; display: flex; align-items: center; gap: 12px;
+    font-size: 22px; font-weight: 600; box-shadow: 0 0 0 2.5px #9CDBB3, 0 16px 40px rgba(0, 0, 0, .45); opacity: 0; white-space: nowrap; }
+  #chip span { color: #0B6340; font-weight: 500; }
+  #chip .cst { position: relative; width: 158px; height: 42px; margin-left: 6px; }
+  #chip .cst .pill { position: absolute; left: 0; top: 0; white-space: nowrap; }
+
+  /* chart */
+  #chartcard { position: absolute; left: 880px; top: 150px; width: 900px; height: 600px; border-radius: 22px; background: #0C1F18; box-shadow: 0 0 0 1px rgba(184, 221, 187, .16), 0 40px 100px rgba(0, 0, 0, .4); opacity: 0; }
+  #chartcard svg { position: absolute; left: 0; top: 0; }
+  .ax { position: absolute; font: 500 22px/1 var(--mono); color: #7E9288; }
+  .lbl { position: absolute; display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 600; white-space: nowrap; }
+  .lbl .mono-chip { width: 34px; height: 34px; font-size: 22px; }
+  #lbl-sym { display: inline-flex; width: 32px; height: 32px; flex: none; } #lbl-lin { color: #D5DED9; } #lbl-hel { color: #9CDBB3; }
+  #lbl-hel2 { position: absolute; font-size: 22px; color: #86A596; white-space: nowrap; }
+  #mk-label { position: absolute; font: 600 22px/1 var(--mono); color: #9CDBB3; white-space: nowrap; }
+  #chartfoot { position: absolute; left: 880px; top: 784px; width: 900px; opacity: 0; }
+
+  /* mcp */
+  #mcpvis { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; }
+  .node { position: absolute; border-radius: 22px; background: #0C1F18; box-shadow: 0 0 0 1.5px rgba(184, 221, 187, .22), 0 30px 80px rgba(0, 0, 0, .4); display: flex; align-items: center; gap: 18px; padding: 0 30px; }
+  .node b { font-size: 36px; font-weight: 600; letter-spacing: -0.03em; color: #E8EEEA; }
+  #nodeA { left: 1000px; top: 486px; width: 290px; height: 116px; }
+  #nodeA .mono-chip { width: 52px; height: 52px; font-size: 28px; border-radius: 12px; }
+  #nodeB { left: 1480px; top: 440px; width: 320px; height: 208px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 16px; }
+  #nodeB .r { display: flex; align-items: center; gap: 14px; }
+  #nodeB .ag { display: flex; gap: 10px; }
+  #nodeB .ag img { width: 44px; height: 44px; border-radius: 12px; }
+  #mcp-tag { position: absolute; left: 1290px; top: 604px; width: 190px; text-align: center; font: 500 22px/1 var(--mono); color: #9CDBB3; letter-spacing: .06em; }
+  #plug { position: absolute; left: 0; top: 0; width: 40px; height: 36px; border-radius: 8px; background: #9CDBB3; }
+  #plug::after { content: ''; position: absolute; right: -14px; top: 9px; width: 14px; height: 6px; background: #9CDBB3; border-radius: 2px; box-shadow: 0 12px 0 #9CDBB3; }
+  #socket { position: absolute; left: 1466px; top: 526px; width: 14px; height: 36px; border-radius: 4px 0 0 4px; background: #2F5A45; }
+  .flow { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #9CDBB3; opacity: 0; }
+
+  /* end */
+  #tag { position: absolute; left: 0; top: 214px; width: 1920px; text-align: center; font-size: 104px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; opacity: 0; }
+  #endmark { position: absolute; left: 0; top: 560px; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 22px; opacity: 0; }
+  #endmark b { font-size: 84px; font-weight: 600; letter-spacing: -0.045em; color: #E8EEEA; }
+  #cta { position: absolute; left: 0; top: 712px; width: 1920px; display: flex; justify-content: center; opacity: 0; }
+  #cta span { height: 64px; padding: 0 30px; display: inline-flex; align-items: center; border-radius: 14px; background: #E8EEEA; color: #081B16; font: 600 28px/1 var(--sans); letter-spacing: -0.01em; }
+  #ctanote { position: absolute; left: 0; top: 806px; width: 1920px; text-align: center; font: 500 24px/1 var(--mono); color: #9FB2A8; letter-spacing: .06em; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="glow"></div><div id="grid"></div></div>
+  <section class="scene" id="main">
+    <!-- hook -->
+    <div id="hookcopy" class="abs" style="left:140px;top:0;width:700px;height:1080px">
+      <div class="vs abs" id="vs" style="left:0;top:254px">
+        <span id="vs-sym"></span><span>Helpin</span><em>vs</em><span class="mono-chip">L</span><span>Linear</span>
+      </div>
+      <div class="h abs" id="hook-h" style="left:0;top:318px;font-size:108px"></div>
+      <div class="cap" id="capC" style="left:0;top:640px"><div class="top">C</div><div class="sub">new</div></div>
+      <div class="cap" id="capJ" style="left:164px;top:640px"><div class="top">J</div><div class="sub">next</div></div>
+      <div class="cap" id="capE" style="left:328px;top:640px"><div class="top">↵</div><div class="sub">open</div></div>
+    </div>
+    <div id="list" class="card">
+      <div class="lh"><b>Engineering</b><span>All issues</span><span>Active</span><span>Backlog</span></div>
+      <div class="cols"><span style="width:44px"></span><span style="width:130px">ID</span><span style="flex:1">Title</span><span style="width:154px">Customer</span></div>
+      <div id="rows"><div id="sel"></div></div>
+    </div>
+
+    <!-- who asked for this? -->
+    <div id="who-h" class="h abs" style="left:140px;top:370px;font-size:108px;width:700px"></div>
+    <div id="issue" class="card">
+      <div id="helbar-line"></div>
+      <div class="ic-bar">
+        <div class="gen" id="bar-gen"><i></i>Issues<span style="color:#B2BCB7">/</span>Engineering</div>
+        <div class="hel" id="bar-hel" style="opacity:0"><span id="bar-sym"></span><b>OrbitDesk</b><span style="color:#B2BCB7">/</span>Engineering</div>
+        <div class="id">EXP-142</div>
+      </div>
+      <div class="ic-title">Fix incomplete CSV exports</div>
+      <div class="ic-props">
+        <div class="pr"><span class="k">Status</span><span class="v" style="height:42px;width:300px">
+          <span class="pill p-prog" id="st-prog"><i></i>In progress</span><span class="pill p-rel" id="st-rel" style="opacity:0">✓ Released</span></span></div>
+        <div class="pr"><span class="k">Assignee</span><span class="v"><img class="av" src="../../assets/helpin/avatars/sam.webp" width="36" height="36">Sam Rivera</span></div>
+        <div class="pr"><span class="k">Customer</span><span class="v" id="custv">
+          <span id="cust-ring"></span>
+          <span class="pill" id="cust-dash">↗ Linked from your support tool</span>
+          <span class="pill" id="cust-chip"><img class="av" src="../../assets/helpin/avatars/maya.webp" width="30" height="30">Maya Chen · Northstar</span></span></div>
+      </div>
+      <div class="ic-sec" id="sec-act">Activity</div>
+      <div class="ic-sec" id="sec-cust">Customer · attached</div>
+      <div class="act" id="cm"><img class="av" src="../../assets/helpin/avatars/sam.webp" width="52" height="52">
+        <div class="body"><b>Sam Rivera</b> <span class="meta">commented</span><br><span class="bubble"><span id="cmtext"></span><span id="caret"></span></span></div></div>
+      <div class="act" id="ag"><img src="../../assets/helpin/agents/forge.svg" width="52" height="52" style="border-radius:12px">
+        <div class="body"><b>Coding agent</b> <span class="meta">picked this up</span><br><span class="ctx">Context: the issue title</span></div></div>
+      <div id="issue-glow"></div>
+    </div>
+
+    <div id="tool" class="card">
+      <div class="tw-bar"><i></i><i></i><i></i><span>Your support tool</span></div>
+      <div class="tw-label">Conversation</div>
+      <div id="slot"></div>
+      <div class="ghost" style="top:480px"></div>
+      <div class="ghost" style="top:592px"></div>
+    </div>
+    <svg id="links" viewBox="0 0 1920 1080">
+      <path id="conn1" d="M 800 585 L 930 585" stroke="#5F7369" stroke-width="3" stroke-dasharray="10 10" fill="none"/>
+      <path id="conn2" d="M 990 585 L 1120 585" stroke="#5F7369" stroke-width="3" stroke-dasharray="10 10" fill="none"/>
+      <path id="arrow" d="M 800 464 L 1030 464" stroke="#F0C35A" stroke-width="3" stroke-dasharray="10 10" fill="none"/>
+    </svg>
+    <div id="broken"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#86998F" stroke-width="2" stroke-linecap="round"><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 4 8M4 4l16 16"/></svg></div>
+    <div id="qmark">?</div>
+    <div id="cust">
+      <div class="hd"><img class="av" src="../../assets/helpin/avatars/maya.webp" width="60" height="60"><div><b>Maya Chen</b><span>Northstar · Customer</span></div></div>
+      <span class="pill tag" id="cust-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Conversation attached</span>
+      <div class="q">“Our export stops at 10,000 contacts. We need all 18,400 for our monthly report.”</div>
+      <div class="chips">
+        <span class="cc" id="cc1"><span class="okw"><span class="ok">✓</span></span>Conversation</span>
+        <span class="cc" id="cc2"><span class="okw"><span class="ok">✓</span></span>Earlier workaround</span>
+        <span class="cc" id="cc3"><span class="okw"><span class="ok">✓</span></span>Account</span>
+      </div>
+      <div id="cust-ring2"></div>
+    </div>
+    <div id="topA" class="top" style="top:96px"></div>
+    <div id="topB" class="top" style="top:96px"></div>
+    <div id="drop-h" class="h abs" style="left:140px;top:330px;font-size:84px;width:700px"></div>
+    <div id="drop-l" class="lede abs" style="left:140px;top:640px;width:640px;opacity:0">The request, the task and the follow-up share one history.</div>
+
+    <!-- stations -->
+    <div class="stn" id="st1"><div class="cap sm"><div class="top">1</div></div><div class="lab">SUPPORT</div><div class="h"></div></div>
+    <div class="stn" id="st2"><div class="cap sm"><div class="top">2</div></div><div class="lab">CODE</div><div class="h"></div>
+      <div class="small">Coding agents need a connected GitHub or GitLab repository.</div></div>
+    <div class="stn" id="st3"><div class="cap sm"><div class="top">3</div></div><div class="lab">FOLLOW UP</div><div class="h"></div></div>
+    <div id="wins" class="abs" style="left:0;top:0;width:1920px;height:1080px"></div>
+    <div id="chip"><img class="av" src="../../assets/helpin/avatars/maya.webp" width="44" height="44">Maya Chen · Northstar <span style="display:inline-flex;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>attached</span><span class="cst"><span class="pill p-prog" id="chip-prog"><i></i>In progress</span><span class="pill p-rel" id="chip-rel" style="opacity:0">✓ Released</span></span></div>
+
+    <!-- chart -->
+    <div class="stn" id="stc" style="width:700px">
+      <div class="eyebrow abs" style="left:0;top:300px">List prices · billed annually</div>
+      <div class="h" style="top:360px;font-size:88px"></div>
+      <div class="lede abs" id="chart-lede" style="left:0;top:580px;opacity:0">And support is included.</div>
+    </div>
+    <div id="chartcard"></div>
+    <div id="chartfoot" class="small">List prices, billed annually, checked September 2026. Linear needs a separate support tool; its coding sessions use prepaid AI credits.</div>
+
+    <!-- mcp -->
+    <div class="stn" id="st4" style="width:800px"><div class="cap sm"><div class="top">4</div></div><div class="lab">MCP (BETA)</div>
+      <div class="pre">NOT READY TO MOVE?</div><div class="h" style="top:460px;font-size:72px;width:820px"></div></div>
+    <div id="mcpvis">
+      <div class="node" id="nodeA"><span class="mono-chip">L</span><b>Linear</b></div>
+      <svg class="abs" style="left:0;top:0" width="1920" height="1080"><path id="cable" d="M 1290 544 L 1466 544" stroke="#2F5A45" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+      <div id="socket"></div>
+      <div id="plug"></div>
+      <div class="flow"></div><div class="flow"></div><div class="flow"></div><div class="flow"></div>
+      <div id="mcp-tag">MCP (beta)</div>
+      <div class="node" id="nodeB"><div class="r"><span id="nodeB-sym"></span><b>Helpin agents</b></div>
+        <div class="ag"><img src="../../assets/helpin/agents/scribe.svg"><img src="../../assets/helpin/agents/forge.svg"><img src="../../assets/helpin/agents/lens.svg"><img src="../../assets/helpin/agents/echo.svg"></div></div>
+    </div>
+
+    <!-- end -->
+    <div id="tag"><div id="t1"></div><div id="t2"></div></div>
+    <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+    <div id="cta"><span>Start free at helpin.ai</span></div>
+    <div id="ctanote">14-day trial · no card · or self-host free</div>
+  </section>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, clamp, brandEase, expoOut, expoInOut, easeInOut, backOut } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { words, rise } from '../../lib/kit.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+import { B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const E = brandEase;
+const ease = (t, a, d = 0.6, f = E) => f(P(t, a, a + d));
+const R = Math.round;
+const sage = (s) => s.split(' ').map((w) => `<em>${w}</em>`).join(' ');
+function lines(el, arr) {
+  el.innerHTML = '';
+  const all = [];
+  arr.forEach((h) => { const d = document.createElement('div'); el.appendChild(d); all.push(words(d, h)); });
+  return all;
+}
+// A screen on [a, b): fades and un-blurs in over inDur, out over the last outDur. `base` is kept in the transform.
+function screen(el, t, a, b, { dy = 26, dx = 0, blur = 10, inDur = 0.5, outDur = 0.3, base = '' } = {}) {
+  const k = ease(t, a, inDur), o = E(P(t, b - outDur, b));
+  const on = t >= a && t < b, m = Math.max(1 - k, o);
+  el.style.opacity = String(on ? k * (1 - o) : 0);
+  const move = m > 0.001 ? `translate(${R((1 - k) * dx - o * dx * 0.4)}px, ${R((1 - k) * dy - o * dy * 0.5)}px)` : '';
+  el.style.transform = `${base} ${move}`.trim() || 'none';
+  el.style.filter = on && m > 0.001 ? `blur(${(m * blur).toFixed(2)}px)` : 'none';
+  return on;
+}
+const show = (el, k) => { el.style.opacity = String(clamp(k)); };
+
+// ── Keycaps: pressed on the beat (down 0.06 s, held, released by 0.34 s)
+function pressK(t, at) {
+  const d = t - at;
+  if (d < 0 || d >= 0.34) return 0;
+  if (d < 0.06) return d / 0.06;
+  if (d < 0.14) return 1;
+  return 1 - E((d - 0.14) / 0.2);
+}
+function cap(el, t, times, depth = 10) {
+  const k = Math.max(0, ...times.map((a) => pressK(t, a)));
+  const top = el.querySelector('.top');
+  const dy = R(k * depth);
+  top.style.transform = dy ? `translateY(${dy}px)` : 'none';
+  top.style.boxShadow = `0 ${12 - dy}px 0 #9FB4A9, 0 ${22 - dy}px ${36 - dy * 2}px rgba(0,0,0,.5)`;
+  top.style.color = k > 0.4 ? '#0F7A50' : '#0B2A20';
+}
+
+// ── Brand marks
+const vsSym = helpinSymbol({ size: 38, color: '#E8EEEA' }); vsSym.assemble(1); $('#vs-sym').append(vsSym.node);
+const barSym = helpinSymbol({ size: 28, color: '#0F7A50' }); barSym.assemble(1); $('#bar-sym').append(barSym.node);
+const nodeSym = helpinSymbol({ size: 44, color: '#9CDBB3' }); nodeSym.assemble(1); $('#nodeB-sym').append(nodeSym.node);
+const endSym = helpinSymbol({ size: 92, color: '#E8EEEA' }); $('#end-symbol').append(endSym.node);
+
+// ── Copy
+const HOOK = lines($('#hook-h'), ['Your issues', sage('move fast.')]);
+const WHO = lines($('#who-h'), ['Who asked', sage('for this?')]);
+const TOPA = lines($('#topA'), ['The customer is in another tool.', sage('So is the context.')]);
+const TOPB = lines($('#topB'), ['Who tells them', sage('it shipped?')]);
+const DROP = lines($('#drop-h'), ['Plan the work', sage('with the customer attached.')]);
+const S1 = lines($('#st1 .h'), ['Support inbox and help center,', sage('built in.')]);
+const S2 = lines($('#st2 .h'), ['Agents read the conversation.', sage('You review the PR.')]);
+const S3 = lines($('#st3 .h'), ['Your customer', 'hears back', sage('in the same thread.')]);
+const SC = lines($('#stc .h'), ['From 15 people,', sage('Helpin costs less.')]);
+const S4 = lines($('#st4 .h'), ['Keep Linear.', sage('Connect it through MCP.')]);
+const TAG = [words($('#t1'), 'Plan the work'), words($('#t2'), sage('with the customer attached.'))];
+$('#st1 .h').style.width = '640px'; $('#st2 .h').style.width = '700px'; $('#st3 .h').style.width = '800px';
+
+// ── Hook list: C adds three issues at the top; J walks the selection down to EXP-142
+const OLD = [['EXP-142', 'Fix incomplete CSV exports', 'sam'], ['EXP-139', 'Slow search on large workspaces', 'priya'], ['EXP-136', 'Timezone in digest emails', 'dev'],
+  ['EXP-131', 'Retry failed webhooks', 'lin'], ['EXP-128', 'Archive old projects', 'aisha'], ['EXP-125', 'Bulk edit labels', 'sam'], ['EXP-121', 'Faster board loading', 'dev']];
+const NEW = [['EXP-145', 'Dark mode for reports', 'priya', B(2)], ['EXP-144', 'Keyboard shortcut for filters', 'lin', B(1)], ['EXP-143', 'Rename billing settings', 'aisha', B(0)]];
+const ROWS = [...NEW, ...OLD.map((r) => [...r, null])].map(([id, ti, av, at]) => {
+  const el = document.createElement('div');
+  el.className = 'row';
+  el.innerHTML = `<span class="st"></span><span class="id">${id}</span><span class="ti">${ti}</span><span class="cu">—</span><img class="pa" src="../../assets/helpin/avatars/${av}.webp">`;
+  $('#rows').appendChild(el);
+  return { el, at, id };
+});
+const MOVES = [B(3), B(3.5), B(4)];
+
+// ── Live helpin.ai previews
+const w1 = siteWindow($('#wins'), { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 18 });
+const w2 = siteWindow($('#wins'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 18, dark: true });
+const w3 = siteWindow($('#wins'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 18 });
+[w1, w2, w3].forEach((w) => { waitFor(w.view.ready); w.el.style.opacity = '0'; });
+const BOX1 = { x: 900, y: 186, w: 760, h: 736 };
+const BOX2 = { x: 880, y: 236, w: 900, h: 620 };
+const BOX3 = { x: 960, y: 196, w: 840, h: 720 };
+w1.place(BOX1); w2.place(BOX2); w3.place(BOX3);
+
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+// Camera shots inside a window: each shot is a rect in page space; moves ease between shots, holds are still.
+function shots(w, box, lt, list, dur = 0.5) {
+  let i = 0;
+  while (i + 1 < list.length && lt >= list[i + 1].at) i++;
+  const cur = list[i], prev = list[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(lt, cur.at, cur.at + dur));
+  const focus = w.view.rect();
+  if (!focus) return;
+  const fit = (s) => fitAspect(s.rect(focus), box.w / box.h, focus);
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev), fit(cur), k));
+}
+// Rect helpers in page space, relative to the focus element.
+const part = (fx, fy, fw, fh) => (f) => ({ x: f.x + f.w * fx, y: f.y + f.h * fy, w: f.w * fw, h: f.h * fh });
+const whole = (f) => f;
+
+// ── Chart
+const CW = 900, CH = 600, X0 = 110, X1 = 860, Y0 = 70, Y1 = 520;
+const X = (n) => X0 + ((n - 1) / 39) * (X1 - X0);
+const Y = (d) => Y1 - (d / 700) * (Y1 - Y0);
+$('#chartcard').innerHTML = `
+  <svg width="${CW}" height="${CH}" viewBox="0 0 ${CW} ${CH}">
+    ${[0, 200, 400, 600].map((d) => `<line x1="${X0}" x2="${X1}" y1="${Y(d)}" y2="${Y(d)}" stroke="rgba(184,221,187,.12)" stroke-width="1.5"/>`).join('')}
+    <polygon id="zone" points="${X(14.94)},${Y(239)} ${X(40)},${Y(640)} ${X(40)},${Y(239)}" fill="rgba(156,219,179,.10)" opacity="0"/>
+    <path id="ln-lin" d="M ${X(1)} ${Y(16)} L ${X(40)} ${Y(640)}" stroke="#C9D6CF" stroke-width="4" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+    <path id="ln-hel" d="M ${X(1)} ${Y(239)} L ${X(40)} ${Y(239)}" stroke="#9CDBB3" stroke-width="6" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+    <line id="mk-line" x1="${X(15)}" x2="${X(15)}" y1="${Y(239)}" y2="${Y1}" stroke="#9CDBB3" stroke-width="2" stroke-dasharray="6 6" opacity="0"/>
+    <circle id="mk-dot" cx="${X(15)}" cy="${Y(239)}" r="11" fill="#0C1F18" stroke="#9CDBB3" stroke-width="4" opacity="0"/>
+  </svg>
+  ${[0, 200, 400, 600].map((d) => `<span class="ax" style="right:${CW - X0 + 16}px;top:${Y(d) - 11}px">$${d}</span>`).join('')}
+  ${[1, 10, 20, 30].map((n) => `<span class="ax" style="left:${X(n) - 8}px;top:${Y1 + 22}px">${n}</span>`).join('')}
+  <span class="ax" style="right:${CW - X(40) - 14}px;top:${Y1 + 22}px">40 people</span>
+  <div class="lbl" id="lbl-lin" style="right:${CW - X1}px;top:${Y(640) - 58}px"><span class="mono-chip">L</span>Linear Business · $16 per user</div>
+  <div class="lbl" id="lbl-hel" style="left:${X(15) + 30}px;top:${Y(239) + 22}px"><span id="lbl-sym"></span>Helpin Growth · $239 per workspace</div>
+  <div id="lbl-hel2" style="left:${X(15) + 76}px;top:${Y(239) + 64}px">Support, CRM and meetings included</div>
+  <div id="mk-label" style="right:${CW - X(15) + 16}px;top:${Y1 - 38}px">15 people</div>`;
+const lblSym = helpinSymbol({ size: 32, color: '#9CDBB3' }); lblSym.assemble(1); $('#lbl-sym').append(lblSym.node);
+
+// ── Poses: the issue card in the hook detail, beside the other tool, and as the Helpin task
+const POSE_B = [880, 150, 1], POSE_C = [130, 300, 0.74], POSE_E = [860, 150, 1];
+const TOOL = [1120, 300, 0.74];
+function issuePose(t) {
+  const k1 = expoInOut(P(t, B(N.other), B(N.other) + 0.65));
+  const k2 = expoOut(P(t, B(N.drop) + 0.12, B(N.drop) + 0.95));
+  const a = t < B(N.drop) ? POSE_B : POSE_C, b = t < B(N.drop) ? POSE_C : POSE_E, k = t < B(N.drop) ? k1 : k2;
+  return [L(a[0], b[0], k), L(a[1], b[1], k), L(a[2], b[2], k)];
+}
+const at = ([x, y, s], [ox, oy]) => [x + ox * s, y + oy * s, s];
+const poseCSS = ([x, y, s]) => (Math.abs(s - 1) < 1e-4 ? `translate(${R(x)}px, ${R(y)}px)` : `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) scale(${s.toFixed(4)})`);
+
+// ── Chip docks, one per station window
+const DOCKS = [[BOX1.x + 20, BOX1.y - 82], [BOX2.x + 20, BOX2.y - 82], [BOX3.x + 20, BOX3.y - 82]];
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 123.07, duration: DURATION,
+  scenes: [{ id: 'main', start: 0, end: DURATION, render: ({ t }) => {
+    // Background: the glow drifts all the way through and blooms on the drop; the grid only moves between screens.
+    const bloom = ease(t, B(N.drop), 0.4) * (1 - 0.45 * ease(t, B(N.drop) + 0.5, 1.6));
+    const gx = 30 + 12 * Math.sin(t * 0.21), gy = 40 + 8 * Math.cos(t * 0.17);
+    $('#glow').style.background = `radial-gradient(ellipse 48% 56% at ${gx.toFixed(2)}% ${gy.toFixed(2)}%, rgba(15,122,80,${(0.26 + 0.22 * bloom).toFixed(3)}), transparent 70%),` +
+      `radial-gradient(ellipse 40% 44% at ${(78 - 6 * Math.sin(t * 0.13)).toFixed(2)}% 72%, rgba(156,219,179,${(0.05 + 0.08 * bloom).toFixed(3)}), transparent 70%)`;
+    const cuts = [B(N.who), B(N.other), B(N.drop), B(N.s1), B(N.s2), B(N.s3), B(N.chart), B(N.mcp), B(N.tag)];
+    const shift = cuts.reduce((s, c) => s + expoOut(P(t, c - 0.1, c + 0.5)), 0);
+    $('#grid').style.transform = `translate(${-R((shift * 40) % 64)}px, ${-R((shift * 16) % 64)}px)`;
+
+    // ── Hook
+    const hookOn = screen($('#hookcopy'), t, 0, B(N.hookOut) - 0.02, { dy: 0, blur: 0, inDur: 0.01 });
+    if (hookOn) {
+      show($('#vs'), ease(t, 0.05, 0.5));
+      rise(HOOK[0], t, 0.1, 0.07); rise(HOOK[1], t, B(1), 0.07);
+      cap($('#capC'), t, [B(0), B(1), B(2)]); cap($('#capJ'), t, MOVES); cap($('#capE'), t, [B(N.open)]);
+      [['#capC', 0], ['#capJ', 0.08], ['#capE', 0.16]].forEach(([s, d]) => { const k = ease(t, d, 0.5); css($(s), { opacity: String(k), transform: k < 1 ? `translateY(${R((1 - k) * 20)}px)` : 'none' }); });
+    }
+    const lk = ease(t, 0, 0.5), lo = E(P(t, B(N.open) + 0.35, B(N.hookOut) + 0.1));
+    css($('#list'), { opacity: String(t < B(N.hookOut) + 0.1 ? lk * (1 - lo) : 0),
+      transform: `translate(900px, ${R(160 + (1 - lk) * 30)}px)${lo > 0 ? ` scale(${(1 + 0.06 * lo).toFixed(4)})` : ''}`, transformOrigin: '440px 380px',
+      filter: lo > 0.001 ? `blur(${(lo * 10).toFixed(2)}px)` : 'none' });
+    if (t < B(N.hookOut) + 0.1) {
+      let y = 0;
+      ROWS.forEach((r) => {
+        const h = r.at === null ? 1 : expoOut(P(t, r.at + 0.02, r.at + 0.3));
+        css(r.el, { top: `${R(y - (1 - h) * 20)}px`, opacity: String(h) });
+        y += 78 * h;
+      });
+      const idx = MOVES.reduce((s, m) => s + expoOut(P(t, m, m + 0.14)), 0);
+      const open = ease(t, B(N.open), 0.2) * (1 - 0.5 * ease(t, B(N.open) + 0.25, 0.3));
+      css($('#sel'), { top: `${R(idx * 78)}px`, background: open > 0.01 ? `rgba(${R(L(238, 211, open))},${R(L(247, 239, open))},${R(L(241, 223, open))},1)` : '#EEF7F1' });
+    }
+
+    // ── Who asked for this?
+    const whoOn = screen($('#who-h'), t, B(N.who + 0.3) - 0.05, B(N.whoOut), { dy: 0, blur: 0, inDur: 0.01 });
+    if (whoOn) { rise(WHO[0], t, B(N.who + 0.3), 0.08); rise(WHO[1], t, B(N.comment + 0.5), 0.08); }
+    const pose = issuePose(t);
+    const issueOn = screen($('#issue'), t, B(N.who), B(N.dropOut), { dy: 30, base: poseCSS(pose) });
+    if (issueOn) {
+      const txt = 'who asked for this?';
+      const n = clamp(Math.floor((t - B(N.comment) - 0.1) * 16), 0, txt.length);
+      $('#cmtext').textContent = t > B(N.comment) ? txt.slice(0, n) : '';
+      const done = t > B(N.comment) + 0.1 + txt.length / 16;
+      const beatPhase = ((t / 0.48753) % 1 + 1) % 1;
+      $('#caret').style.opacity = !done ? '1' : beatPhase < 0.5 ? '1' : '0';
+      // the customer field: linked from somewhere else
+      const ring = ease(t, B(N.field), 0.3) * (1 - ease(t, B(N.other) + 0.2, 0.5));
+      show($('#cust-ring'), ring);
+      const dashPulse = t >= B(N.field) && t < B(N.field) + 0.3 ? 1 - (t - B(N.field)) / 0.3 : 0;
+      $('#cust-dash').style.background = dashPulse ? `rgba(255,244,220,${dashPulse.toFixed(3)})` : '#FAFBFA';
+      // the agent picks it up with only the title
+      const ag = ease(t, B(N.agent), 0.5);
+      css($('#ag'), { opacity: String(ag * (1 - ease(t, B(N.drop), 0.25))), transform: ag < 1 ? `translateY(${R((1 - ag) * 16)}px)` : 'none' });
+      show($('#cm'), 1 - ease(t, B(N.drop), 0.25));
+      show($('#sec-act'), 1 - ease(t, B(N.drop), 0.25));
+      show($('#sec-cust'), ease(t, B(N.drop) + 0.3, 0.4));
+      // released, with nobody to tell
+      // the drop: it becomes a Helpin task with the customer attached, back at In progress (it ships at the Follow-up station)
+      const hk = ease(t, B(N.drop) + 0.05, 0.35);
+      const rel = ease(t, B(N.released), 0.3) * (1 - hk);
+      show($('#st-prog'), 1 - rel); show($('#st-rel'), rel);
+      show($('#bar-gen'), 1 - hk); show($('#bar-hel'), hk); show($('#helbar-line'), hk);
+      show($('#cust-dash'), 1 - hk); show($('#cust-chip'), hk);
+      const glow = ease(t, B(N.drop), 0.12) * (1 - 0.7 * ease(t, B(N.drop) + 0.2, 0.9));
+      show($('#issue-glow'), glow);
+    }
+
+    // ── The customer is in another tool
+    const toolOn = screen($('#tool'), t, B(N.other) + 0.35, B(N.drop) + 0.4, { dx: 50, dy: 0, base: poseCSS(TOOL) });
+    const topAOn = screen($('#topA'), t, B(N.other) + 0.2, B(N.tells), { dy: 0, blur: 8, inDur: 0.01 });
+    if (topAOn) { rise(TOPA[0], t, B(N.other) + 0.25, 0.06); rise(TOPA[1], t, B(N.context), 0.07); }
+    const connK = ease(t, B(N.other) + 0.9, 0.5) * (1 - ease(t, B(N.tells), 0.3));
+    [$('#conn1'), $('#conn2')].forEach((p) => { p.style.opacity = String(connK); });
+    show($('#broken'), connK);
+    // ── Who tells them it shipped?
+    const topBOn = screen($('#topB'), t, B(N.tells) + 0.05, B(N.drop) - 0.05, { dy: 0, blur: 8, inDur: 0.01, outDur: 0.3 });
+    if (topBOn) { rise(TOPB[0], t, B(N.tells) + 0.1, 0.07); rise(TOPB[1], t, B(N.tells + 1), 0.07); }
+    const ar = expoOut(P(t, B(N.arrow), B(N.arrow + 1.2)));
+    const arOut = ease(t, B(N.lift), 0.3);
+    $('#arrow').style.opacity = String((t >= B(N.arrow) ? 1 : 0) * (1 - arOut));
+    $('#arrow').setAttribute('d', `M 800 464 L ${(800 + 230 * ar).toFixed(1)} 464`);
+    const q = backOut(P(t, B(N.arrow + 1.3), B(N.arrow + 1.3) + 0.4), 1.4);
+    css($('#qmark'), { opacity: String(clamp(P(t, B(N.arrow + 1.3), B(N.arrow + 1.3) + 0.12)) * (1 - arOut)), transform: q < 1 ? `scale(${L(0.6, 1, q).toFixed(3)})` : 'none' });
+
+    // ── The customer block: dim in the other tool, lifted in the quiet, snapped onto the task on the drop
+    const custVisible = t >= B(N.other) + 0.35 && t < B(N.dropOut);
+    if (custVisible) {
+      const toolK = parseFloat($('#tool').style.opacity || '0');
+      const from = at(TOOL, [40, 150]), onCard = at(pose, [40, 440]);
+      const lift = P(t, B(N.lift), B(N.drop));
+      let x, y, s;
+      if (lift <= 0) [x, y, s] = from;
+      else if (lift < 1) {
+        const k = easeInOut(lift);
+        x = L(from[0], onCard[0], k); y = L(from[1], onCard[1], k) - Math.sin(k * Math.PI) * 110; s = L(from[2], onCard[2], k) * (1 + 0.1 * Math.sin(k * Math.PI));
+      } else [x, y, s] = onCard;
+      const dim = 1 - ease(t, B(N.lift), 0.4);
+      const exit = E(P(t, B(N.dropOut) - 0.38, B(N.dropOut)));
+      css($('#cust'), {
+        opacity: String(lift > 0 ? 1 - exit : toolK),
+        transform: lift >= 1 ? poseCSS([x, y, s]) : `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) scale(${s.toFixed(4)})`,
+        filter: dim > 0.001 ? `grayscale(${dim.toFixed(3)}) opacity(${L(1, 0.62, dim).toFixed(3)})` : (exit > 0.001 ? `blur(${(exit * 10).toFixed(2)}px)` : 'none'),
+        boxShadow: lift > 0 ? `0 ${R(30 * Math.sin(Math.min(1, lift) * Math.PI))}px 60px rgba(0,0,0,.35), 0 0 0 ${lift >= 1 ? 2.5 : 1.5}px ${lift >= 1 ? '#9CDBB3' : '#E4E9E6'}` : '0 0 0 1.5px #E4E9E6',
+      });
+      show($('#slot'), ease(t, B(N.lift) + 0.1, 0.3));
+      const snap = t >= B(N.drop) ? 1 - E(P(t, B(N.drop), B(N.drop) + 0.8)) : 0;
+      show($('#cust-ring2'), snap);
+      show($('#cust-tag'), ease(t, B(N.drop) + 0.2, 0.4));
+      ['#cc1', '#cc2', '#cc3'].forEach((sel, i) => {
+        const k = expoOut(P(t, B(N.rows + i), B(N.rows + i) + 0.35));
+        const el = $(sel);
+        el.querySelector('.okw').style.width = `${R(k * 34)}px`;
+        el.style.background = k > 0 ? `rgb(${R(L(241, 227, k))},${R(L(244, 244, k))},${R(L(242, 234, k))})` : '#F1F4F2';
+        el.style.color = k > 0.5 ? '#0B6340' : '#4F5A55';
+      });
+    } else $('#cust').style.opacity = '0';
+
+    // ── The drop copy
+    const dropOn = screen($('#drop-h'), t, B(N.drop) + 0.3, B(N.dropOut), { dy: 0, blur: 0, inDur: 0.01 });
+    if (dropOn) { rise(DROP[0], t, B(N.drop) + 0.3, 0.07); rise(DROP[1], t, B(N.drop + 1), 0.07); }
+    screen($('#drop-l'), t, B(N.rows + 3), B(N.dropOut), { dy: 14 });
+
+    // ── Stations
+    const st = [[$('#st1'), S1, N.s1, N.s2], [$('#st2'), S2, N.s2, N.s3], [$('#st3'), S3, N.s3, N.chart], [$('#st4'), S4, N.mcp, N.tag]];
+    st.forEach(([el, hs, a, b]) => {
+      const on = screen(el, t, B(a) - 0.2, B(b), { dy: 0, blur: 8, inDur: 0.25 });
+      if (!on) return;
+      const c = el.querySelector('.cap');
+      const ck = backOut(P(t, B(a) - 0.2, B(a) + 0.2), 1.4);
+      c.style.opacity = String(clamp(P(t, B(a) - 0.2, B(a))));
+      c.style.transform = ck < 1 ? `scale(${L(0.7, 1, ck).toFixed(3)})` : 'none';
+      cap(c, t, [B(a)], 9);
+      const lab = el.querySelector('.lab');
+      lab.style.opacity = String(ease(t, B(a) + 0.08, 0.3));
+      lab.style.transform = t < B(a) + 0.4 ? `translateX(${R((1 - ease(t, B(a) + 0.08, 0.35)) * -14)}px)` : 'none';
+      const pre = el.querySelector('.pre');
+      if (pre) { show(pre, ease(t, B(a) + 0.1, 0.4)); rise(hs[0], t, B(a + 0.6), 0.07); rise(hs[1], t, B(a + 1.5), 0.07); }
+      else { rise(hs[0], t, B(a) + 0.05, 0.06); if (hs.length > 2) { rise(hs[1], t, B(a) + 0.35, 0.06); rise(hs[2], t, B(a + 1.2), 0.07); } else rise(hs[1], t, B(a + 1), 0.07); }
+      const small = el.querySelector('.small');
+      if (small) show(small, ease(t, B(a + 2.5), 0.5));
+    });
+
+    // Live windows, with camera shots on each step
+    const waits = [];
+    const lt1 = t - B(N.s1), lt2 = t - B(N.s2), lt3 = t - B(N.s3);
+    if (screen(w1.el, t, B(N.s1) - 0.15, B(N.s2), { dy: 40, blur: 10, inDur: 0.45 })) {
+      shots(w1, BOX1, lt1, [{ at: 0, rect: whole }, { at: 1.3, rect: () => { const a = w1.view.rect('.swi-agent'); return a && { x: a.x - a.w * 0.02, y: a.y + a.h * 0.06, w: a.w * 1.04, h: a.h * 0.56 }; } }], 0.6);
+      waits.push(w1.view.update(0.4 + clamp(lt1 + 0.5, 0, 3.6) * 2.2));
+    }
+    if (screen(w2.el, t, B(N.s2) - 0.15, B(N.s3), { dy: 40, blur: 10, inDur: 0.45 })) {
+      shots(w2, BOX2, lt2, [
+        { at: 0, rect: part(0, 0, 1, 0.3) }, { at: 0.85, rect: part(0, 0.3, 1, 0.42) },
+        { at: 1.7, rect: part(0, 0.55, 1, 0.3) }, { at: 2.2, rect: part(0, 0.7, 1, 0.3) }], 0.5);
+      waits.push(w2.view.update(clamp(lt2 + 0.3, 0, 3.6) * 1.2));
+    }
+    if (screen(w3.el, t, B(N.s3) - 0.15, B(N.chart), { dy: 40, blur: 10, inDur: 0.45 })) {
+      shots(w3, BOX3, lt3, [{ at: 0, rect: whole }]);
+      waits.push(w3.view.update(0.8 + clamp(lt3 + 0.2, 0, 4) * 1.6));
+    }
+
+    // The customer chip rides from the task into every station
+    if (t >= B(N.dropOut) - 0.45 && t < B(N.chart)) {
+      const start = at(POSE_E, [68, 466]);
+      const legs = [[B(N.s1) - 0.35, DOCKS[0]], [B(N.s2) - 0.1, DOCKS[1]], [B(N.s3) - 0.1, DOCKS[2]]];
+      let x = start[0], y = start[1], prev = [start[0], start[1]];
+      for (const [la, d] of legs) {
+        const k = expoInOut(P(t, la, la + 0.6));
+        if (t < la) break;
+        x = L(prev[0], d[0], k); y = L(prev[1], d[1], k) - Math.sin(k * Math.PI) * 60;
+        prev = d;
+      }
+      const cin = ease(t, B(N.dropOut) - 0.45, 0.3), cout = E(P(t, B(N.chart) - 0.35, B(N.chart)));
+      css($('#chip'), { opacity: String(cin * (1 - cout)), transform: `translate(${R(x)}px, ${R(y)}px)` });
+      const shipped = ease(t, B(N.s3) + 0.35, 0.3);
+      show($('#chip-prog'), 1 - shipped); show($('#chip-rel'), shipped);
+    } else $('#chip').style.opacity = '0';
+
+    // ── Chart
+    const scOn = screen($('#stc'), t, B(N.chart), B(N.mcp), { dy: 0, blur: 8, inDur: 0.01 });
+    if (scOn) {
+      show($('#stc .eyebrow'), ease(t, B(N.chart), 0.4));
+      rise(SC[0], t, B(N.chart) + 0.05, 0.07); rise(SC[1], t, B(N.marker), 0.07);
+      screen($('#chart-lede'), t, B(N.marker + 1.5), B(N.mcp), { dy: 12 });
+    }
+    screen($('#chartcard'), t, B(N.chart) - 0.15, B(N.mcp), { dy: 30, inDur: 0.45 });
+    screen($('#chartfoot'), t, B(N.chart + 2), B(N.mcp), { dy: 10 });
+    if (t >= B(N.chart) && t < B(N.mcp)) {
+      const d1 = easeInOut(P(t, B(N.draw), B(N.draw) + 1.3)), d2 = easeInOut(P(t, B(N.draw) + 0.15, B(N.draw) + 1.2));
+      $('#ln-lin').setAttribute('stroke-dashoffset', (1 - d1).toFixed(4));
+      $('#ln-hel').setAttribute('stroke-dashoffset', (1 - d2).toFixed(4));
+      show($('#lbl-lin'), ease(t, B(N.draw) + 1.1, 0.4));
+      show($('#lbl-hel'), ease(t, B(N.draw) + 1.0, 0.4)); show($('#lbl-hel2'), ease(t, B(N.draw) + 1.2, 0.4));
+      const mk = ease(t, B(N.marker), 0.35);
+      $('#mk-dot').setAttribute('opacity', mk.toFixed(3));
+      $('#mk-dot').setAttribute('r', (11 * backOut(P(t, B(N.marker), B(N.marker) + 0.4), 1.6)).toFixed(2));
+      $('#mk-line').setAttribute('opacity', ease(t, B(N.marker) + 0.1, 0.4).toFixed(3));
+      show($('#mk-label'), ease(t, B(N.marker) + 0.2, 0.4));
+      $('#zone').setAttribute('opacity', ease(t, B(N.marker + 1), 0.8).toFixed(3));
+    }
+
+    // ── MCP: keep Linear, plug it into Helpin's agents
+    const mcpOn = screen($('#mcpvis'), t, B(N.mcp) - 0.15, B(N.tag), { dx: 40, dy: 0, inDur: 0.45 });
+    if (mcpOn) {
+      const pk = expoOut(P(t, B(N.plug) - 0.7, B(N.plug)));
+      const px = L(1300, 1426, pk);
+      css($('#plug'), { transform: `translate(${R(px)}px, 526px)` });
+      const lit = t >= B(N.plug) ? 1 : 0;
+      $('#cable').setAttribute('stroke', lit ? '#9CDBB3' : '#2F5A45');
+      $('#socket').style.background = lit ? '#9CDBB3' : '#2F5A45';
+      $('#nodeB').style.boxShadow = `0 0 0 ${lit ? 2.5 : 1.5}px ${lit ? '#9CDBB3' : 'rgba(184,221,187,.22)'}, 0 30px 80px rgba(0,0,0,.4)`;
+      show($('#mcp-tag'), ease(t, B(N.plug) + 0.1, 0.4));
+      $$('.flow').forEach((f, i) => {
+        const u = ((t - B(N.plug) - i * 0.18) / 0.72);
+        const on = t > B(N.plug) && u >= 0;
+        const uu = ((u % 1) + 1) % 1;
+        css(f, { opacity: on ? String(Math.sin(uu * Math.PI).toFixed(3)) : '0', transform: `translate(${R(L(1296, 1462, uu))}px, 538px)` });
+      });
+    }
+
+    // ── Tagline and end card
+    const endOn = t >= B(N.tag);
+    $('#tag').style.opacity = endOn ? '1' : '0';
+    if (endOn) { rise(TAG[0], t, B(N.tag) + 0.05, 0.08); rise(TAG[1], t, B(N.tag2), 0.08); }
+    endSym.assemble(P(t, B(N.mark) - 0.3, B(N.mark) + 0.7));
+    const mk = ease(t, B(N.mark) - 0.2, 0.7), ck = ease(t, B(N.cta), 0.6), nk = ease(t, B(N.cta + 0.5), 0.6);
+    css($('#endmark'), { opacity: String(mk), transform: mk < 1 ? `translateY(${R((1 - mk) * 16)}px)` : 'none' });
+    css($('#cta'), { opacity: String(ck), transform: ck < 1 ? `translateY(${R((1 - ck) * 16)}px)` : 'none' });
+    css($('#ctanote'), { opacity: String(nk), transform: nk < 1 ? `translateY(${R((1 - nk) * 12)}px)` : 'none' });
+
+    return waits.length ? Promise.all(waits) : null;
+  } }],
+});
+</script>
+</body>
+</html>

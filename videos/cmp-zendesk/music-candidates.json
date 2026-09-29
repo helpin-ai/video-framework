@@ -1,0 +1,27 @@
+{
+ "name": "cmp-zendesk-music",
+ "duration": 36,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 36, "gain": -4,
+    "styles": ["big beat", "breakbeat", "128 BPM", "chopped funk drum breaks", "squelchy acid 303 bassline", "short brass-like synth stab", "punchy, gritty, confident", "product launch motion graphics"],
+    "avoid": ["vocals", "rap", "cinematic", "orchestral", "epic trailer hits", "long silence", "fade out", "breakdown"],
+    "sections": [
+      { "name": "Filtered break", "duration": 7.5, "styles": ["the funk break plays from the very first second under a heavy low-pass filter", "muffled, tense, heard through a wall", "the filter slowly creeping open", "a soft rising noise swell in the last two seconds"] },
+      { "name": "Drop", "duration": 11.25, "styles": ["the filter snaps fully open on the first beat", "full big beat groove", "fat chopped breaks", "acid bassline squelching", "stabs on the offbeats", "energetic and bright"] },
+      { "name": "Lift", "duration": 11.25, "styles": ["fullest energy", "extra percussion", "the acid line rises", "driving"] },
+      { "name": "Carry to the end", "duration": 6, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] },
+  { "at": 0, "length": 36, "gain": -4,
+    "prompt": "Big beat breakbeat at exactly 128 BPM for a punchy product comparison motion graphics video: chopped funky drum breaks, a squelchy acid 303 bassline, short brassy synth stabs and a little vinyl scratch; gritty, confident and fun. No vocals. It starts immediately with the drum break playing under a heavy low-pass filter, muffled and tense (0 to 7.5 seconds), with a short rising swell at the end, then at 7.5 seconds the filter snaps open into the full, loud big beat groove with the acid bassline and stabs, gets even bigger at 18.75 seconds, and carries at full energy all the way to the end. It ends cleanly on a downbeat at 36 seconds with no big final hit, no breakdown and no fade." },
+  { "at": 0, "length": 36, "gain": -4,
+    "styles": ["breakbeat", "funky big beat", "128 BPM", "live-sounding funk drum breaks", "Hammond organ stabs", "rubbery acid bass", "hand claps", "playful, cheeky, energetic", "product video"],
+    "avoid": ["vocals", "rap", "cinematic", "orchestral", "trailer hits", "long silence", "fade out", "breakdown"],
+    "sections": [
+      { "name": "Muffled break", "duration": 7.5, "styles": ["drum break from the first second, low-pass filtered and muffled", "tense", "a noise riser in the last two seconds"] },
+      { "name": "Drop", "duration": 11.25, "styles": ["filter fully open on the first beat", "full funky breakbeat", "organ stabs", "acid bass", "claps"] },
+      { "name": "Bigger", "duration": 11.25, "styles": ["even bigger", "extra percussion and a rising acid line"] },
+      { "name": "Carry to the end", "duration": 6, "styles": ["full groove to the very end", "ends on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] }
+ ]
+}

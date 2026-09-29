@@ -1,0 +1,31 @@
+{
+ "name": "cmp-help-scout-music",
+ "duration": 38,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 38, "gain": -4,
+    "styles": ["indie dance", "122 BPM", "clean funky electric guitar", "hand claps", "warm round bass", "four-on-the-floor kick", "shakers", "bright, optimistic, tidy", "product motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out"],
+    "sections": [
+      { "name": "Calm inbox", "duration": 8, "styles": ["a calm palm-muted funky guitar riff from the very first second", "shaker", "soft rim clicks", "light kick on every beat", "curious and tidy", "sparse but moving"] },
+      { "name": "Build", "duration": 3, "styles": ["adds claps and a rising bass line", "filter opening", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 12, "styles": ["full indie dance groove", "punchy four-on-the-floor kick", "bright open funky guitar chords", "warm bass", "claps", "uplifting"] },
+      { "name": "Lift", "duration": 9, "styles": ["fullest energy", "extra percussion", "a bright guitar lead lick"] },
+      { "name": "Carry to the end", "duration": 6, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] },
+  { "at": 0, "length": 38, "gain": -4,
+    "prompt": "Indie dance at exactly 122 BPM for a bright product motion-graphics film: clean funky electric guitar, hand claps, warm round bass, a four-on-the-floor kick and shakers; optimistic and tidy. No vocals. It starts immediately with a calm palm-muted funky guitar riff and a shaker over a light kick (0 to 8 seconds), adds claps and a rising bass line from 8 seconds, stops for one beat at 10.5 seconds, then drops at 11 seconds into a full bright groove with open funky guitar chords that carries all the way to the end, with a lift at 23 seconds. It ends cleanly on a downbeat at 38 seconds with no big final hit and no fade." },
+  { "at": 0, "length": 38, "gain": -4,
+    "styles": ["nu-disco indie dance", "122 BPM", "choppy disco-funk guitar", "live-feel bass guitar", "Rhodes chord stabs", "hand claps and tambourine", "four-on-the-floor kick", "warm, bright, confident"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out"],
+    "sections": [
+      { "name": "Quiet desk", "duration": 8, "styles": ["muted choppy guitar and shaker from the very first second", "soft kick on every beat", "light, curious", "sparse but moving"] },
+      { "name": "Build", "duration": 3, "styles": ["tambourine and claps join", "bass slides up", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 12, "styles": ["full nu-disco groove", "open disco guitar", "Rhodes stabs", "driving bass", "joyful"] },
+      { "name": "Lift", "duration": 9, "styles": ["fullest energy", "extra percussion", "guitar lead fills"] },
+      { "name": "Carry to the end", "duration": 6, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] }
+ ],
+ "sounds": {},
+ "cues": []
+}

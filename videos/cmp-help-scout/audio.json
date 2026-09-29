@@ -1,0 +1,287 @@
+{
+ "name": "cmp-help-scout",
+ "duration": 38.8,
+ "video": "../../out/cmp-help-scout/cmp-help-scout.mp4",
+ "master": {
+  "lufs": -14,
+  "fadeOut": 1.4
+ },
+ "music": [],
+ "sounds": {
+  "typing": {
+   "text": "soft quiet typing on a laptop keyboard, one short sentence",
+   "duration": 1.5,
+   "gain": -21
+  },
+  "click": {
+   "text": "crisp soft trackpad click",
+   "duration": 0.5,
+   "gain": -14
+  },
+  "sent": {
+   "text": "a soft airy swoosh, an email being sent",
+   "duration": 0.6,
+   "gain": -18
+  },
+  "pull": {
+   "text": "a slow soft airy whoosh, a camera pulling back through a room",
+   "duration": 1.2,
+   "gain": -17
+  },
+  "slide": {
+   "text": "a paper card sliding quickly across a wooden desk, soft",
+   "duration": 0.6,
+   "gain": -16
+  },
+  "coin": {
+   "text": "a tiny soft coin tick, bright and small",
+   "duration": 0.5,
+   "gain": -20
+  },
+  "pop": {
+   "text": "a soft bubbly pop, a small round button appearing",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "swell": {
+   "text": "a gentle rising airy swell building up, no impact at the end",
+   "duration": 2.5,
+   "gain": -17
+  },
+  "snap": {
+   "text": "a soft satisfying magnetic click, a card docking into place",
+   "duration": 0.5,
+   "gain": -16
+  },
+  "whoosh": {
+   "text": "a soft short airy whoosh",
+   "duration": 0.5,
+   "gain": -21
+  },
+  "tick": {
+   "text": "a tiny soft UI tick",
+   "duration": 0.5,
+   "gain": -22
+  },
+  "roll": {
+   "text": "a quick soft mechanical counter rolling",
+   "duration": 1,
+   "gain": -20
+  },
+  "chime": {
+   "text": "a soft bright bell chime, gentle and short",
+   "duration": 1,
+   "gain": -21
+  }
+ },
+ "cues": [
+  {
+   "sound": "typing",
+   "at": 0.778,
+   "trim": 1.4
+  },
+  {
+   "sound": "click",
+   "at": 2.484
+  },
+  {
+   "sound": "sent",
+   "at": 2.728
+  },
+  {
+   "sound": "pull",
+   "at": 3.135
+  },
+  {
+   "sound": "slide",
+   "at": 4.434
+  },
+  {
+   "sound": "slide",
+   "at": 5.166
+  },
+  {
+   "sound": "slide",
+   "at": 5.897
+  },
+  {
+   "sound": "coin",
+   "at": 7.36
+  },
+  {
+   "sound": "coin",
+   "at": 7.847
+  },
+  {
+   "sound": "coin",
+   "at": 8.335
+  },
+  {
+   "sound": "coin",
+   "at": 8.822
+  },
+  {
+   "sound": "coin",
+   "at": 9.31
+  },
+  {
+   "sound": "pop",
+   "at": 7.604
+  },
+  {
+   "sound": "pop",
+   "at": 13.454
+  },
+  {
+   "sound": "pop",
+   "at": 25.393
+  },
+  {
+   "sound": "pop",
+   "at": 27.716
+  },
+  {
+   "sound": "pop",
+   "at": 27.959
+  },
+  {
+   "sound": "swell",
+   "at": 9.492
+  },
+  {
+   "sound": "whoosh",
+   "at": 9.504
+  },
+  {
+   "sound": "whoosh",
+   "at": 11.942
+  },
+  {
+   "sound": "whoosh",
+   "at": 14.867
+  },
+  {
+   "sound": "whoosh",
+   "at": 17.792
+  },
+  {
+   "sound": "whoosh",
+   "at": 20.718
+  },
+  {
+   "sound": "whoosh",
+   "at": 23.643
+  },
+  {
+   "sound": "whoosh",
+   "at": 26.569
+  },
+  {
+   "sound": "whoosh",
+   "at": 30.957
+  },
+  {
+   "sound": "whoosh",
+   "at": 32.907
+  },
+  {
+   "sound": "whoosh",
+   "at": 35.345
+  },
+  {
+   "sound": "snap",
+   "at": 12.687
+  },
+  {
+   "sound": "snap",
+   "at": 12.979
+  },
+  {
+   "sound": "snap",
+   "at": 13.272
+  },
+  {
+   "sound": "snap",
+   "at": 32.079
+  },
+  {
+   "sound": "tick",
+   "at": 16.017
+  },
+  {
+   "sound": "tick",
+   "at": 19.142
+  },
+  {
+   "sound": "tick",
+   "at": 21.968
+  },
+  {
+   "sound": "tick",
+   "at": 27.106
+  },
+  {
+   "sound": "tick",
+   "at": 27.228
+  },
+  {
+   "sound": "tick",
+   "at": 27.35
+  },
+  {
+   "sound": "tick",
+   "at": 27.472
+  },
+  {
+   "sound": "tick",
+   "at": 27.716
+  },
+  {
+   "sound": "chime",
+   "at": 17.317
+  },
+  {
+   "sound": "chime",
+   "at": 23.098
+  },
+  {
+   "sound": "chime",
+   "at": 25.143
+  },
+  {
+   "sound": "chime",
+   "at": 28.713
+  },
+  {
+   "sound": "roll",
+   "at": 28.203
+  },
+  {
+   "sound": "slide",
+   "at": 31.494,
+   "gain": -18
+  }
+ ],
+ "voice": {
+  "lines": [],
+  "gain": -4,
+  "clips": [
+   {
+    "file": "out/audio-cache/music-1-e2d3c9af25ad5d6d.mp3",
+    "at": 0,
+    "from": 0,
+    "trim": 3.9005,
+    "fadeIn": 0.01,
+    "fadeOut": 0.03
+   },
+   {
+    "file": "out/audio-cache/music-1-e2d3c9af25ad5d6d.mp3",
+    "at": 3.9005,
+    "from": 0,
+    "trim": 34.899,
+    "fadeIn": 0.02,
+    "fadeOut": 0.05
+   }
+  ]
+ }
+}

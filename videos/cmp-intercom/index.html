@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin vs Intercom — The meter</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "The meter": Intercom bills per seat and per AI outcome, so a meter runs on every answer. Helpin stops the
+     meter and turns the answer into the fix. One hero object (the odometer) carries the whole film: it ticks on
+     every resolved chat, runs through a year, rolls back on the drop and locks at $239, then holds perfectly still
+     while teammates and AI answers pile in. Music-first on a 123.07 BPM Latin tech-house bed (see timeline.js). */
+  #stage { background: radial-gradient(ellipse 75% 85% at 38% 40%, #0F3228, #081B16 58%, #06140F); color: #E8EEEA; }
+  #tape { position: absolute; left: 0; top: -60px; width: 1920px; height: 1200px;
+    background: repeating-linear-gradient(0deg, rgba(184, 221, 187, .035) 0 1px, transparent 1px 48px); }
+  #glow { position: absolute; left: 0; top: 0; width: 1100px; height: 1100px; border-radius: 50%; filter: blur(40px); }
+  em { font-style: normal; color: var(--sage); }
+  .amb { color: var(--amber); }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  .abs { position: absolute; opacity: 0; }
+
+  /* matchup tag */
+  #vs { left: 140px; top: 84px; display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+  #vs .x { font: 500 22px/1 var(--mono); color: #7F948A; letter-spacing: .1em; margin: 0 4px; }
+  .mono-chip { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid rgba(232, 238, 234, .35);
+    font: 600 18px/1 var(--sans); color: #C9D6CF; }
+
+  /* left column copy */
+  .lines { position: absolute; left: 140px; top: 360px; width: 820px; }
+  .lines div { font-size: 70px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.14; white-space: nowrap; }
+  .side2 { position: absolute; left: 140px; top: 400px; width: 800px; }
+  .side2 div { font-size: 76px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.08; white-space: nowrap; }
+  #side { position: absolute; left: 140px; top: 0; width: 780px; height: 1080px; }
+  .sidecopy { position: absolute; left: 0; top: 340px; width: 780px; opacity: 0; }
+  .sidecopy .eyebrow { font: 500 22px/1 var(--mono); letter-spacing: .28em; color: rgba(184, 221, 187, .75); margin-bottom: 30px; text-transform: uppercase; }
+  .sidecopy .h { font-size: 80px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; color: #E8EEEA; }
+  .sidecopy .lede { margin-top: 28px; font-size: 30px; line-height: 1.4; color: #A9B8B0; max-width: 700px; }
+  .top { position: absolute; left: 0; width: 1920px; top: 150px; text-align: center; font-size: 100px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; white-space: nowrap; opacity: 0; }
+
+  /* chat cards (our own neutral widget design) */
+  .card { position: absolute; background: #fff; color: var(--ink); border-radius: 24px; box-shadow: 0 40px 100px rgba(0, 0, 0, .45), 0 0 0 1px rgba(184, 221, 187, .10); }
+  .chat { width: 820px; padding: 28px 32px 30px; opacity: 0; }
+  .chead { display: flex; align-items: center; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid #E8ECEA; }
+  .av { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font: 600 19px/1 var(--sans); flex: none; }
+  .chead b { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; }
+  .chead small { display: block; font-size: 22px; color: #66716C; margin-top: 3px; }
+  .chead .aitag { margin-left: auto; height: 40px; padding: 0 16px; border-radius: 20px; background: #F1F4F2; display: flex; align-items: center; gap: 10px; font: 500 22px/1 var(--sans); color: #4F5A55; }
+  .chead .aitag i { width: 10px; height: 10px; border-radius: 50%; background: #9AA7A0; }
+  .bub { margin-top: 20px; padding: 16px 20px; border-radius: 18px; font-size: 27px; line-height: 1.35; max-width: 640px; opacity: 0; }
+  .bub.q { background: #F1F4F2; color: #2A2F2C; min-height: 70px; }
+  .bub.a { margin-left: auto; background: #131514; color: #F4F6F5; }
+  .res { margin-top: 18px; margin-left: auto; width: max-content; height: 46px; padding: 0 18px; border-radius: 23px; display: flex; align-items: center; gap: 12px;
+    background: #FFF6E0; border: 1.5px solid #EBCB7A; color: #7A5600; font: 600 22px/1 var(--sans); opacity: 0; }
+  .res b { font: 600 22px/1 var(--mono); }
+
+  #sparks, #avrow, #grid, #plus { position: absolute; inset: 0; }
+  .feed { position: relative; height: 236px; overflow: hidden; }
+  .feed .bub { margin-top: 16px; } .feed .res { margin-top: 12px; }
+  .feedin { position: absolute; left: 0; right: 0; top: 0; }
+  .frow { height: 58px; margin-top: 10px; padding: 0 18px; border-radius: 14px; background: #F6F8F7; display: flex; align-items: center; gap: 14px; font-size: 24px; color: #2A2F2C; white-space: nowrap; }
+  .frow i { font-style: normal; height: 34px; padding: 0 12px; border-radius: 17px; background: #FFF6E0; border: 1.5px solid #EBCB7A; color: #7A5600; display: flex; align-items: center; font: 600 20px/1 var(--sans); }
+  .frow b { margin-left: auto; font: 600 22px/1 var(--mono); color: #7A5600; }
+  .spark { position: absolute; left: 0; top: 0; font: 600 26px/1 var(--mono); color: var(--amber); text-shadow: 0 0 18px rgba(240, 195, 90, .5); opacity: 0; white-space: nowrap; }
+  .face { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font: 600 22px/1 var(--sans); color: #0C2620;
+    box-shadow: 0 0 0 4px #0B231D; opacity: 0; }
+  .plus85 { position: absolute; left: 0; top: 0; font: 600 24px/1 var(--mono); color: var(--amber); opacity: 0; }
+
+  .bug { width: 520px; height: 96px; padding: 0 26px; display: flex; align-items: center; gap: 18px; opacity: 0; }
+  .bug .dot { width: 14px; height: 14px; border-radius: 50%; background: #D9A13A; flex: none; }
+  .bug b { font-size: 25px; font-weight: 600; letter-spacing: -0.01em; }
+  .bug small { display: block; font: 500 22px/1.2 var(--mono); color: #66716C; margin-top: 6px; }
+  #elsewhere { left: 1470px; top: 790px; width: 520px; height: 190px; border: 2.5px dashed rgba(169, 184, 176, .55); border-radius: 22px; }
+  #elsewhere span { position: absolute; left: 28px; bottom: 22px; font: 500 22px/1 var(--mono); color: #A9B8B0; letter-spacing: .08em; white-space: nowrap; }
+
+  /* the meter */
+  #meter { position: absolute; left: 0; top: 0; width: 820px; height: 430px; border-radius: 30px; transform-origin: 50% 50%; opacity: 0;
+    background: linear-gradient(180deg, #0E2B23, #0A211B); box-shadow: 0 50px 120px rgba(0, 0, 0, .5), inset 0 0 0 1.5px rgba(184, 221, 187, .14); }
+  .mhead { position: absolute; left: 40px; right: 40px; top: 34px; height: 36px; }
+  .mwho { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 600; }
+  #mper, #mper2 { position: absolute; right: 0; top: 6px; font: 500 22px/1 var(--mono); letter-spacing: .22em; color: #9FB3A9; }
+  #x12 { position: absolute; right: 196px; top: -4px; height: 40px; padding: 0 14px; border-radius: 20px; border: 1.5px solid rgba(240, 195, 90, .6); color: var(--amber);
+    font: 600 22px/40px var(--mono); opacity: 0; }
+  #digits { position: absolute; left: 0; width: 820px; top: 96px; height: 128px; display: flex; justify-content: center; font: 500 112px/128px var(--mono); }
+  .slot { width: 0.6em; height: 128px; overflow: hidden; position: relative; text-align: center; }
+  .slot .strip { position: absolute; left: 0; top: 0; width: 100%; }
+  .slot .strip span { display: block; height: 128px; }
+  #msuf { position: absolute; left: 560px; top: 150px; font: 500 44px/1 var(--mono); color: var(--mint); opacity: 0; }
+  .items { position: absolute; left: 40px; right: 40px; top: 262px; }
+  .it { display: flex; align-items: baseline; height: 44px; font: 500 24px/44px var(--mono); color: #C9D6CF; border-top: 1px solid rgba(184, 221, 187, .10); }
+  .it .k { flex: 1; font-family: var(--sans); font-size: 26px; font-weight: 500; }
+  .it .q { width: 250px; color: #8FA398; }
+  .it .v { width: 170px; text-align: right; }
+  #mcap, #mcap2 { position: absolute; left: 40px; right: 40px; top: 368px; font: 400 22px/1 var(--sans); color: #8FA398; }
+  #items2 { opacity: 0; }
+  #months { position: absolute; left: 40px; right: 40px; top: 262px; display: flex; gap: 8px; opacity: 0; }
+  #months span { flex: 1; height: 62px; border-radius: 10px; background: rgba(184, 221, 187, .06); color: #6F857A; display: grid; place-items: center; font: 500 22px/1 var(--mono); }
+
+  /* windows */
+  #wins > div { position: absolute; inset: 0; }
+  #small { left: 140px; top: 990px; font-size: 22px; color: #8FA398; }
+
+  /* receipt */
+  #rctx { left: 0; width: 1920px; top: 140px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .2em; color: #9FB3A9; }
+  #verdict { left: 0; width: 1920px; top: 186px; text-align: center; font-size: 100px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.1; white-space: nowrap; }
+  .rc { position: absolute; top: 368px; width: 700px; padding: 32px 40px 26px; border-radius: 26px; opacity: 0; }
+  .rc.rival { left: 220px; border: 2px dashed rgba(184, 221, 187, .26); background: rgba(255, 255, 255, .025); }
+  .rc.mine { left: 1000px; background: linear-gradient(180deg, #14402F, #0F3226); box-shadow: inset 0 0 0 1.5px rgba(156, 219, 179, .45), 0 40px 100px rgba(0, 0, 0, .35); }
+  .rc h4 { margin: 0 0 16px; display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; }
+  .rc h4 small { margin-left: auto; font: 500 22px/1 var(--mono); letter-spacing: .12em; color: #9FB3A9; text-transform: uppercase; }
+  .row { display: flex; align-items: baseline; justify-content: space-between; padding: 12px 0; border-top: 1px solid rgba(184, 221, 187, .12); font-size: 26px; color: #C9D6CF; opacity: 0; }
+  .row b { font: 500 26px/1 var(--mono); color: #E8EEEA; }
+  .row.tot { font-weight: 600; color: #E8EEEA; font-size: 30px; }
+  .row.tot b { font-size: 34px; font-weight: 600; }
+  .rival .row.tot b { color: var(--amber); } .mine .row.tot b { color: var(--mint); }
+  .row.yr b { color: #C9D6CF; }
+  #foot { left: 260px; width: 1400px; top: 872px; text-align: center; font-size: 22px; line-height: 1.5; color: #8FA398; }
+
+  /* tagline and end */
+  .tagl { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 104px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; white-space: nowrap; }
+  #endmark { left: 0; width: 1920px; top: 590px; display: flex; justify-content: center; align-items: center; gap: 22px; }
+  #endmark b { font-size: 84px; font-weight: 600; letter-spacing: -0.045em; }
+  #cta { left: 0; width: 1920px; top: 752px; display: flex; justify-content: center; }
+  #cta span { height: 66px; padding: 0 30px; display: inline-flex; align-items: center; border-radius: 14px; background: #E8EEEA; color: var(--forest); font: 600 28px/1 var(--sans); letter-spacing: -0.01em; }
+  #ctanote { left: 0; width: 1920px; top: 852px; text-align: center; font: 500 24px/1 var(--mono); color: #9FB3A9; letter-spacing: .04em; }
+  #fade { position: absolute; inset: 0; background: #050F0C; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="glow"></div>
+  <div id="tape"></div>
+  <section class="scene" id="film" style="visibility:visible">
+    <div class="abs" id="vs"><span id="vs-sym"></span><span>Helpin</span><span class="x">VS</span><span class="mono-chip">I</span><span>Intercom</span></div>
+
+    <!-- hook, screen 1 -->
+    <div class="lines" id="lines1"><div id="l1"></div><div id="l2"></div><div id="l3"></div></div>
+    <div class="card chat" id="chat1" style="left:1010px; top:104px">
+      <div class="chead"><span class="av" style="background:#E3ECF7;color:#2F4F7A">JL</span><div><b>Jordan Lee</b><small>Website chat</small></div><span class="aitag"><i></i>AI agent</span></div>
+      <div class="feed"><div class="feedin" id="feed">
+        <div class="bub q" id="c1q"></div>
+        <div class="bub a" id="c1a">Open Settings → Team, then click Invite.</div>
+        <div class="res" id="c1r">✓ Resolved <b>$0.99</b></div>
+        <div id="rows"></div>
+      </div></div>
+    </div>
+    <div id="sparks"><div class="spark" id="spark0">+$0.99</div></div>
+    <div id="avrow"></div>
+    <div id="plus"></div>
+
+    <!-- hook, screen 2 -->
+    <div class="side2" id="s2"><div id="h2a"></div><div id="h2b"></div></div>
+    <div class="card chat" id="chat2" style="left:1010px; top:250px">
+      <div class="chead"><span class="av" style="background:#FCE6D8;color:#A8502A">MC</span><div><b>Maya Chen</b><small>Northstar</small></div><span class="aitag"><i></i>AI agent</span></div>
+      <div class="bub q" id="c2q"></div>
+      <div class="bub a" id="c2a">Thanks, Maya. I’ve passed this to the team.</div>
+      <div class="res" id="c2r">✓ Resolved <b>$0.99</b></div>
+    </div>
+    <div class="abs" id="elsewhere"><span>JIRA OR ANOTHER TOOL</span></div>
+    <div class="card bug" id="bug" style="left:0; top:0"><span class="dot"></span><div><b>Export stops at 10,000 rows</b><small>BUG · 1 customer waiting</small></div></div>
+
+    <!-- villain and drop -->
+    <div class="top" id="hv"></div>
+    <div class="top" id="hd"></div>
+
+    <!-- after the drop: side copy, teammates, windows -->
+    <div id="side"></div>
+    <div id="grid"></div>
+    <div id="wins"><div id="wAns"></div><div id="wCode"></div><div id="wFollow"></div></div>
+    <div class="abs" id="small">Coding agents need a connected GitHub or GitLab repository.</div>
+
+    <!-- the meter -->
+    <div id="meter">
+      <div class="mhead">
+        <div class="mwho" id="mwhoI"><span class="mono-chip">I</span><span>Intercom</span></div>
+        <div class="mwho" id="mwhoH" style="opacity:0"><span id="m-sym"></span><span>Helpin</span></div>
+        <span id="x12">× 12</span>
+        <span id="mper">THIS MONTH</span><span id="mper2" style="opacity:0">THIS YEAR</span>
+      </div>
+      <div id="digits"></div>
+      <div id="months"></div>
+      <div id="msuf">/mo</div>
+      <div class="items" id="items1">
+        <div class="it"><span class="k">AI outcomes</span><span class="q" id="q1">0 × $0.99</span><span class="v" id="v1">$0</span></div>
+        <div class="it"><span class="k">Seats</span><span class="q" id="q2">0 × $85</span><span class="v" id="v2">$0</span></div>
+      </div>
+      <div class="items" id="items2">
+        <div class="it"><span class="k">Teammates</span><span class="q" id="q3">8</span><span class="v">Included</span></div>
+        <div class="it" id="it4"><span class="k">AI usage allowance</span><span class="q"></span><span class="v">Included</span></div>
+      </div>
+      <div id="mcap">Example · Advanced plan · billed annually</div>
+      <div id="mcap2" style="opacity:0">Growth plan · one workspace · billed annually</div>
+    </div>
+
+    <!-- receipt -->
+    <div class="abs" id="rctx">LIST PRICES · 8 TEAMMATES · 1,000 AI OUTCOMES A MONTH · BILLED ANNUALLY</div>
+    <div class="abs" id="verdict"><em id="vnum">$17,172</em> less a year.</div>
+    <div class="rc rival" id="rcA">
+      <h4><span class="mono-chip">I</span>Intercom<small>Advanced</small></h4>
+      <div class="row"><span>8 seats × $85</span><b>$680</b></div>
+      <div class="row"><span>1,000 Fin outcomes × $0.99</span><b>$990</b></div>
+      <div class="row tot"><span>Per month</span><b>$1,670</b></div>
+      <div class="row yr"><span>Per year</span><b>$20,040</b></div>
+    </div>
+    <div class="rc mine" id="rcB">
+      <h4><span id="rc-sym"></span>Helpin<small>Growth</small></h4>
+      <div class="row"><span>One workspace</span><b>$239</b></div>
+      <div class="row"><span>8 teammates</span><b>Included</b></div>
+      <div class="row"><span>AI usage allowance</span><b>$239 included</b></div>
+      <div class="row tot"><span>Per month</span><b>$239</b></div>
+      <div class="row yr"><span>Per year</span><b>$2,868</b></div>
+    </div>
+    <div class="abs" id="foot">List prices, billed annually, checked September 2026. Intercom add-ons and channel usage not included.<br>Heavy AI use can go past Helpin’s allowance; overage is metered.</div>
+
+    <!-- tagline and end card -->
+    <div class="tagl" id="tag1" style="top:250px"></div>
+    <div class="tagl" id="tag2" style="top:366px"></div>
+    <div class="abs" id="endmark"><span id="end-sym"></span><b>Helpin</b></div>
+    <div class="abs" id="cta"><span>Start free at helpin.ai</span></div>
+    <div class="abs" id="ctanote">14-day trial · no card · or self-host free</div>
+  </section>
+  <div id="fade"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, keys, brandEase, expoOut, easeIn, easeInOut, expoInOut, backOut, rand, clamp } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { words, rise, reveal, pop } from '../../lib/kit.js';
+import { secOp } from '../../lib/film.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+import { B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const E = brandEase;
+const T = Object.fromEntries(Object.entries(N).map(([k, v]) => [k, B(v)]));
+const PER = B(1);
+const ease = (t, a, d = 0.6, f = E) => f(P(t, a, a + d));
+// Colours as [r, g, b]; mix() returns an array, rgb() a CSS string (lib/film.js mixHex returns rgb(), which can't be re-mixed).
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+const rgb = (c, a = 1) => `rgba(${c.map(Math.round).join(', ')}, ${a})`;
+const money = (v) => `$${Math.round(v).toLocaleString('en-US')}`;
+const money2 = (v) => `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+// ── Brand marks
+const sym = (sel, size, color = '#E8EEEA') => { const s = helpinSymbol({ size, color }); s.assemble(1); $(sel).append(s.node); return s; };
+sym('#vs-sym', 30); sym('#m-sym', 30); sym('#rc-sym', 30);
+const endSym = helpinSymbol({ size: 92, color: '#E8EEEA' }); $('#end-sym').append(endSym.node);
+
+// ── Copy
+const L1 = words($('#l1'), 'Every AI outcome: <em class="amb">$0.99.</em>');
+const L2 = words($('#l2'), '1,000 outcomes a month.');
+const L3 = words($('#l3'), 'Plus <em class="amb">$85</em> for every seat.');
+const H2A = words($('#h2a'), 'The chat is resolved.');
+const H2B = words($('#h2b'), '<em>The fix is somewhere else.</em>');
+const HV = words($('#hv'), 'The meter’s running.');
+const HD = words($('#hd'), 'Stop <em>the meter.</em>');
+const TG1 = words($('#tag1'), 'From “resolved”');
+const TG2 = words($('#tag2'), '<em>to “released.”</em>');
+
+// Side copy after the drop: eyebrow, headline and lede cross-dissolve per step.
+const STEPS = [
+  { at: T.team + 0.1, eyebrow: 'Unlimited teammates', head: 'Every teammate.<br><em>One workspace price.</em>', lede: 'Add support, engineering and sales. The price stays put.' },
+  { at: T.ai, eyebrow: 'AI included', head: 'AI answers,<br><em>included in the plan.</em>', lede: 'Every Cloud plan includes an AI usage allowance.' },
+  { at: T.task, eyebrow: 'The answer becomes the fix', head: 'TASK.', lede: 'Your customer’s chat becomes the task, history attached.' },
+  { at: T.pr, eyebrow: 'The answer becomes the fix', head: '<em>PULL REQUEST.</em>', lede: 'An agent prepares the fix. Your team reviews it.' },
+  { at: T.follow, eyebrow: 'The answer becomes the fix', head: 'FOLLOW-UP.', lede: 'When it ships, your customer hears back in the same chat.' },
+];
+const sideBlocks = STEPS.map((s) => {
+  const b = document.createElement('div');
+  b.className = 'sidecopy';
+  b.innerHTML = `<div class="eyebrow">${s.eyebrow}</div><div class="h"></div><div class="lede">${s.lede}</div>`;
+  $('#side').appendChild(b);
+  const h = b.querySelector('.h');
+  const ws = s.head.split('<br>').flatMap((line, i) => { const d = document.createElement('div'); h.appendChild(d); return words(d, line); });
+  return { b, ws, eb: b.querySelector('.eyebrow'), lede: b.querySelector('.lede'), s };
+});
+function side(t) {
+  sideBlocks.forEach(({ b, ws, eb, lede, s }, i) => {
+    const until = STEPS[i + 1]?.at ?? T.receipt;
+    const on = t >= s.at && t < until, o = E(P(t, until - 0.35, until));
+    css(b, { opacity: String(on ? 1 - o : 0), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+    if (!on) return;
+    const same = i > 0 && STEPS[i - 1].eyebrow === s.eyebrow;
+    if (same) css(eb, { opacity: '1', transform: 'none', filter: 'none' }); else reveal(eb, t, s.at, { dy: 10 });
+    rise(ws, t, s.at + 0.06, 0.07);
+    reveal(lede, t, s.at + 0.3, { dy: 12 });
+  });
+}
+
+// ── The odometer: $00,000.00, each digit a rolling strip. Value in cents.
+const SLOTS = ['$', 5, 4, ',', 3, 2, 1, '.', 0, -1]; // k: place value 10^(k+1) cents, so 5 = ten-thousands of dollars … -1 = cents
+const DIG = 128;
+const slotEls = SLOTS.map((k) => {
+  const s = document.createElement('div');
+  s.className = 'slot';
+  if (typeof k === 'string') s.innerHTML = `<div class="strip"><span>${k}</span></div>`;
+  else s.innerHTML = `<div class="strip">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((d) => `<span>${d}</span>`).join('')}</div>`;
+  $('#digits').appendChild(s);
+  return { el: s, strip: s.firstChild, k };
+});
+// Odometer positions (0..10) per digit k (place value 10^(k+1) cents). The cents wheel turns continuously; each
+// higher wheel only turns while every wheel below it sits on 9, as on a mechanical meter.
+function odoAll(cents) {
+  const pos = {};
+  let lower = 0;
+  for (let k = -1; k <= 5; k++) {
+    pos[k] = k === -1 ? cents % 10 : (Math.floor(cents / 10 ** (k + 1)) % 10) + (lower >= 9 ? lower - 9 : 0);
+    lower = pos[k];
+  }
+  return pos;
+}
+function drawMeter(cents, color, hideCents) {
+  const dim = mix(color, hex('#0E2B23'), 0.74);
+  const wheel = odoAll(Math.max(0, cents));
+  slotEls.forEach(({ el, strip, k }) => {
+    let lit = 1, op = 1;
+    if (k === ',') lit = clamp(cents / 100000);
+    else if (k === '.' || (typeof k === 'number' && k <= 0)) op = 1 - hideCents;
+    else if (typeof k === 'number') lit = clamp(cents / 10 ** (k + 1));
+    el.style.color = rgb(mix(dim, color, lit));
+    el.style.opacity = String(op);
+    if (typeof k === 'number') {
+      const pos = wheel[k];
+      strip.style.transform = `translateY(${-(Number.isInteger(pos) ? pos * DIG : +(pos * DIG).toFixed(2))}px)`;
+    }
+  });
+  $('#digits').style.textShadow = `0 0 34px ${rgb(color, 0.33)}`;
+}
+
+// The meter's value over the film (cents).
+const seatAt = (i) => T.seats + PER * (0.5 * i) + 0.12;
+function meterCents(t) {
+  let v = 0;
+  if (t >= T.resolved) v = 99 * ease(t, T.resolved, 0.3, expoOut);
+  if (t >= T.flood) v = L(99, 99000, easeIn(P(t, T.flood, T.flooded - 0.05)) * 0.35 + P(t, T.flood, T.flooded - 0.05) * 0.65);
+  for (let i = 0; i < 8; i++) v += 8500 * ease(t, seatAt(i), 0.22, expoOut);
+  if (t >= T.year) v = L(167000, 2004000, easeInOut(P(t, T.year, T.yearDone)));
+  if (t >= T.drop) v = L(2004000, 23900, expoOut(P(t, T.drop, T.locked)));
+  return v;
+}
+const AMBER = hex('#F0C35A'), MINT = hex('#9CDBB3');
+const monthEls = 'JFMAMJJASOND'.split('').map((l, i) => { const m = document.createElement('span'); m.textContent = l; $('#months').appendChild(m); return m; });
+
+// Meter poses: [cx, cy, scale]. Moves ease between poses and hold still in between.
+const POSES = [
+  [0, [1420, 712, 1]],
+  [T.fix - 0.05, [1420, 712, 1]], [T.fix + 0.75, [1650, 128, 0.42], E],
+  [T.villain - 0.15, [1650, 128, 0.42]], [T.villain + 0.6, [960, 612, 1.25], E],
+  [T.team, [960, 612, 1.25]], [T.team + 0.75, [1400, 430, 0.8], E],
+  [T.ai, [1400, 430, 0.8]], [T.ai + 0.75, [1430, 152, 0.42], E],
+];
+function meter(t) {
+  const [cx, cy, s] = keys(t, POSES);
+  const inK = ease(t, 0, 0.7), out = E(P(t, T.task - 0.1, T.task + 0.3));
+  css($('#meter'), { opacity: String(inK * (1 - out)), transform: `translate(${Math.round(cx - 410)}px, ${Math.round(cy - 215 + (1 - inK) * 40)}px) scale(${s.toFixed(4)})` });
+  const cents = meterCents(t);
+  const col = mix(AMBER, MINT, ease(t, T.drop, 0.8));
+  drawMeter(cents, col, ease(t, T.drop + 0.4, 0.6));
+  // detail layers: visible only in the big poses
+  const big = (a, b) => secOp(t, [a, b], 0.4, 0.35);
+  const head = Math.max(big(0.2, T.fix + 0.2), big(T.villain + 0.3, T.ai + 0.25));
+  $('.mhead').style.opacity = String(head);
+  css($('#mwhoI'), { opacity: String(1 - ease(t, T.drop, 0.4)) });
+  css($('#mwhoH'), { opacity: String(ease(t, T.drop + 0.25, 0.5)) });
+  css($('#mper'), { opacity: String(t < T.year ? 1 : t < T.drop ? 1 - ease(t, T.year, 0.3) : ease(t, T.drop + 0.3, 0.4)) });
+  $('#mper').textContent = t < T.drop ? 'THIS MONTH' : 'PER MONTH';
+  css($('#mper2'), { opacity: String(t >= T.year && t < T.drop + 0.3 ? ease(t, T.year + 0.1, 0.3) * (1 - ease(t, T.drop, 0.3)) : 0) });
+  const x12 = t >= T.year && t < T.drop ? backOut(P(t, T.year + 0.1, T.year + 0.45), 1.6) * (1 - ease(t, T.drop - 0.1, 0.25)) : 0;
+  css($('#x12'), { opacity: String(clamp(x12)), transform: `scale(${L(0.7, 1, clamp(x12)).toFixed(3)})` });
+  css($('#msuf'), { opacity: String(ease(t, T.locked, 0.5)) });
+  $('#months').style.opacity = String(t >= T.villain ? ease(t, T.villain + 0.4, 0.5) * (1 - ease(t, T.drop, 0.35)) : 0);
+  monthEls.forEach((m, i) => {
+    const at = T.year + (T.yearDone - T.year) * (i / 11) * 0.98;
+    const k = t >= T.year ? ease(t, at, 0.25) : 0;
+    const c = mix(mix(AMBER, hex('#0E2B23'), 0.2), MINT, ease(t, T.drop, 0.3));
+    m.style.background = k > 0 ? rgb(c, 0.06 + 0.24 * k) : 'rgba(184, 221, 187, .06)';
+    m.style.color = k > 0 ? rgb(mix(hex('#6F857A'), AMBER, k)) : '#6F857A';
+  });
+  // line items (hook), then Helpin's items (teammates)
+  $('#items1').style.opacity = String(big(0.35, T.fix + 0.1));
+  const n1 = t < T.resolved + 0.1 ? 0 : t < T.flood ? 1 : Math.round(L(1, 1000, easeIn(P(t, T.flood, T.flooded - 0.05)) * 0.35 + P(t, T.flood, T.flooded - 0.05) * 0.65));
+  $('#q1').textContent = `${n1.toLocaleString('en-US')} × $0.99`;
+  $('#v1').textContent = money2(n1 * 0.99);
+  const n2 = [0, 1, 2, 3, 4, 5, 6, 7].filter((i) => t >= seatAt(i)).length;
+  $('#q2').textContent = `${n2} × $85`;
+  $('#v2').textContent = money(n2 * 85);
+  $('#items2').style.opacity = String(big(T.team + 0.5, T.ai + 0.2));
+  const n3 = t < T.team20 ? 8 : t < T.team40 ? Math.round(L(8, 20, ease(t, T.team20, 0.5))) : Math.round(L(20, 40, ease(t, T.team40, 0.6)));
+  $('#q3').textContent = String(n3);
+  $('#mcap').style.opacity = String(Math.max(big(0.4, T.fix + 0.1), big(T.villain + 0.4, T.drop + 0.1)));
+  $('#mcap').textContent = t < T.villain ? 'Example · Advanced plan · billed annually' : '8 seats · 1,000 AI outcomes a month · Advanced plan, billed annually';
+  $('#mcap2').style.opacity = String(t >= T.drop ? ease(t, T.drop + 0.5, 0.5) * (1 - ease(t, T.team + 0.1, 0.3)) : 0);
+  return { cx, cy, s };
+}
+
+// ── Hook: the first chat, then tiles pouring into the meter
+const Q1 = 'How do I invite a teammate?';
+const TILES = ['Where’s my invoice?', 'Can I change my plan?', 'How do I reset 2FA?', 'Do you have an API?', 'Can I export to CSV?', 'Is there a dark mode?',
+  'How do I merge contacts?', 'Where are my reports?', 'Can I add a logo?', 'How do refunds work?', 'Is SSO available?', 'Can I undo a delete?'];
+const NR = 34, ROWH = 68;
+for (let i = 0; i < NR; i++) {
+  const r = document.createElement('div');
+  r.className = 'frow';
+  r.innerHTML = `<i>✓ Resolved</i>${TILES[(i * 5) % TILES.length]}<b>$0.99</b>`;
+  $('#rows').appendChild(r);
+}
+// The feed scrolls ever faster; each row that passes the card's bottom edge sends "+$0.99" into the meter.
+const feedY = (t) => { const k = P(t, T.flood, T.flooded - 0.1); return 190 * E(clamp(k * 4)) + (NR * ROWH - 150) * k ** 2.2; };
+const NS = 22;
+const sparkEls = Array.from({ length: NS }, (_, i) => {
+  const el = document.createElement('div');
+  el.className = 'spark';
+  el.textContent = '+$0.99';
+  $('#sparks').appendChild(el);
+  const u = i / (NS - 1);
+  return { el, start: T.flood + 0.15 + (T.flooded - 0.6 - T.flood) * u ** 0.55, x: 1150 + rand(i + 7) * 460 };
+});
+function feed(t) {
+  $('#feed').style.transform = `translateY(${-Math.round(feedY(t))}px)`;
+  sparkEls.forEach(({ el, start, x }) => {
+    const k = P(t, start, start + 0.42);
+    if (k <= 0 || k >= 1) { el.style.opacity = '0'; return; }
+    const e = easeIn(k);
+    css(el, { opacity: String(Math.min(1, k * 5) * (1 - P(k, 0.75, 1))), transform: `translate(${Math.round(L(x, 1330, e))}px, ${Math.round(L(452, 610, e))}px) scale(${L(1, 0.7, e).toFixed(3)})` });
+  });
+}
+// Seats: eight faces drop into a row where the chat was, each sending "+$85" into the meter.
+const FACE_COLS = ['#B8DDBB', '#9CDBB3', '#E7D3A8', '#C9D6CF', '#D8C4E6', '#F2C9B0', '#BFD7EA', '#DDE6B8'];
+const INITS = ['SR', 'AK', 'LM', 'DP', 'JT', 'RN', 'EO', 'CW', 'MB', 'TS', 'HV', 'GF', 'NI', 'OP', 'KZ', 'YL', 'BA', 'QX', 'UV', 'WD'];
+const rowFaces = Array.from({ length: 8 }, (_, i) => {
+  const f = document.createElement('div');
+  f.className = 'face';
+  f.style.background = FACE_COLS[i % 8];
+  f.textContent = INITS[i];
+  $('#avrow').appendChild(f);
+  const p = document.createElement('div');
+  p.className = 'plus85';
+  p.textContent = '+$85';
+  $('#plus').appendChild(p);
+  return { f, p, x: 1420 - 4 * 86 + i * 86 + 11, y: 262 };
+});
+function seatRow(t) {
+  const out = E(P(t, T.fix - 0.1, T.fix + 0.35));
+  rowFaces.forEach(({ f, p, x, y }, i) => {
+    const at = seatAt(i) - 0.12;
+    const k = backOut(P(t, at, at + 0.4), 1.4);
+    const on = t >= at;
+    css(f, { opacity: String(on ? Math.min(1, P(t, at, at + 0.1)) * (1 - out) : 0), transform: `translate(${x - 32}px, ${Math.round(y - 32 - (1 - k) * 70)}px) scale(${L(0.6, 1, clamp(k)).toFixed(3)})` });
+    const pk = P(t, at + 0.05, at + 0.5);
+    css(p, { opacity: String(pk > 0 && pk < 1 ? Math.min(1, pk * 5) * (1 - P(pk, 0.7, 1)) : 0), transform: `translate(${Math.round(x - 34)}px, ${Math.round(L(y + 44, 560, easeIn(pk)))}px)` });
+  });
+}
+function hook(t) {
+  // matchup tag
+  reveal($('#vs'), t, 0.15, { out: T.villain + 0.1, dy: 12 });
+  // stacked lines: each lands on its event, earlier lines dim
+  const lines = [[$('#l1'), L1, T.resolved], [$('#l2'), L2, T.flood + PER], [$('#l3'), L3, T.seats + PER * 0.5]];
+  const out1 = E(P(t, T.fix - 0.25, T.fix + 0.2));
+  css($('#lines1'), { opacity: String(1 - out1), filter: out1 > 0.001 ? `blur(${(out1 * 8).toFixed(2)}px)` : 'none' });
+  lines.forEach(([el, ws, at], i) => {
+    rise(ws, t, at, 0.07);
+    const next = lines[i + 1];
+    el.style.opacity = String(L(1, 0.34, next ? E(P(t, next[2], next[2] + 0.5)) : 0));
+  });
+  // chat 1: rises, the question types, the answer lands, then the chip drops its $0.99 into the meter
+  const c1out = E(P(t, T.seats - 0.1, T.seats + 0.35));
+  const c1in = ease(t, 0, 0.6);
+  css($('#chat1'), { opacity: String(c1in * (1 - c1out)), transform: `translateY(${Math.round((1 - c1in) * 30 - c1out * 20)}px)`, filter: c1out > 0.001 ? `blur(${(c1out * 8).toFixed(2)}px)` : 'none' });
+  const n = Math.floor(clamp((t - 0.25) * 34, 0, Q1.length));
+  $('#c1q').textContent = Q1.slice(0, n);
+  pop($('#c1q'), t, 0.2, { dist: 10 });
+  pop($('#c1a'), t, T.answer, { dist: 16 });
+  // the chip pops under the answer; a spark carries its $0.99 into the meter
+  const rk = backOut(P(t, T.resolved - 0.15, T.resolved + 0.2), 1.7);
+  css($('#c1r'), { opacity: String(clamp(P(t, T.resolved - 0.15, T.resolved - 0.05))), transform: `scale(${L(0.7, 1, clamp(rk)).toFixed(3)})` });
+  const sk = P(t, T.resolved, T.resolved + 0.42);
+  css($('#spark0'), { opacity: String(sk > 0 && sk < 1 ? Math.min(1, sk * 5) * (1 - P(sk, 0.75, 1)) : 0),
+    transform: `translate(${Math.round(L(1650, 1520, easeIn(sk)))}px, ${Math.round(L(452, 610, easeIn(sk)))}px) scale(${L(1.1, 0.8, easeIn(sk)).toFixed(3)})` });
+  feed(t);
+  seatRow(t);
+}
+
+// ── Hook, screen 2: the chat is resolved; the fix leaves for another tool
+const Q2 = 'Our export stops at 10,000 contacts. We need all 18,400.';
+function fixScreen(t) {
+  const out = E(P(t, T.villain - 0.35, T.villain + 0.05));
+  const on = t >= T.fix - 0.1 && t < T.villain + 0.1;
+  const blur = (k) => (k > 0.001 ? `blur(${(k * 8).toFixed(2)}px)` : 'none');
+  css($('#s2'), { opacity: String(on ? 1 - out : 0), filter: blur(out) });
+  if (on) { rise(H2A, t, T.fix + 0.25, 0.07); rise(H2B, t, T.fixOut + 0.1, 0.07); }
+  const cin = ease(t, T.fix + 0.3, 0.6);
+  css($('#chat2'), { opacity: String(on ? cin * (1 - out) : 0), transform: `translateY(${Math.round((1 - cin) * 30)}px)`, filter: blur(out) });
+  const n = Math.floor(clamp((t - T.fixQ - 0.1) * 44, 0, Q2.length));
+  $('#c2q').textContent = Q2.slice(0, n);
+  pop($('#c2q'), t, T.fixQ, { dist: 10 });
+  pop($('#c2a'), t, T.fixA, { dist: 16 });
+  const rk = backOut(P(t, T.fixResolved, T.fixResolved + 0.35), 1.7);
+  css($('#c2r'), { opacity: String(clamp(P(t, T.fixResolved, T.fixResolved + 0.1))), transform: `scale(${L(0.7, 1, clamp(rk)).toFixed(3)})` });
+  // the bug card peels off the conversation and slides into the dashed box at the frame's edge, then both leave
+  const bIn = backOut(P(t, T.fixA + 0.3, T.fixA + 0.7), 1.4);
+  const slide = expoInOut(P(t, T.fixOut, T.fixOut + 0.75));
+  const leave = easeIn(P(t, T.fixGone, T.villain + 0.1));
+  const bx = L(1010, 1492, slide) + leave * 560, by = L(724, 806, slide);
+  css($('#bug'), { opacity: String(t >= T.fixA + 0.3 && t < T.villain + 0.1 ? clamp(P(t, T.fixA + 0.3, T.fixA + 0.45)) * (1 - leave * 0.6) : 0),
+    transform: `translate(${Math.round(bx)}px, ${Math.round(by - (1 - clamp(bIn)) * 24)}px) scale(${L(1, 0.84, slide).toFixed(3)}) rotate(${(Math.sin(slide * Math.PI) * -2.5).toFixed(2)}deg)` });
+  const box = ease(t, T.fixOut - 0.2, 0.5);
+  css($('#elsewhere'), { opacity: String(on ? box * (1 - leave) : 0), transform: `translateX(${Math.round((1 - box) * 60 + leave * 560)}px)` });
+}
+
+// ── Villain and drop headlines (centred above the meter)
+function tops(t) {
+  const vOut = E(P(t, T.drop - 0.15, T.drop + 0.1));
+  const von = t >= T.villain && t < T.drop + 0.1;
+  css($('#hv'), { opacity: String(von ? 1 - vOut : 0), filter: vOut > 0.001 ? `blur(${(vOut * 10).toFixed(2)}px)` : 'none' });
+  if (von) rise(HV, t, T.villain + 0.3, 0.09);
+  const dOut = E(P(t, T.team - 0.3, T.team + 0.05));
+  const don = t >= T.drop && t < T.team + 0.05;
+  css($('#hd'), { opacity: String(don ? 1 - dOut : 0), filter: dOut > 0.001 ? `blur(${(dOut * 10).toFixed(2)}px)` : 'none' });
+  if (don) rise(HD, t, T.drop + 0.02, 0.08, 0.6);
+}
+
+// ── Teammates pile in; the meter doesn't move
+const gridFaces = Array.from({ length: 40 }, (_, i) => {
+  const f = document.createElement('div');
+  f.className = 'face';
+  f.style.background = FACE_COLS[(i * 3) % 8];
+  f.textContent = INITS[(i * 7) % INITS.length];
+  $('#grid').appendChild(f);
+  const col = i % 10, row = Math.floor(i / 10);
+  const at = i < 8 ? T.team + 0.35 + i * 0.04 : i < 20 ? T.team20 + (i - 8) * 0.035 : T.team40 + (i - 20) * 0.03;
+  return { f, x: 1400 - 5 * 70 + col * 70 + 35, y: 690 + row * 70, at };
+});
+function grid(t) {
+  const out = E(P(t, T.ai - 0.1, T.ai + 0.3));
+  gridFaces.forEach(({ f, x, y, at }) => {
+    const k = backOut(P(t, at, at + 0.35), 1.6);
+    css(f, { opacity: String(t >= at ? Math.min(1, P(t, at, at + 0.08)) * (1 - out) : 0), transform: `translate(${x - 32}px, ${y - 32}px) scale(${L(0.4, 1, clamp(k)).toFixed(3)})` });
+  });
+}
+
+// ── Live helpin.ai previews
+const ans = siteWindow($('#wAns'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(1) .support-workflow-art', hide: ['canvas'], radius: 22 });
+const code = siteWindow($('#wCode'), { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 20, dark: true });
+const follow = siteWindow($('#wFollow'), { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 22 });
+[ans, code, follow].forEach((w) => waitFor(w.view.ready));
+const BOX_ANS = { x: 1030, y: 250, w: 760, h: 651 };      // art aspect 356×305
+const BOX_CODE = { x: 880, y: 170, w: 960, h: 740 };
+const BOX_FOL = { x: 1030, y: 214, w: 760, h: 651 };
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+const union = (...rs) => { rs = rs.filter(Boolean); if (!rs.length) return null; const x = Math.min(...rs.map((r) => r.x)), y = Math.min(...rs.map((r) => r.y)); return { x, y, w: Math.max(...rs.map((r) => r.x + r.w)) - x, h: Math.max(...rs.map((r) => r.y + r.h)) - y }; };
+const pad = (r, p) => r && { x: r.x - p, y: r.y - p, w: r.w + 2 * p, h: r.h + 2 * p };
+// Window entrance: rises with a small tilt, then pixel-still; exit dissolves.
+function raise(w, box, t, at, out) {
+  const k = expoOut(P(t, at, at + 0.7)), o = E(P(t, out - 0.4, out));
+  w.place(box);
+  const on = t >= at && t < out;
+  css(w.el, { opacity: String(on ? Math.min(1, k * 1.8) * (1 - o) : 0), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none',
+    transform: k >= 1 ? 'none' : `perspective(2400px) translateY(${Math.round((1 - k) * 140)}px) rotateX(${((1 - k) * 14).toFixed(2)}deg)` });
+  return on;
+}
+const cr = (sel) => code.view.rect(sel);
+const cardB = () => cr('#agent-coding .awa-coding');
+const SHOTS = [
+  { at: 0, rect: () => pad(cr('#agent-coding .awa-code-task'), 14), spot: () => cr('#agent-coding .awa-code-task') },
+  { at: T.pr + 0.15, rect: () => pad(union(cr('#agent-coding .awa-code-file'), cr('#agent-coding .awa-code-test')), 14), spot: () => union(cr('#agent-coding .awa-code-file'), cr('#agent-coding .awa-code-test')) },
+  { at: T.prOpen, rect: () => pad(union(cr('#agent-coding .awa-answer'), cr('#agent-coding .awa-code-review')), 14), spot: () => cr('#agent-coding .awa-code-review') },
+];
+function shoot(t) {
+  let i = 0;
+  while (i + 1 < SHOTS.length && t >= SHOTS[i + 1].at) i++;
+  const cur = SHOTS[i], prev = SHOTS[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoInOut(P(t, cur.at, cur.at + 0.55));
+  const fit = (r) => fitAspect(r, BOX_CODE.w / BOX_CODE.h, cardB());
+  code.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const sOn = clamp(P(t, T.task + 0.5, T.task + 0.9));
+  const a = prev.spot(), b = cur.spot();
+  if (a && b) code.spotlight(lerpRect(a, b, k), 0.9 * sOn, 8);
+}
+function windows(t) {
+  const waits = [];
+  raise(ans, BOX_ANS, t, T.ai + 0.2, T.task + 0.3);
+  ans.camera(1);
+  waits.push(ans.view.update(keys(t, [[0, 0.3], [T.ai + 0.2, 0.3], [T.task - 0.35, 5.4]])));
+  raise(code, BOX_CODE, t, T.task - 0.05, T.follow + 0.25);
+  shoot(t);
+  const ct = keys(t, [[0, 0.3], [T.task, 0.3], [T.pr, 1.0], [T.prOpen - 0.15, 2.3], [T.prOpen + 0.5, 3.3], [T.follow, 3.6]]);
+  waits.push(code.view.update(ct));
+  raise(follow, BOX_FOL, t, T.follow - 0.05, T.receipt + 0.3);
+  follow.camera(1);
+  waits.push(follow.view.update(clamp(1.6 + (t - T.follow) * 1.3, 1.6, 4.6)));
+  reveal($('#small'), t, T.pr + 0.5, { out: T.follow, dy: 8 });
+  return Promise.all(waits);
+}
+
+// ── Receipt
+const rowsA = [...document.querySelectorAll('#rcA .row')], rowsB = [...document.querySelectorAll('#rcB .row')];
+function receipt(t) {
+  const out = T.tag - 0.05;
+  reveal($('#rctx'), t, T.receipt + 0.1, { out, dy: 10 });
+  const cardIn = (el, at) => {
+    const k = expoOut(P(t, at, at + 0.7)), o = E(P(t, out - 0.4, out));
+    const on = t >= at && t < out;
+    css(el, { opacity: String(on ? Math.min(1, k * 1.6) * (1 - o) : 0), transform: k >= 1 ? 'none' : `translateY(${Math.round((1 - k) * 60)}px)`, filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+  };
+  cardIn($('#rcA'), T.receipt + 0.05);
+  cardIn($('#rcB'), T.receipt + 0.2);
+  rowsA.forEach((r, i) => pop(r, t, T.receipt + 0.45 + i * PER * 0.5, { dist: 10 }));
+  rowsB.forEach((r, i) => pop(r, t, T.receipt + 0.6 + i * PER * 0.5, { dist: 10 }));
+  const vOn = reveal($('#verdict'), t, T.verdict - 0.1, { out, dy: 18 });
+  if (vOn) $('#vnum').textContent = money(17172 * expoOut(P(t, T.verdict - 0.1, T.verdict + 1.1)));
+  reveal($('#foot'), t, T.verdict + 0.2, { out, dy: 8 });
+}
+
+// ── Tagline and end card
+function ending(t) {
+  const on = t >= T.tag;
+  $('#tag1').style.opacity = on ? '1' : '0';
+  $('#tag2').style.opacity = on ? '1' : '0';
+  if (on) { rise(TG1, t, T.tag + 0.1, 0.1); rise(TG2, t, T.tag2, 0.1); }
+  endSym.assemble(P(t, T.end, T.end + 0.9));
+  reveal($('#endmark'), t, T.end, { dy: 16 });
+  reveal($('#cta'), t, T.end + PER * 1.5, { dy: 16 });
+  reveal($('#ctanote'), t, T.end + PER * 2.5, { dy: 10 });
+  $('#fade').style.opacity = String(E(P(t, DURATION - 0.7, DURATION)));
+}
+
+// ── Background: a slow tape and a glow that follows the meter, amber until the drop, then mint
+function background(t, m) {
+  $('#tape').style.transform = `translateY(${-Math.round((t * 14) % 48)}px)`;
+  const g = mix(AMBER, MINT, ease(t, T.drop, 1.0));
+  const gx = t < T.task ? m.cx : 1400, gy = t < T.task ? m.cy : 560;
+  const strength = t < T.receipt ? 0.13 : L(0.13, 0.07, ease(t, T.receipt, 0.8));
+  css($('#glow'), { background: `radial-gradient(circle, ${rgb(g, strength)}, transparent 62%)`,
+    transform: `translate(${Math.round(gx - 550 + Math.sin(t * 0.7) * 40)}px, ${Math.round(gy - 550 + Math.cos(t * 0.5) * 30)}px)` });
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 123.07, duration: DURATION,
+  scenes: [{ id: 'film', start: 0, end: DURATION, render: ({ t }) => {
+    const m = meter(t);
+    background(t, m);
+    hook(t);
+    fixScreen(t);
+    tops(t);
+    side(t);
+    grid(t);
+    receipt(t);
+    ending(t);
+    return windows(t);
+  } }],
+});
+</script>
+</body>
+</html>

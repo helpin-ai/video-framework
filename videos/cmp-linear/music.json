@@ -1,0 +1,31 @@
+{
+ "name": "cmp-linear-music",
+ "duration": 40,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 40, "gain": -4,
+    "styles": ["dark minimal bass house", "124 BPM", "mechanical keyboard clicks and typewriter ticks as the hi-hats", "deep round rubbery bass", "short glassy synth stabs", "tight punchy kick", "sleek, focused, confident", "product comparison motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out", "bright uplifting chords"],
+    "sections": [
+      { "name": "Keys", "duration": 8, "styles": ["mechanical keyboard clicks as hi-hats from the very first second", "muted kick on every beat", "no bass yet", "curious, slightly tense", "sparse but driving"] },
+      { "name": "Pre-drop", "duration": 3.9, "styles": ["rising filter sweep", "a low sub swell", "tension builds", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 12, "styles": ["full groove", "deep round rubbery bass enters", "glassy synth stabs", "crisp claps", "keyboard clicks keep the hats", "confident"] },
+      { "name": "Groove", "duration": 10, "styles": ["fullest energy", "extra percussion", "stabs answer the bass"] },
+      { "name": "Carry to the end", "duration": 6.1, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] },
+  { "at": 0, "length": 40, "gain": -4,
+    "prompt": "Dark, sleek minimal bass house at exactly 124 BPM for a product comparison motion graphics film: mechanical keyboard clicks and typewriter ticks play the hi-hats, a tight punchy kick, a deep round rubbery bassline and short glassy synth stabs; focused and confident, no bright uplifting chords. No vocals. It starts immediately with keyboard-click hats and a muted kick (0 to 8 seconds, curious and slightly tense, no bass), rises with a filter sweep and a sub swell from 8 seconds, stops for one beat at 11.4 seconds, then drops at 11.9 seconds into the full groove with the rubbery bass and glassy stabs, which carries all the way to the end with extra percussion from 24 seconds. It ends cleanly on a downbeat at 40 seconds with no big final hit and no fade." },
+  { "at": 0, "length": 40, "gain": -4,
+    "styles": ["deep tech house", "124 BPM", "clicky mechanical keyboard percussion", "glitchy typing ticks", "warm Reese bass", "short glassy chord stabs", "hypnotic and precise", "product comparison motion graphics"],
+    "avoid": ["vocals", "cinematic", "orchestral", "epic trailer hits", "lo-fi", "long silence", "fade out", "bright uplifting chords"],
+    "sections": [
+      { "name": "Typing", "duration": 8, "styles": ["fast keyboard-click hats from the first second", "kick on every beat", "muted and tense", "curious"] },
+      { "name": "Pre-drop", "duration": 3.9, "styles": ["filtered", "rising", "a one-beat stop at the very end"] },
+      { "name": "Drop", "duration": 12, "styles": ["full groove", "Reese bass enters", "glassy stabs", "claps"] },
+      { "name": "Groove", "duration": 10, "styles": ["fullest energy", "extra percussion"] },
+      { "name": "Carry to the end", "duration": 6.1, "styles": ["keeps the full groove to the very end", "ends cleanly on a downbeat"], "avoid": ["big final hit", "fade out", "breakdown"] }
+    ] }
+ ],
+ "sounds": {},
+ "cues": []
+}

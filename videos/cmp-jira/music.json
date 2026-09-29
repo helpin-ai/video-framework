@@ -1,0 +1,174 @@
+{
+ "name": "cmp-jira-music",
+ "duration": 40,
+ "master": {
+  "lufs": -14
+ },
+ "music": [
+  {
+   "at": 0,
+   "length": 40,
+   "gain": -4,
+   "styles": [
+    "nu-jazz",
+    "broken beat",
+    "124 BPM",
+    "warm Rhodes electric piano chords",
+    "walking upright bass",
+    "brushed jazz hi-hats",
+    "short brass horn stabs",
+    "modern, confident, soulful",
+    "product comparison motion graphics"
+   ],
+   "avoid": [
+    "vocals",
+    "scat",
+    "cinematic",
+    "orchestral",
+    "epic trailer hits",
+    "lo-fi hip hop",
+    "long silence",
+    "fade out",
+    "sleepy lounge"
+   ],
+   "sections": [
+    {
+     "name": "Sinking",
+     "duration": 8.6,
+     "styles": [
+      "Rhodes chords and a walking upright bass from the very first second",
+      "brushed hi-hats and a soft broken-beat kick",
+      "murky, dim, slightly unresolved, going down",
+      "sparse but moving"
+     ]
+    },
+    {
+     "name": "Pre-drop",
+     "duration": 3.0,
+     "styles": [
+      "a low rising swell",
+      "tension builds",
+      "a one-beat stop at the very end"
+     ]
+    },
+    {
+     "name": "Drop",
+     "duration": 11.6,
+     "styles": [
+      "the full band hits on the first beat with a bright horn stab",
+      "four-on-the-floor kick lifts the groove",
+      "Rhodes and horns answer each other",
+      "bright, rising, uplifting"
+     ]
+    },
+    {
+     "name": "Groove",
+     "duration": 10.3,
+     "styles": [
+      "fullest energy",
+      "extra percussion",
+      "horn riffs"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 6.5,
+     "styles": [
+      "keeps the full groove to the very end",
+      "ends cleanly on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ]
+  },
+  {
+   "at": 0,
+   "length": 40,
+   "gain": -4,
+   "prompt": "Nu-jazz broken beat at exactly 124 BPM for a product comparison motion graphics film: warm Rhodes electric piano, a walking upright bass, brushed jazz hi-hats and a broken-beat kick; soulful and modern. No vocals. It starts immediately (0 to 9.5 seconds) with Rhodes chords, walking bass and brushes, murky and dim like something sinking; a low swell rises from 9.5 seconds and stops for one beat at 11.4 seconds; at 11.6 seconds the full band drops in with a bright horn stab and a four-on-the-floor kick, bright and uplifting, Rhodes and horns trading riffs, getting fuller at 23 seconds and carrying at full energy all the way to the end. It ends cleanly on a downbeat at 40 seconds with no big final hit, no breakdown and no fade."
+  },
+  {
+   "at": 0,
+   "length": 40,
+   "gain": -4,
+   "styles": [
+    "jazzy broken beat",
+    "West London broken beat",
+    "124 BPM",
+    "Rhodes stabs",
+    "double bass walking line",
+    "brushed drums",
+    "trumpet and sax section stabs",
+    "groovy, warm, confident",
+    "product video"
+   ],
+   "avoid": [
+    "vocals",
+    "cinematic",
+    "orchestral",
+    "trailer hits",
+    "long silence",
+    "fade out",
+    "breakdown",
+    "smooth jazz"
+   ],
+   "sections": [
+    {
+     "name": "Down",
+     "duration": 8.6,
+     "styles": [
+      "Rhodes and walking double bass from the first second",
+      "brushed broken-beat drums",
+      "moody, low, murky"
+     ]
+    },
+    {
+     "name": "Rise",
+     "duration": 3.0,
+     "styles": [
+      "rising swell",
+      "one-beat stop at the end"
+     ]
+    },
+    {
+     "name": "Drop",
+     "duration": 11.6,
+     "styles": [
+      "full band on the first beat",
+      "horn section stab",
+      "four-on-the-floor lift",
+      "bright and uplifting"
+     ]
+    },
+    {
+     "name": "Bigger",
+     "duration": 10.3,
+     "styles": [
+      "fuller",
+      "extra percussion",
+      "horn riffs"
+     ]
+    },
+    {
+     "name": "Carry to the end",
+     "duration": 6.5,
+     "styles": [
+      "full groove to the very end",
+      "ends on a downbeat"
+     ],
+     "avoid": [
+      "big final hit",
+      "fade out",
+      "breakdown"
+     ]
+    }
+   ]
+  }
+ ],
+ "sounds": {},
+ "cues": []
+}

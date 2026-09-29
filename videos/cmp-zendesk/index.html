@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>cmp-zendesk</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* Helpin vs Zendesk: "Solved. Still broken." A seam splits the ticket from the customer; on the drop it slams
+     shut and becomes the spine of one history that the camera travels down. */
+  #stage { background: #081B16; color: #E8EEEA; }
+  em { font-style: normal; color: var(--sage); }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  #bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 72% 30%, #0F3228, #081B16 60%, #06140F); }
+  #glow { position: absolute; left: 0; top: 0; width: 1400px; height: 1400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(156, 219, 179, .07), rgba(156, 219, 179, 0) 65%); }
+  .mono { font-family: var(--mono); }
+  .eyebrow { font: 500 22px/1 var(--mono); letter-spacing: .26em; text-transform: uppercase; }
+
+  /* ── Hook: the split ─────────────────────────────────────────── */
+  #hk-left { position: absolute; inset: 0; background: #ECEFEB; color: var(--ink); }
+  #hk-left em { color: #0F7A50; }
+  #hk-right { position: absolute; inset: 0; }
+  .hk-in { position: absolute; inset: 0; }
+  #seam { position: absolute; top: 0; height: 1080px; width: 2px; margin-left: -1px; background: rgba(184, 221, 187, .55); }
+  #seam i { position: absolute; left: -9px; top: 0; width: 20px; height: 100%; background: linear-gradient(90deg, rgba(156, 219, 179, 0), rgba(156, 219, 179, .55), rgba(156, 219, 179, 0)); opacity: 0; }
+  .lab { position: absolute; top: 94px; }
+  #lbL { left: 96px; color: #5E6B64; }
+  #lbR { left: 1056px; color: rgba(184, 221, 187, .72); }
+  #matchupWrap { position: absolute; left: 0; top: 30px; width: 1920px; display: flex; justify-content: center; }
+  #matchup { display: flex; align-items: center; gap: 12px;
+    height: 46px; padding: 0 18px 0 12px; border-radius: 23px; background: #0C1F19; border: 1px solid rgba(184, 221, 187, .22);
+    font: 500 22px/1 var(--sans); color: #E8EEEA; white-space: nowrap; }
+  #matchup .vs { font: 500 18px/1 var(--mono); color: rgba(184, 221, 187, .6); letter-spacing: .08em; }
+  .mono-chip { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; border: 1px solid rgba(184, 221, 187, .35);
+    font: 600 16px/1 var(--sans); color: #C9D6CF; }
+
+  .card { position: absolute; background: #fff; color: var(--ink); border-radius: 22px; box-shadow: 0 30px 70px rgba(19, 21, 20, .12), 0 0 0 1px #DCE3DE; }
+  #ticket { left: 96px; top: 160px; width: 768px; padding: 30px 34px; transform-origin: 0 0; }
+  .tk-head { display: flex; justify-content: space-between; align-items: center; }
+  .tk-id { font: 500 22px/1 var(--mono); color: #66716C; letter-spacing: .04em; }
+  .tk-status { position: relative; height: 40px; width: 170px; }
+  .tk-status span { position: absolute; right: 0; top: 0; height: 40px; padding: 0 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; font: 600 22px/1 var(--sans); white-space: nowrap; }
+  .s-open { background: #FBF1DC; color: #8A5B0E; }
+  .s-solved { background: #E2F1E8; color: #16603F; opacity: 0; }
+  .s-solved svg { width: 20px; height: 20px; }
+  .tk-subj { margin-top: 18px; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; }
+  .tk-req { margin-top: 12px; display: flex; align-items: center; gap: 12px; font-size: 22px; color: #4F5A55; }
+  .tk-req img { width: 34px; height: 34px; border-radius: 50%; }
+  .tk-msg { margin-top: 18px; padding: 16px 20px; border-radius: 16px; font-size: 24px; line-height: 1.35; }
+  .tk-msg.c { background: #F3F5F4; }
+  .tk-msg.a { background: #EEF6F1; border: 1px solid #D6E9DD; }
+  .tk-msg b { display: block; font: 500 22px/1 var(--mono); color: #66716C; margin-bottom: 8px; font-weight: 500; }
+  .tk-strike { position: absolute; left: -8px; top: 19px; height: 3px; width: calc(100% + 16px); background: #C8572F; transform-origin: 0 50%; transform: scaleX(0); border-radius: 2px; }
+
+  .head { position: absolute; font-weight: 600; letter-spacing: -0.045em; line-height: 1.03; white-space: nowrap; }
+  #hA, #hB { left: 96px; top: 640px; font-size: 88px; }
+  #hB { font-size: 78px; }
+  #hR { left: 1056px; top: 640px; font-size: 88px; color: #E8EEEA; }
+  #vL, #vR { top: 646px; font-size: 136px; }
+  #vL { left: 96px; } #vR { left: 1056px; color: #E8EEEA; }
+  #vL .strike { position: absolute; left: -10px; top: 56%; height: 10px; width: calc(100% + 20px); background: #C8572F; border-radius: 5px; transform-origin: 0 50%; transform: scaleX(0); }
+
+  #exp { left: 1056px; top: 160px; width: 768px; padding: 30px 34px; transform-origin: 0 0; }
+  .ex-top { display: flex; align-items: center; gap: 14px; }
+  .ex-app { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #131514; color: #fff; font: 700 20px/1 var(--sans); }
+  .ex-title { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; }
+  .ex-sub { margin-top: 10px; font-size: 22px; color: #66716C; }
+  .ex-bar { position: relative; margin-top: 28px; height: 16px; border-radius: 8px; background: #EDF0EE; overflow: hidden; }
+  .ex-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 8px; background: #0F7A50; }
+  .ex-row { margin-top: 18px; display: flex; justify-content: space-between; align-items: center; }
+  .ex-count { font: 500 26px/1 var(--mono); color: var(--ink); }
+  .ex-count s { text-decoration: none; color: #9AA39E; }
+  .ex-state { position: relative; height: 38px; width: 200px; }
+  .ex-state span { position: absolute; right: 0; top: 0; height: 38px; padding: 0 16px; border-radius: 19px; display: inline-flex; align-items: center; font: 600 22px/1 var(--sans); white-space: nowrap; opacity: 0; }
+  .ex-run { background: #EEF2F0; color: #4F5A55; }
+  .ex-stop { background: #FBEBDD; color: #A0471F; }
+  .ex-done { background: #E2F1E8; color: #16603F; gap: 8px; }
+  .ex-done svg { width: 20px; height: 20px; }
+
+  .chip { position: absolute; left: 836px; width: 440px; height: 104px; padding: 20px 24px; border-radius: 18px; background: #fff; box-shadow: 0 16px 40px rgba(19, 21, 20, .10), 0 0 0 1px #DCE3DE; opacity: 0; }
+  .chip .k { font: 500 20px/1 var(--mono); letter-spacing: .2em; color: #66716C; }
+  .chip .v { margin-top: 12px; font-size: 26px; font-weight: 600; letter-spacing: -0.015em; color: var(--ink); white-space: nowrap; }
+  .chip .v small { font-size: 22px; font-weight: 500; color: #A0471F; letter-spacing: 0; }
+  #links { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  #links path { fill: none; stroke: #7C8A83; stroke-width: 2.5; stroke-dasharray: 4 8; stroke-linecap: round; }
+
+  /* ── The spine world ─────────────────────────────────────────── */
+  #world { position: absolute; left: 0; top: 0; width: 1920px; height: 5600px; }
+  #spineSvg { position: absolute; left: 0; top: 0; width: 1920px; height: 5600px; overflow: visible; }
+  .stcopy { position: absolute; left: 140px; width: 740px; height: 1080px; display: flex; flex-direction: column; justify-content: center; }
+  .stcopy .eyebrow { color: rgba(184, 221, 187, .75); margin-bottom: 30px; }
+  .stcopy .h { font-size: 72px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; color: #E8EEEA; }
+  .stcopy .lede { margin-top: 26px; font-size: 29px; line-height: 1.4; color: #A9B8B0; max-width: 640px; }
+  .stcopy .fine { margin-top: 22px; font-size: 22px; line-height: 1.4; color: #7F9088; }
+  #one { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #one .h { font-size: 104px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; color: #E8EEEA; white-space: nowrap; }
+  #one .eyebrow { color: rgba(184, 221, 187, .75); margin-bottom: 34px; }
+  .note { position: absolute; display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 20px; border-radius: 14px; background: rgba(240, 195, 90, .08);
+    border: 1px solid rgba(240, 195, 90, .32); color: #E9D3A0; font-size: 23px; white-space: nowrap; opacity: 0; }
+  .note svg { width: 26px; height: 26px; }
+  .note.inline { position: relative; margin-top: 34px; align-self: flex-start; height: 58px; font-size: 26px; }
+  #exp2 { width: 760px; padding: 26px 30px; }
+  #exp2 .ex-title { font-size: 30px; } #exp2 .ex-bar { margin-top: 22px; } #exp2 .ex-row { margin-top: 16px; }
+  .site-window { will-change: auto; }
+
+  /* ── Chart ───────────────────────────────────────────────────── */
+  #ch-copy { position: absolute; left: 140px; top: 110px; }
+  #ch-copy .eyebrow { color: rgba(184, 221, 187, .75); }
+  #ch-copy .h { margin-top: 26px; font-size: 84px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; white-space: nowrap; }
+  #ch-copy .lede { margin-top: 20px; font-size: 30px; color: #A9B8B0; }
+  #chartSvg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+  #chartSvg text { font-family: var(--mono); font-size: 22px; fill: #7F9088; }
+  #chartSvg .lbl { font-family: var(--sans); font-size: 26px; font-weight: 600; }
+  #foot { position: absolute; left: 140px; top: 1010px; font-size: 22px; color: #7F9088; }
+
+  /* ── Tagline and end ─────────────────────────────────────────── */
+  #tg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #tg .l { font-size: 110px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.12; white-space: nowrap; }
+  #loopSvg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  #endwrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #endmatch { font: 500 22px/1 var(--mono); letter-spacing: .26em; color: rgba(184, 221, 187, .7); text-transform: uppercase; }
+  #endmark { margin-top: 44px; display: flex; align-items: center; gap: 24px; }
+  #endmark b { font-size: 104px; font-weight: 600; letter-spacing: -0.045em; color: #E8EEEA; }
+  #cta { margin-top: 52px; height: 66px; padding: 0 30px; border-radius: 16px; background: #E8EEEA; color: #081B16; display: inline-flex; align-items: center; font: 600 28px/1 var(--sans); }
+  #ctaNote { margin-top: 26px; font: 400 23px/1 var(--mono); color: #A9B8B0; letter-spacing: .02em; }
+  #fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="glow"></div>
+
+  <section class="scene" id="hook">
+    <div id="hk-right"><div class="hk-in" id="hkR">
+      <div class="lab eyebrow" id="lbR">Your customer</div>
+      <div class="card" id="exp">
+        <div class="ex-top"><span class="ex-app">O</span><span class="ex-title">Export contacts</span></div>
+        <div class="ex-sub">OrbitDesk · Northstar · all contacts</div>
+        <div class="ex-bar"><i></i></div>
+        <div class="ex-row"><span class="ex-count"></span><span class="ex-state"><span class="ex-run">Exporting…</span><span class="ex-stop">Stopped</span></span></div>
+      </div>
+      <div class="head" id="hR"></div>
+      <div class="head" id="vR"></div>
+    </div></div>
+    <div id="hk-left"><div class="hk-in" id="hkL">
+      <div class="lab eyebrow" id="lbL">The ticket</div>
+      <svg id="links" viewBox="0 0 1920 1080"><path id="lk1"/><path id="lk2"/><path id="lk3"/></svg>
+      <div class="card" id="ticket">
+        <div class="tk-head"><span class="tk-id">#4812 · Help desk</span>
+          <span class="tk-status"><span class="s-open">Open</span><span class="s-solved"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Solved<i class="tk-strike"></i></span></span></div>
+        <div class="tk-subj">Export stops at 10,000 contacts</div>
+        <div class="tk-req"><img src="../../assets/helpin/avatars/maya.webp" alt="">Maya Chen · Northstar</div>
+        <div class="tk-msg c">Our export stops at 10,000 contacts. We need all 18,400.</div>
+        <div class="tk-msg a"><b>Support</b>Thanks! We’ve passed this to engineering.</div>
+      </div>
+      <div class="chip" id="ch1" style="top:150px"><div class="k">THE FIX</div><div class="v">Jira or another tool</div></div>
+      <div class="chip" id="ch2" style="top:290px"><div class="k">THE ACCOUNT</div><div class="v">Zendesk Sell <small>· retiring Aug 2027</small></div></div>
+      <div class="chip" id="ch3" style="top:430px"><div class="k">THE BILL</div><div class="v">Per agent</div></div>
+      <div class="head" id="hA"></div>
+      <div class="head" id="hB"></div>
+      <div class="head" id="vL"><span class="vw"></span><i class="strike"></i></div>
+    </div></div>
+    <div id="seam"><i></i></div>
+    <div id="matchupWrap"><div id="matchup"><img src="../../assets/helpin/helpin-symbol-white.svg" width="24" height="24" alt=""><span>Helpin</span><span class="vs">VS</span><span class="mono-chip">Z</span><span>Zendesk</span></div></div>
+  </section>
+
+  <section class="scene" id="spine">
+    <div id="world">
+      <svg id="spineSvg" viewBox="0 0 1920 5600"><g id="dimLines"></g><g id="brightLines"></g><g id="nodes"></g></svg>
+      <div id="one"><div class="eyebrow">Helpin</div><div class="h" id="one1"></div><div class="h" id="one2"></div></div>
+      <div class="stcopy" id="c1" style="top:1080px"><div class="eyebrow">01 · Task</div><div class="h"></div><div class="lede">Your customer’s conversation stays attached to the task, history and all.</div></div>
+      <div class="stcopy" id="c2" style="top:2160px"><div class="eyebrow">02 · Pull request</div><div class="h"></div><div class="lede">A coding agent prepares the change and a regression test, then opens a pull request.</div><div class="fine">Coding agents need a connected GitHub or GitLab repository.</div></div>
+      <div class="stcopy" id="c3" style="top:3240px"><div class="eyebrow">03 · Told</div><div class="h"></div><div class="lede">In the same thread, once the fix is live. Your team approves the message.</div></div>
+      <div class="stcopy" id="c4" style="top:4320px"><div class="eyebrow">04 · CRM</div><div class="h"></div><div class="lede">The account, the conversation and the work share one history.</div><div class="note inline" id="sell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Zendesk Sell retires August 31, 2027.</div></div>
+      <div class="card" id="exp2" style="left:1040px; top:4020px">
+        <div class="ex-top"><span class="ex-app">O</span><span class="ex-title">Export contacts</span></div>
+        <div class="ex-bar"><i></i></div>
+        <div class="ex-row"><span class="ex-count"></span><span class="ex-state"><span class="ex-run">Exporting…</span><span class="ex-stop">Stopped</span><span class="ex-done"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Complete</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="chart">
+    <div id="ch-copy"><div class="eyebrow" id="chEb">Price · list prices, billed annually</div><div class="h" id="chH"></div><div class="lede" id="chL">Unlimited teammates. AI usage included.</div></div>
+    <svg id="chartSvg" viewBox="0 0 1920 1080"></svg>
+    <div id="foot">List prices, billed annually, checked September 2026. Zendesk AI resolutions and Copilot not included.</div>
+  </section>
+
+  <section class="scene" id="tagline">
+    <svg id="loopSvg" viewBox="0 0 1920 1080"><path id="loop" fill="none" stroke="#9CDBB3" stroke-width="4" stroke-linecap="round" pathLength="1"/></svg>
+    <div id="tg"><div class="l" id="tg1"></div><div class="l" id="tg2"></div></div>
+  </section>
+
+  <section class="scene" id="end">
+    <div id="endwrap">
+      <div id="endmatch">Helpin vs Zendesk</div>
+      <div id="endmark"><span id="end-symbol"></span><b>Helpin</b></div>
+      <div id="cta">Start free at helpin.ai</div>
+      <div id="ctaNote">14-day trial · no card · or self-host free</div>
+    </div>
+  </section>
+  <div id="fade"></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, clamp, keys, brandEase, expoOut, expoIn, expoInOut, easeInOut, easeIn } from '../../lib/motion.js';
+import { helpinSymbol, css } from '../../lib/components.js';
+import { words, rise, reveal } from '../../lib/kit.js';
+import { siteWindow, lerpRect } from '../../lib/site.js';
+import { B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const T = Object.fromEntries(Object.entries(N).map(([k, n]) => [k, B(n)]));
+const BEAT = B(1) - B(0);
+const ease = (t, a, d = 0.6, f = brandEase) => f(P(t, a, a + d));
+const fmt = (n) => Math.round(n).toLocaleString('en-US');
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+// ── Copy
+function lines(el, a, b) { el.innerHTML = '<div></div><div></div>'; return [words(el.children[0], a), words(el.children[1], b)]; }
+const hA = lines($('#hA'), 'The ticket:', '<em>Solved.</em>');
+const hR = lines($('#hR'), 'Your customer:', '<em>still at 10,000.</em>');
+const hB = lines($('#hB'), 'Three tools.', '<em>Three versions of the story.</em>');
+const vL = words($('#vL .vw'), 'Solved.');
+const vR = words($('#vR'), '<em>Still broken.</em>');
+const one1 = words($('#one1'), 'One history,');
+const one2 = words($('#one2'), '<em>from ticket to release.</em>');
+const stH = [
+  null,
+  words($('#c1 .h'), 'The ticket becomes <em>the work.</em>'),
+  words($('#c2 .h'), 'Your team reviews <em>every fix.</em>'),
+  words($('#c3 .h'), 'Your customer <em>hears back.</em>'),
+  words($('#c4 .h'), 'Contacts, companies and deals, <em>built in.</em>'),
+];
+const chH = words($('#chH'), 'From 5 agents, <em>Helpin costs less.</em>');
+const tg1 = words($('#tg1'), 'Don’t close the ticket.');
+const tg2 = words($('#tg2'), '<em>Close the loop.</em>');
+
+// ── Live helpin.ai previews, placed in the spine world
+const SY = (k) => 1080 * k;                       // top of station k in the world
+const BOX = {
+  1: { x: 1040, y: SY(1) + 172, w: 760, h: 736 },
+  2: { x: 1040, y: SY(2) + 230, w: 760, h: 620 },
+  3: { x: 1040, y: SY(3) + 70, w: 760, h: 651 },
+  4: { x: 1040, y: SY(4) + 150, w: 760, h: 700 },
+};
+const world = $('#world');
+const w1 = siteWindow(world, { path: '/products/customer-support', focus: '.support-connected-preview .support-workspace', hide: ['canvas'], radius: 20 });
+const w2 = siteWindow(world, { path: '/products/ai-agents', focus: '#agent-coding .awa-coding', hide: ['canvas'], radius: 18, dark: true });
+const w3 = siteWindow(world, { path: '/products/customer-support', focus: '#support-workflow article:nth-child(3) .support-workflow-art', hide: ['canvas'], radius: 20 });
+const w4 = siteWindow(world, { path: '/products/crm', focus: '#crm-record .cw-account', hide: ['canvas'], radius: 20 });
+[w1, w2, w3, w4].forEach((w, i) => { w.place(BOX[i + 1]); waitFor(w.view.ready); });
+[w1, w3, w4].forEach((w) => { w.el.style.boxShadow = '0 40px 110px rgba(0,0,0,.5), 0 0 0 1px rgba(184,221,187,.16)'; });
+
+// Camera shots inside a window (from "Ticket limbo"): each shot frames a rect, aspect-fitted to the window.
+function fitAspect(r, aspect, b) {
+  if (!r) return r;
+  let { x, y, w, h } = r;
+  if (w / h > aspect) { const nh = w / aspect; y -= (nh - h) / 2; h = nh; } else { const nw = h * aspect; x -= (nw - w) / 2; w = nw; }
+  if (b) { x = w >= b.w ? b.x + (b.w - w) / 2 : Math.min(Math.max(x, b.x), b.x + b.w - w); y = h >= b.h ? b.y + (b.h - h) / 2 : Math.min(Math.max(y, b.y), b.y + b.h - h); }
+  return { x, y, w, h };
+}
+function shoot(w, box, t, shots, dur = 0.55) {
+  let i = 0;
+  while (i + 1 < shots.length && t >= shots[i + 1].at) i++;
+  const cur = shots[i], prev = shots[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : expoOut(P(t, cur.at, cur.at + dur));
+  const bounds = w.view.rect();
+  const fit = (r) => fitAspect(r, box.w / box.h, bounds);
+  w.camera(1, [0.5, 0.5], lerpRect(fit(prev.rect()), fit(cur.rect()), k));
+  const a = prev !== cur && prev.spot?.(), b = cur.spot?.();
+  if (a && b) w.spotlight(lerpRect(a, b, k), 1); else if (b) w.spotlight(b, k); else if (a) w.spotlight(a, 1 - k); else w.spotlight(null, 0);
+}
+const pad = (r, p = 14) => r && { x: r.x - p, y: r.y - p, w: r.w + p * 2, h: r.h + p * 2 };
+const union = (a, b) => a && b && { x: Math.min(a.x, b.x), y: Math.min(a.y, b.y), w: Math.max(a.x + a.w, b.x + b.w) - Math.min(a.x, b.x), h: Math.max(a.y + a.h, b.y + b.h) - Math.min(a.y, b.y) };
+const off = (w, dx, dy, ww, hh) => () => { const f = w.view.rect(); return f && { x: f.x + dx, y: f.y + dy, w: ww, h: hh }; };
+const sel = (w, s, i = 0) => () => w.view.rect(s, i);
+
+const SHOTS = {
+  1: [
+    { at: -9, rect: () => w1.view.rect() },
+    { at: T.task + 0.15, rect: sel(w1, '.support-connected-preview .swi-agent') },
+    { at: T.task + 1.25, rect: () => pad(union(w1.view.rect('.support-connected-preview .swi-agent-step', 0), w1.view.rect('.support-connected-preview .swi-agent-step', 1)), 24) },
+    { at: T.task + 1.5, rect: () => pad(union(w1.view.rect('.support-connected-preview .swi-agent-step', 0), w1.view.rect('.support-connected-preview .swi-agent-step', 1)), 24),
+      spot: () => w1.view.rect('.support-connected-preview .swi-agent-step', 1) },
+  ],
+  2: [
+    { at: -9, rect: off(w2, 0, 40, 606, 440) },
+    { at: T.pr + 1.9, rect: off(w2, 0, 450, 606, 290) },
+    { at: T.pr + 2.75, rect: off(w2, 0, 450, 606, 290), spot: sel(w2, '#agent-coding .awa-code-review') },
+  ],
+  4: [
+    { at: -9, rect: off(w4, 640, 0, 592, 545) },
+    { at: T.crm + 0.7, rect: off(w4, 961, 346, 270, 320) },
+    { at: T.crm + 1.2, rect: off(w4, 961, 346, 270, 320), spot: () => w4.view.rect('#crm-record .cw-association', 1) },
+    { at: T.crm + 2.2, rect: off(w4, 961, 346, 270, 320), spot: () => w4.view.rect('#crm-record .cw-association', 2) },
+  ],
+};
+
+// ── The spine: dim guide line, a bright line that grows with the camera, and a node per station.
+const dimG = $('#dimLines'), brightG = $('#brightLines'), nodeG = $('#nodes');
+const mk = (tag, attrs, parent) => { const e = document.createElementNS(SVGNS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); parent.appendChild(e); return e; };
+const SPINE_END = SY(4) + 1080 + 200;
+const dim = mk('line', { x1: 960, x2: 960, y1: -300, y2: SPINE_END, stroke: 'rgba(184,221,187,.2)', 'stroke-width': 2 }, dimG);
+const brightA = mk('line', { x1: 960, x2: 960, y1: -300, y2: 0, stroke: '#9CDBB3', 'stroke-width': 3, 'stroke-linecap': 'round' }, brightG);
+const brightB = mk('line', { x1: 960, x2: 960, y1: 0, y2: 0, stroke: '#9CDBB3', 'stroke-width': 3, 'stroke-linecap': 'round' }, brightG);
+const glowA = mk('line', { x1: 960, x2: 960, y1: -300, y2: 0, stroke: 'rgba(156,219,179,.22)', 'stroke-width': 14, 'stroke-linecap': 'round' }, brightG);
+const glowB = mk('line', { x1: 960, x2: 960, y1: 0, y2: 0, stroke: 'rgba(156,219,179,.22)', 'stroke-width': 14, 'stroke-linecap': 'round' }, brightG);
+const NODES = [1, 2, 3, 4].map((k) => ({
+  k, y: SY(k) + 540,
+  ring: mk('circle', { cx: 960, cy: SY(k) + 540, r: 12, fill: 'none', stroke: '#9CDBB3', 'stroke-width': 2, opacity: 0 }, nodeG),
+  dot: mk('circle', { cx: 960, cy: SY(k) + 540, r: 11, fill: '#081B16', stroke: 'rgba(184,221,187,.45)', 'stroke-width': 3 }, nodeG),
+}));
+const STATION_T = { 1: T.task, 2: T.pr, 3: T.told, 4: T.crm };
+// The website starts each preview when it scrolls into view (IntersectionObserver), and those callbacks land
+// between frames on real time. So a preview's clock stays at 0 until its window is fully on screen; on that frame
+// it steps to 0, waits a few real frames for the observer and React, then catches up. Sequential and segmented
+// renders then start playback at the same virtual time.
+const rafs = (n) => new Promise((r) => { let k = 0; const f = () => (++k >= n ? r() : requestAnimationFrame(f)); requestAnimationFrame(f); });
+const LIVE = {};
+function drive(w, k, t, pOf) {
+  const st = LIVE[k] ||= { started: false };
+  if (t < ENTER[k]) return null;
+  if (!st.started) { st.started = true; return w.view.update(0).then(() => rafs(4)).then(() => w.view.update(pOf(t))); }
+  return w.view.update(pOf(t));
+}
+// World camera (y of the stage top in the world). Each move lands exactly on its station's beat.
+const MOVE = 0.55;
+const P3 = 0.9, P3_SPEED = 1.6;   // follow-through preview: offset at landing and speed (Released ≈1.1 s, Sent ≈3.4 s of its clock)
+const camKeys = [[0, 0], [T.task - MOVE, 0], [T.task, SY(1), expoInOut], [T.pr - MOVE, SY(1)], [T.pr, SY(2), expoInOut],
+  [T.told - MOVE, SY(2)], [T.told, SY(3), expoInOut], [T.crm - MOVE, SY(3)], [T.crm, SY(4), expoInOut], [T.chart, SY(4)], [T.chart + 0.6, SY(4) + 260, easeIn]];
+// Bright line tip: through station 0 on the drop, then to each node as the camera arrives.
+// First frame on which each window is fully inside the frame.
+const ENTER = {};
+for (const k of [1, 2, 3, 4]) for (let f = 0; f < 60 * 30; f++) { const top = BOX[k].y - keys(f / 30, camKeys); if (top >= 0 && top + BOX[k].h <= 1080) { ENTER[k] = f / 30; break; } }
+const tipKeys = [[T.drop, 1080 * 0.5], [T.drop + 0.35, 1080, expoOut], [T.task - MOVE, 1080], [T.task, NODES[0].y, expoInOut],
+  [T.pr - MOVE, NODES[0].y], [T.pr, NODES[1].y, expoInOut], [T.told - MOVE, NODES[1].y], [T.told, NODES[2].y, expoInOut],
+  [T.crm - MOVE, NODES[2].y], [T.crm, NODES[3].y, expoInOut], [T.chart, NODES[3].y], [T.chart + 0.6, SPINE_END, easeIn]];
+
+// ── Chart: Zendesk Suite Team at $55 per agent against Helpin Growth at $239 a month, 1–20 agents.
+const CH = { x0: 180, x1: 1560, y0: 930, y1: 470, top: 1200 };
+const cx = (n) => CH.x0 + ((n - 1) / 19) * (CH.x1 - CH.x0);
+const cy = (v) => CH.y0 - (v / CH.top) * (CH.y0 - CH.y1);
+const chart = $('#chartSvg');
+const grid = [0, 600, 1200].map((v) => ({ v, line: mk('line', { x1: CH.x0, x2: CH.x1, y1: cy(v), y2: cy(v), stroke: 'rgba(184,221,187,.12)', 'stroke-width': 1.5 }, chart),
+  text: Object.assign(mk('text', { x: CH.x0 - 20, y: cy(v) + 8, 'text-anchor': 'end' }, chart), { textContent: `$${fmt(v)}` }) }));
+const ticks = [1, 5, 10, 15, 20].map((n) => Object.assign(mk('text', { x: cx(n), y: CH.y0 + 42, 'text-anchor': 'middle' }, chart), { textContent: String(n) }));
+const axisLbl = Object.assign(mk('text', { x: CH.x1 + 30, y: CH.y0 + 42 }, chart), { textContent: 'agents' });
+const zone = mk('rect', { x: cx(5), y: CH.y1 - 20, width: CH.x1 - cx(5), height: CH.y0 - CH.y1 + 20, fill: 'rgba(156,219,179,.06)', opacity: 0 }, chart);
+const hLine = mk('path', { d: `M${cx(1)} ${cy(239)} L${cx(20)} ${cy(239)}`, fill: 'none', stroke: '#9CDBB3', 'stroke-width': 5, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, chart);
+const zLine = mk('path', { d: `M${cx(1)} ${cy(55)} L${cx(20)} ${cy(1100)}`, fill: 'none', stroke: '#E0A458', 'stroke-width': 4, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, chart);
+const mark = mk('line', { x1: cx(5), x2: cx(5), y1: CH.y0, y2: CH.y1 - 20, stroke: 'rgba(232,238,234,.5)', 'stroke-width': 2, 'stroke-dasharray': '6 8', opacity: 0 }, chart);
+const markDot = mk('circle', { cx: cx(5), cy: cy(275), r: 9, fill: '#E0A458', opacity: 0 }, chart);
+const markDot2 = mk('circle', { cx: cx(5), cy: cy(239), r: 9, fill: '#9CDBB3', opacity: 0 }, chart);
+const markTxt = Object.assign(mk('text', { x: cx(5) + 18, y: CH.y1 - 2, class: 'lbl', fill: '#E8EEEA', style: 'fill:#E8EEEA' }, chart), { textContent: '5 agents' });
+const zLbl = Object.assign(mk('text', { x: cx(20) + 22, y: cy(1100) + 8, class: 'lbl', style: 'fill:#E0A458' }, chart), { textContent: '$1,100' });
+const zLbl2 = Object.assign(mk('text', { x: cx(20) + 22, y: cy(1100) + 40 }, chart), { textContent: 'Zendesk Suite Team' });
+const zLbl3 = Object.assign(mk('text', { x: cx(20) + 22, y: cy(1100) + 68 }, chart), { textContent: '$55 per agent' });
+const hLbl = Object.assign(mk('text', { x: cx(20) + 22, y: cy(239) + 8, class: 'lbl', style: 'fill:#9CDBB3' }, chart), { textContent: '$239' });
+const hLbl2 = Object.assign(mk('text', { x: cx(20) + 22, y: cy(239) + 40 }, chart), { textContent: 'Helpin Growth' });
+const hLbl3 = Object.assign(mk('text', { x: cx(20) + 22, y: cy(239) + 68 }, chart), { textContent: 'per workspace' });
+
+// ── Tagline loop: an ellipse that closes around "Close the loop."
+{
+  const [rx, ry, ox, oy] = [470, 92, 960, 600];
+  const pts = [];
+  for (let i = 0; i <= 120; i++) { const a = -Math.PI * 0.62 + (i / 120) * Math.PI * 2.04; pts.push(`${(ox + Math.cos(a) * rx).toFixed(1)} ${(oy + Math.sin(a) * ry + Math.sin(a * 3) * 4).toFixed(1)}`); }
+  $('#loop').setAttribute('d', `M${pts.join(' L')}`);
+}
+
+// ── End card
+const endMark = helpinSymbol({ size: 104, color: '#E8EEEA' });
+$('#end-symbol').append(endMark.node);
+
+// ── Helpers
+const setWords = (ws, o) => ws.forEach((w) => { w.style.opacity = String(o); });
+function fadeBlock(el, t, a, b, { inDur = 0.5, outDur = 0.4 } = {}) {
+  const k = ease(t, a, inDur), o = brandEase(P(t, b - outDur, b));
+  const on = t >= a && t < b;
+  css(el, { opacity: String(on ? Math.min(k, 1 - o) : 0), filter: on && o > 0.001 ? `blur(${(o * 10).toFixed(2)}px)` : 'none' });
+  return on;
+}
+function exportCard(el, t, { start, stall, done, final }) {
+  // Fill to 10,000 of 18,400 and stall; optionally complete to 18,400 later. The count floors, so it only reads
+  // 10,000 (or 18,400) on the frame the label switches to Stopped (or Complete).
+  const a = expoOut(P(t, start, stall)) * 10000;
+  const b = done ? easeInOut(P(t, done, done + 0.8)) * 8400 : 0;
+  const n = Math.floor(a + b + 1e-6);
+  el.querySelector('.ex-bar i').style.width = `${((n / 18400) * 100).toFixed(2)}%`;
+  el.querySelector('.ex-bar i').style.background = done && t >= done ? '#0F7A50' : t >= stall ? '#D2733A' : '#0F7A50';
+  el.querySelector('.ex-count').innerHTML = `${fmt(n)} <s>of 18,400</s>`;
+  const st = (c, on) => { const s = el.querySelector(c); if (s) s.style.opacity = on ? '1' : '0'; };
+  st('.ex-run', t < stall || (done && t >= done && t < done + 0.8));
+  st('.ex-stop', t >= stall && !(done && t >= done));
+  st('.ex-done', done && t >= done + 0.8);
+}
+
+// ── Scenes
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 129.19, duration: DURATION,
+  scenes: [
+    // 0 – drop: the split. Seam draws, the paper half opens, the ticket says Solved while the export stays stuck.
+    { id: 'hook', start: 0, end: T.drop + 0.6, render: ({ t }) => {
+      // Seam position: centre, then slides right for "three tools", then back for the villain.
+      const seamX = L(L(960, 1360, ease(t, T.three, 0.6, expoInOut)), 960, ease(t, T.villain, 0.6, expoInOut));
+      const gap = t < T.drop ? L(0, 84, easeInOut(P(t, T.pull, T.drop - 0.12))) * (1 - expoIn(P(t, T.drop - 0.12, T.drop))) : 0;
+      const open = ease(t, T.open, 0.55, expoOut);                           // paper half reveals from the seam
+      const collapse = expoIn(P(t, T.drop + 0.06, T.drop + 0.46));          // both halves fold into the seam
+      const leftEdge = seamX - gap / 2, rightEdge = seamX + gap / 2;
+      const Lclip = L(0, leftEdge, collapse), Rclip = L(1920, rightEdge, collapse);
+      css($('#hk-left'), { clipPath: `inset(0 ${(1920 - leftEdge).toFixed(1)}px 0 ${Math.max(Lclip, leftEdge * (1 - open)).toFixed(1)}px)` });
+      css($('#hk-right'), { clipPath: `inset(0 ${(1920 - Rclip).toFixed(1)}px 0 ${rightEdge.toFixed(1)}px)` });
+      css($('#hkL'), { transform: gap ? `translateX(${(-gap / 2).toFixed(1)}px)` : 'none', filter: collapse > 0 ? `blur(${(collapse * 14).toFixed(1)}px)` : 'none' });
+      css($('#hkR'), { transform: gap ? `translateX(${(gap / 2).toFixed(1)}px)` : 'none', filter: collapse > 0 ? `blur(${(collapse * 14).toFixed(1)}px)` : 'none' });
+      // Seam line: draws down, marks the gap, flares mint on the slam.
+      const draw = ease(t, T.seam, 0.45, expoOut);
+      const flare = t >= T.drop ? 1 - P(t, T.drop + 0.2, T.drop + 0.6) : 0;
+      css($('#seam'), { left: `${seamX.toFixed(1)}px`, height: `${(1080 * draw).toFixed(0)}px`, width: `${(2 + gap).toFixed(1)}px`, marginLeft: `${(-1 - gap / 2).toFixed(1)}px`,
+        background: t >= T.drop ? '#9CDBB3' : gap > 1 ? '#040E0B' : 'rgba(184,221,187,.55)', boxShadow: gap > 1 ? 'inset 2px 0 0 rgba(184,221,187,.45), inset -2px 0 0 rgba(184,221,187,.45)' : 'none',
+        opacity: String(1 - P(t, T.drop + 0.2, T.drop + 0.4)) });   // hands over to the spine before the eyebrow rises
+      $('#seam i').style.opacity = String(flare);
+      reveal($('#matchup'), t, B(N.labels), { dy: -10, out: T.three + 0.2 });
+      reveal($('#lbL'), t, B(N.labels), { dy: 10 });
+      reveal($('#lbR'), t, B(N.labels) + 0.08, { dy: 10 });
+
+      // The ticket: pops in, the agent reply lands, the status flips to Solved. Scales down while the chips peel off.
+      const tk = ease(t, B(N.cards), 0.6);
+      const tkS = L(L(1, 0.8, ease(t, T.three, 0.6, expoInOut)), 1, ease(t, T.villain, 0.6, expoInOut));
+      css($('#ticket'), { opacity: String(tk), transform: `translateY(${Math.round((1 - tk) * 30)}px) scale(${tkS.toFixed(4)})` });
+      const rep = ease(t, B(N.reply), 0.45);
+      css($('#ticket .tk-msg.a'), { opacity: String(rep), transform: `translateY(${Math.round((1 - rep) * 14)}px)` });
+      const sv = ease(t, T.solved, 0.25);
+      css($('#ticket .s-open'), { opacity: String(1 - sv) });
+      css($('#ticket .s-solved'), { opacity: String(sv), transform: `scale(${L(0.85, 1, sv).toFixed(3)})` });
+      $('#ticket .tk-strike').style.transform = `scaleX(${ease(t, T.strike, 0.3, expoOut).toFixed(3)})`;
+
+      // The export: fills and stalls at 10,000. Shrinks into the narrowed right half during "three tools".
+      const ex = ease(t, B(N.cards) + 0.1, 0.6);
+      const exK = ease(t, T.three, 0.6, expoInOut) * (1 - ease(t, T.villain, 0.6, expoInOut));
+      css($('#exp'), { opacity: String(ex), left: `${L(1056, 1420, exK).toFixed(1)}px`, transform: `translateY(${Math.round((1 - ex) * 30)}px) scale(${L(1, 0.62, exK).toFixed(4)})` });
+      exportCard($('#exp'), t, { start: B(N.cards) + 0.2, stall: T.stall });
+      $('#lbR').style.left = `${(L(1056, 1420, exK)).toFixed(1)}px`;
+
+      // Headlines: A (left) and R (right), then "three tools", then the villain split across the seam.
+      if (fadeBlock($('#hA'), t, T.headA, T.three)) { rise(hA[0], t, T.headA, 0.07); rise(hA[1], t, T.headA + 0.2, 0.07); }
+      if (fadeBlock($('#hR'), t, T.headB, T.three)) { rise(hR[0], t, T.headB, 0.07); rise(hR[1], t, T.headB + 0.2, 0.07); }
+      if (fadeBlock($('#hB'), t, T.three + 0.25, T.villain)) { rise(hB[0], t, T.three + 0.25, 0.07); rise(hB[1], t, T.three + 0.45, 0.07); }
+      if (fadeBlock($('#vL'), t, T.villain + 0.2, T.drop + 0.6)) rise(vL, t, T.villain + 0.2, 0.07, 0.6);
+      if (fadeBlock($('#vR'), t, T.broken, T.drop + 0.6)) rise(vR, t, T.broken, 0.07, 0.6);
+      $('#vL .strike').style.transform = `scaleX(${ease(t, T.strike, 0.35, expoOut).toFixed(3)})`;
+
+      // Three chips peel off the ticket; their links break on the next beat.
+      const chipAt = [B(N.chip1), B(N.chip2), B(N.chip3)];
+      ['#ch1', '#ch2', '#ch3'].forEach((id, i) => {
+        const k = ease(t, chipAt[i], 0.5), o = ease(t, T.villain - 0.1, 0.35);
+        const drift = ease(t, T.snap, 0.9, expoOut) * 26;
+        css($(id), { opacity: String(k * (1 - o)), transform: `translate(${Math.round((1 - k) * -60 + drift)}px, ${Math.round((i - 1) * drift * 0.6)}px)`, filter: o > 0.001 ? `blur(${(o * 8).toFixed(1)}px)` : 'none' });
+        // Link from the ticket's right edge to the chip's left edge (the ticket is scaled to 0.8 here).
+        const x0 = 96 + 768 * 0.8, y0 = 170 + 110 + i * 70, cy0 = 150 + i * 140 + 52, x1 = 836 + drift + (1 - k) * -60;
+        const path = $(`#lk${i + 1}`);
+        path.setAttribute('d', `M${x0} ${y0} C ${x0 + 60} ${y0}, ${x1 - 60} ${cy0 + (i - 1) * drift * 0.6}, ${x1} ${cy0 + (i - 1) * drift * 0.6}`);
+        const brk = ease(t, T.snap, 0.5, expoOut);
+        path.style.strokeDasharray = `${L(4, 2, brk)} ${L(8, 22, brk)}`;
+        path.style.opacity = String(k * (1 - o) * (1 - brk * 0.55));
+      });
+    } },
+
+    // Drop → the spine world: one history, then four stations down the line.
+    { id: 'spine', start: T.drop, end: T.chart + 0.7, render: ({ t }) => {
+      const camY = keys(t, camKeys);
+      const settled = Math.abs(camY - Math.round(camY)) < 0.01 && [0, SY(1), SY(2), SY(3), SY(4)].includes(Math.round(camY));
+      const v = Math.abs(keys(t + 1 / 60, camKeys) - keys(t - 1 / 60, camKeys)) * 30;   // px per frame
+      css(world, { transform: `translateY(${settled ? -Math.round(camY) : -camY.toFixed(2)}px)`, filter: v > 8 ? `blur(${Math.min(7, (v - 8) * 0.12).toFixed(2)}px)` : 'none' });
+      const out = brandEase(P(t, T.chart, T.chart + 0.6));
+      $('#spine').style.opacity = String(1 - out);
+
+      // Spine: the bright line through the one-history text gap, growing to each node.
+      const tip = keys(t, tipKeys);
+      const gapOpen = t < T.oneOut + 0.2 ? 1 : 1 - expoOut(P(t, T.oneOut + 0.2, T.oneOut + 0.7));
+      const [g0, g1] = [330, 750];
+      const gA = L(g0, 540, 1 - gapOpen), gB = L(g1, 540, 1 - gapOpen);   // the gap closes toward its middle
+      brightA.setAttribute('y2', String(Math.min(tip, gA)));
+      brightB.setAttribute('y1', String(gB)); brightB.setAttribute('y2', String(Math.max(gB, tip)));
+      glowA.setAttribute('y2', String(Math.min(tip, gA)));
+      glowB.setAttribute('y1', String(gB)); glowB.setAttribute('y2', String(Math.max(gB, tip)));
+      dim.setAttribute('y1', String(tip));
+      // The glow only near the drop and during moves.
+      const glow = String(Math.max(1 - P(t, T.drop + 0.2, T.drop + 1.2), Math.min(1, v / 20)));
+      glowA.style.opacity = glow; glowB.style.opacity = glow;
+      NODES.forEach(({ k, dot, ring }) => {
+        const a = STATION_T[k], on = t >= a;
+        dot.setAttribute('fill', on ? '#9CDBB3' : '#081B16');
+        dot.setAttribute('stroke', on ? '#9CDBB3' : 'rgba(184,221,187,.45)');
+        const r = P(t, a, a + 0.7);
+        ring.setAttribute('r', String(L(12, 40, expoOut(r))));
+        ring.setAttribute('opacity', String(on && r < 1 ? 0.8 * (1 - r) : 0));
+      });
+
+      // Station 0: one history.
+      if (fadeBlock($('#one'), t, T.drop + 0.15, T.oneOut + 0.4)) {
+        reveal($('#one .eyebrow'), t, T.drop + 0.35, { dy: 10 });
+        rise(one1, t, T.one, 0.08); rise(one2, t, T.one + 0.3, 0.08);
+      }
+      // Stations 1–4: copy rises as the camera lands.
+      [1, 2, 3, 4].forEach((k) => {
+        const a = STATION_T[k], el = $(`#c${k}`);
+        const on = t >= a - 0.25;
+        el.style.opacity = on ? '1' : '0';
+        if (!on) return;
+        reveal(el.querySelector('.eyebrow'), t, a - 0.2, { dy: 10 });
+        rise(stH[k], t, a - 0.1, 0.07);
+        reveal(el.querySelector('.lede'), t, a + 0.35, { dy: 12 });
+        const fine = el.querySelector('.fine'); if (fine) reveal(fine, t, a + 0.7, { dy: 8 });
+      });
+
+      // Windows: each rises into place as its station arrives; shots and spotlights inside.
+      const waits = [];
+      const clampT = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+      // Preview clocks (seconds since the preview started playing): the first frame jumps ahead to the state wanted
+      // as the camera lands, then they run in real time and hold before the next step of the loop.
+      // 1 · Ask Agent: panel ≈2.1 s, "Reviewed the request" ≈2.3 s, "Used the existing task EXP-142" ≈4.4 s, coding ≈7.5 s.
+      shoot(w1, BOX[1], t, SHOTS[1]);
+      waits.push(drive(w1, 1, t, (x) => clampT(3.1 + x - T.task, 0, 6.9)));
+      // 2 · Coding agent: diff ≈0.6 s, regression test ≈2.0 s, Lens review ≈2.5 s, pull request open ≈3.0 s.
+      shoot(w2, BOX[2], t, SHOTS[2]);
+      waits.push(drive(w2, 2, t, (x) => clampT(0.3 + x - T.pr, 0, 3.6)));
+      // 3 · Follow through (at 1.6×): EXP-142 released ≈+0.12 s, then "The export fix is live" sent to Maya ≈+1.56 s.
+      w3.camera(1, [0.5, 0.5]);
+      waits.push(drive(w3, 3, t, (x) => clampT(P3 + (x - T.told) * P3_SPEED, 0, 5.0)));
+      // 4 · CRM: Maya's record, then Companies / Deals / Tasks (held before the Ask Agent panel starts opening at ≈2.4 s).
+      shoot(w4, BOX[4], t, SHOTS[4]);
+      waits.push(drive(w4, 4, t, (x) => clampT(x - T.crm + 0.2, 0, 2.2)));
+
+      // The customer's export completes under the follow-up.
+      const e2 = ease(t, T.told + 0.6, 0.6);
+      css($('#exp2'), { opacity: String(e2), transform: e2 >= 1 ? 'none' : `translateY(${Math.round((1 - e2) * 24)}px)` });
+      exportCard($('#exp2'), t, { start: -10, stall: -9, done: T.told + 2.15 });
+      // Zendesk Sell note under the CRM window.
+      reveal($('#sell'), t, T.crm + 1.2, { dy: 12 });  // lands with the Deals spotlight
+      return Promise.all(waits);
+    } },
+
+    // Price: the crossing chart.
+    { id: 'chart', start: T.chart + 0.1, end: T.tag + 0.1, render: ({ t }) => {
+      const a = T.chart + 0.2;
+      fadeBlock($('#chart'), t, a, T.tag + 0.1, { inDur: 0.4, outDur: 0.45 });
+      reveal($('#chEb'), t, a, { dy: 10 });
+      rise(chH, t, a + 0.15, 0.07);
+      reveal($('#chL'), t, B(N.chart + 5.5), { dy: 12 });
+      reveal($('#foot'), t, B(N.chart + 6), { dy: 8 });
+      const ax = ease(t, a + 0.1, 0.6);
+      grid.forEach(({ line, text }) => { line.style.opacity = String(ax); text.style.opacity = String(ax); });
+      ticks.forEach((e) => { e.style.opacity = String(ax); }); axisLbl.style.opacity = String(ax);
+      hLine.setAttribute('stroke-dashoffset', String(1 - ease(t, B(N.chart + 1), 0.6, easeInOut)));
+      zLine.setAttribute('stroke-dashoffset', String(1 - ease(t, B(N.chart + 2), 1.1, easeInOut)));
+      const m = ease(t, B(N.chart + 4), 0.45);
+      [mark, markDot, markDot2, markTxt].forEach((e) => e.setAttribute('opacity', String(m)));
+      markDot.setAttribute('r', String(L(4, 9, m))); markDot2.setAttribute('r', String(L(4, 9, m)));
+      zone.setAttribute('opacity', String(ease(t, B(N.chart + 4.3), 0.6)));
+      const hl = ease(t, B(N.chart + 1.6), 0.45), zl = ease(t, B(N.chart + 4.4), 0.45);
+      [hLbl, hLbl2, hLbl3].forEach((e) => e.setAttribute('opacity', String(hl)));
+      [zLbl, zLbl2, zLbl3].forEach((e) => e.setAttribute('opacity', String(zl)));
+    } },
+
+    // Tagline: Don't close the ticket. Close the loop. (the loop draws closed around the second line)
+    { id: 'tagline', start: T.tag, end: T.end + 0.1, render: ({ t }) => {
+      fadeBlock($('#tagline'), t, T.tag, T.end + 0.1, { inDur: 0.3, outDur: 0.45 });
+      rise(tg1, t, T.tag + 0.15, 0.08);
+      rise(tg2, t, T.loop, 0.09);
+      const lp = $('#loop');
+      lp.style.strokeDasharray = '1';
+      lp.style.strokeDashoffset = String(1 - ease(t, T.loop + 0.35, 1.1, easeInOut));
+      lp.style.opacity = String(t >= T.loop + 0.35 ? 0.9 : 0);
+    } },
+
+    // End card: lock-up and CTA; the music rides out.
+    { id: 'end', start: T.end, end: DURATION, render: ({ t }) => {
+      fadeBlock($('#end'), t, T.end, DURATION + 1, { inDur: 0.4 });
+      reveal($('#endmatch'), t, T.end + 0.1, { dy: 10 });
+      endMark.assemble(P(t, T.end + 0.2, T.end + 1.3));
+      const mk2 = ease(t, T.end + 0.4, 0.8);
+      css($('#endmark b'), { opacity: String(mk2), transform: mk2 < 1 ? `translateX(${Math.round((1 - mk2) * 20)}px)` : 'none' });
+      reveal($('#cta'), t, B(N.end + 3), { dy: 16 });
+      reveal($('#ctaNote'), t, B(N.end + 3.5), { dy: 10 });
+    } },
+  ],
+  render: ({ t }) => {
+    // Background glow drifts slowly; it follows the camera loosely during the spine.
+    const gx = 700 + Math.sin(t * 0.25) * 90, gy = -120 + Math.cos(t * 0.21) * 60;
+    $('#glow').style.transform = `translate(${gx.toFixed(1)}px, ${gy.toFixed(1)}px)`;
+    $('#fade').style.opacity = String(P(t, DURATION - 0.9, DURATION));
+  },
+});
+</script>
+</body>
+</html>

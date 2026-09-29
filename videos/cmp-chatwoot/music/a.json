@@ -1,0 +1,9 @@
+{
+ "name": "cmp-chatwoot-music-a",
+ "duration": 38,
+ "master": { "lufs": -14 },
+ "music": [
+  { "at": 0, "length": 38, "gain": -4,
+    "prompt": "Chiptune-tinged electro house at exactly 126 BPM for a sleek open-source software product video: a bright 8-bit square-wave arpeggio, a modern punchy four-on-the-floor kick, a sidechained pumping synth bass, crisp ticking hi-hats and small retro game blips; confident, playful and modern, not cheesy. No vocals. It starts immediately with the 8-bit arpeggio and ticking hats over a muted kick (0 to 8 seconds, curious), builds with claps and a rising filter from 8 seconds, stops for one beat at 11 seconds, then drops at 11.4 seconds into a full, bright, driving groove with the pumping bass and a soaring 8-bit lead that carries all the way to the end, with a lift at 23 seconds. It ends cleanly on a downbeat at 38 seconds with no big final hit and no fade." }
+ ]
+}

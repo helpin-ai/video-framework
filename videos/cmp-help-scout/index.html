@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Helpin vs Help Scout · Past Send</title>
+<link rel="stylesheet" href="../../lib/brand.css">
+<style>
+  /* "Past Send": a calm inbox on paper; the camera pulls back past its edges and the work walks off the page.
+     On the drop the frame widens and the same inbox docks into one workspace. */
+  :root { --paper: #F3EFE6; --pink: #17231E; --off: #E8EEEA; --grey: #A9B8B0; --cost: #F0C35A; }
+  #stage { color: var(--off); }
+  #bg, #glow { position: absolute; inset: 0; }
+  #glow { background: radial-gradient(ellipse 75% 85% at 50% 42%, #10352A 0%, #0A2019 55%, #06140F 100%); opacity: 0; }
+  em { font-style: normal; color: var(--sage); }
+  .w { display: inline-block; } .w > span { display: inline-block; }
+  .abs { position: absolute; }
+  .hc { position: absolute; left: 0; width: 1920px; text-align: center; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; white-space: nowrap; color: var(--off); }
+  #frameline { position: absolute; border: 2px solid var(--mint); border-radius: 30px; opacity: 0; pointer-events: none; }
+
+  /* The hook, on paper */
+  #eb { position: absolute; left: 130px; top: 300px; display: flex; align-items: center; gap: 14px; font: 500 22px/1 var(--mono); letter-spacing: .22em; color: #5E6B64; opacity: 0; }
+  #eb img { width: 30px; height: 30px; }
+  .mono-chip { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid currentColor; font: 600 22px/1 var(--sans); letter-spacing: 0; }
+  .hookh { position: absolute; left: 130px; font-size: 84px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.05; color: var(--pink); white-space: nowrap; }
+  .hookh.g { color: var(--green); }
+
+  /* The inbox: our own calm, email-like design (1400 × 1000, transformed as one piece) */
+  #inbox { position: absolute; left: 0; top: 0; width: 1400px; height: 1000px; transform-origin: 0 0; background: #FFFDF8; border-radius: 28px;
+    box-shadow: 0 50px 120px rgba(0, 0, 0, .28), 0 0 0 1px #E3DCCB; overflow: hidden; color: var(--pink); z-index: 4; }
+  .ib-top { position: absolute; left: 0; top: 0; right: 0; height: 84px; border-bottom: 1px solid #ECE6D8; display: flex; align-items: center; gap: 18px; padding: 0 36px; }
+  .ib-top b { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+  .ib-count { font: 500 22px/1 var(--mono); color: #7B857F; }
+  .ib-search { margin-left: 160px; height: 48px; width: 420px; border-radius: 24px; background: #F4F0E6; display: flex; align-items: center; padding: 0 22px; font-size: 22px; color: #8B938E; }
+  .ib-list { position: absolute; left: 0; top: 84px; width: 440px; bottom: 0; border-right: 1px solid #ECE6D8; background: #FBF8F1; }
+  .ib-item { position: absolute; left: 0; width: 440px; height: 118px; display: flex; align-items: center; gap: 18px; padding: 0 28px; border-bottom: 1px solid #EFE9DC; }
+  .ib-item.sel { background: #EAF3EC; box-shadow: inset 5px 0 0 var(--green); }
+  .ib-item img, .ib-item .av { width: 54px; height: 54px; border-radius: 50%; flex: none; object-fit: cover; }
+  .ib-item .av { display: grid; place-items: center; font: 600 22px/1 var(--sans); color: #4A544F; }
+  .ib-item div { flex: 1; min-width: 0; }
+  .ib-item b { display: block; font-size: 25px; font-weight: 600; letter-spacing: -0.01em; }
+  .ib-item span.s { display: block; font-size: 22px; color: #6E7872; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 6px; }
+  .ib-item i { font: 400 22px/1 var(--mono); font-style: normal; color: #8B938E; align-self: flex-start; margin-top: 30px; }
+  .ib-conv { position: absolute; left: 440px; top: 84px; right: 0; bottom: 0; }
+  .ib-subject { position: absolute; left: 44px; top: 40px; font-size: 36px; font-weight: 600; letter-spacing: -0.025em; }
+  .ib-meta { position: absolute; left: 44px; top: 94px; font-size: 22px; color: #7B857F; }
+  .ib-msg { position: absolute; left: 44px; top: 156px; width: 680px; display: flex; gap: 20px; }
+  .ib-msg img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; }
+  .ib-msg b { font-size: 24px; font-weight: 600; }
+  .ib-msg p, .ib-sent p { margin: 8px 0 0; font-size: 27px; line-height: 1.45; color: #2B3530; }
+  .ib-sent { position: absolute; left: 120px; top: 390px; width: 604px; padding: 22px 28px; border-radius: 20px; background: #EAF3EC; opacity: 0; }
+  .ib-sent-h { font-size: 22px; color: #56625C; } .ib-sent-h b { color: var(--pink); font-weight: 600; }
+  .ib-compose { position: absolute; left: 44px; top: 650px; width: 680px; height: 216px; border-radius: 20px; border: 1.5px solid #E1D9C7; background: #fff; }
+  .ib-typed { position: absolute; left: 26px; top: 24px; right: 26px; font-size: 27px; line-height: 1.45; color: #2B3530; }
+  .ib-typed .caret { display: inline-block; width: 2px; height: 30px; background: var(--green); vertical-align: -5px; margin-left: 2px; }
+  .ib-hint { position: absolute; left: 26px; bottom: 24px; font-size: 22px; color: #9AA19D; }
+  #ibSend { position: absolute; right: 22px; bottom: 18px; width: 124px; height: 56px; border: 0; border-radius: 14px; background: var(--green); color: #fff; font: 600 24px/1 var(--sans); }
+  #ibSentChip { position: absolute; right: 180px; bottom: 30px; font: 500 22px/1 var(--mono); color: var(--green); opacity: 0; }
+
+  /* Cards that walk off the page, their destinations and threads */
+  #threads { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 2; }
+  .dest { position: absolute; width: 360px; height: 150px; margin: -75px 0 0 -180px; border: 2px dashed rgba(184, 221, 187, .38); border-radius: 22px; opacity: 0; z-index: 1; }
+  .dest span { position: absolute; left: 0; top: -40px; width: 360px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .2em; color: rgba(184, 221, 187, .8); text-transform: uppercase; }
+  .lcard { position: absolute; left: 0; top: 0; width: 320px; height: 112px; margin: -56px 0 0 -160px; background: #fff; color: var(--pink); border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .4); padding: 20px 24px; opacity: 0; z-index: 3; }
+  .lcard i { display: inline-block; font: 500 22px/1 var(--mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: #9A6A12; }
+  .lcard b { display: block; margin-top: 12px; font-size: 27px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .token { position: absolute; left: 0; top: 0; height: 50px; padding: 0 20px; margin: -25px 0 0 -62px; border-radius: 25px; border: 1.5px solid rgba(240, 195, 90, .7);
+    background: rgba(40, 32, 12, .75); color: var(--cost); font: 600 24px/50px var(--mono); opacity: 0; z-index: 5; white-space: nowrap; }
+  #avatars { position: absolute; left: 0; top: 902px; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5; }
+  #avatars img, #avatars .av { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; opacity: 0; border: 2px solid #0A2019; }
+  #avatars .av { display: grid; place-items: center; background: #2B4A3E; font: 600 22px/1 var(--sans); color: var(--off); }
+  #avatars .lbl { margin-left: 18px; font: 500 24px/1 var(--mono); color: var(--cost); opacity: 0; }
+
+  /* The workspace the inbox docks into */
+  #wsFrame { position: absolute; left: 160px; top: 290px; width: 1600px; height: 720px; border-radius: 30px; background: #F6F8F7; box-shadow: 0 60px 140px rgba(0, 0, 0, .5); opacity: 0; z-index: 0; }
+  #rail { position: absolute; left: 0; top: 0; width: 170px; height: 720px; border-right: 1px solid var(--hairline); background: #fff; border-radius: 30px 0 0 30px; }
+  #rail img { position: absolute; left: 63px; top: 30px; width: 44px; height: 44px; }
+  .ri { position: absolute; left: 14px; width: 142px; height: 96px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #6B7570; font-size: 22px; }
+  .ri svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ri.on { background: #E7F4ED; color: var(--green); }
+  .tile { position: absolute; left: 930px; width: 640px; height: 155px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px var(--hairline); padding: 22px 28px; color: var(--ink); }
+  .tile .th { font: 500 22px/1 var(--mono); letter-spacing: .16em; color: var(--green); }
+  .tile .tc { opacity: 0; }
+  .tile b { display: block; margin-top: 16px; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .tile span { display: block; margin-top: 10px; font-size: 22px; color: var(--t2); }
+  .tile span.att { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 10px; background: #E7F4ED; color: var(--green); }
+  #strip { position: absolute; left: 200px; top: 560px; width: 1370px; height: 130px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px var(--hairline); color: var(--ink); opacity: 0; }
+  #strip .sl { position: absolute; left: 30px; top: 26px; font: 500 22px/1 var(--mono); letter-spacing: .16em; color: var(--t3); }
+  #strip .who { position: absolute; left: 30px; top: 64px; display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 600; }
+  #strip .who img { width: 42px; height: 42px; border-radius: 50%; }
+  #strip .hist { position: absolute; left: 470px; top: 44px; right: 30px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+  #strip .hist::before { content: ''; position: absolute; left: 10px; right: 10px; top: 21px; height: 2px; background: #CFE3D6; }
+  #strip .hist span { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 0 14px; height: 44px; border-radius: 22px; background: #E7F4ED; color: var(--green); font-size: 22px; font-weight: 500; }
+
+  /* Stations: side copy on the left, a live product window on the right */
+  #side { position: absolute; left: 140px; top: 0; width: 640px; height: 1080px; }
+  .sidecopy { position: absolute; left: 0; top: 300px; width: 640px; opacity: 0; }
+  .sidecopy .eyebrow { font: 500 24px/1 var(--mono); letter-spacing: .3em; color: rgba(184, 221, 187, .75); margin-bottom: 30px; text-transform: uppercase; }
+  .sidecopy .h { font-size: 76px; font-weight: 600; letter-spacing: -0.045em; line-height: 1.04; color: var(--off); }
+  .sidecopy .lede { margin-top: 28px; font-size: 30px; line-height: 1.4; color: var(--grey); max-width: 600px; }
+  #aiChip { position: absolute; left: 950px; top: 872px; height: 60px; padding: 0 24px; border-radius: 30px; background: var(--off); color: var(--forest); display: flex; align-items: center; gap: 12px;
+    font: 600 26px/1 var(--sans); box-shadow: 0 20px 50px rgba(0, 0, 0, .45); opacity: 0; z-index: 3; }
+  #aiChip svg { width: 26px; height: 26px; stroke: var(--green); fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* The receipt */
+  .rc-eb { position: absolute; left: 0; top: 112px; width: 1920px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .18em; color: rgba(184, 221, 187, .8); text-transform: uppercase; }
+  .rc-card { position: absolute; top: 180px; width: 640px; height: 400px; border-radius: 26px; padding: 34px 40px; opacity: 0; }
+  .rc-card.rival { left: 300px; border: 2px dashed rgba(184, 221, 187, .32); background: rgba(8, 27, 22, .5); }
+  .rc-card.helpin { left: 980px; border: 2px solid rgba(156, 219, 179, .55); background: linear-gradient(160deg, rgba(15, 122, 80, .38), rgba(15, 122, 80, .16)); }
+  .rc-h { display: flex; align-items: center; gap: 16px; font-size: 36px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 30px; }
+  .rc-h img { width: 36px; height: 36px; }
+  .rc-h .mono-chip { color: var(--grey); }
+  .rc-plan { margin-left: auto; font: 500 22px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--grey); padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(184, 221, 187, .3); }
+  .rc-row { display: flex; justify-content: space-between; font-size: 27px; color: #C9D6CF; padding: 14px 0; border-bottom: 1px solid rgba(184, 221, 187, .14); opacity: 0; }
+  .rc-row b { font-weight: 600; color: var(--off); font-variant-numeric: tabular-nums; }
+  .rc-total { position: absolute; left: 40px; right: 40px; bottom: 32px; display: flex; justify-content: space-between; align-items: baseline; font-size: 28px; color: var(--grey); opacity: 0; }
+  .rc-total b { font-size: 52px; font-weight: 600; letter-spacing: -0.03em; color: var(--off); font-variant-numeric: tabular-nums; }
+  .rc-card.helpin .rc-total b { color: var(--mint); }
+  .rc-verdict { position: absolute; left: 0; top: 650px; width: 1920px; text-align: center; font-size: 84px; font-weight: 600; letter-spacing: -0.045em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .rc-foot { position: absolute; left: 0; top: 900px; width: 1920px; text-align: center; font-size: 23px; color: #8FA39A; }
+
+  /* Bring your docs */
+  .dc-panel { position: absolute; top: 380px; width: 560px; height: 380px; border-radius: 24px; padding: 28px 32px; opacity: 0; }
+  #dcSrc { left: 240px; border: 2px dashed rgba(184, 221, 187, .32); }
+  #dcDst { left: 1120px; background: #fff; color: var(--ink); box-shadow: 0 50px 120px rgba(0, 0, 0, .45); }
+  .dc-h { display: flex; align-items: center; gap: 14px; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 26px; }
+  .dc-h img { width: 34px; height: 34px; }
+  #dcSrc .mono-chip { color: var(--grey); }
+  .dc-art { height: 70px; border-radius: 14px; display: flex; align-items: center; gap: 14px; padding: 0 20px; font-size: 25px; margin-bottom: 14px; }
+  #dcSrc .dc-art { background: rgba(232, 238, 234, .06); color: #C9D6CF; }
+  #dcDst .dc-art { background: var(--surface); color: var(--ink); }
+  .dc-art svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; flex: none; }
+  .dc-art .ok { margin-left: auto; font: 500 22px/1 var(--mono); color: var(--green); }
+  #dcFly { position: absolute; left: 0; top: 0; width: 496px; margin: -35px 0 0 -248px; background: #fff; color: var(--ink); box-shadow: 0 30px 70px rgba(0, 0, 0, .45); opacity: 0; z-index: 3; }
+
+  /* End card */
+  #endmark { position: absolute; left: 0; top: 400px; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 26px; }
+  #endmark b { font-size: 110px; font-weight: 600; letter-spacing: -0.045em; color: var(--off); opacity: 0; }
+  #cta { position: absolute; left: 0; top: 610px; width: 1920px; display: flex; justify-content: center; opacity: 0; }
+  #cta span { height: 72px; padding: 0 34px; display: inline-flex; align-items: center; border-radius: 16px; background: var(--off); color: var(--forest); font: 600 32px/1 var(--sans); letter-spacing: -0.01em; }
+  #ctaNote { position: absolute; left: 0; top: 724px; width: 1920px; text-align: center; font: 500 24px/1 var(--mono); letter-spacing: .06em; color: rgba(184, 221, 187, .8); opacity: 0; }
+  .cursor { position: absolute; left: 0; top: 0; opacity: 0; z-index: 20; }
+  .cursor svg { width: 42px; height: 42px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .35)); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div><div id="glow"></div>
+  <div id="frameline"></div>
+
+  <section class="scene" id="a">
+    <div class="layer" id="aWrap">
+      <div id="wsFrame">
+        <div id="rail">
+          <img src="../../assets/helpin/helpin-symbol-ink.svg" alt="">
+          <div class="ri on" style="top:110px"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Support</div>
+          <div class="ri" id="ri1" style="top:216px"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg>Projects</div>
+          <div class="ri" id="ri2" style="top:322px"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c.8-3.6 3.2-5.5 6-5.5s5.2 1.9 6 5.5M16 11a3 3 0 1 0 0-6M21 19c-.4-2.3-1.6-3.8-3.2-4.5"/></svg>CRM</div>
+          <div class="ri" id="ri3" style="top:428px"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10.5l5-3v9l-5-3"/></svg>Meetings</div>
+        </div>
+        <div class="tile" id="tile1" style="top:30px"><div class="th">PROJECTS</div><div class="tc"><b>EXP-142 · Fix incomplete CSV exports</b><span class="att">Maya's conversation attached</span></div></div>
+        <div class="tile" id="tile2" style="top:202px"><div class="th">CRM</div><div class="tc"><b>Northstar Labs · Annual renewal</b><span>$42,000 · Review</span></div></div>
+        <div class="tile" id="tile3" style="top:375px"><div class="th">MEETINGS</div><div class="tc"><b>Rollout review</b><span>Meeting · Today · 32 minutes</span></div></div>
+        <div id="strip">
+          <div class="sl">ONE CUSTOMER HISTORY</div>
+          <div class="who"><img src="../../assets/helpin/avatars/maya.webp" alt="">Maya Chen · Northstar Labs</div>
+          <div class="hist"><span>Inbox</span><span>EXP-142</span><span>Renewal</span><span>Rollout review</span></div>
+        </div>
+      </div>
+      <svg id="threads" viewBox="0 0 1920 1080"></svg>
+      <div class="dest" id="d0"><span>Jira</span></div>
+      <div class="dest" id="d1"><span>A CRM</span></div>
+      <div class="dest" id="d2"><span>A notes app</span></div>
+      <div class="lcard" id="c0"><i>Bug report</i><b>Export stops at 10,000</b></div>
+      <div class="lcard" id="c1"><i>Renewal</i><b>Northstar, next month</b></div>
+      <div class="lcard" id="c2"><i>Call notes</i><b>Thursday with Maya</b></div>
+
+      <div id="inbox">
+        <div class="ib-top"><b>Inbox</b><span class="ib-count">4 open</span><span class="ib-search">Search conversations</span></div>
+        <div class="ib-list">
+          <div class="ib-item sel" style="top:0"><img src="../../assets/helpin/avatars/maya.webp" alt=""><div><b>Maya Chen</b><span class="s">Our export stops at 10,000…</span></div><i>9:41</i></div>
+          <div class="ib-item" style="top:118px"><span class="av" style="background:#EADFCD">LP</span><div><b>Leo Park</b><span class="s">Invoice for September</span></div><i>9:12</i></div>
+          <div class="ib-item" style="top:236px"><span class="av" style="background:#DCE8DF">AR</span><div><b>Ana Ruiz</b><span class="s">Can we add a teammate?</span></div><i>Tue</i></div>
+          <div class="ib-item" style="top:354px"><span class="av" style="background:#E4E0EE">TO</span><div><b>Tom Okafor</b><span class="s">Love the new reports</span></div><i>Mon</i></div>
+        </div>
+        <div class="ib-conv">
+          <div class="ib-subject">Our export stops at 10,000 contacts</div>
+          <div class="ib-meta">Maya Chen · Northstar Labs · 9:41</div>
+          <div class="ib-msg"><img src="../../assets/helpin/avatars/maya.webp" alt=""><div><b>Maya Chen</b><p>Hi! Our export stops at 10,000 contacts. We need all 18,400 for our renewal review. Can you help?</p></div></div>
+          <div class="ib-sent" id="ibSent"><div class="ib-sent-h"><b>You</b> · just now</div><p>Thanks Maya, I've passed this to our team.</p></div>
+          <div class="ib-compose"><div class="ib-typed" id="ibTyped"></div><span class="ib-hint" id="ibHint">Reply to Maya</span><span id="ibSentChip">Sent ✓</span><button id="ibSend">Send</button></div>
+        </div>
+      </div>
+
+      <div class="token" id="k0">+$0.75</div><div class="token" id="k1">+$0.75</div><div class="token" id="k2">+$0.75</div><div class="token" id="k3">+$0.75</div><div class="token" id="k4">+$0.75</div>
+      <div id="avatars">
+        <img src="../../assets/helpin/avatars/sam.webp" alt=""><img src="../../assets/helpin/avatars/lin.webp" alt=""><img src="../../assets/helpin/avatars/dev.webp" alt="">
+        <img src="../../assets/helpin/avatars/priya.webp" alt=""><img src="../../assets/helpin/avatars/aisha.webp" alt="">
+        <span class="av">JK</span><span class="av">RM</span><span class="av">TB</span><span class="lbl">× per user</span>
+      </div>
+    </div>
+
+    <div id="eb"><img src="../../assets/helpin/helpin-symbol-ink.svg" alt="">HELPIN&nbsp;&nbsp;VS&nbsp;&nbsp;<span class="mono-chip">H</span>HELP SCOUT</div>
+    <div class="hookh" id="h1a" style="top:360px"></div>
+    <div class="hookh g" id="h1b" style="top:452px"></div>
+    <div class="hc" id="hWalk" style="top:120px;font-size:80px"></div>
+    <div class="hc" id="hFee" style="top:120px;font-size:80px"></div>
+    <div class="hc" id="hLoose" style="top:112px;font-size:120px"></div>
+    <div class="hc" id="hKeep1" style="top:70px;font-size:80px"></div>
+    <div class="hc" id="hKeep2" style="top:156px;font-size:80px"></div>
+  </section>
+
+  <section class="scene" id="side"></section>
+  <section class="scene" id="s1"></section>
+  <section class="scene" id="s2"></section>
+  <section class="scene" id="s3"></section>
+  <section class="scene" id="s4"><div id="aiChip"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>AI usage included</div></section>
+
+  <section class="scene" id="rc">
+    <div class="rc-eb" id="rcEb">At list prices · 8 teammates · 300 AI resolutions a month · billed annually</div>
+    <div class="rc-card rival" id="rcA">
+      <div class="rc-h"><span class="mono-chip">H</span>Help Scout<span class="rc-plan">Plus</span></div>
+      <div class="rc-row"><span>8 × Plus at $45</span><b>$360</b></div>
+      <div class="rc-row"><span>300 AI resolutions × $0.75</span><b>$225</b></div>
+      <div class="rc-total"><span>Per month</span><b>$585</b></div>
+    </div>
+    <div class="rc-card helpin" id="rcB">
+      <div class="rc-h"><img src="../../assets/helpin/helpin-symbol-white.svg" alt="">Helpin<span class="rc-plan">Growth</span></div>
+      <div class="rc-row"><span>Growth plan, one workspace</span><b>$239</b></div>
+      <div class="rc-row"><span>8 teammates</span><b>Included</b></div>
+      <div class="rc-row"><span>AI usage allowance</span><b>$239 included</b></div>
+      <div class="rc-total"><span>Per month</span><b>$239</b></div>
+    </div>
+    <div class="rc-verdict" id="rcV"></div>
+    <div class="rc-foot" id="rcFoot">List prices, billed annually, checked September 2026. For one or two users, Help Scout’s free and Standard plans can cost less.</div>
+  </section>
+
+  <section class="scene" id="dc">
+    <div class="hc" id="dcHead" style="top:150px;font-size:84px"></div>
+    <div class="dc-panel" id="dcSrc">
+      <div class="dc-h"><span class="mono-chip">H</span>Help Scout Docs</div>
+      <div class="dc-art"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Getting started</div>
+      <div class="dc-art"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Billing and plans</div>
+      <div class="dc-art" id="dcGhost" style="border:2px dashed rgba(184,221,187,.3);background:none"></div>
+    </div>
+    <div class="dc-panel" id="dcDst">
+      <div class="dc-h"><img src="../../assets/helpin/helpin-symbol-ink.svg" alt="">Helpin Knowledge</div>
+      <div class="dc-art"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Getting started<span class="ok">Imported</span></div>
+      <div class="dc-art"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Billing and plans<span class="ok">Imported</span></div>
+      <div class="dc-art" id="dcSlot" style="opacity:0"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Exporting your contacts<span class="ok">Imported</span></div>
+    </div>
+    <div class="dc-art" id="dcFly"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M15 3v4h4"/></svg>Exporting your contacts</div>
+  </section>
+
+  <section class="scene" id="tg">
+    <div class="hc" id="tg1" style="top:360px;font-size:116px"></div>
+    <div class="hc" id="tg2" style="top:486px;font-size:116px"></div>
+  </section>
+
+  <section class="scene" id="en">
+    <div id="endmark"><span id="endSym"></span><b id="endWord">Helpin</b></div>
+    <div id="cta"><span>Start free at helpin.ai</span></div>
+    <div id="ctaNote">14-day trial · no card · or self-host free</div>
+  </section>
+
+  <div class="cursor" id="cur"><svg viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+</div>
+
+<script type="module">
+import { defineVideo, waitFor } from '../../lib/runtime.js';
+import { P, L, clamp, brandEase, expoOut, easeInOut, typed } from '../../lib/motion.js';
+import { helpinSymbol, css, counter } from '../../lib/components.js';
+import { words, rise, reveal, pop, push, sideCopy } from '../../lib/kit.js';
+import { siteWindow } from '../../lib/site.js';
+import { B, N, DURATION } from './timeline.js';
+
+const $ = (s) => document.querySelector(s);
+const E = (t, a, d = 0.6, f = brandEase) => f(P(t, a, a + d));
+const lerp2 = (a, b, k) => [L(a[0], b[0], k), L(a[1], b[1], k)];
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mixHex = (a, b, k) => `rgb(${hex(a).map((v, i) => Math.round(L(v, hex(b)[i], k))).join(',')})`;
+const px = (v) => `${Math.round(v)}px`;
+/** Blur-out exit of an element over the `d` seconds before `at`. */
+const exitK = (t, at, d = 0.4) => brandEase(P(t, at - d, at));
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+const H1A = words($('#h1a'), 'A calm inbox.');
+const H1B = words($('#h1b'), 'You hit Send.');
+const HWALK = words($('#hWalk'), 'Then the work <em>walks off the page.</em>');
+const HFEE = words($('#hFee'), 'Every AI resolution: <em>$0.75.</em>');
+const HLOOSE = words($('#hLoose'), 'Loose ends.');
+const HK1 = words($('#hKeep1'), 'Keep the calm inbox.');
+const HK2 = words($('#hKeep2'), '<em>Connect what comes next.</em>');
+const DCH = words($('#dcHead'), 'Bring your Help Scout Docs <em>with you.</em>');
+const TG1 = words($('#tg1'), 'Support that doesn’t');
+const TG2 = words($('#tg2'), '<em>stop at Send.</em>');
+$('#rcV').innerHTML = 'Helpin costs <em><span id="rcNum">$4,152</span> less</em> a year.';
+
+// ── The inbox: one piece, placed by its screen rect [x, y, scale] ─────────────
+const R0 = [720, 120, 1];          // the hook: bleeds off the right and bottom edges
+const R1 = [596, 350, 0.52];       // pulled back: a card on the desk
+const R2 = [638, 410, 0.46];       // loose ends: floating alone
+const R3 = [360, 610, 0.5];        // docked: the Support pane of the workspace (set below from the frame)
+function inboxRect(t) {
+  let r = R0;
+  r = r.map((v, i) => L(v, R1[i], E(t, B(N.pull), B(N.pull + 2) - B(N.pull), easeInOut)));
+  r = r.map((v, i) => L(v, R2[i], E(t, B(N.villain), 1.1)));
+  r = r.map((v, i) => L(v, R3[i], E(t, B(N.drop), 0.8, expoOut)));
+  return r;
+}
+// Workspace frame at (160, 290); the Support pane sits at (+200, +30), 700 × 500 → inbox at scale 0.5.
+R3[0] = 160 + 200; R3[1] = 290 + 30;
+const edge = (r, fx, fy) => [r[0] + 1400 * r[2] * fx, r[1] + 1000 * r[2] * fy];
+
+// ── Loose cards ───────────────────────────────────────────────────────────────
+const TILE_Y = [30, 202, 375].map((y) => 290 + y + 77.5);
+const CARDS = [
+  { at: N.card1, from: [760, 560], dest: [300, 560], hang: [440, 735], anchor: [0, 0.42], side: -1, tile: [160 + 930 + 320, TILE_Y[0]] },
+  { at: N.card2, from: [1160, 455], dest: [1620, 455], hang: [1480, 560], anchor: [1, 0.2], side: 1, tile: [160 + 930 + 320, TILE_Y[1]] },
+  { at: N.card3, from: [1160, 735], dest: [1620, 745], hang: [1490, 820], anchor: [1, 0.72], side: 1, tile: [160 + 930 + 320, TILE_Y[2]] },
+];
+const threads = $('#threads');
+CARDS.forEach((c) => {
+  c.el = $(`#c${CARDS.indexOf(c)}`); c.dest_el = $(`#d${CARDS.indexOf(c)}`);
+  c.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  Object.entries({ fill: 'none', stroke: 'rgba(184,221,187,.6)', 'stroke-width': 2.4, 'stroke-dasharray': '1 9', 'stroke-linecap': 'round' }).forEach(([k, v]) => c.path.setAttribute(k, v));
+  threads.appendChild(c.path);
+});
+
+function renderCards(t) {
+  const r = inboxRect(t);
+  const dim = E(t, B(N.fee) - 0.3, 0.5) * (1 - E(t, B(N.villain), 0.6));
+  const hangK = E(t, B(N.villain), 1.1);
+  CARDS.forEach((c, i) => {
+    const ke = E(t, B(c.at), 0.8, expoOut);
+    const dockAt = B(N.dock[i]);
+    const kd = E(t, dockAt, 0.65, expoOut);
+    let [x, y] = lerp2(c.from, c.dest, ke);
+    [x, y] = lerp2([x, y], c.hang, hangK);
+    // Dangling: a slow sway while the cards hang from the inbox's edges (cards are paper, not live UI).
+    const sway = hangK * (1 - kd) * Math.sin((t - B(N.villain)) * Math.PI * 2 / 2.4 + i * 1.9);
+    y += sway * 7;
+    [x, y] = lerp2([x, y], c.tile, kd);
+    const s = L(1, 1.38, kd);
+    const on = t >= B(c.at) ? P(t, B(c.at), B(c.at) + 0.15) : 0;
+    // On landing the card hands over to the pane: it fades out first, then the pane's own content rises.
+    const gone = P(t, dockAt + 0.42, dockAt + 0.58);
+    const op = on * (1 - gone) * L(1, 0.22, dim);
+    const blur = Math.max(dim * 3, gone * 6);
+    css(c.el, { opacity: String(op), zIndex: t >= dockAt ? '6' : '3', transform: `translate(${px(x)}, ${px(y)}) rotate(${(sway * 3).toFixed(2)}deg) scale(${s.toFixed(4)})`,
+      filter: blur > 0.01 ? `blur(${blur.toFixed(2)}px)` : 'none' });
+    // Destination outline (text only: Jira, a CRM, a notes app)
+    const kdst = E(t, B(c.at) - 0.15, 0.5) * (1 - E(t, B(N.villain), 0.6));
+    css(c.dest_el, { opacity: String(kdst * L(1, 0.3, dim)), transform: `translate(${px(c.dest[0])}, ${px(c.dest[1])})` });
+    // The thread from the inbox's edge to the card
+    const [ax, ay] = edge(r, ...c.anchor);
+    const bx = x - c.side * 160 * s, by = y;
+    const sag = 40 + hangK * 70;
+    c.path.setAttribute('d', `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${((ax + bx) / 2).toFixed(1)} ${(Math.max(ay, by) + sag).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`);
+    c.path.style.opacity = String(on * (1 - P(t, B(N.drop), B(N.drop) + 0.3)) * L(1, 0.25, dim));
+    // The pane it docks into
+    pop($(`#tile${i + 1} .tc`), t, dockAt + 0.55, { dist: 12, dur: 0.45 });
+    $(`#ri${i + 1}`).classList.toggle('on', t >= dockAt + 0.5);
+  });
+}
+
+// ── Cursor ────────────────────────────────────────────────────────────────────
+const SEND = [720 + 440 + 44 + 680 - 22 - 62, 120 + 84 + 650 + 216 - 18 - 28]; // Send button centre at R0
+function renderCursor(t) {
+  const k = E(t, B(N.cursor), B(N.press - 0.3) - B(N.cursor), expoOut);
+  const [x, y] = lerp2([1420, 700], [SEND[0] - 8, SEND[1] - 6], k);
+  const press = t >= B(N.press) && t < B(N.press) + 0.12 ? 0.88 : 1;
+  const op = P(t, B(N.cursor), B(N.cursor) + 0.2) * (1 - P(t, B(N.pull) - 0.1, B(N.pull) + 0.15));
+  css($('#cur'), { opacity: String(op), transform: `translate(${px(x)}, ${px(y)}) scale(${press})` });
+}
+
+// ── Part A: hook → pull-back → fee → loose ends → drop ────────────────────────
+const REPLY = 'Thanks Maya, I’ve passed this to our team.';
+function renderA(t) {
+  // Background: paper for the calm inbox, the dark desk once the camera pulls back.
+  const kbg = E(t, B(N.pull) + 0.15, 0.8, easeInOut);
+  $('#bg').style.background = mixHex('#F3EFE6', '#081B16', kbg);
+  $('#glow').style.opacity = String(kbg);
+
+  // The inbox
+  const r = inboxRect(t);
+  const exitA = exitK(t, B(N.projects), 0.45);
+  css($('#inbox'), { transform: `translate(${px(r[0])}, ${px(r[1])}) scale(${r[2].toFixed(4)})` });
+  $('#inbox').style.boxShadow = `0 ${Math.round(L(30, 60, kbg))}px ${Math.round(L(80, 140, kbg))}px rgba(0,0,0,${L(0.16, 0.5, kbg).toFixed(3)}), 0 0 0 1px #E3DCCB`;
+  // Reply: types, Send, sent
+  const sent = t >= B(N.sent);
+  const txt = sent ? '' : typed(REPLY, t, B(N.type), 31);
+  $('#ibTyped').innerHTML = txt + (!sent && t >= B(N.type) - 0.3 ? '<span class="caret"></span>' : '');
+  $('#ibHint').style.opacity = String(txt ? 0 : 1);
+  $('#ibSend').style.background = t >= B(N.press) && t < B(N.press) + 0.14 ? '#0B6340' : '#0F7A50';
+  const ks = E(t, B(N.sent), 0.5);
+  css($('#ibSent'), { opacity: String(ks), transform: ks < 1 ? `translateY(${Math.round((1 - ks) * 30)}px)` : 'none' });
+  $('#ibSentChip').style.opacity = String(E(t, B(N.sent) + 0.1, 0.4));
+
+  // Hook copy (on paper)
+  const hookOut = exitK(t, B(N.pull) + 0.35, 0.4);
+  css($('#eb'), { opacity: String(1 - hookOut) }); // on from frame 0: the poster names the comparison
+  rise(H1A, t, B(N.h1), 0.07); rise(H1B, t, B(N.h2), 0.07);
+  [$('#h1a'), $('#h1b')].forEach((el) => css(el, { opacity: String(1 - hookOut), filter: hookOut > 0.001 ? `blur(${(hookOut * 8).toFixed(2)}px)` : 'none' }));
+
+  // Top headlines (on the desk)
+  const head = (el, ws, a, b, gap = 0.07) => {
+    const on = t >= a && t < b, o = exitK(t, b, 0.4);
+    css(el, { opacity: String(on ? 1 - o : 0), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+    if (on) rise(ws, t, a, gap);
+  };
+  head($('#hWalk'), HWALK, B(N.walk), B(N.fee));
+  head($('#hFee'), HFEE, B(N.fee) + 0.05, B(N.villain));
+  head($('#hLoose'), HLOOSE, B(N.villain) + 0.15, B(N.drop), 0.12);
+  head($('#hKeep1'), HK1, B(N.drop) + 0.05, B(N.projects));
+  head($('#hKeep2'), HK2, B(N.keep2), B(N.projects));
+
+  // $0.75 tokens, one per beat, rising off the inbox's top edge
+  const feeOut = exitK(t, B(N.villain), 0.4);
+  for (let j = 0; j < 5; j++) {
+    const at = B(N.token + j), k = E(t, at, 0.55);
+    const x = 700 + j * 150, y = 350 - k * 58;
+    css($(`#k${j}`), { opacity: String(t >= at ? k * (1 - feeOut) : 0), transform: `translate(${px(x)}, ${px(y)})` });
+  }
+  // Per user: the team's avatars
+  [...$('#avatars').children].forEach((el, j) => {
+    const k = E(t, B(N.avatars) + j * 0.06, 0.45);
+    css(el, { opacity: String(k * (1 - feeOut)), transform: k < 1 ? `translateY(${Math.round((1 - k) * 16)}px)` : 'none' });
+  });
+
+  renderCards(t);
+
+  // The drop: the frame widens into the workspace
+  const kf = E(t, B(N.drop), 0.8, expoOut);
+  css($('#wsFrame'), { opacity: String(kf), transform: kf < 1 ? `scale(${L(0.96, 1, kf).toFixed(4)})` : 'none', transformOrigin: '50% 50%' });
+  const ks2 = E(t, B(N.strip), 0.5);
+  css($('#strip'), { opacity: String(ks2), transform: ks2 < 1 ? `translateY(${Math.round((1 - ks2) * 16)}px)` : 'none' });
+
+  // Exit into the stations: the whole desk blurs out as the camera pushes in a little
+  css($('#aWrap'), { opacity: String(1 - exitA), transform: exitA > 0.001 ? `scale(${L(1, 1.05, exitA).toFixed(4)})` : 'none', transformOrigin: '960px 600px',
+    filter: exitA > 0.001 ? `blur(${(exitA * 8).toFixed(2)}px)` : 'none' });
+  renderCursor(t);
+}
+
+// The frame outline: on the drop it grows from the inbox's edges to the workspace frame, then fades;
+// from the stations on it stays as a faint frame just inside the picture's edges.
+function renderFrameline(t) {
+  const el = $('#frameline');
+  let rect = null, op = 0;
+  if (t >= B(N.drop) && t < B(N.drop) + 1.4) {
+    const r = inboxRect(B(N.drop));
+    const a = [r[0], r[1], 1400 * r[2], 1000 * r[2]], b = [160, 290, 1600, 720];
+    const k = E(t, B(N.drop), 0.8, expoOut);
+    rect = a.map((v, i) => L(v, b[i], k));
+    op = 0.9 * (1 - P(t, B(N.drop) + 0.6, B(N.drop) + 1.4));
+  } else if (t >= B(N.projects)) {
+    rect = [40, 40, 1840, 1000];
+    op = 0.13 * E(t, B(N.projects), 0.8);
+  }
+  if (!rect) return css(el, { opacity: '0' });
+  css(el, { left: px(rect[0]), top: px(rect[1]), width: px(rect[2]), height: px(rect[3]), opacity: String(op) });
+}
+
+// ── Stations: live website previews ──────────────────────────────────────────
+const STATIONS = [
+  // shots: [at (s into the station), cx, cy, w] as fractions of the preview's focus element; the height follows the window's aspect.
+  { id: 's1', at: N.projects, end: N.crm, path: '/products/projects', focus: '#project-context .project-scene.ps-context', dark: true,
+    box: { x: 880, y: 200, w: 940, h: 680 }, pt: (lt) => 4.1 + lt * 1.2,
+    shots: [[0, 0.5, 0.2, 0.96], [1.1, 0.5, 0.62, 0.96]] },
+  { id: 's2', at: N.crm, end: N.meetings, path: '/products/crm', focus: '#crm-record .crm-workspace.cw-account',
+    box: { x: 820, y: 170, w: 1000, h: 742 }, pt: (lt) => Math.min(0.4 + lt * 0.6, 2.4),
+    shots: [[0, 0.49, 0.29, 0.58], [1.3, 0.49, 0.71, 0.58]] },
+  { id: 's3', at: N.meetings, end: N.agents, path: '/products/meetings', focus: '.mw-preview',
+    box: { x: 820, y: 196, w: 1000, h: 688 }, pt: (lt) => 6.4 + lt * 0.9,
+    shots: [[0, 0.495, 0.3, 0.68], [1.2, 0.495, 0.75, 0.68]] },
+  { id: 's4', at: N.agents, end: N.receipt, path: '/products/customer-support', focus: '#support-workflow .support-scene-answer',
+    box: { x: 1000, y: 170, w: 742, h: 744 }, pt: (lt) => Math.min(0.5 + lt * 1.4, 4.9),
+    shots: [[0, 0.5, 0.5, 1]] },
+];
+STATIONS.forEach((s) => {
+  s.win = siteWindow($(`#${s.id}`), { path: s.path, focus: s.focus, hide: ['canvas'], radius: 22, dark: !!s.dark });
+  s.win.place(s.box);
+  waitFor(s.win.view.ready);
+});
+/** Camera shots inside a window: hold each band [at, cx, cy, w], ease between them. Bands stay inside the focus element. */
+function band(s, [cx, cy, w]) {
+  const f = s.win.view.rect();
+  if (!f) return null;
+  const bw = f.w * w, bh = bw * s.box.h / s.box.w;
+  const x = clamp(f.x + f.w * cx - bw / 2, f.x, f.x + f.w - bw), y = clamp(f.y + f.h * cy - bh / 2, f.y, Math.max(f.y, f.y + f.h - bh));
+  return { x, y, w: bw, h: bh };
+}
+function shoot(s, lt) {
+  const shots = s.shots;
+  let i = 0;
+  while (i + 1 < shots.length && lt >= shots[i + 1][0]) i++;
+  const k = i === 0 ? 1 : brandEase(P(lt, shots[i][0], shots[i][0] + 0.8));
+  const a = band(s, shots[Math.max(0, i - 1)].slice(1)), b = band(s, shots[i].slice(1));
+  if (!a || !b) return;
+  s.win.camera(1, [0.5, 0.5], { x: L(a.x, b.x, k), y: L(a.y, b.y, k), w: L(a.w, b.w, k), h: L(a.h, b.h, k) });
+}
+const side = sideCopy($, [
+  { at: B(N.projects) - 0.25, eyebrow: 'Projects', head: 'The request <em>becomes tracked work.</em>', lede: 'Create the task from the conversation. The request stays attached.' },
+  { at: B(N.crm) - 0.25, eyebrow: 'CRM', head: 'Every reply, <em>on the account.</em>', lede: 'Emails, meetings and tasks on one customer record.' },
+  { at: B(N.meetings) - 0.25, eyebrow: 'Meetings', head: 'Every call, <em>on the same history.</em>', lede: 'Notes from Meet, Zoom, Teams and Webex, linked to the customer and the work.' },
+  { at: B(N.agents) - 0.25, eyebrow: 'AI agents', head: 'AI answers and drafts. <em>Usage included.</em>', lede: 'Every Cloud plan includes an AI usage allowance.' },
+], B(N.receipt));
+
+const stationScene = (s) => ({
+  // Cross-dissolve: each window fades in over the last 0.3 s of the one before and out over the first 0.15 s of the next.
+  id: s.id, start: B(s.at), end: B(s.end), hold: [0.3, 0.15],
+  render: ({ t, lt }) => {
+    push(s.win.el, t, B(s.at) - 0.3, B(s.end) + 0.15, { dy: 30 });
+    shoot(s, lt);
+    if (s.id === 's4') {
+      const k = E(t, B(N.agents) + 1.7, 0.5);
+      css($('#aiChip'), { opacity: String(k * (1 - exitK(t, B(s.end), 0.45))), transform: k < 1 ? `translateY(${Math.round((1 - k) * 18)}px)` : 'none' });
+    }
+    return s.win.view.update(s.pt(lt));
+  },
+});
+
+// ── Receipt ───────────────────────────────────────────────────────────────────
+function renderReceipt(t) {
+  const out = B(N.docs);
+  const o = exitK(t, out, 0.45);
+  css($('#rc'), { opacity: String(1 - o), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+  // Enters over the agents window's fade-out, so the frame never empties.
+  const r0 = B(N.receipt) - 0.3;
+  reveal($('#rcEb'), t, r0, { dy: 10 });
+  pop($('#rcA'), t, r0 + 0.05, { dist: 30 });
+  pop($('#rcB'), t, r0 + 0.3, { dist: 30 });
+  const rowsA = $('#rcA').querySelectorAll('.rc-row'), rowsB = $('#rcB').querySelectorAll('.rc-row');
+  rowsA.forEach((el, i) => pop(el, t, B(N.rows + i * 0.5), { dist: 10 }));
+  rowsB.forEach((el, i) => pop(el, t, B(N.rows + 0.25 + i * 0.5), { dist: 10 }));
+  pop($('#rcA .rc-total'), t, B(N.totals), { dist: 10 });
+  pop($('#rcB .rc-total'), t, B(N.totals + 0.5), { dist: 10 });
+  const kv = E(t, B(N.verdict), 0.6);
+  css($('#rcV'), { opacity: String(kv), transform: kv < 1 ? `translateY(${Math.round((1 - kv) * 24)}px)` : 'none', filter: kv < 1 ? `blur(${((1 - kv) * 8).toFixed(2)}px)` : 'none' });
+  const n = counter($('#rcNum'), t, B(N.verdict), B(N.counted), 0, 4152, { ease: expoOut });
+  $('#rcNum').textContent = `$${n.toLocaleString('en-US')}`;
+  reveal($('#rcFoot'), t, B(N.receipt + 1), { dy: 8 });
+}
+
+// ── Docs import ───────────────────────────────────────────────────────────────
+function renderDocs(t) {
+  const o = exitK(t, B(N.tag), 0.45);
+  css($('#dc'), { opacity: String(1 - o), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+  rise(DCH, t, B(N.docs) - 0.2, 0.07);
+  pop($('#dcSrc'), t, B(N.docs) - 0.1, { dist: 24 });
+  pop($('#dcDst'), t, B(N.docs + 0.5), { dist: 24 });
+  // The article lifts off the Help Scout side and lands in Helpin Knowledge
+  const src = [240 + 32 + 248, 380 + 28 + 60 + 84 * 2 + 35], dst = [1120 + 32 + 248, 380 + 28 + 60 + 84 * 2 + 35];
+  const k = E(t, B(N.fly), B(N.land) - B(N.fly), easeInOut);
+  const [x, y0] = lerp2(src, dst, k);
+  const y = y0 - Math.sin(k * Math.PI) * 120;
+  const flyOn = t >= B(N.docs) + 0.3 && t < B(N.land) + 0.2;
+  css($('#dcFly'), { opacity: String(flyOn ? P(t, B(N.docs) + 0.3, B(N.docs) + 0.6) * (1 - P(t, B(N.land), B(N.land) + 0.2)) : 0),
+    transform: `translate(${px(x)}, ${px(y)}) rotate(${(Math.sin(k * Math.PI) * -3).toFixed(2)}deg) scale(${(1 + Math.sin(k * Math.PI) * 0.06).toFixed(3)})` });
+  $('#dcSlot').style.opacity = String(E(t, B(N.land), 0.35));
+  $('#dcGhost').style.opacity = String(P(t, B(N.fly), B(N.fly) + 0.3));
+}
+
+// ── Tagline and end card ──────────────────────────────────────────────────────
+const mark = helpinSymbol({ size: 116, color: '#E8EEEA' });
+$('#endSym').append(mark.node);
+function renderTag(t) {
+  const o = exitK(t, B(N.end), 0.45);
+  css($('#tg'), { opacity: String(1 - o), filter: o > 0.001 ? `blur(${(o * 8).toFixed(2)}px)` : 'none' });
+  rise(TG1, t, B(N.tag) - 0.2, 0.09);
+  rise(TG2, t, B(N.tag2), 0.09);
+}
+function renderEnd(t) {
+  mark.assemble(P(t, B(N.end) - 0.2, B(N.end + 2.5)));
+  const kw = E(t, B(N.end + 1), 0.8);
+  css($('#endWord'), { opacity: String(kw), transform: kw < 1 ? `translateX(${Math.round((1 - kw) * -20)}px)` : 'none' });
+  reveal($('#cta'), t, B(N.cta), { dy: 18 });
+  reveal($('#ctaNote'), t, B(N.end2), { dy: 12 });
+}
+
+defineVideo({
+  width: 1920, height: 1080, fps: 30, bpm: 123.06, duration: DURATION,
+  scenes: [
+    { id: 'a', start: 0, end: B(N.projects), render: ({ t }) => renderA(t) },
+    { id: 'side', start: B(N.projects), end: B(N.receipt), render: ({ t }) => side(t) },
+    ...STATIONS.map(stationScene),
+    { id: 'rc', start: B(N.receipt), end: B(N.docs), hold: [0.3, 0], render: ({ t }) => renderReceipt(t) },
+    { id: 'dc', start: B(N.docs), end: B(N.tag), hold: [0.25, 0], render: ({ t }) => renderDocs(t) },
+    { id: 'tg', start: B(N.tag), end: B(N.end), hold: [0.25, 0], render: ({ t }) => renderTag(t) },
+    { id: 'en', start: B(N.end), end: DURATION, hold: [0.25, 0], render: ({ t }) => renderEnd(t) },
+  ],
+  render: ({ t }) => {
+    if (t >= B(N.projects)) { $('#bg').style.background = '#081B16'; $('#glow').style.opacity = '1'; }
+    renderFrameline(t);
+    if (t >= B(N.projects)) css($('#cur'), { opacity: '0' });
+  },
+});
+</script>
+</body>
+</html>

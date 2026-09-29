@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>probe</title>
+<link rel="stylesheet" href="../../../lib/brand.css">
+<style>.cam { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; } #stage { background: #555; } .lbl{position:absolute;left:20px;top:10px;font:600 40px/1 var(--mono);color:#ff0;z-index:9}</style>
+</head><body><div id="stage">
+<section class="scene" id="pj"><div class="cam" id="c1"></div></section>
+<section class="scene" id="cr"><div class="cam" id="c2"></div></section>
+<section class="scene" id="mt"><div class="cam" id="c3"></div></section>
+<section class="scene" id="an"><div class="cam" id="c4"></div></section>
+<div class="lbl" id="lbl"></div>
+</div>
+<script type="module">
+import { defineVideo, waitFor } from '../../../lib/runtime.js';
+import { siteView, frameRect } from '../../../lib/site.js';
+const $ = (s) => document.querySelector(s);
+const views = {
+  pj: siteView($('#c1'), { path: '/products/projects', focus: '#project-context .project-scene.ps-context', hide: ['canvas'] }),
+  cr: siteView($('#c2'), { path: '/products/crm', focus: '#crm-record .crm-workspace.cw-account', hide: ['canvas'] }),
+  mt: siteView($('#c3'), { path: '/products/meetings', focus: '.mw-preview', hide: ['canvas'] }),
+  an: siteView($('#c4'), { path: '/products/customer-support', focus: '#support-workflow .support-scene-answer', hide: ['canvas'] }),
+};
+Object.values(views).forEach((v) => waitFor(v.ready));
+const box = { x: 40, y: 60, w: 1840, h: 1000 };
+const cams = { pj: '#c1', cr: '#c2', mt: '#c3', an: '#c4' };
+const scene = (id, start, end) => ({ id, start, end, render: ({ lt }) => {
+  const r = views[id].rect(); if (r) frameRect($(cams[id]), r, box);
+  $('#lbl').textContent = `${id} ${lt.toFixed(2)} ${r ? Math.round(r.w) + 'x' + Math.round(r.h) : ''}`;
+  return views[id].update(lt);
+} });
+defineVideo({ width: 1920, height: 1080, fps: 30, scenes: [scene('pj', 0, 12), scene('cr', 12, 24), scene('mt', 24, 36), scene('an', 36, 48)] });
+</script></body></html>
